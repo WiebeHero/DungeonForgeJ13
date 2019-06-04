@@ -9,7 +9,7 @@ public class MethodItemStack {
 			Player p = (Player) e;
 			ItemStack item = p.getIt
 			if() {
-				
+				aaaaaaa
 			}
 		}
 		return false;
