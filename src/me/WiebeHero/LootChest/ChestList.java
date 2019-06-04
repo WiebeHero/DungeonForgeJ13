@@ -21,7 +21,6 @@ public class ChestList extends LootRewards implements Listener {
         return set.stream().skip(set.stream().count() - 1).findFirst().get();
     }	
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
-	@EventHandler
 	public void lootChest() {
 		new BukkitRunnable() {
 			@Override
