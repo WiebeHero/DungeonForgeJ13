@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import net.md_5.bungee.api.ChatColor;
 
 public class MethodItemStack {
-	public boolean checkLore(ItemStack item, String check) {
+	public boolean loreContains(ItemStack item, String check) {
 		if(item != null & item.getType() != Material.AIR) {
 			if(item.hasItemMeta()) {
 				if(item.getItemMeta().hasLore()) {
@@ -18,7 +18,7 @@ public class MethodItemStack {
 		}
 		return false;
 	}
-	public int checkEnchLevel(ItemStack item, String check) {
+	public int levelEnchant(ItemStack item, String check) {
 		if(item != null & item.getType() != Material.AIR) {
 			if(item.hasItemMeta()) {
 				if(item.getItemMeta().hasLore()) {
