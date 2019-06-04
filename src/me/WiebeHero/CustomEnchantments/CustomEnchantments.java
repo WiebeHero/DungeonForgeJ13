@@ -268,6 +268,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Config Manager
 		loadConfigManager();
 		//Melee Enchantments
+		getServer().getPluginManager().registerEvents(new CustomEnchantmentsMelee(), this);
 		getServer().getPluginManager().registerEvents(new Confusion(), this);
 		getServer().getPluginManager().registerEvents(new Wither(), this);
 		getServer().getPluginManager().registerEvents(new HeavyHand(), this);
