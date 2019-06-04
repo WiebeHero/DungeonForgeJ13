@@ -1,0 +1,85 @@
+name: CustomEnchantments
+author: WiebeHero
+version: 0.1
+api-version: 1.13
+main: me.WiebeHero.CustomEnchantments.CustomEnchantments
+description: Custom Enchantment coded in java for DungeonForge
+
+commands:
+  giveitem:
+    ussage: /<command>
+    description: 'Tutorial Command'
+  SpawnNovis:
+    ussage: /<command>
+    description: 'Tutorial Command'
+  skill:
+    ussage: /<command>
+    description: 'Command for opening skills'
+  skills:
+    ussage: /<command>
+    description: 'Command for opening skills'
+  spawner:
+    ussage: /<command>
+    description: 'Command for setting spawners'
+  Novis:
+    ussage: /<command>
+    description: 'Command for Novis'
+  Loot:
+    ussage: /<command>
+    description: 'Command for Loot'
+  faction:
+    ussage: /<command>
+    description: 'Command for Factions'
+    aliases: [f]
+  rtp:
+    ussage: /<command>
+    description: 'Command for rtp'
+  spawn:
+    ussage: /<command>
+    description: 'Command for spawn'
+  pay:
+    ussage: /<command>
+    description: 'Command for paying players'
+  balance:
+    ussage: /<command>
+    description: 'Command for checking your balance'
+    aliases: [bal]
+  money:
+    ussage: /<command>
+    description: 'Command for checking your balance'
+  sethome:
+    ussage: /<command>
+    description: 'Command for sethome'
+  home:
+    ussage: /<command>
+    description: 'Command for home'
+  tpa:
+    ussage: /<command>
+    description: 'Command for tpa'
+  tpaccept:
+    ussage: /<command>
+    description: 'Command for tpaccept'
+  tpdeny:
+    ussage: /<command>
+    description: 'Command for tpadeny'
+  staffmode:
+    ussage: /<command>
+    description: 'Command for staffmode'
+  ban:
+    ussage: /<command>
+    description: 'Command for ban'
+  unban:
+    ussage: /<command>
+    description: 'Command for unban'
+  mute:
+    ussage: /<command>
+    description: 'Command for mute'
+  unmute:
+    ussage: /<command>
+    description: 'Command for unmute'
+  warn:
+    ussage: /<command>
+    description: 'Command for warn'
+  unwarn:
+    ussage: /<command>
+    description: 'Command for unwarn'
