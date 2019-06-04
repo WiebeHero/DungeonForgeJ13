@@ -264,11 +264,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		instance = this;
 		scoreboard = this.getServer().getScoreboardManager().getMainScoreboard();
 		//Enable Plugin Message
-		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "\n\nThe plugin CustomEnchantments has been enabled!\n\n");
+		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "\n\nThe plugin CustomEnchantments has been enabled111!\n\n");
 		//Config Manager
 		loadConfigManager();
 		//Melee Enchantments
-		getServer().getPluginManager().registerEvents(new CustomEnchantmentsMelee(), this);
 		getServer().getPluginManager().registerEvents(new Confusion(), this);
 		getServer().getPluginManager().registerEvents(new Wither(), this);
 		getServer().getPluginManager().registerEvents(new HeavyHand(), this);

@@ -1,5 +1,6 @@
 package Skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,6 +10,8 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import net.md_5.bungee.api.ChatColor;
@@ -94,6 +97,7 @@ public class Defense implements Listener{
 	@EventHandler
 	public void defenseInv(InventoryClickEvent event) {
 		if(event.getWhoClicked() instanceof Player) {
+			Bukkit.broadcastMessage("Yes!");
 			Player player = (Player) event.getWhoClicked();
 			runDefense(player);
 		}
@@ -107,5 +111,9 @@ public class Defense implements Listener{
 	public void defenseDrop(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		runDefense(player);
+	}
+	@EventHandler
+	public void armorSwitch(PlayerArmorChangeEvent event) {
+		Bukkit.broadcastMessage("Yes!");
 	}
 }
