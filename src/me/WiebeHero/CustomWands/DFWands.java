@@ -11,9 +11,6 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -26,7 +23,6 @@ import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,7 +33,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
@@ -360,21 +355,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 													e.printStackTrace();
 												}
 												ItemStack item = item1;
-												Location loc = new Location(damager.getWorld(), damager.getLocation().getX(), damager.getLocation().getY() + 3.00, damager.getLocation().getZ());
-							    				Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-							    				FireworkMeta fm = f1.getFireworkMeta();
-							    				fm.addEffect(FireworkEffect.builder()
-						                             .flicker(true)
-						                             .trail(true)
-						                             .with(Type.BALL_LARGE)
-						                             .withColor(Color.LIME)
-						                             .withFade(Color.AQUA)
-						                             .build());
-							    				fm.setPower(1);
-							    				f1.setFireworkMeta(fm);
-							    				f1.detonate();
-							    				Firework fw2 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-							    	            fw2.setFireworkMeta(fm);
+												
 							    	            for(Player victim1 : Bukkit.getOnlinePlayers()) {
 							    	    			((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.75);
 							    	    		}

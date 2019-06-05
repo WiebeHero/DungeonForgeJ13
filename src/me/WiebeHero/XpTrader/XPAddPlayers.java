@@ -30,20 +30,7 @@ public class XPAddPlayers extends SpawnerList implements Listener {
 				if(player.getInventory().getItemInMainHand().getType() == Material.EXPERIENCE_BOTTLE) {
 					if(player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
 						if(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(ChatColor.stripColor("XP Bottle (Player)"))) {
-							File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-							YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-							//-----------------------------------------------------------------------------------------------------------------------------------------
-							//File Calling
-							//-----------------------------------------------------------------------------------------------------------------------------------------
-							try{
-								yml.load(f);
-					        }
-					        catch(IOException e){
-					            e.printStackTrace();
-					        } 
-							catch (InvalidConfigurationException e) {
-								e.printStackTrace();
-							}
+							
 							ItemStack item = player.getInventory().getItemInMainHand();
 							int xpAdd = 0;
 							String xpAmount = "";

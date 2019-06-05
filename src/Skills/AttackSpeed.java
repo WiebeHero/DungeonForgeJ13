@@ -1,5 +1,8 @@
 package Skills;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,10 +19,39 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import net.md_5.bungee.api.ChatColor;
 
 public class AttackSpeed implements Listener{
+	HashMap<UUID, Double> speed = new HashMap<UUID, Double>();
+	HashMap<UUID, Long> dur = new HashMap<UUID, Long>();
 	SkillJoin join = new SkillJoin();
 	ClassPride p = new ClassPride();
 	ClassGreed g = new ClassGreed();
-	public void attackSpeedRun(Player p, double multiplier) {
+	public void attackSpeedRun(Player p, long duration, double multiplier) {
+		if(duration != 0 && multiplier != 0.0) {
+			if(!speed.containsKey(p.getUniqueId()) && !dur.containsKey(p.getUniqueId())) {
+				speed.put(p.getUniqueId(), multiplier);
+				dur.put(p.getUniqueId(), duration);
+				new BukkitRunnable() {
+					public void run() {
+						if(dur.containsKey(p.getUniqueId())) {
+							if(dur.get(p.getUniqueId()) == 0L) {
+								speed.remove(p.getUniqueId());
+								dur.remove(p.getUniqueId());
+								cancel();
+							}
+							else {
+								dur.put(p.getUniqueId(), dur.get(p.getUniqueId()) - 1L);
+							}
+						}
+						else {
+							cancel();
+						}
+					}
+				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+			}
+			else {
+				speed.put(p.getUniqueId(), duration + multiplier);
+				dur.put(p.getUniqueId(), duration + dur.get(p.getUniqueId()));
+			}
+		}
 		new BukkitRunnable() {
 			public void run() {
 				int level = 0;
@@ -31,6 +63,10 @@ public class AttackSpeed implements Listener{
 					if(item.hasItemMeta()) {
 						if(item.getItemMeta().hasLore()) {
 							if(item.getItemMeta().getLore().toString().contains("Attack Speed")) {
+								double currentMult = 1.0;
+								if(speed.containsKey(p.getUniqueId()) && dur.containsKey(p.getUniqueId())) {
+									currentMult = currentMult + speed.get(p.getUniqueId());
+								}
 								String check1 = "";
 								String check2 = "";
 								for(String s : item.getItemMeta().getLore()) {
@@ -47,13 +83,13 @@ public class AttackSpeed implements Listener{
 								double attackDamage = Double.parseDouble(check2);
 								p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(attackDamage + 1);
 								if(join.getClassList().get(p.getUniqueId()).equals("Pride") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
-									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100 * (100 + level * 0.60) * multiplier);
+									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100 * (100 + level * 0.60) * currentMult);
 								}
 								else if(join.getClassList().get(p.getUniqueId()).equals("Sloth") || join.getClassList().get(p.getUniqueId()).equals("Envy")) {
-									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100 * (100 + level * 0.20) * multiplier);
+									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100 * (100 + level * 0.20) * currentMult);
 								}
 								else {
-									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100 * (100 + level * 0.40) * multiplier);
+									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100 * (100 + level * 0.40) * currentMult);
 								}
 							}
 							else {
@@ -81,63 +117,28 @@ public class AttackSpeed implements Listener{
 	@EventHandler
 	public void attackSpeedItemChange(PlayerItemHeldEvent event) {
 		Player player = event.getPlayer();
-		if(p.getPrideList().contains(player.getUniqueId()) || g.getGreedList().contains(player.getUniqueId())) {
-			int level = join.getLevelList().get(player.getUniqueId());
-			double attackS = 20 + level * 0.30;
-			attackSpeedRun(player, (1.00 + attackS / 100));
-		}
-		else {
-			attackSpeedRun(player, 1.00);
-		}
+		attackSpeedRun(player, 0L, 0.0D);
 	}
 	@EventHandler
 	public void attackSpeedItemDrop(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
-		if(p.getPrideList().contains(player.getUniqueId()) || g.getGreedList().contains(player.getUniqueId())) {
-			int level = join.getLevelList().get(player.getUniqueId());
-			double attackS = 20 + level * 0.30;
-			attackSpeedRun(player, (1.00 + attackS / 100));
-		}
-		else {
-			attackSpeedRun(player, 1.00);
-		}
+		attackSpeedRun(player, 0L, 0.0D);
 	}
 	@EventHandler
 	public void attackSpeedItemPickup(@SuppressWarnings("deprecation") PlayerPickupItemEvent event) {
 		Player player = event.getPlayer();
-		if(p.getPrideList().contains(player.getUniqueId()) || g.getGreedList().contains(player.getUniqueId())) {
-			int level = join.getLevelList().get(player.getUniqueId());
-			double attackS = 20 + level * 0.30;
-			attackSpeedRun(player, (1.00 + attackS / 100));
-		}
-		else {
-			attackSpeedRun(player, 1.00);
-		}
+		attackSpeedRun(player, 0L, 0.0D);
 	}
 	@EventHandler
 	public void attackSpeedInvClick(InventoryClickEvent event) {
 		if(event.getWhoClicked() instanceof Player) {
 			Player player = (Player) event.getWhoClicked();
-			if(p.getPrideList().contains(player.getUniqueId()) || g.getGreedList().contains(player.getUniqueId())) {
-				int level = join.getLevelList().get(player.getUniqueId());
-				double attackS = 20 + level * 0.30;
-				attackSpeedRun(player, (1.00 + attackS / 100));
-			}
-			else {
-				attackSpeedRun(player, 1.00);
-			}
+			attackSpeedRun(player, 0L, 0.0D);
 		}
 	}
 	@EventHandler
 	public void attackSpeedSwitchHand(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(p.getPrideList().contains(player.getUniqueId()) || g.getGreedList().contains(player.getUniqueId())) {
-			int level = join.getLevelList().get(player.getUniqueId());
-			double attackS = 20 + level * 0.30;
-			attackSpeedRun(player, (1.00 + attackS / 100));
-		}
-		else {
-			attackSpeedRun(player, 1.00);
-		}
+		attackSpeedRun(player, 0L, 0.0D);
 	}
 }

@@ -14,8 +14,8 @@ public class MobDamage implements Listener{
 		if(event.getDamager() instanceof Monster) {
 			if(event.getEntity() instanceof Player) {
 				LivingEntity uuidOfAttacker = (LivingEntity) event.getDamager();
-				if(s.getMobList().containsKey(uuidOfAttacker)) {
-					event.setDamage(4.5 + 3 * s.getMobList().get(uuidOfAttacker));
+				if(SpawnerList.getMobList().containsKey(uuidOfAttacker)) {
+					event.setDamage(4.5 + 3 * SpawnerList.getMobList().get(uuidOfAttacker));
 				}
 			}
 		}
@@ -23,8 +23,8 @@ public class MobDamage implements Listener{
 			if(event.getDamager() instanceof Player) {
 				if(event.getEntity() instanceof Monster) {
 					LivingEntity uuidOfVictim = (LivingEntity) event.getEntity();
-					if(s.getMobList().containsKey(uuidOfVictim)) {
-						event.setDamage(event.getFinalDamage() * (1.00 - 0.10 * s.getMobList().get(uuidOfVictim)));
+					if(SpawnerList.getMobList().containsKey(uuidOfVictim)) {
+						event.setDamage(event.getFinalDamage() * (1.00 - 0.10 * SpawnerList.getMobList().get(uuidOfVictim)));
 					}
 				}
 			}

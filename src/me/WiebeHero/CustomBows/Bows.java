@@ -224,20 +224,6 @@ public class Bows extends SpawnerList implements Listener{
 													}
 													ItemStack item = item1;
 													Location loc = new Location(damager.getWorld(), damager.getLocation().getX(), damager.getLocation().getY() + 3.00, damager.getLocation().getZ());
-								    				Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-								    				FireworkMeta fm = f1.getFireworkMeta();
-								    				fm.addEffect(FireworkEffect.builder()
-							                             .flicker(true)
-							                             .trail(true)
-							                             .with(Type.BALL_LARGE)
-							                             .withColor(Color.LIME)
-							                             .withFade(Color.AQUA)
-							                             .build());
-								    				fm.setPower(1);
-								    				f1.setFireworkMeta(fm);
-								    				f1.detonate();
-								    				Firework fw2 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-								    	            fw2.setFireworkMeta(fm);
 								    	            for(Player victim1 : Bukkit.getOnlinePlayers()) {
 								    	    			((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.75);
 								    	    		}

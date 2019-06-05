@@ -4,8 +4,8 @@ package Skills;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -19,12 +19,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomMethods.MethodMovementSpeed;
 import me.WiebeHero.Factions.DFFactions;
 
 public class ClassWrath implements Listener{
 	SkillJoin join = new SkillJoin();
 	DFFactions fac = new DFFactions();
+	MethodMovementSpeed move = new MethodMovementSpeed();
 	public HashMap<UUID, Integer> activated = new HashMap<UUID, Integer>();
+	public HashMap<UUID, Integer> temp = new HashMap<UUID, Integer>();
 	public ArrayList<UUID> wrathCooldown = new ArrayList<UUID>();
 	public HashMap<UUID, Integer> wrathExtra = new HashMap<UUID, Integer>();
 	@EventHandler
@@ -63,43 +66,42 @@ public class ClassWrath implements Listener{
 					for(Entity e : player.getLocation().getNearbyEntities(range, range, range)) {
 						if(e != null && e != player) {
 							if(e instanceof LivingEntity) {
-								if(fac.getFactionMemberList().get(facName) != null && !fac.getFactionMemberList().get(facName).contains(e.getUniqueId())) {
-									double totalDamage = 0.00;
-									LivingEntity victim = (LivingEntity) e;
-									victim.getWorld().strikeLightningEffect(victim.getLocation());
-									totalDamage = totalDamage + damage1;
-									if(wrathExtra.containsKey(victim.getUniqueId())) {
-										totalDamage = totalDamage + damage2 * wrathExtra.get(victim.getUniqueId());
-										wrathExtra.remove(victim.getUniqueId());
-									}
-									if(ad > 0) {
-										totalDamage = totalDamage + amount * (0.1 * ad);
-									}
-									if(as > 0) {
-										long duration = 60 + (as * 20);
-										double speed = victim.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
-										victim.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(speed / 100 * (100 - (10 + (double)amount * 2)));
-										new BukkitRunnable() {
-											public void run() {
-												victim.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(speed);
-											}
-										}.runTaskLater(CustomEnchantments.getInstance(), duration);
-									}
-									if(cc > 0) {
-										float i = ThreadLocalRandom.current().nextFloat() * 100;
-										if(i < 10 * cc) {
-											totalDamage = totalDamage * 2.00;
+								double totalDamage = 0.00;
+								LivingEntity victim = (LivingEntity) e;
+								victim.getWorld().strikeLightningEffect(victim.getLocation());
+								totalDamage = totalDamage + damage1;
+								if(wrathExtra.containsKey(victim.getUniqueId())) {
+									totalDamage = totalDamage + damage2 * wrathExtra.get(victim.getUniqueId());
+									wrathExtra.remove(victim.getUniqueId());
+								}
+								if(ad > 0) {
+									totalDamage = totalDamage + amount * (0.1 * ad);
+								}
+								if(as > 0) {
+									long duration = 60 + (as * 20);
+									victim.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(move.getSpeed(player) + 10 * amount / 1000);
+									temp.put(victim.getUniqueId(), amount);
+									new BukkitRunnable() {
+										public void run() {
+											victim.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(move.getSpeed(player) - 10 * temp.get(victim.getUniqueId()) / 1000);
+											temp.remove(victim.getUniqueId());
 										}
+									}.runTaskLater(CustomEnchantments.getInstance(), duration);
+								}
+								if(cc > 0) {
+									float i = ThreadLocalRandom.current().nextFloat() * 100;
+									if(i < 10 * cc) {
+										totalDamage = totalDamage * 2.00;
 									}
-									if(!wrathCooldown.contains(player.getUniqueId())) {
-										wrathCooldown.add(player.getUniqueId());
-										new BukkitRunnable() {
-											public void run() {
-												wrathCooldown.remove(player.getUniqueId());
-												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Hatred of the Wrath &aagain!"));
-											}
-										}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
-									}
+								}
+								if(!wrathCooldown.contains(player.getUniqueId())) {
+									wrathCooldown.add(player.getUniqueId());
+									new BukkitRunnable() {
+										public void run() {
+											wrathCooldown.remove(player.getUniqueId());
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Hatred of the Wrath &aagain!"));
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
 								}
 							}
 						}

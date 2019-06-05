@@ -22,11 +22,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomMethods.MethodMovementSpeed;
 
 public class ClassPride implements Listener{
 	SkillJoin join = new SkillJoin();
+	MethodMovementSpeed move = new MethodMovementSpeed();
 	public ArrayList<UUID> prideCooldown = new ArrayList<UUID>();
 	public HashMap<UUID, Double> prideAbsorb = new HashMap<UUID, Double>();
+	public HashMap<UUID, Double> temp = new HashMap<UUID, Double>();
 	public static ArrayList<UUID> prideExtraAS = new ArrayList<UUID>();
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
@@ -38,32 +41,33 @@ public class ClassPride implements Listener{
 					prideExtraAS.add(player.getUniqueId());
 					int level = join.getLevelList().get(player.getUniqueId());
 					int rd = join.getRDMODList().get(player.getUniqueId());
-					double duration = 5 + level * 0.10;
+					long duration = 100 + level * 2;
 					long cooldown = 2000 - level * 6;
 					if(rd > 0) {
 						cooldown = cooldown - 20 * rd;
 					}
-					float speed = 20.00F + level * 0.30F;
+					double speed = 20.00 + level * 0.30;
 					double attackS = 20 + level * 0.30;
-					double walkSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
 					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPIDER_DEATH, 2.0F, 2.0F);
 					Location loc = player.getLocation();
 					loc.setY(loc.getY() - 1.5);
 					BlockData bd = Material.COBWEB.createBlockData();
 					player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
 					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Quick Attack!"));
-					player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(walkSpeed / 100 * (100 + speed));
+					move.setSpeed(player, move.getSpeed(player) / 100 * (100 + speed));
 					AttackSpeed aSpeed = new AttackSpeed();
-					aSpeed.attackSpeedRun(player, (1.00 + attackS / 100));
+					prideExtraAS.add(player.getUniqueId());
+					aSpeed.attackSpeedRun(player, duration, (1.00 + attackS / 100));
 					event.setCancelled(true);
 					new BukkitRunnable() {
 						public void run() {
 							prideExtraAS.remove(player.getUniqueId());
 							prideAbsorb.remove(player.getUniqueId());
-							aSpeed.attackSpeedRun(player, 1.00);
-							player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(walkSpeed);
+							aSpeed.attackSpeedRun(player, duration, speed / 100);
+							move.setSpeed(player, move.getSpeed(player) - speed / 1000 - temp.get(player.getUniqueId()));
+							temp.remove(player.getUniqueId());
 						}
-					}.runTaskLater(CustomEnchantments.getInstance(), (long)(duration * 20));
+					}.runTaskLater(CustomEnchantments.getInstance(), duration);
 					new BukkitRunnable() {
 						public void run() {
 							prideCooldown.remove(player.getUniqueId());
@@ -101,8 +105,11 @@ public class ClassPride implements Listener{
 			if(prideExtraAS.contains(player.getUniqueId())) {
 				int as = join.getASMODList().get(player.getUniqueId());
 				if(as > 0) {
-					double walkSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
-					player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(walkSpeed / 100 * (100 + as * 0.5));
+					if(!temp.containsKey(player.getUniqueId())) {
+						temp.put(player.getUniqueId(), 0.00);
+					}
+					temp.put(player.getUniqueId(), temp.get(player.getUniqueId()) + 0.001 * as);
+					player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(move.getSpeed(player) + 0.001 * as);
 				}
 				int ad = join.getADMODList().get(player.getUniqueId());
 				if(ad > 0) {

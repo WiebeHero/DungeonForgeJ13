@@ -30,7 +30,6 @@ public class ClassGreed implements Listener{
 	public ArrayList<UUID> greedCooldown = new ArrayList<UUID>();
 	public ArrayList<UUID> greedArrow = new ArrayList<UUID>();
 	public ArrayList<UUID> arrowHit = new ArrayList<UUID>();
-	public static ArrayList<UUID> extraSpeed = new ArrayList<UUID>();
 	public HashMap<UUID, UUID> extraDamage = new HashMap<UUID, UUID>();
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
@@ -50,19 +49,17 @@ public class ClassGreed implements Listener{
 						player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
 						AttackSpeed aSpeed = new AttackSpeed();
 						greedCooldown.add(player.getUniqueId());
-						extraSpeed.add(player.getUniqueId());
-						aSpeed.attackSpeedRun(player, (1.00 + attackS / 100));
+						aSpeed.attackSpeedRun(player, duration, (1.00 + attackS / 100));
 						event.setCancelled(true);
 						new BukkitRunnable() {
 							public void run() {
 								greedCooldown.remove(player.getUniqueId());
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Hunting Arrow &aagain!"));
 							}
 						}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
 						new BukkitRunnable() {
 							public void run() {
-								extraSpeed.remove(player.getUniqueId());
-								aSpeed.attackSpeedRun(player, 1.00);
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Hunting Arrow &aagain!"));
+								aSpeed.attackSpeedRun(player, 0L, 0.0D);
 							}
 						}.runTaskLater(CustomEnchantments.getInstance(), duration);
 					}
@@ -169,8 +166,5 @@ public class ClassGreed implements Listener{
 				event.setDamage(event.getFinalDamage() / 100 * (100 + damage));
 			}
 		}
-	}
-	public ArrayList<UUID> getGreedList(){
-		return ClassGreed.extraSpeed;
 	}
 }

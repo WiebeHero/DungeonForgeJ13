@@ -53,7 +53,7 @@ public class SkillMenuInteract implements Listener{
 							join.getASList().put(player.getUniqueId(), join.getASList().get(player.getUniqueId()) + 1);
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							speed.attackSpeedRun(player, 1.0);
+							speed.attackSpeedRun(player, 0L, 0.0D);
 							menu.SkillMenuInv(player);
 						}
 						else {

@@ -1,13 +1,9 @@
 package Skills;
 
-import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -95,25 +91,8 @@ public class Defense implements Listener{
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 	}
 	@EventHandler
-	public void defenseInv(InventoryClickEvent event) {
-		if(event.getWhoClicked() instanceof Player) {
-			Bukkit.broadcastMessage("Yes!");
-			Player player = (Player) event.getWhoClicked();
-			runDefense(player);
-		}
-	}
-	@EventHandler
-	public void defenseDrop(PlayerDropItemEvent event) {
-		Player player = event.getPlayer();
-		runDefense(player);
-	}
-	@EventHandler
-	public void defenseDrop(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
-		runDefense(player);
-	}
-	@EventHandler
 	public void armorSwitch(PlayerArmorChangeEvent event) {
-		Bukkit.broadcastMessage("Yes!");
+		Player player = event.getPlayer();
+		runDefense(player);
 	}
 }
