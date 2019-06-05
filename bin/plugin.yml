@@ -1,6 +1,6 @@
 name: CustomEnchantments
 author: WiebeHero
-version: 0.1
+version: 0.8
 api-version: 1.13
 main: me.WiebeHero.CustomEnchantments.CustomEnchantments
 description: Custom Enchantment coded in java for DungeonForge
