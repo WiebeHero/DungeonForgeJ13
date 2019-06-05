@@ -92,9 +92,9 @@ public class SkillMenu {
 				int cLevel = join.getCCMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) + 5;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
 				i.setItem(21, modCreator(player, Material.DIAMOND_SWORD, "&5Critical Modifier, Thunderstrike: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability has a chance to deal double damage.",
 				"",
@@ -119,9 +119,9 @@ public class SkillMenu {
 				int cLevel = join.getRDMODList().get(player.getUniqueId());
 				double calcNow = cLevel;
 				double calcNext = (cLevel + 1);
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
 				i.setItem(23, modCreator(player, Material.GRASS_BLOCK, "&dRanged Modifier, Globular: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your abilities range increases.",
 				"",
@@ -166,9 +166,9 @@ public class SkillMenu {
 				int cLevel = join.getCCMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 1;
 				double calcNext = (cLevel + 1) * 1;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
 				i.setItem(21, modCreator(player, Material.BLAZE_ROD, "&5Critical Modifier, Critical State: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability deals an additional % of damage to your enemy.",
 				"",
@@ -193,9 +193,9 @@ public class SkillMenu {
 				int cLevel = join.getRDMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 2;
 				double calcNext = (cLevel + 1) * 2;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
 				i.setItem(23, modCreator(player, Material.ARMOR_STAND, "&dRanged Modifier, All Around: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Increase the range of your ability by a certain amount of blocks.",
 				"",
@@ -220,9 +220,9 @@ public class SkillMenu {
 				int cLevel = join.getHHMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) + 5;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getHHMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getHHMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()));
 				i.setItem(24, modCreator(player, Material.ROSE_RED, "&cHealth Modifier, Heartbeat: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your abilities recovery is increased by a certain %.",
 				"",
@@ -247,9 +247,9 @@ public class SkillMenu {
 				int cLevel = join.getDFMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 8;
 				double calcNext = (cLevel + 1) * 8;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
 				i.setItem(25, modCreator(player, Material.DIAMOND_CHESTPLATE, "&7Defense Modifier, Maximum Overdrive: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Increase your MAX HP for 30 seconds.",
 				"",
@@ -311,9 +311,9 @@ public class SkillMenu {
 				int cLevel = join.getCCMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) * 5;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
 				i.setItem(21, modCreator(player, Material.POTION, "&5Critical Modifier, Critical Extension: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Increase the duration by a %",
 				"",
@@ -341,9 +341,9 @@ public class SkillMenu {
 				int cLevel = join.getHHMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) * 5;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getHHMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getHHMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()));
 				i.setItem(24, modCreator(player, Material.POPPY, "&cHealth Modifier, Healing Stand: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your abilities recovery is increased by a certain %.",
 				"",
@@ -368,9 +368,9 @@ public class SkillMenu {
 				int cLevel = join.getDFMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 4;
 				double calcNext = (cLevel + 1) * 4;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
 				i.setItem(25, modCreator(player, Material.IRON_BLOCK, "&7Defense Modifier, Reflection: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7While your ability is active, reflect some % of the damage",
 				"&7done to you, back to the attacker.",
@@ -402,9 +402,9 @@ public class SkillMenu {
 				int cLevel = join.getADMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 2;
 				double calcNext = (cLevel + 1) * 2;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getADMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getADMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()));
 				i.setItem(19, modCreator(player, Material.ARROW, "&4Attack Modifier, Hunters Eye: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability deals additional damage to an enemy.",
 				"",
@@ -457,9 +457,9 @@ public class SkillMenu {
 				int cLevel = join.getCCMODList().get(player.getUniqueId());
 				double calcNow = 15 + (cLevel * 5);
 				double calcNext = 15 + ((cLevel + 1) * 5);
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
 				i.setItem(21, modCreator(player, Material.WITHER_SKELETON_SKULL, "&5Critical Modifier, Death Shot: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7You wither your enemy for a certain amount of seconds.",
 				"",
@@ -484,9 +484,9 @@ public class SkillMenu {
 				int cLevel = join.getRDMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 0.5;
 				double calcNext = (cLevel + 1) * 0.5;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
 				i.setItem(23, modCreator(player, Material.REDSTONE, "&dRanged Modifier, Hunters Blood: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Increase the duration of your ability.",
 				"",
@@ -523,9 +523,9 @@ public class SkillMenu {
 				int cLevel = join.getADMODList().get(player.getUniqueId());
 				double calcNow = cLevel;
 				double calcNext = (cLevel + 1);
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getADMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getADMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()));
 				i.setItem(19, modCreator(player, Material.ENCHANTED_BOOK, "&4Attack Modifier, Sharpened Thorns: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability deals additional damage to an enemy.",
 				"",
@@ -554,9 +554,9 @@ public class SkillMenu {
 				int cLevel = join.getCCMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 10;
 				double calcNext = (cLevel + 1) * 10;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
 				i.setItem(21, modCreator(player, Material.FIRE_CHARGE, "&5Critical Modifier, Critical Charge: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your thorns gain an additional % of force.",
 				"",
@@ -584,9 +584,9 @@ public class SkillMenu {
 				int cLevel = join.getHHMODList().get(player.getUniqueId());
 				double calcNow = cLevel;
 				double calcNext = cLevel + 1;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getHHMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getHHMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()));
 				i.setItem(24, modCreator(player, Material.RED_STAINED_GLASS, "&cHealth Modifier, Combo Shot: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your thorns heal you for a % amount of HP per enemy shot.",
 				"",
@@ -611,9 +611,9 @@ public class SkillMenu {
 				int cLevel = join.getDFMODList().get(player.getUniqueId());
 				double calcNow = 90 - cLevel * 10;
 				double calcNext = 90 - (cLevel + 1) * 10;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
 				i.setItem(25, modCreator(player, Material.CREEPER_HEAD, "&7Defense Modifier, Reflex: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7When you get hit, there is a small chance that &6Hedge of the Thorn",
 				"&7will activate. This will not reset the cooldown, however it shoots",
@@ -646,9 +646,9 @@ public class SkillMenu {
 				int cLevel = join.getADMODList().get(player.getUniqueId());
 				double calcNow = cLevel;
 				double calcNext = (cLevel + 1);
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getADMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getADMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()));
 				i.setItem(19, modCreator(player, Material.GOLDEN_SWORD, "&4Attack Modifier, Sharp Edge: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7After you succesfully performed your ability, your next",
 				"&7attack against the same enemy deals an additional amount of damage.",
@@ -680,9 +680,9 @@ public class SkillMenu {
 				int cLevel = join.getRDMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 10;
 				double calcNext = (cLevel + 1) * 10;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
 				i.setItem(23, modCreator(player, Material.GOLDEN_BOOTS, "&5Critical Modifier, Retreatfull: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7After you succesfully executed this attack, your",
 				"&7Movement Speed increases by a certain % for 15 seconds",
@@ -708,9 +708,9 @@ public class SkillMenu {
 				int cLevel = join.getHHMODList().get(player.getUniqueId());
 				double calcNow = 1 + cLevel * 0.75;
 				double calcNext = 1 + (cLevel + 1) * 0.75;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getHHMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getHHMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()));
 				i.setItem(24, modCreator(player, Material.RED_STAINED_GLASS, "&cHealth Modifier, Regenerative Comeback: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7You heal some HP after you succesfully performed your ability",
 				"&7For a few seconds.",
@@ -736,9 +736,9 @@ public class SkillMenu {
 				int cLevel = join.getDFMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 7.5;
 				double calcNext = (cLevel + 1) * 7.5;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
 				i.setItem(25, modCreator(player, Material.GOLDEN_CHESTPLATE, "&7Defense Modifier, Guard Up: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7When your ability runs out before you could perform it, the next",
 				"&7attacks damage you recieve will be decreased by a certain %",
@@ -770,9 +770,9 @@ public class SkillMenu {
 				int cLevel = join.getADMODList().get(player.getUniqueId());
 				double calcNow = cLevel;
 				double calcNext = (cLevel + 1);
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getADMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getADMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()));
 				i.setItem(19, modCreator(player, Material.FERMENTED_SPIDER_EYE, "&4Attack Modifier, Weakening Strike: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7When your ability is active, your strikes apply weakness 1",
 				"&7to the enemy for a few seconds",
@@ -829,9 +829,9 @@ public class SkillMenu {
 				int cLevel = join.getRDMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 2;
 				double calcNext = (cLevel + 1) * 2;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
 				i.setItem(23, modCreator(player, Material.ICE, "&cHealth Modifier, Cooling: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your abilities cooldown decreases by a few seconds.",
 				"",
@@ -859,9 +859,9 @@ public class SkillMenu {
 				int cLevel = join.getDFMODList().get(player.getUniqueId());
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) * 5;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
+				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
+				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
 				i.setItem(25, modCreator(player, Material.IRON_CHESTPLATE, "&7Defense Modifier, Absorb: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7While your ability is active, you absorb part of the incoming damage",
 				"&7and return this damage back to the attacker on your next attacker",
@@ -1061,16 +1061,16 @@ public class SkillMenu {
 	public ItemStack hh(Player p) {
 		ItemStack item = new ItemStack(Material.APPLE);
 		ItemMeta meta = item.getItemMeta();
-		int levelNow = join.getRDList().get(p.getUniqueId());
-		double calcNow = join.getRDList().get(p.getUniqueId()) * 5.00;
-		double calcNext = (join.getRDList().get(p.getUniqueId()) + 1.00) * 5.00;
+		int levelNow = join.getHHList().get(p.getUniqueId());
+		double calcNow = join.getHHList().get(p.getUniqueId()) * 5.00;
+		double calcNext = (join.getHHList().get(p.getUniqueId()) + 1.00) * 5.00;
 		if(join.getClassList().get(p.getUniqueId()).equals("Lust") || join.getClassList().get(p.getUniqueId()).equals("Gluttony")) {
-			calcNow = join.getRDList().get(p.getUniqueId()) * 7.50;
-			calcNext = (join.getRDList().get(p.getUniqueId()) + 1.00) * 7.50;
+			calcNow = join.getHHList().get(p.getUniqueId()) * 7.50;
+			calcNext = (join.getHHList().get(p.getUniqueId()) + 1.00) * 7.50;
 		}
 		else if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
-			calcNow = join.getRDList().get(p.getUniqueId()) * 2.50;
-			calcNext = (join.getRDList().get(p.getUniqueId()) + 1.00) * 2.50;
+			calcNow = join.getHHList().get(p.getUniqueId()) * 2.50;
+			calcNext = (join.getHHList().get(p.getUniqueId()) + 1.00) * 2.50;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&cHealth: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -1088,16 +1088,16 @@ public class SkillMenu {
 	public ItemStack df(Player p) {
 		ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
 		ItemMeta meta = item.getItemMeta();
-		int levelNow = join.getRDList().get(p.getUniqueId());
-		double calcNow = join.getRDList().get(p.getUniqueId()) * 3.33;
-		double calcNext = (join.getRDList().get(p.getUniqueId()) + 1.00) * 3.33;
+		int levelNow = join.getDFList().get(p.getUniqueId());
+		double calcNow = join.getDFList().get(p.getUniqueId()) * 3.33;
+		double calcNext = (join.getDFList().get(p.getUniqueId()) + 1.00) * 3.33;
 		if(join.getClassList().get(p.getUniqueId()).equals("Gluttony") || join.getClassList().get(p.getUniqueId()).equals("Sloth") || join.getClassList().get(p.getUniqueId()).equals("Pride")) {
-			calcNow = join.getRDList().get(p.getUniqueId()) * 5.00;
-			calcNext = (join.getRDList().get(p.getUniqueId()) + 1.00) * 5.00;
+			calcNow = join.getDFList().get(p.getUniqueId()) * 5.00;
+			calcNext = (join.getDFList().get(p.getUniqueId()) + 1.00) * 5.00;
 		}
 		else if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
-			calcNow = join.getRDList().get(p.getUniqueId()) * 1.66;
-			calcNext = (join.getRDList().get(p.getUniqueId()) + 1.00) * 1.66;
+			calcNow = join.getDFList().get(p.getUniqueId()) * 1.66;
+			calcNext = (join.getDFList().get(p.getUniqueId()) + 1.00) * 1.66;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&8Defense: [&7&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();

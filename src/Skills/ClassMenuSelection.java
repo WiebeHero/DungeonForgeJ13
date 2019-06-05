@@ -24,7 +24,7 @@ public class ClassMenuSelection implements Listener{
 		InventoryView current = player.getOpenInventory();
 		if(current.getTitle().contains("Class Selection")) {
 			event.setCancelled(true);
-			if(item.equals(null) || !item.hasItemMeta()) {
+			if(item == null || !item.hasItemMeta()) {
 				return;
 			}
 			else {
@@ -38,7 +38,7 @@ public class ClassMenuSelection implements Listener{
 		}
 		else if(current.getTitle().contains("Class:")) {
 			event.setCancelled(true);
-			if(item.equals(null) || !item.hasItemMeta()) {
+			if(item == null || !item.hasItemMeta()) {
 				return;
 			}
 			else {

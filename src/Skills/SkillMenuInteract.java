@@ -134,7 +134,7 @@ public class SkillMenuInteract implements Listener{
 					if(join.getADMODList().get(player.getUniqueId()) < 5) {
 						if(join.getADList().get(player.getUniqueId()) >= 20 + (20 * join.getADMODList().get(player.getUniqueId()))) {
 							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * money.getMoneyList().get(player.getUniqueId())));
+								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId())));
 								money.getMoneyList().put(player.getUniqueId(), moneyNow);
 								join.getADMODList().put(player.getUniqueId(), join.getADMODList().get(player.getUniqueId()) + 1);
 								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -156,7 +156,7 @@ public class SkillMenuInteract implements Listener{
 					if(join.getASMODList().get(player.getUniqueId()) < 5) {
 						if(join.getASList().get(player.getUniqueId()) >= 20 + (20 * join.getASMODList().get(player.getUniqueId()))) {
 							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * money.getMoneyList().get(player.getUniqueId())));
+								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId())));
 								money.getMoneyList().put(player.getUniqueId(), moneyNow);
 								join.getASMODList().put(player.getUniqueId(), join.getASMODList().get(player.getUniqueId()) + 1);
 								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -178,7 +178,7 @@ public class SkillMenuInteract implements Listener{
 					if(join.getCCMODList().get(player.getUniqueId()) < 5) {
 						if(join.getCCList().get(player.getUniqueId()) >= 20 + (20 * join.getCCMODList().get(player.getUniqueId()))) {
 							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * money.getMoneyList().get(player.getUniqueId())));
+								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 *join.getCCMODList().get(player.getUniqueId())));
 								money.getMoneyList().put(player.getUniqueId(), moneyNow);
 								join.getCCMODList().put(player.getUniqueId(), join.getCCMODList().get(player.getUniqueId()) + 1);
 								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -200,7 +200,7 @@ public class SkillMenuInteract implements Listener{
 					if(join.getRDMODList().get(player.getUniqueId()) < 5) {
 						if(join.getRDList().get(player.getUniqueId()) >= 20 + (20 * join.getRDMODList().get(player.getUniqueId()))) {
 							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * money.getMoneyList().get(player.getUniqueId())));
+								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId())));
 								money.getMoneyList().put(player.getUniqueId(), moneyNow);
 								join.getRDMODList().put(player.getUniqueId(), join.getRDMODList().get(player.getUniqueId()) + 1);
 								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -222,7 +222,7 @@ public class SkillMenuInteract implements Listener{
 					if(join.getHHMODList().get(player.getUniqueId()) < 5) {
 						if(join.getHHList().get(player.getUniqueId()) >= 20 + (20 * join.getHHMODList().get(player.getUniqueId()))) {
 							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * money.getMoneyList().get(player.getUniqueId())));
+								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId())));
 								money.getMoneyList().put(player.getUniqueId(), moneyNow);
 								join.getHHMODList().put(player.getUniqueId(), join.getHHMODList().get(player.getUniqueId()) + 1);
 								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -244,7 +244,7 @@ public class SkillMenuInteract implements Listener{
 					if(join.getDFMODList().get(player.getUniqueId()) < 5) {
 						if(join.getDFList().get(player.getUniqueId()) >= 20 + (20 * join.getDFMODList().get(player.getUniqueId()))) {
 							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * money.getMoneyList().get(player.getUniqueId())));
+								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId())));
 								money.getMoneyList().put(player.getUniqueId(), moneyNow);
 								join.getDFMODList().put(player.getUniqueId(), join.getDFMODList().get(player.getUniqueId()) + 1);
 								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);

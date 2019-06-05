@@ -258,6 +258,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private TPACommand tpa = new TPACommand();
 	private ModerationGUICommand mod = new ModerationGUICommand();
 	private ConfigManager cfgm;
+	private SkillJoin join = new SkillJoin();
 	int level;
 	public Scoreboard scoreboard;
 	@Override
@@ -269,7 +270,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Config Manager
 		loadConfigManager();
 		//Melee Enchantments
-		getServer().getPluginManager().registerEvents(new CustomEnchantmentsMelee(), this);
 		getServer().getPluginManager().registerEvents(new Confusion(), this);
 		getServer().getPluginManager().registerEvents(new Wither(), this);
 		getServer().getPluginManager().registerEvents(new HeavyHand(), this);
@@ -757,6 +757,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		registerRank(player);
 		registerNameTag(player);
 	}
 	@EventHandler
@@ -773,40 +774,65 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			scoreboard.getObjective("myHealth").unregister();
 		}
 		Objective o = scoreboard.registerNewObjective("myHealth", "health", "display");
-		o.setDisplayName(ChatColor.RED + ": HP");
+		o.setDisplayName(ChatColor.RED + "❤");
 		o.setDisplaySlot(DisplaySlot.BELOW_NAME);
+	}
+	public static HashMap<UUID, String> ranks = new HashMap<UUID, String>();
+	public void registerRank(Player player) {
+		if(player.hasPermission("owner")) {
+			ranks.put(player.getUniqueId(), "&2Owner");
+		}
+		else if(player.hasPermission("manager")) {
+			ranks.put(player.getUniqueId(), "&5Manager");
+		}
+		else if(player.hasPermission("headadmin")) {
+			ranks.put(player.getUniqueId(), "&4Head Admin");
+		}
+		else if(player.hasPermission("admin")) {
+			ranks.put(player.getUniqueId(), "&cAdmin");
+		}
+		else if(player.hasPermission("headmod")) {
+			ranks.put(player.getUniqueId(), "&1Head Mod");
+		}
+		else if(player.hasPermission("moderator")) {
+			ranks.put(player.getUniqueId(), "&9Mod");
+		}
+		else if(player.hasPermission("helper+")) {
+			ranks.put(player.getUniqueId(), "&aHelper+");
+		}
+		else if(player.hasPermission("helper")) {
+			ranks.put(player.getUniqueId(), "&aHelper");
+		}
+		else if(player.hasPermission("bronze")) {
+			ranks.put(player.getUniqueId(), "&6Bronze");
+		}
+		else if(player.hasPermission("silver")) {
+			ranks.put(player.getUniqueId(), "&7Silver");
+		}
+		else if(player.hasPermission("gold")) {
+			ranks.put(player.getUniqueId(), "&eGold");
+		}
+		else if(player.hasPermission("platinum")) {
+			ranks.put(player.getUniqueId(), "&3Platinum");
+		}
+		else if(player.hasPermission("diamond")) {
+			ranks.put(player.getUniqueId(), "&bDiamond");
+		}
+		else if(player.hasPermission("emerald")) {
+			ranks.put(player.getUniqueId(), "&aEmerald");
+		}
+		else {
+			ranks.put(player.getUniqueId(), "");
+		}
 	}
 	public static HashMap<UUID, Scoreboard> scores = new HashMap<UUID, Scoreboard>();
 	@SuppressWarnings("deprecation")
 	public void registerNameTag(Player player) {
 		if(!scores.containsKey(player.getUniqueId())) {
-			File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-			YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-			int level = yml.getInt("Skills.Players." + player.getUniqueId() + ".Level");
+			int level = 1;
+			double cash = 1500;
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
 			Scoreboard board = manager.getNewScoreboard();
-			File f1 =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-			YamlConfiguration yml1 = YamlConfiguration.loadConfiguration(f1);
-			try{
-				yml1.load(f1);
-	        }
-	        catch(IOException e){
-	            e.printStackTrace();
-	        } 
-			catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			}
-			File f3 =  new File("plugins/CustomEnchantments/moneyConfig.yml");
-			YamlConfiguration yml3 = YamlConfiguration.loadConfiguration(f3);
-			try{
-				yml3.load(f3);
-	        }
-	        catch(IOException e){
-	            e.printStackTrace();
-	        } 
-			catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			}
 			org.bukkit.scoreboard.Scoreboard b = board;
 			Objective o = null;
 			if(b.getObjective(player.getName()) == null) {
@@ -838,99 +864,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			board.registerNewTeam(player.getName() + "1");
 			Team t = board.getTeam(player.getName() + "1");
 			board.getTeam(player.getName() + "1").addPlayer(player);
-			if(player.hasPermission("owner")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &2Owner"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("manager")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &5Manager"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("headadmin")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &4Head Admin"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("admin")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &cAdmin"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("headmod")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &1Head Mod"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("moderator")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &bMod"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("helper+")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &aHelper+"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("helper")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &aHelper"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("bronze")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &6Bronze"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("silver")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &7Silver"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("gold")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &eGold"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("platinum")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &1Platinum"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("diamond")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &bDiamond"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName() + "1").getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else if(player.hasPermission("emerald")) {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				t.setSuffix(new ColorCodeTranslator().colorize(" &aEmerald"));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName() + " " + board.getTeam(player.getName()).getSuffix()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			else {
-				t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-				player.setPlayerListName(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 " + player.getName()));
-				t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			}
-			//Money
-			int moneyMe = yml3.getInt("List." + player.getUniqueId().toString() + ".Money");
-			//Level
-			int levelMe = yml1.getInt("Skills.Players." + player.getUniqueId().toString() + ".Level");
+			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + join.getClassList().get(player.getUniqueId())));
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + t.getSuffix()));
+			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
+			
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
@@ -974,12 +912,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			else {
 				facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Unknown"));
 			}
-			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + moneyMe));
-			Score level1 = o.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + levelMe));
-			int xp = yml1.getInt("Skills.Players." + player.getUniqueId() + ".XP");
-			int maxxp = yml1.getInt("Skills.Players." + player.getUniqueId() + ".MAXXP");
-			int needed = maxxp - xp;
-			Score xpToLevelUp = o.getScore(new ColorCodeTranslator().colorize("&7XP to level up: &b&l" + needed));
+			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + cash));
+			Score level1 = o.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + level));
+			Score rank = o.getScore(new ColorCodeTranslator().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
 			Score adress = o.getScore(new ColorCodeTranslator().colorize("    &2&lplay.dungeonforge.net"));
 			Set<String> entries;
 	        entries = b.getEntries();
@@ -991,14 +926,123 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			facTeritory.setScore(7);
 			money.setScore(6);
 			blank2.setScore(5);
-			level1.setScore(4);
-			xpToLevelUp.setScore(3);
+			rank.setScore(4);
+			level1.setScore(3);
 			blank3.setScore(2);
 			adress.setScore(1);
 			player.setScoreboard(b);
 			player.setScoreboard(board);
 			scores.put(player.getUniqueId(), b);
+		}
+		else {
+			int level = 1;
+			if(join.getLevelList().get(player.getUniqueId()) != null) {
+				level = join.getLevelList().get(player.getUniqueId());
+			}
+			double cash = 1500.0;
+			if(money.getMoneyList().get(player.getUniqueId()) != null) {
+				cash = money.getMoneyList().get(player.getUniqueId());
+			}
+			Scoreboard board = scores.get(player.getUniqueId());
+			org.bukkit.scoreboard.Scoreboard b = board;
+			Objective o = null;
+			if(b.getObjective(player.getName()) == null) {
+				o = b.registerNewObjective(player.getName(), "Scoreboard", "myScoreboard");
+			}
+			else {
+				o = b.getObjective(player.getName());
+			}
+			if(board.getTeam("GRAY") == null) {
+				board.registerNewTeam("GRAY");
+				board.getTeam("GRAY").setPrefix(ChatColor.GRAY + "");
+				board.registerNewTeam("GREEN");
+				board.getTeam("GREEN").setPrefix(ChatColor.GREEN + "");
+				board.registerNewTeam("AQUA");
+				board.getTeam("AQUA").setPrefix(ChatColor.AQUA + "");
+				board.registerNewTeam("RED");
+				board.getTeam("RED").setPrefix(ChatColor.RED + "");
+				board.registerNewTeam("PURPLE");
+				board.getTeam("PURPLE").setPrefix(ChatColor.DARK_PURPLE + "");
+				board.registerNewTeam("YELLOW");
+				board.getTeam("YELLOW").setPrefix(ChatColor.YELLOW + "");
+				board.registerNewTeam("OWNER");
+			}
+			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
+			o.setDisplaySlot(DisplaySlot.SIDEBAR);
+			if(board.getTeam(player.getName() + "1") != null) {
+				board.getTeam(player.getName() + "1").unregister();
+			}
+			board.registerNewTeam(player.getName() + "1");
+			Team t = board.getTeam(player.getName() + "1");
+			board.getTeam(player.getName() + "1").addPlayer(player);
+			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + join.getClassList().get(player.getUniqueId())));
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + t.getSuffix()));
+			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 			
+			//Faction Info
+			Score blank1 = o.getScore("");
+			Score blank2 = o.getScore(" ");
+			Score blank3 = o.getScore("  ");
+			Score facName = null;
+			Score facTeritory = null;
+			String facN = "";
+			for(Entry<String, ArrayList<UUID>> entry : fac.getFactionMemberList().entrySet()) {
+				if(entry.getValue().contains(player.getUniqueId())) {
+					facN = entry.getKey();
+				}
+			}
+			if(!facN.equals("")) {
+				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6" + facN));
+			}
+			else {
+				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6None"));
+			}
+			if(player.getWorld().getName() == Bukkit.getWorld("DFWarzone-1").getName()) {
+				facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&lWarzone"));
+			}
+			else if(!facN.equals("")) {
+				boolean check = false;
+				for(Entry<String, ArrayList<Chunk>> entry : fac.getChunkList().entrySet()) {
+					if(!entry.getKey().equals(facN)) {
+						if(entry.getValue().contains(player.getLocation().getChunk())) {
+							check = true;
+						}
+					}
+				}
+				if(fac.getChunkList().get(facN).contains(player.getLocation().getChunk())) {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&lFriendly"));
+				}
+				else if(check == true) {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6&cEnemy"));
+				}
+				else {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
+				}
+			}
+			else {
+				facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Unknown"));
+			}
+			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + cash));
+			Score level1 = o.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + level));
+			Score rank = o.getScore(new ColorCodeTranslator().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
+			Score adress = o.getScore(new ColorCodeTranslator().colorize("    &2&lplay.dungeonforge.net"));
+			Set<String> entries;
+	        entries = b.getEntries();
+	        for(String entry : entries){
+	            b.resetScores(entry);
+	        }
+	        blank1.setScore(9);
+			facName.setScore(8);
+			facTeritory.setScore(7);
+			money.setScore(6);
+			blank2.setScore(5);
+			rank.setScore(4);
+			level1.setScore(3);
+			blank3.setScore(2);
+			adress.setScore(1);
+			player.setScoreboard(b);
+			player.setScoreboard(board);
 		}
 	}
 	public ItemStack createHead(String paramString)
