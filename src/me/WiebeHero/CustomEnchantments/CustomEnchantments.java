@@ -260,6 +260,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ConfigManager cfgm;
 	int level;
 	public Scoreboard scoreboard;
+	@Override
 	public void onEnable() {
 		instance = this;
 		scoreboard = this.getServer().getScoreboardManager().getMainScoreboard();
