@@ -43,11 +43,7 @@ public class XPAddPlayers extends SpawnerList implements Listener {
 							while(matcher1.find()) {
 							    xpAdd = Integer.parseInt(matcher1.group(1));
 							}
-							int level = yml.getInt("Skills.Players." + player.getUniqueId() + ".Level");
-							int xp = yml.getInt("Skills.Players." + player.getUniqueId() + ".XP");
-							int maxxp = yml.getInt("Skills.Players." + player.getUniqueId() + ".MAXXP");	
-							int skillPoints = yml.getInt("Skills.Players." + player.getUniqueId() + ".Skill Points");
-							int atributePoints = yml.getInt("Skills.Players." + player.getUniqueId() + ".Atribute Points");
+							
 							int finalXP = xp + xpAdd;
 							if(level < 100) {
 								if(finalXP >= maxxp) {
