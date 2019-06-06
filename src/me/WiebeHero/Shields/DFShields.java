@@ -263,166 +263,191 @@ public class DFShields extends SpawnerList implements Listener{
 									    			}	
 								    			}
 									    		else {
-										    		lore.set(getLine, new ColorCodeTranslator().colorize("&7Upgrade Progress: " + "&a[&b&l" + (totalxpearned) + " &6/ " + "&b&l" + secondInt + "&a]"));
-										    		for(int lijn1 = 0; lijn1 < lore.size(); lijn1++) {
-										    			if(lore.get(lijn1).contains(ChatColor.stripColor("::::"))) {
-											    			double barprogress = (double) totalxpearned / (double) secondInt * 100.0;
-											    			if(barprogress >= 0 && barprogress <= 2) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:&7:::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+									    			int level = join.getLevelList().get(damager.getUniqueId());
+									    			List<String> loreList = damager.getInventory().getBoots().getItemMeta().getLore();
+									    			String line = "";
+									    			for (int j=0; j<damager.getInventory().getItemInOffHand().getItemMeta().getLore().size(); j++) {
+														if(loreList.get(j).contains(ChatColor.stripColor("Level Required:"))) {
+															line = ChatColor.stripColor(loreList.get(j));
+														}
+									    			}
+									    			int required = -1;
+									    			Matcher matcher3 = Pattern.compile("Level Required: (\\d+)").matcher(ChatColor.stripColor(line));
+													while(matcher3.find()) {
+													    required = Integer.parseInt(matcher3.group(1));
+													}
+									    			if(level >= required) {
+											    		lore.set(getLine, new ColorCodeTranslator().colorize("&7Upgrade Progress: " + "&a[&b&l" + (totalxpearned) + " &6/ " + "&b&l" + secondInt + "&a]"));
+											    		for(int lijn1 = 0; lijn1 < lore.size(); lijn1++) {
+											    			if(lore.get(lijn1).contains(ChatColor.stripColor("::::"))) {
+												    			double barprogress = (double) totalxpearned / (double) secondInt * 100.0;
+												    			if(barprogress >= 0 && barprogress <= 2) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:&7:::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 2 && barprogress <= 4) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::&7::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 4 && barprogress <= 6) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::&7:::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 6 && barprogress <= 8) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::&7::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 8 && barprogress <= 10) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::&7:::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 10 && barprogress <= 12) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::&7::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 12 && barprogress <= 14) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::&7:::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 14 && barprogress <= 16) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::&7::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 16 && barprogress <= 18) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::&7:::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 18 && barprogress <= 20) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::&7::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 20 && barprogress <= 22) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::&7:::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 22 && barprogress <= 24) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::&7::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 24 && barprogress <= 26) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::&7:::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 26 && barprogress <= 28) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::&7::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 28 && barprogress <= 30) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::&7:::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 30 && barprogress <= 32) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::&7::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 32 && barprogress <= 34) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::&7:::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 34 && barprogress <= 36) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::&7::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 36 && barprogress <= 38) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::&7:::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 38 && barprogress <= 40) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::&7::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 40 && barprogress <= 42) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::&7:::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 42 && barprogress <= 44) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::&7::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 44 && barprogress <= 46) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::&7:::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 46 && barprogress <= 48) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::&7::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 48 && barprogress <= 50) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::&7:::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 50 && barprogress <= 52) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::&7::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 52 && barprogress <= 54) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::&7:::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 54 && barprogress <= 56) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::&7::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 56 && barprogress <= 58) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::&7:::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 58 && barprogress <= 60) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::&7::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 60 && barprogress <= 62) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::&7:::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 62 && barprogress <= 64) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::&7::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 64 && barprogress <= 66) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::&7:::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 66 && barprogress <= 68) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::&7::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 68 && barprogress <= 70) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::&7:::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 70 && barprogress <= 72) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::&7::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 72 && barprogress <= 74) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::&7:::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 74 && barprogress <= 76) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::&7::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 76 && barprogress <= 78) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::&7:::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 78 && barprogress <= 80) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::&7::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 80 && barprogress <= 82) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::&7:::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 82 && barprogress <= 84) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::&7::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 84 && barprogress <= 86) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::&7:::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 86 && barprogress <= 88) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::&7::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 88 && barprogress <= 90) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::&7:::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 90 && barprogress <= 92) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::&7::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 92 && barprogress <= 94) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::&7:::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 94 && barprogress <= 96) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::&7::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 96 && barprogress <= 98) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::::&7:&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
+												    			else if(barprogress >= 98 && barprogress <= 100) {
+												    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+												    			}
 											    			}
-											    			else if(barprogress >= 2 && barprogress <= 4) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::&7::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 4 && barprogress <= 6) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::&7:::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 6 && barprogress <= 8) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::&7::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 8 && barprogress <= 10) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::&7:::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 10 && barprogress <= 12) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::&7::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 12 && barprogress <= 14) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::&7:::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 14 && barprogress <= 16) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::&7::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 16 && barprogress <= 18) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::&7:::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 18 && barprogress <= 20) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::&7::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 20 && barprogress <= 22) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::&7:::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 22 && barprogress <= 24) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::&7::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 24 && barprogress <= 26) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::&7:::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 26 && barprogress <= 28) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::&7::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 28 && barprogress <= 30) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::&7:::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 30 && barprogress <= 32) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::&7::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 32 && barprogress <= 34) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::&7:::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 34 && barprogress <= 36) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::&7::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 36 && barprogress <= 38) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::&7:::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 38 && barprogress <= 40) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::&7::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 40 && barprogress <= 42) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::&7:::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 42 && barprogress <= 44) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::&7::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 44 && barprogress <= 46) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::&7:::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 46 && barprogress <= 48) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::&7::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 48 && barprogress <= 50) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::&7:::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 50 && barprogress <= 52) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::&7::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 52 && barprogress <= 54) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::&7:::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 54 && barprogress <= 56) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::&7::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 56 && barprogress <= 58) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::&7:::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 58 && barprogress <= 60) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::&7::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 60 && barprogress <= 62) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::&7:::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 62 && barprogress <= 64) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::&7::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 64 && barprogress <= 66) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::&7:::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 66 && barprogress <= 68) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::&7::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 68 && barprogress <= 70) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::&7:::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 70 && barprogress <= 72) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::&7::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 72 && barprogress <= 74) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::&7:::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 74 && barprogress <= 76) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::&7::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 76 && barprogress <= 78) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::&7:::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 78 && barprogress <= 80) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::&7::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 80 && barprogress <= 82) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::&7:::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 82 && barprogress <= 84) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::&7::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 84 && barprogress <= 86) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::&7:::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 86 && barprogress <= 88) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::&7::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 88 && barprogress <= 90) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::&7:::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 90 && barprogress <= 92) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::&7::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 92 && barprogress <= 94) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::&7:::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 94 && barprogress <= 96) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::&7::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 96 && barprogress <= 98) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::::&7:&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-											    			else if(barprogress >= 98 && barprogress <= 100) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
-											    			}
-										    			}
+											    		}
+											    		im.setLore(lore);
+											    		item1.setItemMeta(im);
 										    		}
-										    		im.setLore(lore);
-										    		item1.setItemMeta(im);
-									    		}
-									    	}
+									    			else if(!(damager.getInventory().firstEmpty() == -1)){
+									    				damager.getInventory().setItemInOffHand(null);
+									    				damager.getInventory().addItem(item1);
+									    				damager.sendMessage(new ColorCodeTranslator().colorize("&cYou are to low level to wear this shield, it has been moved to you're inventory."));
+									    			}
+									    			else {
+									    				damager.getInventory().setItemInOffHand(null);
+									    				damager.getWorld().dropItemNaturally(damager.getLocation(), item1);
+									    				damager.sendMessage(new ColorCodeTranslator().colorize("&cYou are to low level to wear this shield, and since your inventory is full, it has been dropped to the ground"));
+									    			}
+										    	}
+											}
 							    		}	
 							    	}
 						    	}

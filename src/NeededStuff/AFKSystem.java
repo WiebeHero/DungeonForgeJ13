@@ -83,7 +83,7 @@ public class AFKSystem implements Listener{
 			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 144000L);
 		}
 		else {
-			if(!player.hasPermission("owner") || !player.hasPermission("manager") || !player.hasPermission("admin")) {
+			if(!player.hasPermission("owner") || !player.hasPermission("manager") || !player.hasPermission("head admin") || !player.hasPermission("admin")) {
 				new BukkitRunnable() {
 					@Override
 					public void run() {

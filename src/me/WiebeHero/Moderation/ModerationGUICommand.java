@@ -557,6 +557,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 			}
 		}
 	}
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void activatePerk(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
