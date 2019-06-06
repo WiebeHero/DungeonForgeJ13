@@ -1,7 +1,5 @@
 package me.WiebeHero.CustomWands;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -16,8 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.entity.Arrow;
@@ -38,6 +34,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import NeededStuff.SwordSwingProgress;
+import Skills.AttackSpeed;
+import Skills.SkillJoin;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Spawners.SpawnerList;
@@ -47,8 +45,8 @@ import net.minecraft.server.v1_13_R2.EntityArrow;
 
 public class DFWands extends SwordSwingProgress implements Listener{
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
-	File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-	YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
+	AttackSpeed speed = new AttackSpeed();
+	SkillJoin join = new SkillJoin();
 	@EventHandler
 	public void beam (PlayerAnimationEvent event){
 		if(event.getAnimationType() == PlayerAnimationType.ARM_SWING) {
@@ -154,15 +152,6 @@ public class DFWands extends SwordSwingProgress implements Listener{
 													else if(player.getInventory().getItemInMainHand().getItemMeta().getLore().toString().contains("Heroic")) {
 														player.getWorld().spawnParticle(Particle.BLOCK_DUST, loc, 1, 0.05, 0.05, 0.05, 0.05, t6);
 													}
-													try{
-									  					yml.load(f);
-									  		        }
-									  		        catch(IOException e1){
-									  		            e1.printStackTrace();
-									  		        } 
-									  				catch (InvalidConfigurationException e1) {
-									  					e1.printStackTrace();
-									  				}
 													org.bukkit.World world = player.getWorld();
 													EntityArrow testArrow = new EntityArrow(null, ((CraftWorld)world).getHandle()){
 														@Override
@@ -292,9 +281,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 												totalxpearned = 3 + firstInt;
 											}
 											else if(victim.getType() == EntityType.PLAYER) {
-												File f =  new File("plugins/CustomEnchantments/spawnerConfig.yml");
-												YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-												int levelVictim = yml.getInt("Skills.Players." + victim.getUniqueId() + ".Level");
+												int levelVictim = join.getLevelList().get(victim.getUniqueId());
 												if(levelVictim >= 0) {
 													int i6 = new Random().nextInt(50) + 50;
 													totalxpearned = i6 + firstInt;
@@ -343,19 +330,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 										}
 										if(totalxpearned > 0){
 							    			if(totalxpearned >= secondInt) {
-							    				File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-												YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-												try{
-													yml.load(f);
-										        }
-										        catch(IOException e){
-										            e.printStackTrace();
-										        } 
-												catch (InvalidConfigurationException e) {
-													e.printStackTrace();
-												}
 												ItemStack item = item1;
-												
 							    	            for(Player victim1 : Bukkit.getOnlinePlayers()) {
 							    	    			((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.75);
 							    	    		}
@@ -419,6 +394,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 							    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + rarity));
 							    				meta.setLore(newLore);
 							    				item.setItemMeta(meta);
+							    				speed.attackSpeedRun(damager, 0L, 1.0);
 							    			}
 								    		else {
 									    		lore.set(getLine, new ColorCodeTranslator().colorize("&7Upgrade Progress: " + "&a[&b&l" + (totalxpearned) + " &6/ " + "&b&l" + secondInt + "&a]"));

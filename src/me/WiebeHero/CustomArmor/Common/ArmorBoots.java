@@ -27,6 +27,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
+import Skills.Defense;
+import Skills.SkillJoin;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Spawners.SpawnerList;
@@ -45,7 +47,8 @@ public class ArmorBoots extends SpawnerList implements Listener{
         }
         return coloredMsg;
     }
-	int levelVictim;
+	Defense def = new Defense();
+	SkillJoin join = new SkillJoin();
 	String realName;
 	@EventHandler
 	public void armor(EntityDeathEvent event) {
@@ -145,9 +148,7 @@ public class ArmorBoots extends SpawnerList implements Listener{
 											totalxpearned = 3 + firstInt;
 										}
 										else if(victim.getType().equals(EntityType.PLAYER)) {
-											File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-											YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-											int levelVictim = yml.getInt("Skills.Players." + victim.getUniqueId() + ".Level");
+											int levelVictim = join.getLevelList().get(victim.getUniqueId());
 											if(levelVictim > 1) {
 												int i6 = new Random().nextInt(50) + 50;
 												totalxpearned = i6 + firstInt;
@@ -200,17 +201,6 @@ public class ArmorBoots extends SpawnerList implements Listener{
 						    				String levelStringFinal = levelString[1];
 						    				int levelWeapon = Integer.parseInt(levelStringFinal);
 						    				if(levelWeapon != 15) {
-							    				File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-												YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-												try{
-													yml.load(f);
-										        }
-										        catch(IOException e){
-										            e.printStackTrace();
-										        } 
-												catch (InvalidConfigurationException e) {
-													e.printStackTrace();
-												}
 												ItemStack item = item1;
 							    	            for(Player victim1 : Bukkit.getOnlinePlayers()) {
 							    	    			((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.75);
@@ -295,78 +285,12 @@ public class ArmorBoots extends SpawnerList implements Listener{
 							    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + rarity));
 							    				meta.setLore(newLore);
 							    				item.setItemMeta(meta);
-							    				//Weapon Data
-												double armorDefenseData = 0.0;
-												double armorToughnessData = 0.0;
-												for(ItemStack ite : damager.getInventory().getArmorContents()) {
-													if(ite != null) {
-														if(ite.hasItemMeta()) {
-															if(ite.getItemMeta().hasLore()) {
-																if(ite.getItemMeta().getLore().toString().contains("Armor Defense:") && ite.getItemMeta().getLore().toString().contains("Armor Toughness:")) {
-																	String attackD = "";
-												    				String attackS = "";
-												    				for(String s : item.getItemMeta().getLore()) {
-												    					if(s.contains("Armor Defense:")) {
-												    						attackD = ChatColor.stripColor(s);
-												    					}
-												    					else if(s.contains("Armor Toughness:")) {
-												    						attackS = ChatColor.stripColor(s);
-												    					}
-												    				}
-												    				double used1 = 0.0;
-												    				double used2 = 0.0;
-																	Matcher matcher1 = Pattern.compile("Armor Defense: (\\d+)\\.(\\d+)").matcher(attackD);
-																	while(matcher1.find()) {
-																	    used1 = Integer.parseInt(matcher1.group(1));
-																	}
-																	Matcher matcher2 = Pattern.compile("Armor Toughness: (\\d+)\\.(\\d+)").matcher(attackS);
-																	while(matcher2.find()) {
-																	    used2 = Integer.parseInt(matcher2.group(1));
-																	}
-													  				armorDefenseData = armorDefenseData + (used1 * ((double)yml.getInt("Skills.Players." + damager.getUniqueId() + ".Defense") * 4.00 / 100.00 + 1.00));
-													  				armorToughnessData = armorToughnessData + (used2 * ((double)yml.getInt("Skills.Players." + damager.getUniqueId() + ".Toughness") * 4.00 / 100.00 + 1.00));;
-																}
-															}
-														}
-													}
-												}
-												damager.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(armorDefenseData);
-												if(damager.getInventory().getItemInOffHand() != null) {
-													if(damager.getInventory().getItemInOffHand().hasItemMeta()) {
-														if(damager.getInventory().getItemInOffHand().getItemMeta().hasLore()) {
-															if(damager.getInventory().getItemInOffHand().getItemMeta().getLore().toString().contains("Armor Toughness:") && !damager.getInventory().getItemInOffHand().getItemMeta().getLore().toString().contains("Armor Defense:")) {
-																String armorToughnessS = "";
-																for(String s : damager.getInventory().getItemInOffHand().getItemMeta().getLore()) {
-																	if(s.contains(ChatColor.stripColor("Armor Toughness:"))) {
-																		armorToughnessS = ChatColor.stripColor(s);
-																	}
-																}
-																Matcher matcher2 = Pattern.compile("Armor Toughness: (\\d+)\\.(\\d+)").matcher(armorToughnessS);
-												  				double toughness = 0.00;
-												  				while(matcher2.find()) {
-												  					toughness = Double.parseDouble(matcher2.group(1) + "." + matcher2.group(2));	
-												  				}
-												  				armorToughnessData = armorToughnessData + (toughness * ((double)yml.getInt("Skills.Players." + damager.getUniqueId() + ".Toughness") * 4.00 / 100.00 + 1.00));
-															}
-														}
-													}
-												}
-												damager.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(armorToughnessData);
+							    				//Armor Data
+												def.runDefense(damager);
 						    				}
 						    			}	
 							    		else {
-							    			File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-											YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-											try{
-												yml.load(f);
-									        }
-									        catch(IOException e){
-									            e.printStackTrace();
-									        } 
-											catch (InvalidConfigurationException e) {
-												e.printStackTrace();
-											}
-							    			int level = yml.getInt("Skills.Players." + damager.getUniqueId() + ".Level");
+							    			int level = join.getLevelList().get(damager.getUniqueId());
 							    			List<String> loreList = damager.getInventory().getBoots().getItemMeta().getLore();
 							    			String line = "";
 							    			for (int j=0; j<damager.getInventory().getBoots().getItemMeta().getLore().size(); j++) {

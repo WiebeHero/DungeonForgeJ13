@@ -28,7 +28,7 @@ public class Chat implements Listener{
 			String fName = "";
 			for(Entry<String, ArrayList<UUID>> entry : f.getFactionMemberList().entrySet()) {
 				if(entry.getValue().contains(player.getUniqueId())) {
-					
+					fName = entry.getKey();
 				}
 			}
 			int level = yml1.getInt("Skills.Players." + player.getUniqueId() + ".Level");
