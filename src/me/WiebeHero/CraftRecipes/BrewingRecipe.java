@@ -24,14 +24,14 @@ public class BrewingRecipe {
     private static List<BrewingRecipe> recipes = new ArrayList<BrewingRecipe>();
     private ItemStack ingridient;
     private BrewAction action;
-    private static ArrayList<ItemStack> stacks;
+    private ArrayList<ItemStack> stacks;
     private boolean perfect;
 
     public BrewingRecipe(ItemStack ingridient , ArrayList<ItemStack> stacks, BrewAction action , boolean perfect) {
         this.ingridient = ingridient;
         this.action = action;
         this.perfect = perfect;
-        BrewingRecipe.stacks = stacks;
+        this.stacks = stacks;
         recipes.add(this);
     }
  
@@ -89,7 +89,7 @@ public class BrewingRecipe {
                     if(inventory.getItem(i).getType() == Material.AIR)
                         continue;
                     for(ItemStack item : recipe.getResults()) {
-                    	Bukkit.broadcastMessage(item.getType().toString() + "len: " + stacks.size());
+                    	Bukkit.broadcastMessage(item.getType().toString() + "len: " + recipe.getResults().size());
 	                    if(inventory.getItem(i).isSimilar(item)) {
 	                    	checkItem = true;
 	                    	break;
@@ -97,6 +97,7 @@ public class BrewingRecipe {
 	                    else if(!inventory.getItem(i).isSimilar(item) && inventory.getItem(i).getType() != Material.AIR) {
 	                        checkItem = false;
 	                    }
+	                    Bukkit.broadcastMessage(checkItem + "");
                     }
             	}
             	if(checkItem == true) 
@@ -111,7 +112,7 @@ public class BrewingRecipe {
                     if(inventory.getItem(i).getType() == Material.AIR)
                         continue;
                     for(ItemStack item : recipe.getResults()) {
-                    	Bukkit.broadcastMessage(item.getType().toString() + "len: " + stacks.size());
+                    	Bukkit.broadcastMessage(item.getType().toString() + "len: " + recipe.getResults().size());
 	                    if(inventory.getItem(i).isSimilar(item)) {
 	                    	checkItem = true;
 	                    	break;
@@ -119,6 +120,7 @@ public class BrewingRecipe {
 	                    else if(!inventory.getItem(i).isSimilar(item) && inventory.getItem(i).getType() != Material.AIR) {
 	                        checkItem = false;
 	                    }
+	                    Bukkit.broadcastMessage(checkItem + "");
                     }
             	}
             	if(checkItem == true) 
