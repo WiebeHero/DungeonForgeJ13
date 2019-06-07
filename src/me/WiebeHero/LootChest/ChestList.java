@@ -30,19 +30,62 @@ public class ChestList extends LootRewards implements Listener {
   					Location loc = SetChest.getChestLocationList().get(counter);
   					loc.setWorld(Bukkit.getWorld(SetChest.getChestWorldsList().get(counter)));
 		  			if(loc.getBlock() != null && loc.getBlock().getType() != Material.AIR) {
-			  			if(loc.getBlock().getType() == Material.CHEST) {
-			  				Block block = loc.getBlock();
-				  			Chest chest = (Chest) block.getState();
-			  				Inventory inv = chest.getBlockInventory();
-			  				inv.clear();
-			  				for(int i = 0; i < tieredSlots(tier + 1); i++) {
-			  					int slot = randomSlot();
-			  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
-			  						i--;
-			  					}
-			  					inv.setItem(randomSlot(), rewards1.get(rewards(tier)));
-			  				}
+		  				if(SetChest.getChestRadiusList().get(counter) == 1) {
+				  			if(loc.getBlock().getType() == Material.CHEST) {
+				  				Block block = loc.getBlock();
+					  			Chest chest = (Chest) block.getState();
+				  				Inventory inv = chest.getBlockInventory();
+				  				inv.clear();
+				  				for(int i = 0; i < tieredSlots(tier + 1); i++) {
+				  					int slot = randomSlot();
+				  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
+				  						i--;
+				  					}
+				  					if(tier == 1) {
+				  						inv.setItem(randomSlot(), rewards1.get(rewards(tier)));
+				  					}
+				  					if(tier == 1) {
+				  						inv.setItem(randomSlot(), rewards2.get(rewards(tier)));
+				  					}
+				  					if(tier == 1) {
+				  						inv.setItem(randomSlot(), rewards3.get(rewards(tier)));
+				  					}
+				  					if(tier == 1) {
+				  						inv.setItem(randomSlot(), rewards4.get(rewards(tier)));
+					  				}
+				  					
+				  				}
+				  			}
+				  			else {
+				  				loc.getBlock().setType(Material.CHEST);
+				  				Block block = loc.getBlock();
+					  			Chest chest = (Chest) block.getState();
+				  				Inventory inv = chest.getBlockInventory();
+				  				inv.clear();
+				  				for(int i = 0; i < tieredSlots(tier + 1); i++) {
+				  					int slot = randomSlot();
+				  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
+				  						i--;
+				  					}
+				  					if(tier == 1) {
+				  						inv.setItem(randomSlot(), rewards1.get(rewards(tier)));
+				  					}
+				  					if(tier == 1) {
+				  						inv.setItem(randomSlot(), rewards2.get(rewards(tier)));
+				  					}
+				  					if(tier == 1) {
+				  						inv.setItem(randomSlot(), rewards3.get(rewards(tier)));
+				  					}
+				  					if(tier == 1) {
+				  						inv.setItem(randomSlot(), rewards4.get(rewards(tier)));
+					  				}
+				  					
+				  				}
+				  			}
 			  			}
+		  				else {
+		  					
+		  				}
 		  			}
 				}
 			}

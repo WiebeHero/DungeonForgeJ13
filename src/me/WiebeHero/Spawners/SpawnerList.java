@@ -101,7 +101,14 @@ public class SpawnerList implements Listener{
 				  					spawnLoc.setY(y1);
 				  					if(spawnLoc.getBlock().getType() != Material.AIR) {
 				  						spawnLoc.setY(y1 + 2.00);
-				  						break;
+				  						if(spawnLoc.getBlock().getType() == Material.AIR) {
+				  							break;
+				  						}
+				  						else {
+				  							y1 = spawnLoc.getY() + 13;
+				  							spawnLoc.setX(spawnLoc.getX() + randomLocOffSet());
+						  					spawnLoc.setZ(spawnLoc.getZ() + randomLocOffSet());
+				  						}
 				  					}
 				  				}
 				  				LivingEntity mob = (LivingEntity) spawnLoc.getWorld().spawnEntity(spawnLoc, EntityType.valueOf(SetSpawner.getTypeList().get(counter)));
