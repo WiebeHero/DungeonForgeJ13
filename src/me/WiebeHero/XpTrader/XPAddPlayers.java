@@ -2,6 +2,7 @@ package me.WiebeHero.XpTrader;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +10,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import Skills.SkillJoin;
+import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.Spawners.SpawnerList;
 
 public class XPAddPlayers extends SpawnerList implements Listener {
@@ -43,12 +45,13 @@ public class XPAddPlayers extends SpawnerList implements Listener {
 									join.getMXPList().put(player.getUniqueId(), maxxpFinal);
 									join.getXPList().put(player.getUniqueId(), xp);
 									join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) + 2);
+									player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have leveled up to level &6" + level + "&a!"));
 									
 								}
 								else if(finalXP > 0){
 									join.getXPList().put(player.getUniqueId(), finalXP);
 								}
-								
 							}
 							float barprogress = (float) finalXP / maxxp;
 							if(finalXP > 0){

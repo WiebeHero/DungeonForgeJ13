@@ -1,7 +1,5 @@
 package me.WiebeHero.DFWeapons;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,18 +7,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.FireworkEffect.Type;
-import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,10 +18,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
+import Skills.AttackSpeed;
+import Skills.SkillJoin;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Spawners.SpawnerList;
@@ -51,7 +41,8 @@ public class DFWeaponUpgrade implements Listener{
         }
         return coloredMsg;
     }
-	int levelVictim;
+	SkillJoin join = new SkillJoin();
+	AttackSpeed speed = new AttackSpeed();
 	@EventHandler
 	public void weapons(EntityDeathEvent event) {
 		LivingEntity victim = (LivingEntity) event.getEntity();
@@ -153,9 +144,7 @@ public class DFWeaponUpgrade implements Listener{
 													totalxpearned = 3 + firstInt;
 												}
 												else if(victim.getType() == EntityType.PLAYER) {
-													File f =  new File("plugins/CustomEnchantments/spawnerConfig.yml");
-													YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-													int levelVictim = yml.getInt("Skills.Players." + victim.getUniqueId() + ".Level");
+													int levelVictim = join.getLevelList().get(victim.getUniqueId());
 													if(levelVictim >= 0) {
 														int i6 = new Random().nextInt(50) + 50;
 														totalxpearned = i6 + firstInt;
@@ -208,36 +197,8 @@ public class DFWeaponUpgrade implements Listener{
 								    				String levelStringFinal = levelString[1];
 								    				int levelWeapon = Integer.parseInt(levelStringFinal);
 								    				if(levelWeapon != 15) {
-									    				File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-														YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-														try{
-															yml.load(f);
-												        }
-												        catch(IOException e){
-												            e.printStackTrace();
-												        } 
-														catch (InvalidConfigurationException e) {
-															e.printStackTrace();
-														}
 														ItemStack item = item1;
-														Location loc = new Location(damager.getWorld(), damager.getLocation().getX(), damager.getLocation().getY() + 3.00, damager.getLocation().getZ());
-									    				Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-									    				FireworkMeta fm = f1.getFireworkMeta();
-									    				fm.addEffect(FireworkEffect.builder()
-								                             .flicker(true)
-								                             .trail(true)
-								                             .with(Type.BALL_LARGE)
-								                             .withColor(Color.LIME)
-								                             .withFade(Color.AQUA)
-								                             .build());
-									    				fm.setPower(1);
-									    				f1.setFireworkMeta(fm);
-									    				f1.detonate();
-									    				Firework fw2 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-									    	            fw2.setFireworkMeta(fm);
-									    	            for(Player victim1 : Bukkit.getOnlinePlayers()) {
-									    	    			((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.75);
-									    	    		}
+														damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, (float)2, (float)1);
 									    	            //Config Data
 									    				levelWeapon++;
 									    				String enchantmentsString = plugin.getConfig().getString("Items.Weapons." + realName + ".Enchantments." + levelWeapon);
@@ -294,29 +255,8 @@ public class DFWeaponUpgrade implements Listener{
 									    				meta.setLore(newLore);
 									    				item.setItemMeta(meta);
 									    				//Weapon Data
-									    				String attackD = "";
-									    				String attackS = "";
-									    				double attackDamage = 0.0;
-									    				double attackSpeed = 0.0;
-									    				for(String s : item.getItemMeta().getLore()) {
-									    					if(s.contains("Attack Damage:")) {
-									    						attackD = ChatColor.stripColor(s);
-									    					}
-									    					else if(s.contains("Attack Speed:")) {
-									    						attackS = ChatColor.stripColor(s);
-									    					}
-									    				}
-									    				Matcher matcher1 = Pattern.compile("Attack Damage: (\\d+)\\.(\\d+)").matcher(attackD);
-														while(matcher1.find()) {
-														    firstInt = Integer.parseInt(matcher1.group(1));
-														}
-														Matcher matcher2 = Pattern.compile("Attack Speed: (\\d+)\\.(\\d+)").matcher(attackS);
-														while(matcher2.find()) {
-														    firstInt = Integer.parseInt(matcher2.group(1));
-														}
-									    				damager.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(attackDamage);
-									    				damager.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed + ((double)yml.getInt("Skills.Players." + damager.getUniqueId() + ".Attack Speed") / 20.00 * 0.10) + 1.00);
-									    			}	
+									    				speed.attackSpeedRun(damager, 0L, 0.0);
+								    				}
 								    			}
 									    		else {
 										    		lore.set(getLine, new ColorCodeTranslator().colorize("&7Upgrade Progress: " + "&a[&b&l" + (totalxpearned) + " &6/ " + "&b&l" + secondInt + "&a]"));

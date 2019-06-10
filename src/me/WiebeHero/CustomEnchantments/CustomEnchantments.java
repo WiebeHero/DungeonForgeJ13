@@ -17,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -227,6 +228,7 @@ import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Factions.FactionsHandler;
 import me.WiebeHero.FishingLoot.ChangeFishDrops;
 import me.WiebeHero.LootChest.ChestList;
+import me.WiebeHero.LootChest.LootRewards;
 import me.WiebeHero.LootChest.SetChest;
 import me.WiebeHero.Moderation.ModerationGUI;
 import me.WiebeHero.Moderation.ModerationGUICommand;
@@ -257,10 +259,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private HomeSystem home = new HomeSystem();
 	private TPACommand tpa = new TPACommand();
 	private ModerationGUICommand mod = new ModerationGUICommand();
+	private ChestList cList = new ChestList();
+	private LootRewards lootR = new LootRewards();
 	private ConfigManager cfgm;
 	private SkillJoin join = new SkillJoin();
 	int level;
 	public Scoreboard scoreboard;
+	public static boolean shutdown = false;
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -579,6 +584,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new ButterscotchPie(), this);
 		getServer().getPluginManager().registerEvents(new Fusgel(), this);
 		getServer().getPluginManager().registerEvents(new ChangeFishDrops(), this);
+		lootR.loadRewards();
+		cList.lootChest();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -597,6 +604,41 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 15 minutes!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 270000L);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 10 minutes!"));
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 264000L);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 5 minutes!"));
+				shutdown = true;
+				for(Player p : Bukkit.getOnlinePlayers()) {
+					if(p != null) {
+						p.kickPlayer(new ColorCodeTranslator().colorize("&cThe server is going into shutdown, try to join back in 5 minutes."));
+					}
+				}
+				for(Entity e : Bukkit.getWorld("DFWarzone-1").getEntities()) {
+					if(e != null) {
+						e.remove();
+					}
+				}
+				for(Entity e : Bukkit.getWorld("FactionWorld-1").getEntities()) {
+					if(e != null) {
+						e.remove();
+					}
+				}
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 258000L);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 1 minutes!"));
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 253200L);
+		
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -756,9 +798,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	}
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-		registerRank(player);
-		registerNameTag(player);
+		if(shutdown != true) {
+			Player player = event.getPlayer();
+			registerRank(player);
+			registerNameTag(player);
+		}
+		else {
+			event.getPlayer().kickPlayer(new ColorCodeTranslator().colorize("&cThe server is going into shutdown, try to join back in 5 minutes."));
+		}
 	}
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
@@ -868,7 +915,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + join.getClassList().get(player.getUniqueId())));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + t.getSuffix()));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-			
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
@@ -1071,5 +1117,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
     }
 	public static CustomEnchantments getInstance() {
 		return instance;
+	}
+	public boolean getShutdownState() {
+		return CustomEnchantments.shutdown;
 	}
 }

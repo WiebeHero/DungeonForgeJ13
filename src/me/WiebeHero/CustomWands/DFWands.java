@@ -331,9 +331,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 										if(totalxpearned > 0){
 							    			if(totalxpearned >= secondInt) {
 												ItemStack item = item1;
-							    	            for(Player victim1 : Bukkit.getOnlinePlayers()) {
-							    	    			((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.75);
-							    	    		}
+												damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
 							    	            //Config Data
 							    				String levelString[] = stripped1.split("\\[Lv |\\]");
 							    				String levelStringFinal = levelString[1];

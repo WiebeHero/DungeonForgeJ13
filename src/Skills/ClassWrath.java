@@ -50,7 +50,7 @@ public class ClassWrath implements Listener{
 					double damage1 = 5 + level * 0.15;
 					double damage2 = 0.1 + level * 0.01;
 					double range = 4 + level * 0.06;
-					double cooldown = 2600 - level * 5;
+					long cooldown = 2600 - level * 5;
 					int amount = 0;
 					if(rd > 0) {
 						range = range + rd;
@@ -101,8 +101,9 @@ public class ClassWrath implements Listener{
 											wrathCooldown.remove(player.getUniqueId());
 											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Hatred of the Wrath &aagain!"));
 										}
-									}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
+									}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
 								}
+								victim.damage(totalDamage);
 							}
 						}
 					}

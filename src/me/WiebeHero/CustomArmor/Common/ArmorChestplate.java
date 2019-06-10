@@ -1,7 +1,5 @@
 package me.WiebeHero.CustomArmor.Common;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,11 +7,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -199,21 +194,8 @@ public class ArmorChestplate extends SpawnerList implements Listener{
 					    				String levelStringFinal = levelString[1];
 					    				int levelWeapon = Integer.parseInt(levelStringFinal);
 					    				if(levelWeapon != 15) {
-						    				File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-											YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-											try{
-												yml.load(f);
-									        }
-									        catch(IOException e){
-									            e.printStackTrace();
-									        } 
-											catch (InvalidConfigurationException e) {
-												e.printStackTrace();
-											}
 											ItemStack item = item1;
-						    	            for(Player victim1 : Bukkit.getOnlinePlayers()) {
-						    	    			((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.75);
-						    	    		}
+											damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
 						    	            //Config Data
 						    				levelWeapon++;
 						    				String enchantmentsString = plugin.getConfig().getString("Items.Armor." + realName + ".Enchantments." + levelWeapon);

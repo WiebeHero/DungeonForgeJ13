@@ -44,7 +44,7 @@ public class SetChest implements Listener,CommandExecutor {
 						catch(NumberFormatException ex){
 							ex.printStackTrace();
 						}
-						if(tier >= 1 && tier <= 5) {
+						if(tier >= 1 && tier <= 4) {
 							if(radius >= 1) {
 								chestLocations.put(chestLocations.size() + 1, player.getLocation());
 								chestTier.put(chestTier.size() + 1, tier);

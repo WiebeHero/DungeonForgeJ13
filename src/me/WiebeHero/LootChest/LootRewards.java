@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 
@@ -13,7 +16,7 @@ public class LootRewards {
 	public static ArrayList<ItemStack> rewards2 = new ArrayList<>();
 	public static ArrayList<ItemStack> rewards3 = new ArrayList<>();
 	public static ArrayList<ItemStack> rewards4 = new ArrayList<>();
-	public LootRewards() {
+	public void loadRewards() {
 		//--------------------------------------------------------------------------------------------------------------------
 		//Tier 1
 		//--------------------------------------------------------------------------------------------------------------------
@@ -478,11 +481,19 @@ public class LootRewards {
 		return item1;
 	}
 	public ItemStack strPot1() {
-		ItemStack item1 = new ItemStack(Material.POTION, 1, (byte)8201);
+		ItemStack item1 = new ItemStack(Material.POTION, 1);
+		PotionMeta meta = (PotionMeta) item1.getItemMeta();
+		meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Strength"));
+		meta.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 0), true);
+		item1.setItemMeta(meta);
 		return item1;
 	}
 	public ItemStack spdPot1() {
-		ItemStack item1 = new ItemStack(Material.POTION, 1, (byte)8194);
+		ItemStack item1 = new ItemStack(Material.POTION, 1);
+		PotionMeta meta = (PotionMeta) item1.getItemMeta();
+		meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Speed"));
+		meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 600, 0), true);
+		item1.setItemMeta(meta);
 		return item1;
 	}
 	public ItemStack obby4() {
@@ -668,7 +679,7 @@ public class LootRewards {
 		return item1;
 	}
 	public ItemStack skyFish() {
-		ItemStack item1 = new ItemStack(Material.COD, 1, (byte)2);
+		ItemStack item1 = new ItemStack(Material.COD, 1);
 		ItemMeta meta1 = item1.getItemMeta();	
 		meta1.setDisplayName(new ColorCodeTranslator().colorize("&bSky Fish"));
 		ArrayList<String> lore1 = new ArrayList<String>();
@@ -812,5 +823,17 @@ public class LootRewards {
 		itemmeta.setLore(lore1);
 		item.setItemMeta(itemmeta);
 		return item;
+	}
+	public static ArrayList<ItemStack> getTier1List(){
+		return LootRewards.rewards1;
+	}
+	public static ArrayList<ItemStack> getTier2List(){
+		return LootRewards.rewards2;
+	}
+	public static ArrayList<ItemStack> getTier3List(){
+		return LootRewards.rewards3;
+	}
+	public static ArrayList<ItemStack> getTier4List(){
+		return LootRewards.rewards4;
 	}
 }
