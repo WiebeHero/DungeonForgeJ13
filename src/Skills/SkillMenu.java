@@ -919,7 +919,7 @@ public class SkillMenu {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Skill Points: &6" + skillPoints));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7Here, you can view how many &6Skill Points &7You have."));
+		lore.add(new ColorCodeTranslator().colorize("&7Here, you can view how many &6Skill Points &7you have."));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

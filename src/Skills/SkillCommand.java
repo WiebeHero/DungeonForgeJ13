@@ -17,8 +17,8 @@ public class SkillCommand implements CommandExecutor{
 			Player player = (Player) sender;
 			if(cmd.getName().equalsIgnoreCase(skill) || cmd.getName().equalsIgnoreCase(skills)) {
 				if(args.length == 0) {
-					join.getSkillPoints().put(player.getUniqueId(), 100);
 					menu.SkillMenuInv(player);
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /skill or /skills"));
 				}
 				else {
 					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /skill or /skills"));

@@ -589,35 +589,35 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 1 hour!"));
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 hour!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 216000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 30 minutes!"));
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 30 minutes!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 252000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 15 minutes!"));
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 15 minutes!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 270000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 10 minutes!"));
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 10 minutes!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 264000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 5 minutes!"));
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 5 minutes!"));
 				shutdown = true;
 				for(Player p : Bukkit.getOnlinePlayers()) {
 					if(p != null) {
-						p.kickPlayer(new ColorCodeTranslator().colorize("&cThe server is going into shutdown, try to join back in 5 minutes."));
+						p.kickPlayer(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
 					}
 				}
 				for(Entity e : Bukkit.getWorld("DFWarzone-1").getEntities()) {
@@ -635,14 +635,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cThe server will restart in 1 minutes!"));
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 minute!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 253200L);
 		
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&cRestarting!"));
+				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cRestarting!"));
 				Bukkit.getServer().shutdown();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 288000L);

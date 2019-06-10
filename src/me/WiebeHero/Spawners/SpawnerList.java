@@ -341,7 +341,7 @@ public class SpawnerList implements Listener{
 					}
 				}
 			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 100L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 3600L);
 	}
 	public double randomDouble() {
 		double i = ThreadLocalRandom.current().nextDouble() * 100;
