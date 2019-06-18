@@ -821,7 +821,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			scoreboard.getObjective("myHealth").unregister();
 		}
 		Objective o = scoreboard.registerNewObjective("myHealth", "health", "display");
-		o.setDisplayName(ChatColor.RED + "❤");
+		o.setDisplayName(ChatColor.RED + "â�¤");
 		o.setDisplaySlot(DisplaySlot.BELOW_NAME);
 	}
 	public static HashMap<UUID, String> ranks = new HashMap<UUID, String>();

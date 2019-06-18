@@ -1,6 +1,7 @@
 package me.WiebeHero.CustomMethods;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.md_5.bungee.api.ChatColor;
@@ -18,7 +19,7 @@ public class MethodItemStack {
 		}
 		return false;
 	}
-	public int levelEnchant(ItemStack item, String check) {
+	public int getLevelEnchant(ItemStack item, String check) {
 		if(item != null & item.getType() != Material.AIR) {
 			if(item.hasItemMeta()) {
 				if(item.getItemMeta().hasLore()) {
@@ -37,5 +38,14 @@ public class MethodItemStack {
 			}
 		}
 		return 0;
+	}
+	public boolean fullInv(Player p) {
+		boolean room = true;
+		if(p.getInventory() != null) {
+			if(p.getInventory().firstEmpty() == -1) {
+				room = false;
+			}
+		}
+		return false;
 	}
 }

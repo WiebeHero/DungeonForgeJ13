@@ -47,11 +47,17 @@ public class ClassMenuSelection implements Listener{
 					String className[] = ChatColor.stripColor(current.getTitle()).split(" ");
 					join.getClassList().put(player.getUniqueId(), className[1]);
 					join.getADList().put(player.getUniqueId(), 0);
+					join.getADCalList().put(player.getUniqueId(), 100.00);
 					join.getASList().put(player.getUniqueId(), 0);
+					join.getASCalList().put(player.getUniqueId(), 100.00);
 					join.getCCList().put(player.getUniqueId(), 0);
+					join.getCCCalList().put(player.getUniqueId(), 100.00);
 					join.getRDList().put(player.getUniqueId(), 0);
+					join.getRDCalList().put(player.getUniqueId(), 100.00);
 					join.getHHList().put(player.getUniqueId(), 0);
+					join.getHHCalList().put(player.getUniqueId(), 20.00);
 					join.getDFList().put(player.getUniqueId(), 0);
+					join.getDFCalList().put(player.getUniqueId(), 100.00);
 					join.getADMODList().put(player.getUniqueId(), 0);
 					join.getASMODList().put(player.getUniqueId(), 0);
 					join.getCCMODList().put(player.getUniqueId(), 0);

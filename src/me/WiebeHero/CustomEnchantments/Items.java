@@ -3,6 +3,7 @@ package me.WiebeHero.CustomEnchantments;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +29,7 @@ public class Items implements Listener{
 					meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 					meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 					@SuppressWarnings("deprecation")
-					ShapedRecipe tr =new ShapedRecipe(item);
+					ShapedRecipe tr = new ShapedRecipe(item);
 					tr.shape("$%$","%#%","$%$");
 					tr.setIngredient('#', Material.COD);
 					tr.setIngredient('%', Material.POTION);

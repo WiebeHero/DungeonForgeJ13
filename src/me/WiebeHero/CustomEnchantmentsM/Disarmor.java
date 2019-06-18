@@ -115,6 +115,5 @@ public class Disarmor extends SwordSwingProgress implements Listener{
 		Location locCF = new Location(entity.getWorld(), entity.getLocation().getX() + 0D, entity.getLocation().getY() + 1.3D, entity.getLocation().getZ() + 0D);
 		entity.getWorld().spawnParticle(Particle.ITEM_CRACK, locCF, 50, 0.2, 0.2, 0.2, 0.1);
 		entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ITEM_BREAK, 2, (float) 0.9);
-		
 	}
 }
