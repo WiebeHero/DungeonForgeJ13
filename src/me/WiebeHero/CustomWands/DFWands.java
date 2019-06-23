@@ -392,7 +392,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 							    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + rarity));
 							    				meta.setLore(newLore);
 							    				item.setItemMeta(meta);
-							    				speed.attackSpeedRun(damager, 0L, 1.0);
+							    				speed.attackSpeedRun(damager);
 							    			}
 								    		else {
 									    		lore.set(getLine, new ColorCodeTranslator().colorize("&7Upgrade Progress: " + "&a[&b&l" + (totalxpearned) + " &6/ " + "&b&l" + secondInt + "&a]"));

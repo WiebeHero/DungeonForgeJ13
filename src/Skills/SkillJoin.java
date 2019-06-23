@@ -41,21 +41,27 @@ public class SkillJoin implements Listener{
 	public static HashMap<UUID, Integer> dfMod = new HashMap<UUID, Integer>();
 	//Attack Damage
 	public static HashMap<UUID, Integer> ad = new HashMap<UUID, Integer>();
+	public static HashMap<UUID, Double> adCal = new HashMap<UUID, Double>();
 	public static HashMap<UUID, Double> adExtra = new HashMap<UUID, Double>();
 	//Attack Speed
 	public static HashMap<UUID, Integer> as = new HashMap<UUID, Integer>();
+	public static HashMap<UUID, Double> asCal = new HashMap<UUID, Double>();
 	public static HashMap<UUID, Double> asExtra = new HashMap<UUID, Double>();
 	//Critical Chance
 	public static HashMap<UUID, Integer> cc = new HashMap<UUID, Integer>();
+	public static HashMap<UUID, Double> ccCal = new HashMap<UUID, Double>();
 	public static HashMap<UUID, Double> ccExtra = new HashMap<UUID, Double>();
 	//Ranged Damage
 	public static HashMap<UUID, Integer> rd = new HashMap<UUID, Integer>();
+	public static HashMap<UUID, Double> rdCal = new HashMap<UUID, Double>();
 	public static HashMap<UUID, Double> rdExtra = new HashMap<UUID, Double>();
 	//Health
 	public static HashMap<UUID, Integer> hh = new HashMap<UUID, Integer>();
+	public static HashMap<UUID, Double> hhCal = new HashMap<UUID, Double>();
 	public static HashMap<UUID, Double> hhExtra = new HashMap<UUID, Double>();
 	//Defense
 	public static HashMap<UUID, Integer> df = new HashMap<UUID, Integer>();
+	public static HashMap<UUID, Double> dfCal = new HashMap<UUID, Double>();
 	public static HashMap<UUID, Double> dfExtra = new HashMap<UUID, Double>();
 	@EventHandler
 	public void skillJoin(PlayerJoinEvent event) {
@@ -336,36 +342,54 @@ public class SkillJoin implements Listener{
 		return SkillJoin.ad;
 	}
 	public HashMap<UUID, Double> getADCalList(){
+		return SkillJoin.adCal;
+	}
+	public HashMap<UUID, Double> getADExtraList(){
 		return SkillJoin.adExtra;
 	}
 	public HashMap<UUID, Integer> getASList(){
 		return SkillJoin.as;
 	}
 	public HashMap<UUID, Double> getASCalList(){
+		return SkillJoin.asCal;
+	}
+	public HashMap<UUID, Double> getASExtraList(){
 		return SkillJoin.asExtra;
 	}
 	public HashMap<UUID, Integer> getCCList(){
 		return SkillJoin.cc;
 	}
 	public HashMap<UUID, Double> getCCCalList(){
+		return SkillJoin.ccCal;
+	}
+	public HashMap<UUID, Double> getCCExtraList(){
 		return SkillJoin.ccExtra;
 	}
 	public HashMap<UUID, Integer> getRDList(){
 		return SkillJoin.rd;
 	}
 	public HashMap<UUID, Double> getRDCalList(){
+		return SkillJoin.rdCal;
+	}
+	public HashMap<UUID, Double> getRDExtraList(){
 		return SkillJoin.rdExtra;
 	}
 	public HashMap<UUID, Integer> getHHList(){
 		return SkillJoin.hh;
 	}
 	public HashMap<UUID, Double> getHHCalList(){
+		return SkillJoin.hhCal;
+	}
+	public HashMap<UUID, Double> getHHExtraList(){
 		return SkillJoin.hhExtra;
 	}
 	public HashMap<UUID, Integer> getDFList(){
 		return SkillJoin.df;
 	}
 	public HashMap<UUID, Double> getDFCalList(){
+		return SkillJoin.dfCal;
+	}
+	public HashMap<UUID, Double> getDFExtraList(){
 		return SkillJoin.dfExtra;
 	}
 	public HashMap<UUID, Integer> getADMODList(){

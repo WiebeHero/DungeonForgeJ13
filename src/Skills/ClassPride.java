@@ -46,7 +46,7 @@ public class ClassPride implements Listener{
 					if(rd > 0) {
 						cooldown = cooldown - 20 * rd;
 					}
-					double speed = 20.00 + level * 0.30;
+					double speed = 20.00 + level * 0.20;
 					double attackS = 20 + level * 0.30;
 					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPIDER_DEATH, 2.0F, 2.0F);
 					Location loc = player.getLocation();
@@ -57,13 +57,14 @@ public class ClassPride implements Listener{
 					move.setSpeed(player, move.getSpeed(player) / 100 * (100 + speed));
 					AttackSpeed aSpeed = new AttackSpeed();
 					prideExtraAS.add(player.getUniqueId());
-					aSpeed.attackSpeedRun(player, duration, (1.00 + attackS / 100));
+					join.getASExtraList().put(player.getUniqueId(), join.getASExtraList().get(player.getUniqueId()) + attackS);
+					aSpeed.attackSpeedRun(player);
 					event.setCancelled(true);
 					new BukkitRunnable() {
 						public void run() {
 							prideExtraAS.remove(player.getUniqueId());
 							prideAbsorb.remove(player.getUniqueId());
-							aSpeed.attackSpeedRun(player, duration, speed / 100);
+							aSpeed.attackSpeedRun(player);
 							move.setSpeed(player, move.getSpeed(player) - speed / 1000 - temp.get(player.getUniqueId()));
 							temp.remove(player.getUniqueId());
 						}

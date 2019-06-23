@@ -255,7 +255,7 @@ public class DFWeaponUpgrade implements Listener{
 									    				meta.setLore(newLore);
 									    				item.setItemMeta(meta);
 									    				//Weapon Data
-									    				speed.attackSpeedRun(damager, 0L, 0.0);
+									    				speed.attackSpeedRun(damager);
 								    				}
 								    			}
 									    		else {

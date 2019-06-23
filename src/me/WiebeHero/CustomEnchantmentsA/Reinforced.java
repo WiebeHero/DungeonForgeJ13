@@ -20,20 +20,8 @@ public class Reinforced implements Listener{
 		Player player = event.getPlayer();
 		ItemStack armorNew = event.getNewItem();
 		ItemStack armorOld = event.getOldItem();
-		if(it.loreContains(armorNew, "Reinforced")) {
-			int level = it.getLevelEnchant(armorNew, "Reinforced");
-			double calc = join.getHHCalList().get(player.getUniqueId()) + 0.625 * level;
-			join.getHHCalList().put(player.getUniqueId(), calc);
-		}
-		if(it.loreContains(armorOld, "Reinforced")) {
-			int level = it.getLevelEnchant(armorNew, "Reinforced");
-			double calc = join.getHHCalList().get(player.getUniqueId()) - 0.625 * level;
-			if(calc < 20.00) {
-				join.getHHCalList().put(player.getUniqueId(), 20.00);
-			}
-			else {
-				join.getHHCalList().put(player.getUniqueId(), calc);
-			}
+		if(it.loreContains(armorNew, "Reinforced") || it.loreContains(armorOld, "Reinforced")) {
+			he.updateHealth(player);
 		}
 	}
 }

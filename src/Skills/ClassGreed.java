@@ -49,7 +49,8 @@ public class ClassGreed implements Listener{
 						player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
 						AttackSpeed aSpeed = new AttackSpeed();
 						greedCooldown.add(player.getUniqueId());
-						aSpeed.attackSpeedRun(player, duration, (1.00 + attackS / 100));
+						join.getASExtraList().put(player.getUniqueId(), join.getASExtraList().get(player.getUniqueId()) + attackS);
+						aSpeed.attackSpeedRun(player);
 						event.setCancelled(true);
 						new BukkitRunnable() {
 							public void run() {
@@ -59,7 +60,8 @@ public class ClassGreed implements Listener{
 						}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
 						new BukkitRunnable() {
 							public void run() {
-								aSpeed.attackSpeedRun(player, 0L, 0.0D);
+								join.getASExtraList().put(player.getUniqueId(), join.getASExtraList().get(player.getUniqueId()) - attackS);
+								aSpeed.attackSpeedRun(player);
 							}
 						}.runTaskLater(CustomEnchantments.getInstance(), duration);
 					}

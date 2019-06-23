@@ -13,13 +13,15 @@ public class AttackDamage implements Listener{
 		if(event.getDamager() instanceof Player) {
 			Player player = (Player) event.getDamager();
 			if(event.getCause() == DamageCause.ENTITY_ATTACK) {
-				int level = join.getADList().get(player.getUniqueId());
-				double calc = event.getFinalDamage() / 100 * (100 + level * 2.5);
+				double calc = 0.00;
 				if(join.getClassList().get(player.getUniqueId()).equals("Wrath") || join.getClassList().get(player.getUniqueId()).equals("Envy")) {
-					calc = event.getFinalDamage() / 100 * (100 + level * 3.75);
+					calc = event.getFinalDamage() / 100 * (join.getADCalList().get(player.getUniqueId()) + join.getADExtraList().get(player.getUniqueId()));
 				}
 				else if(join.getClassList().get(player.getUniqueId()).equals("Lust") || join.getClassList().get(player.getUniqueId()).equals("Gluttony")) {
-					calc = event.getFinalDamage() / 100 * (100 + level * 1.25);
+					calc = event.getFinalDamage() / 100 * (join.getADCalList().get(player.getUniqueId()) + join.getADExtraList().get(player.getUniqueId()));
+				}
+				else {
+					calc = event.getFinalDamage() / 100 * (join.getADCalList().get(player.getUniqueId()) + join.getADExtraList().get(player.getUniqueId()));
 				}
 				event.setDamage(calc);
 			}
