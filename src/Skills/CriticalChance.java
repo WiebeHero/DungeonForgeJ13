@@ -13,22 +13,9 @@ public class CriticalChance implements Listener{
 	public void criticalChance(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player) {
 			Player player = (Player) event.getDamager();
-			int level = join.getCCList().get(player.getUniqueId());
 			float i = ThreadLocalRandom.current().nextFloat() * 100;
-			if(join.getClassList().get(player.getUniqueId()).equals("Wrath") || join.getClassList().get(player.getUniqueId()).equals("Sloth")) {
-				if(i <= level / 100 * (100 + level * 0.75)) {
-					event.setDamage(event.getFinalDamage() * 2);
-				}
-			}
-			else if(join.getClassList().get(player.getUniqueId()).equals("Pride") || join.getClassList().get(player.getUniqueId()).equals("Envy")) {
-				if(i <= level / 100 * (100 + level * 0.25)) {
-					event.setDamage(event.getFinalDamage() * 2);
-				}
-			}
-			else {
-				if(i <= level / 100 * (100 + level * 0.50)) {
-					event.setDamage(event.getFinalDamage() * 2);
-				}
+			if(i <= join.getCCCalList().get(player.getUniqueId()) + join.getCCCalList().get(player.getUniqueId())) {
+				event.setDamage(event.getFinalDamage() * 2);
 			}
 		}
 	}

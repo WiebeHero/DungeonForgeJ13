@@ -142,22 +142,6 @@ public class XPAddWeapons implements Listener{
 												totalXP = totalXP - xpNeeded;
 												totalXP = Math.abs(totalXP);
 												level = i + 1;
-												//Level Up Effect
-												Location loc = new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY() + 3.00, player.getLocation().getZ());
-												Firework f1 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-							    				FireworkMeta fm = f1.getFireworkMeta();
-							    				fm.addEffect(FireworkEffect.builder()
-						                             .flicker(true)
-						                             .trail(true)
-						                             .with(Type.BALL_LARGE)
-						                             .withColor(Color.LIME)
-						                             .withFade(Color.AQUA)
-						                             .build());
-							    				fm.setPower(1);
-							    				f1.setFireworkMeta(fm);
-							    				f1.detonate();
-							    				Firework fw2 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-							    	            fw2.setFireworkMeta(fm);
 							    	    		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.75);
 											}
 											else {

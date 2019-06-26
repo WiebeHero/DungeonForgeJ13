@@ -26,16 +26,7 @@ public class RangedDamage implements Listener{
 			if(arrow.getShooter() instanceof Player) {
 				Player player = (Player) arrow.getShooter();
 				if(arrows.containsKey(arrow.getUniqueId())) {
-					if(join.getClassList().get(player.getUniqueId()).equals("Lust") || join.getClassList().get(player.getUniqueId()).equals("Greed") || join.getClassList().get(player.getUniqueId()).equals("Envy")) {
-						event.setDamage(event.getFinalDamage() / 100 * (100 + join.getRDList().get(player.getUniqueId()) * 4.5) * arrows.get(arrow.getUniqueId()));
-					}
-					else if(join.getClassList().get(player.getUniqueId()).equals("Gluttony") || join.getClassList().get(player.getUniqueId()).equals("Sloth")) {
-						event.setDamage(event.getFinalDamage() / 100 * (100 + join.getRDList().get(player.getUniqueId()) * 1.5) * arrows.get(arrow.getUniqueId()));
-					}
-					else {
-						event.setDamage(event.getFinalDamage() / 100 * (100 + join.getRDList().get(player.getUniqueId()) * 3) * arrows.get(arrow.getUniqueId()));
-					}
-					
+					event.setDamage(event.getFinalDamage() / 100 * (join.getRDCalList().get(player.getUniqueId()) + join.getRDExtraList().get(player.getUniqueId())) * arrows.get(arrow.getUniqueId()));
 				}
 			}
 		}

@@ -17,10 +17,6 @@ public class Defense implements Listener{
 	public void runDefense(Player p) {
 		new BukkitRunnable() {
 			public void run() {
-				int level = 0;
-				if(join.getDFList().get(p.getUniqueId()) != null) {
-					level = join.getDFList().get(p.getUniqueId());
-				}
 				double armorD = 0.0;
 				double armorT = 0.0;
 				for(ItemStack item : p.getInventory().getArmorContents()) {
@@ -42,18 +38,9 @@ public class Defense implements Listener{
 									check2 = check2.replaceAll("[^\\d.]", "");
 									double armorDT = Double.parseDouble(check1);
 									double armorTT = Double.parseDouble(check2);
-									if(join.getClassList().get(p.getUniqueId()).equals("Gluttony") || join.getClassList().get(p.getUniqueId()).equals("Sloth") || join.getClassList().get(p.getUniqueId()).equals("Pride")) {
-										armorD = armorD + armorDT / 100 * (100 + level * 5.0);
-										armorT = armorT + armorTT / 100 * (100 + level * 5.0);
-									}
-									else if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
-										armorD = armorD + armorDT / 100 * (100 + level * 1.66);
-										armorT = armorT + armorTT / 100 * (100 + level * 1.66);
-									}
-									else {
-										armorD = armorD + armorDT / 100 * (100 + level * 3.33);
-										armorT = armorT + armorTT / 100 * (100 + level * 3.33);
-									}
+									armorD = armorD + armorDT / 100 * (join.getDFCalList().get(p.getUniqueId()) + join.getDFExtraList().get(p.getUniqueId()));
+									armorT = armorT + armorTT / 100 * (join.getDFCalList().get(p.getUniqueId()) + join.getDFExtraList().get(p.getUniqueId()));
+									
 								}
 							}
 						}
@@ -72,15 +59,7 @@ public class Defense implements Listener{
 								}
 								check1 = check1.replaceAll("[^\\d.]", "");
 								double armorTT = Double.parseDouble(check1);
-								if(join.getClassList().get(p.getUniqueId()).equals("Gluttony") || join.getClassList().get(p.getUniqueId()).equals("Sloth") || join.getClassList().get(p.getUniqueId()).equals("Pride")) {
-									armorT = armorT + armorTT / 100 * (100 + level * 5.0);
-								}
-								else if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
-									armorT = armorT + armorTT / 100 * (100 + level * 1.66);
-								}
-								else {
-									armorT = armorT + armorTT / 100 * (100 + level * 3.33);
-								}
+								armorT = armorT + (armorTT / 100.00 * (join.getDFCalList().get(p.getUniqueId()) + join.getDFExtraList().get(p.getUniqueId())));
 							}
 						}
 					}

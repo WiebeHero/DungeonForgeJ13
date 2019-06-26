@@ -79,12 +79,14 @@ public class SkillJoin implements Listener{
 			player.getInventory().addItem(divineB());
 			player.teleport(player.getWorld().getSpawnLocation());
 			HealthH h = new HealthH();
-			h.changeHealth(player);
+			h.updateHealth(player);
 		}
 		else {
 			player.teleport(player.getWorld().getSpawnLocation());
+			ClassC c = new ClassC();
+			c.registerClass(player);
 			HealthH h = new HealthH();
-			h.changeHealth(player);
+			h.updateHealth(player);
 		}
 	}
 	@EventHandler

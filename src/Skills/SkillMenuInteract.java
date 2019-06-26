@@ -9,6 +9,12 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomMethods.MethodAttack;
+import me.WiebeHero.CustomMethods.MethodAttackSpeed;
+import me.WiebeHero.CustomMethods.MethodCritical;
+import me.WiebeHero.CustomMethods.MethodDefense;
+import me.WiebeHero.CustomMethods.MethodHealth;
+import me.WiebeHero.CustomMethods.MethodRanged;
 import me.WiebeHero.DFShops.MoneyCreate;
 import net.md_5.bungee.api.ChatColor;
 
@@ -19,6 +25,12 @@ public class SkillMenuInteract implements Listener{
 	HealthH health = new HealthH();
 	Defense defense = new Defense();
 	MoneyCreate money = new MoneyCreate();
+	MethodAttack at = new MethodAttack();
+	MethodAttackSpeed as = new MethodAttackSpeed();
+	MethodCritical cc = new MethodCritical();
+	MethodDefense df = new MethodDefense();
+	MethodHealth hh = new MethodHealth();
+	MethodRanged ra = new MethodRanged();
 	@EventHandler
 	public void skillMenuClick(InventoryClickEvent event) {
 		ItemStack item = event.getCurrentItem();
@@ -38,6 +50,7 @@ public class SkillMenuInteract implements Listener{
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							menu.SkillMenuInv(player);
+							at.updateAttack(player);
 						}
 						else {
 							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
@@ -53,7 +66,8 @@ public class SkillMenuInteract implements Listener{
 							join.getASList().put(player.getUniqueId(), join.getASList().get(player.getUniqueId()) + 1);
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							speed.attackSpeedRun(player, 0L, 0.0D);
+							as.updateAttackSpeed(player);
+							speed.attackSpeedRun(player);
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -70,6 +84,7 @@ public class SkillMenuInteract implements Listener{
 							join.getCCList().put(player.getUniqueId(), join.getCCList().get(player.getUniqueId()) + 1);
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+							cc.updateCriticalChance(player);
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -86,6 +101,7 @@ public class SkillMenuInteract implements Listener{
 							join.getRDList().put(player.getUniqueId(), join.getRDList().get(player.getUniqueId()) + 1);
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+							ra.updateRanged(player);
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -103,7 +119,8 @@ public class SkillMenuInteract implements Listener{
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							menu.SkillMenuInv(player);
-							health.changeHealth(player);
+							hh.updateHealth(player);
+							health.updateHealth(player);
 						}
 						else {
 							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
@@ -120,6 +137,7 @@ public class SkillMenuInteract implements Listener{
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							menu.SkillMenuInv(player);
+							df.updateDefense(player);
 							defense.runDefense(player);
 						}
 						else {

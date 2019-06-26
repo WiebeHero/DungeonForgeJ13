@@ -1,12 +1,8 @@
 package Skills;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 
 import org.bukkit.Sound;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -25,23 +21,6 @@ public class XPEarningMobs implements Listener{
 	public void xpEarnMobs10(EntityDeathEvent event) {
 		if(event.getEntity().getKiller() != null && event.getEntity().getKiller() instanceof Player) {
 			if(event.getEntity() instanceof LivingEntity) {
-				File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-				YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-				//-----------------------------------------------------------------------------------------------------------------------------------------
-				//File Calling
-				//-----------------------------------------------------------------------------------------------------------------------------------------
-				try{
-					yml.load(f);
-		        }
-		        catch(IOException e){
-		            e.printStackTrace();
-		        } 
-				catch (InvalidConfigurationException e) {
-					e.printStackTrace();
-				}
-				//-----------------------------------------------------------------------------------------------------------------------------------------
-				//Load File
-				//-----------------------------------------------------------------------------------------------------------------------------------------
 				Player player = event.getEntity().getKiller();
 				LivingEntity victim = event.getEntity();
 				int level = join.getLevelList().get(player.getUniqueId());
@@ -128,29 +107,31 @@ public class XPEarningMobs implements Listener{
 							finalXP = i2 + xp;
 						}
 					}
-					//-----------------------------------------------------------------------------------------------------------------------------------------
-					//Level check/xp setting
-					//-----------------------------------------------------------------------------------------------------------------------------------------
 				}
 				if(level < 100) {
 					if(finalXP >= maxxp) {
-						int finalSkillPoints = skillPoints + 3;
-						level++;
-						xp = 0;
-						int maxxpFinal = (int)(double)(maxxp / 100.00 * 107.00);
-						join.getLevelList().put(player.getUniqueId(), level);
-						join.getXPList().put(player.getUniqueId(), finalXP - maxxp);
-						join.getMXPList().put(player.getUniqueId(), maxxpFinal);
-						join.getSkillPoints().put(player.getUniqueId(), finalSkillPoints);
+						for(int i = level; i < 99; i++) {
+							if(finalXP >= maxxp) {
+								finalXP = finalXP - maxxp;
+								maxxp = Math.abs(maxxp);
+								level++;
+								int finalSkillPoints = skillPoints + 3;
+								maxxp = (int)(double)(maxxp / 100.00 * 107.00);
+								join.getLevelList().put(player.getUniqueId(), level);
+								join.getXPList().put(player.getUniqueId(), finalXP);
+								join.getMXPList().put(player.getUniqueId(), maxxp);
+								join.getSkillPoints().put(player.getUniqueId(), finalSkillPoints);
+							}
+							else {
+								break;
+							}
+						}
 	    	    		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
 	    	            player.sendMessage(new ColorCodeTranslator().colorize("&aYou have leveled up to level: &6&l" + level));
 					}
 					else if(finalXP > 0){
 						join.getXPList().put(player.getUniqueId(), finalXP);
 					}
-					//-----------------------------------------------------------------------------------------------------------------------------------------
-					//Save File
-					//-----------------------------------------------------------------------------------------------------------------------------------------
 				}
 				float barprogress = (float) finalXP / maxxp;
 				if(finalXP > 0){
