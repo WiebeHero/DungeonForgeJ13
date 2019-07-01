@@ -110,7 +110,7 @@ public class XPEarningMobs implements Listener{
 				}
 				if(level < 100) {
 					if(finalXP >= maxxp) {
-						for(int i = level; i < 99; i++) {
+						for(int i = level; i < 100; i++) {
 							if(finalXP >= maxxp) {
 								finalXP = finalXP - maxxp;
 								maxxp = Math.abs(maxxp);

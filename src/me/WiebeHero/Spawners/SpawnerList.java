@@ -121,19 +121,19 @@ public class SpawnerList implements Listener{
 					  				name = name.toLowerCase();
 					  				String mobName = name.substring(0, 1).toUpperCase() + name.substring(1);
 					  				if(tier == 1) {
-					  					mob.setCustomName(new ColorCodeTranslator().colorize("&f" + mobName + " &6[&b" + new Random().nextInt(19) + 1 + "&6]"));
+					  					mob.setCustomName(new ColorCodeTranslator().colorize("&f" + mobName + " &6[&b" + new Random().nextInt(20) + "&6]"));
 					  				}
 					  				else if(tier == 2) {
-					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(19) + 21 + "&6]"));
+					  					mob.setCustomName(new ColorCodeTranslator().colorize("&a" + mobName + " &6[&b" + new Random().nextInt(40) + "&6]"));
 					  				}
 					  				else if(tier == 3) {
-					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(19) + 41 + "&6]"));
+					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(60) + "&6]"));
 					  				}
 					  				else if(tier == 4) {
-					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(19) + 61 + "&6]"));
+					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(80) + "&6]"));
 					  				}
 					  				else if(tier == 5) {
-					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(19) + 81 + "&6]"));
+					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(100) + "&6]"));
 					  				}
 					  				mob.setCustomNameVisible(true);
 					  				if(mob instanceof Zombie) {
@@ -145,7 +145,7 @@ public class SpawnerList implements Listener{
 					  					zombie.setBaby(false);
 					  				}
 					  				mob.getEquipment().setHelmet(new ItemStack(Material.STONE_BUTTON, 1));
-				  					if(randomDouble() < 40 + tier * 10) {
+				  					if(randomDouble() < 60) {
 				  						if(tier == 1) {
 				  							mob.getEquipment().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
 				  						}
@@ -162,7 +162,7 @@ public class SpawnerList implements Listener{
 				  							mob.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE, 1));
 				  						}
 				  					}
-				  					if(randomDouble() < 40 + tier * 10) {
+				  					if(randomDouble() < 60) {
 				  						if(tier == 1) {
 				  							mob.getEquipment().setChestplate(new ItemStack(Material.LEATHER_LEGGINGS, 1));
 				  						}
@@ -179,7 +179,7 @@ public class SpawnerList implements Listener{
 				  							mob.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
 				  						}
 				  					}
-				  					if(randomDouble() < 40 + tier * 10) {
+				  					if(randomDouble() < 60) {
 				  						if(tier == 1) {
 				  							mob.getEquipment().setChestplate(new ItemStack(Material.LEATHER_BOOTS, 1));
 				  						}
@@ -341,7 +341,7 @@ public class SpawnerList implements Listener{
 					}
 				}
 			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 3600L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 100L);
 	}
 	public double randomDouble() {
 		double i = ThreadLocalRandom.current().nextDouble() * 100;

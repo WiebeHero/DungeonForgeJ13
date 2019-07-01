@@ -21,7 +21,7 @@ public class Reinforced implements Listener{
 		ItemStack armorNew = event.getNewItem();
 		ItemStack armorOld = event.getOldItem();
 		if(it.loreContains(armorNew, "Reinforced") || it.loreContains(armorOld, "Reinforced")) {
-			he.updateHealth(player);
+			he.updateHealth(player.getUniqueId());
 		}
 	}
 }

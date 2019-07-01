@@ -1,10 +1,16 @@
 package Skills;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,8 +22,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomMethods.MethodAttack;
+import me.WiebeHero.CustomMethods.MethodAttackSpeed;
+import me.WiebeHero.CustomMethods.MethodCritical;
+import me.WiebeHero.CustomMethods.MethodDefense;
+import me.WiebeHero.CustomMethods.MethodHealth;
+import me.WiebeHero.CustomMethods.MethodRanged;
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_13_R2.NBTTagByte;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.NBTTagDouble;
@@ -84,7 +98,7 @@ public class SkillJoin implements Listener{
 		else {
 			player.teleport(player.getWorld().getSpawnLocation());
 			ClassC c = new ClassC();
-			c.registerClass(player);
+			c.registerClass(player.getUniqueId());
 			HealthH h = new HealthH();
 			h.updateHealth(player);
 		}
@@ -146,7 +160,14 @@ public class SkillJoin implements Listener{
 		compound1.set("AttributeModifiers", modifiers1);
 		compound1.set("Unbreakable", new NBTTagByte((byte) 1));
 		nmsStack1.setTag(compound1);
-		return item1 = CraftItemStack.asBukkitCopy(nmsStack1);
+		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
+		meta1.setUnbreakable(true);
+		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(newItem);
+		item.setDouble("Defense", 0.50);
+		item.setDouble("Toughness", 0.20);
+		item1 = item.getItem();
+		return item1;
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//Divine Chestplate
@@ -194,7 +215,14 @@ public class SkillJoin implements Listener{
 		compound1.set("AttributeModifiers", modifiers1);
 		compound1.set("Unbreakable", new NBTTagByte((byte) 1));
 		nmsStack1.setTag(compound1);
-		return item1 = CraftItemStack.asBukkitCopy(nmsStack1);
+		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
+		meta1.setUnbreakable(true);
+		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(newItem);
+		item.setDouble("Defense", 0.50);
+		item.setDouble("Toughness", 0.20);
+		item1 = item.getItem();
+		return item1;
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//Divine Leggings
@@ -242,7 +270,14 @@ public class SkillJoin implements Listener{
 		compound1.set("AttributeModifiers", modifiers1);
 		compound1.set("Unbreakable", new NBTTagByte((byte) 1));
 		nmsStack1.setTag(compound1);
-		return item1 = CraftItemStack.asBukkitCopy(nmsStack1);
+		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
+		meta1.setUnbreakable(true);
+		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(newItem);
+		item.setDouble("Defense", 0.50);
+		item.setDouble("Toughness", 0.20);
+		item1 = item.getItem();
+		return item1;
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//Divine Boots
@@ -288,9 +323,15 @@ public class SkillJoin implements Listener{
 		modifiers1.add(defense);
 		modifiers1.add(toughness);
 		compound1.set("AttributeModifiers", modifiers1);
-		compound1.set("Unbreakable", new NBTTagByte((byte) 1));
 		nmsStack1.setTag(compound1);
-		return item1 = CraftItemStack.asBukkitCopy(nmsStack1);
+		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
+		meta1.setUnbreakable(true);
+		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(newItem);
+		item.setDouble("Defense", 0.50);
+		item.setDouble("Toughness", 0.20);
+		item1 = item.getItem();
+		return item1;
 	}
 	public ItemStack apprenticeSword() {
 		ItemStack item1 = new ItemStack(Material.IRON_SWORD);
@@ -336,9 +377,122 @@ public class SkillJoin implements Listener{
 		modifiers1.add(damage);
 		modifiers1.add(speed);
 		compound1.set("AttributeModifiers", modifiers1);
-		compound1.set("Unbreakable", new NBTTagByte((byte) 1));
 		nmsStack1.setTag(compound1);
-		return item1 = CraftItemStack.asBukkitCopy(nmsStack1);
+		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
+		meta1.setUnbreakable(true);
+		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(newItem);
+		item.setDouble("Attack Damage", 5.0);
+		item.setDouble("Attack Speed", 0.8);
+		item1 = item.getItem();
+		return item1;
+	}
+	public void loadSkilledProfiles(YamlConfiguration yml, File f) {
+		Set<String> set = yml.getConfigurationSection("Skills.Players").getKeys(false);
+		ArrayList<String> players = new ArrayList<String>(set);
+		for(int i = 0; i < players.size(); i++) {
+			UUID id = UUID.fromString(players.get(i));
+			Bukkit.getServer().getConsoleSender().sendMessage(id + "");
+			String className = yml.getString("Skills.Players." + id + ".Class");
+			int level = yml.getInt("Skills.Players." + id + ".Level");
+			int xpA = yml.getInt("Skills.Players." + id + ".XP");
+			int maxxpA = yml.getInt("Skills.Players." + id + ".MXP");
+			int skillPoint = yml.getInt("Skills.Players." + id + ".Skill Points");
+			int adA = yml.getInt("Skills.Players." + id + ".Attack Damage");
+			int asA = yml.getInt("Skills.Players." + id + ".Attack Speed");
+			int ccA = yml.getInt("Skills.Players." + id + ".Critical Chance");
+			int rdA = yml.getInt("Skills.Players." + id + ".Ranged Damage");
+			int hhA = yml.getInt("Skills.Players." + id + ".Health");
+			int dfA = yml.getInt("Skills.Players." + id + ".Defense");
+			int adM = yml.getInt("Skills.Players." + id + ".Attack Modifier");
+			int asM = yml.getInt("Skills.Players." + id + ".Speed Modifier");
+			int ccM = yml.getInt("Skills.Players." + id + ".Critical Modifier");
+			int rdM = yml.getInt("Skills.Players." + id + ".Ranged Modifier");
+			int hhM = yml.getInt("Skills.Players." + id + ".Health Modifier");
+			int dfM = yml.getInt("Skills.Players." + id + ".Defense Modifier");
+			classes.put(id, className);
+			levels.put(id, level);
+			xp.put(id, xpA);
+			maxxp.put(id, maxxpA);
+			skillPoints.put(id, skillPoint);
+			ad.put(id, adA);
+			as.put(id, asA);
+			cc.put(id, ccA);
+			rd.put(id, rdA);
+			hh.put(id, hhA);
+			df.put(id, dfA);
+			MethodAttack mAT = new MethodAttack();
+			MethodAttackSpeed mAS = new MethodAttackSpeed();
+			MethodCritical mCC = new MethodCritical();
+			MethodRanged mRD = new MethodRanged();
+			MethodHealth mHH = new MethodHealth();
+			MethodDefense mDF = new MethodDefense();
+			mAT.updateAttack(id);
+			mAS.updateAttackSpeed(id);
+			mCC.updateCriticalChance(id);
+			mRD.updateRanged(id);
+			mHH.updateHealth(id);
+			mDF.updateDefense(id);
+			ClassC c = new ClassC();
+			c.registerClass(id);
+			adExtra.put(id, 0.0);
+			asExtra.put(id, 0.0);
+			ccExtra.put(id, 0.0);
+			rdExtra.put(id, 0.0);
+			hhExtra.put(id, 0.0);
+			dfExtra.put(id, 0.0);
+			adMod.put(id, adM);
+			asMod.put(id, asM);
+			ccMod.put(id, ccM);
+			rdMod.put(id, rdM);
+			hhMod.put(id, hhM);
+			dfMod.put(id, dfM);
+		}
+	}
+	public void saveSkilledProfiles(YamlConfiguration yml, File f) {
+		for(Entry<UUID, String> entry : classes.entrySet()) {
+			UUID id = entry.getKey();
+			String className = entry.getValue();
+			int level = levels.get(id);
+			int xpA = xp.get(id);
+			int maxxpA = maxxp.get(id);
+			int skillPoint = skillPoints.get(id);
+			int adA = ad.get(id);
+			int asA = as.get(id);
+			int ccA = cc.get(id);
+			int rdA = rd.get(id);
+			int hhA = hh.get(id);
+			int dfA = df.get(id);
+			int adM = adMod.get(id);
+			int asM = asMod.get(id);
+			int ccM = ccMod.get(id);
+			int rdM = rdMod.get(id);
+			int hhM = hhMod.get(id);
+			int dfM = dfMod.get(id);
+			yml.set("Skills.Players." + id.toString() + ".Class", className);
+			yml.set("Skills.Players." + id.toString() + ".Level", level);
+			yml.set("Skills.Players." + id.toString() + ".XP", xpA);
+			yml.set("Skills.Players." + id.toString() + ".MXP", maxxpA);
+			yml.set("Skills.Players." + id.toString() + ".Skill Points", skillPoint);
+			yml.set("Skills.Players." + id.toString() + ".Attack Damage", adA);
+			yml.set("Skills.Players." + id.toString() + ".Attack Speed", asA);
+			yml.set("Skills.Players." + id.toString() + ".Critical Chance", ccA);
+			yml.set("Skills.Players." + id.toString() + ".Ranged Damage", rdA);
+			yml.set("Skills.Players." + id.toString() + ".Health", hhA);
+			yml.set("Skills.Players." + id.toString() + ".Defense", dfA);
+			yml.set("Skills.Players." + id.toString() + ".Attack Modifier", adM);
+			yml.set("Skills.Players." + id.toString() + ".Speed Modifier", asM);
+			yml.set("Skills.Players." + id.toString() + ".Critical Modifier", ccM);
+			yml.set("Skills.Players." + id.toString() + ".Ranged Modifier", rdM);
+			yml.set("Skills.Players." + id.toString() + ".Health Modifier", hhM);
+			yml.set("Skills.Players." + id.toString() + ".Defense Modifier", dfM);
+		}
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
 	}
 	public HashMap<UUID, Integer> getADList(){
 		return SkillJoin.ad;
@@ -347,7 +501,7 @@ public class SkillJoin implements Listener{
 		return SkillJoin.adCal;
 	}
 	public HashMap<UUID, Double> getADExtraList(){
-		return SkillJoin.adExtra;
+		return SkillJoin.asExtra;
 	}
 	public HashMap<UUID, Integer> getASList(){
 		return SkillJoin.as;

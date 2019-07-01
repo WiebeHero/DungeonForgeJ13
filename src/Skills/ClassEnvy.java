@@ -18,11 +18,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import Skills.Enums.Classes;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class ClassEnvy implements Listener{
 	SkillJoin join = new SkillJoin();
+	ClassC c = new ClassC();
 	ArrayList<UUID> envyCooldown = new ArrayList<UUID>();
 	ArrayList<UUID> envyDamage = new ArrayList<UUID>();
 	ArrayList<UUID> envyExtra = new ArrayList<UUID>();
@@ -30,44 +32,39 @@ public class ClassEnvy implements Listener{
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(join.getClassList().containsKey(player.getUniqueId())) {
-			if(join.getClassList().get(player.getUniqueId()).equals("Envy")) {
-				if(!envyCooldown.contains(player.getUniqueId())) {
-					int level = join.getLevelList().get(player.getUniqueId());
-					int df = join.getDFMODList().get(player.getUniqueId());
-					double duration = 5 + level * 0.05;
-					double cooldown = 65 - level * 0.25;
-					envyDamage.add(player.getUniqueId());
-					Location loc = player.getLocation();
-					loc.setY(loc.getY() + 2.5);
-					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 2.0F, 1.0F);
-					BlockData bd = Material.REDSTONE_BLOCK.createBlockData();
-					player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Special Attack!"));
-					event.setCancelled(true);
-					new BukkitRunnable() {
-						public void run() {
-							if(envyDamage.contains(player.getUniqueId())) {
-								envyDamage.remove(player.getUniqueId());
-								envyBlock.add(player.getUniqueId());
-							}
+		if(c.getClass(player.getUniqueId()) == Classes.ENVY) {
+			if(!envyCooldown.contains(player.getUniqueId())) {
+				int level = join.getLevelList().get(player.getUniqueId());
+				int df = join.getDFMODList().get(player.getUniqueId());
+				double duration = 5 + level * 0.05;
+				double cooldown = 65 - level * 0.25;
+				envyDamage.add(player.getUniqueId());
+				Location loc = player.getLocation();
+				loc.setY(loc.getY() + 2.5);
+				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 2.0F, 1.0F);
+				BlockData bd = Material.REDSTONE_BLOCK.createBlockData();
+				player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
+				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Special Attack!"));
+				event.setCancelled(true);
+				new BukkitRunnable() {
+					public void run() {
+						if(envyDamage.contains(player.getUniqueId())) {
+							envyDamage.remove(player.getUniqueId());
+							envyBlock.add(player.getUniqueId());
 						}
-					}.runTaskLater(CustomEnchantments.getInstance(), (long)(duration * 20));
-					envyCooldown.add(player.getUniqueId());
-					new BukkitRunnable() {
-						public void run() {
-							envyCooldown.remove(player.getUniqueId());
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
-				}
-				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
-				}
+					}
+				}.runTaskLater(CustomEnchantments.getInstance(), (long)(duration * 20));
+				envyCooldown.add(player.getUniqueId());
+				new BukkitRunnable() {
+					public void run() {
+						envyCooldown.remove(player.getUniqueId());
+						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
+					}
+				}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
 			}
-		}
-		else {
-			player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have not chosen a class!"));
+			else {
+				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+			}
 		}
 	}
 	@EventHandler

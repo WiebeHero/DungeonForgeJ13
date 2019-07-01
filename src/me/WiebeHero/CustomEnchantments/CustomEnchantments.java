@@ -515,6 +515,18 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		if(yml3.getConfigurationSection("List") != null) {
 			money.loadMoney(yml3, f4);
 		}
+		File f5 = new File("plugins/CustomEnchantments/playerskillsDF.yml");
+		YamlConfiguration yml4 = YamlConfiguration.loadConfiguration(f5);
+		try{
+			yml4.load(f5);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		join.loadSkilledProfiles(yml4, f5);
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
 		//NeededStuff
@@ -784,6 +796,18 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		money.saveMoney(yml3, f4);
+		File f5 =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
+		YamlConfiguration yml4 = YamlConfiguration.loadConfiguration(f5);
+		try{
+			yml4.load(f5);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		join.saveSkilledProfiles(yml4, f5);
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {

@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
@@ -58,8 +59,8 @@ public class NovisRewards {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
 			}
 			String enchantmentsString = config.getString("Items.Weapons." + listItemsWep.get(i) + ".Enchantments.1");
-			double damageWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".Damage.1");
-			double speedWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".Speed.1");
+			double damageWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".BeginDamage");
+			double speedWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".BeginSpeed");
 			ArrayList<String> newLore = new ArrayList<String>();
 			String enchantmentSetting[] = enchantmentsString.split("//");
 			for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
@@ -104,7 +105,11 @@ public class NovisRewards {
 			compound.set("AttributeModifiers", modifiers);
 			nmsStack.setTag(compound);
 			nmsStack.save(compound);
-			item = CraftItemStack.asBukkitCopy(nmsStack);
+			ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack);
+			NBTItem tempItem = new NBTItem(newItem);
+			tempItem.setDouble("Attack Damage", damageWeapon);
+			tempItem.setDouble("Attack Speed", speedWeapon);
+			item = tempItem.getItem();
 			if(check.contains("Common")) {
 				rewards1.add(item);
 			}
@@ -150,9 +155,9 @@ public class NovisRewards {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsWand.get(i) + " &a[&6Lv 1&a]"));
 			}
 			String enchantmentsString = config.getString("Items.Wands." + listItemsWand.get(i) + ".Enchantments.1");
-			double damageWeapon = config.getDouble("Items.Wands." + listItemsWand.get(i) + ".Damage.1");
-			double speedWeapon = config.getDouble("Items.Wands." + listItemsWand.get(i) + ".Speed.1");
-			double attackRange = config.getDouble("Items.Wands." + listItemsWand.get(i) + ".Range.1");
+			double damageWeapon = config.getDouble("Items.Wands." + listItemsWand.get(i) + ".BeginDamage");
+			double speedWeapon = config.getDouble("Items.Wands." + listItemsWand.get(i) + ".BeginSpeed");
+			double attackRange = config.getDouble("Items.Wands." + listItemsWand.get(i) + ".BeginRange");
 			ArrayList<String> newLore = new ArrayList<String>();
 			String enchantmentSetting[] = enchantmentsString.split("//");
 			for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
@@ -173,6 +178,12 @@ public class NovisRewards {
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 			item.setItemMeta(meta);
+			ItemStack newItem = item;
+			NBTItem tempItem = new NBTItem(newItem);
+			tempItem.setDouble("Attack Damage", damageWeapon);
+			tempItem.setDouble("Attack Speed", speedWeapon);
+			tempItem.setDouble("Attack Range", attackRange);
+			item = tempItem.getItem();
 			if(check.contains("Common")) {
 				rewards1.add(item);
 			}
@@ -218,8 +229,8 @@ public class NovisRewards {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
 			}
 			String enchantmentsString = config.getString("Items.Bows." + listItemsBows.get(i) + ".Enchantments.1");
-			double damageWeapon = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".Damage.1");
-			double drawSpeedWeapon = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".Speed.1");
+			double damageWeapon = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".BeginDamage");
+			double drawSpeedWeapon = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".BeginSpeed");
 			ArrayList<String> newLore = new ArrayList<String>();
 			String enchantmentSetting[] = enchantmentsString.split("//");
 			for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
@@ -227,7 +238,7 @@ public class NovisRewards {
 			}
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
-			newLore.add(new ColorCodeTranslator().colorize("&7Draw Speed: &6" + drawSpeedWeapon / 100));
+			newLore.add(new ColorCodeTranslator().colorize("&7Minimally Drawn: &6" + drawSpeedWeapon + "%"));
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 			newLore.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
@@ -239,6 +250,11 @@ public class NovisRewards {
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 			item.setItemMeta(meta);
+			ItemStack newItem = item;
+			NBTItem tempItem = new NBTItem(newItem);
+			tempItem.setDouble("Attack Damage", damageWeapon);
+			tempItem.setDouble("Draw Speed", drawSpeedWeapon);
+			item = tempItem.getItem();
 			if(check.contains("Common")) {
 				rewards1.add(item);
 			}
@@ -284,7 +300,7 @@ public class NovisRewards {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
 			}
 			String enchantmentsString = config.getString("Items.Shields." + listItemsShields.get(i) + ".Enchantments.1");
-			double damageWeapon = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".Damage.1");
+			double damageWeapon = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".BeginToughness");
 			ArrayList<String> newLore = new ArrayList<String>();
 			String enchantmentSetting[] = enchantmentsString.split("//");
 			for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
@@ -303,6 +319,9 @@ public class NovisRewards {
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 			item.setItemMeta(meta);
+			NBTItem tempItem = new NBTItem(item);
+			tempItem.setDouble("Toughness", damageWeapon);
+			item = tempItem.getItem();
 			if(check.contains("Common")) {
 				rewards1.add(item);
 			}
@@ -339,37 +358,25 @@ public class NovisRewards {
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName(new ColorCodeTranslator().colorize("&7" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
 			String enchantmentsString = config.getString("Items.Armor." + listItemsArmor.get(i) + ".Enchantments.1");
-			double armorDefense = 0.0;
-			double armorToughness = 0.0;
+			double armorDefense = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".BeginDefense");
+			double armorToughness = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".BeginToughness");
 			if(check.contains("Common")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&7" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-				armorDefense = config.getDouble("Armor Values.Common.Defense.1");
-				armorToughness = config.getDouble("Armor Values.Common.Toughness.1");
 			}
 			if(check.contains("Rare")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&a" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-				armorDefense = config.getDouble("Armor Values.Rare.Defense.1");
-				armorToughness = config.getDouble("Armor Values.Rare.Toughness.1");
 			}
 			if(check.contains("Epic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&b" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-				armorDefense = config.getDouble("Armor Values.Epic.Defense.1");
-				armorToughness = config.getDouble("Armor Values.Epic.Toughness.1");
 			}
 			if(check.contains("Legendary")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&c" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-				armorDefense = config.getDouble("Armor Values.Legendary.Defense.1");
-				armorToughness = config.getDouble("Armor Values.Legendary.Toughness.1");
 			}
 			if(check.contains("Mythic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&5" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-				armorDefense = config.getDouble("Armor Values.Mythic.Defense.1");
-				armorToughness = config.getDouble("Armor Values.Mythic.Toughness.1");
 			}
 			if(check.contains("Heroic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-				armorDefense = config.getDouble("Armor Values.Heroic.Defense.1");
-				armorToughness = config.getDouble("Armor Values.Heroic.Toughness.1");
 			}
 			ArrayList<String> newLore = new ArrayList<String>();
 			String enchantmentSetting[] = enchantmentsString.split("//");
@@ -439,12 +446,15 @@ public class NovisRewards {
 			speed.set("Name", new NBTTagString("generic.armorToughness"));
 			speed.set("Amount", new NBTTagDouble(0));
 			speed.set("Operation", new NBTTagInt(0));
-			
 			modifiers.add(speed);
 			compound.set("AttributeModifiers", modifiers);
 			nmsStack.setTag(compound);
 			nmsStack.save(compound);
 			item = CraftItemStack.asCraftMirror(nmsStack);
+			NBTItem newItem = new NBTItem(item);
+			newItem.setDouble("Defense", armorDefense);
+			newItem.setDouble("Toughness", armorToughness);
+			item = newItem.getItem();
 			if(check.contains("Common")) {
 				rewards1.add(item);
 			}

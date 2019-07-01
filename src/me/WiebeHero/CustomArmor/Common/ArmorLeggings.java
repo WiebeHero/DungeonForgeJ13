@@ -23,6 +23,7 @@ import org.bukkit.plugin.Plugin;
 
 import Skills.Defense;
 import Skills.SkillJoin;
+import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Spawners.SpawnerList;
@@ -43,7 +44,6 @@ public class ArmorLeggings extends SpawnerList implements Listener{
     }
 	Defense def = new Defense();
 	SkillJoin join = new SkillJoin();
-	String realName;
 	@EventHandler
 	public void armor(EntityDeathEvent event) {
 		LivingEntity victim = (LivingEntity) event.getEntity();
@@ -85,6 +85,7 @@ public class ArmorLeggings extends SpawnerList implements Listener{
 					    	String part1 = partName[0];
 					    	Set<String> configSection1 = plugin.getConfig().getConfigurationSection(("Items.Armor")).getKeys(false);
 					    	List<String> configSection2 = new ArrayList<String>(configSection1);
+					    	String realName = "";
 					    	for(int i6 = 0; i6 < configSection2.size(); i6++) {
 					    		if(part1.contains(configSection2.get(i6))) {
 					    			realName = part1;
@@ -201,34 +202,13 @@ public class ArmorLeggings extends SpawnerList implements Listener{
 							    				levelWeapon++;
 							    				String enchantmentsString = plugin.getConfig().getString("Items.Armor." + realName + ".Enchantments." + levelWeapon);
 							    				String rarity = plugin.getConfig().getString("Items.Armor." + realName + ".Rarity" );
+							    				NBTItem tempItem = new NBTItem(item);
+							    				double temp1 = tempItem.getDouble("Defense");
+							    				double temp2 = tempItem.getDouble("Toughness");
 							    				//Config Data
-							    				String rare = "";
-					    	            		if(rarity.contains("&7")) {
-					    	            			String split[] = rarity.split("&7");
-					    	            			rare = split[1];
-					    	            		}
-					    	            		if(rarity.contains("&a")) {
-					    	            			String split[] = rarity.split("&a");
-					    	            			rare = split[1];
-					    	            		}
-					    	            		if(rarity.contains("&e")) {
-					    	            			String split[] = rarity.split("&b");
-					    	            			rare = split[1];
-					    	            		}
-					    	            		if(rarity.contains("&c")) {
-					    	            			String split[] = rarity.split("&c");
-					    	            			rare = split[1];
-					    	            		}
-					    	            		if(rarity.contains("&5")) {
-					    	            			String split[] = rarity.split("&5");
-					    	            			rare = split[1];
-					    	            		}
-					    	            		if(rarity.contains("&e")) {
-					    	            			String split[] = rarity.split("&e");
-					    	            			rare = split[1];
-					    	            		}
-					    	            		double armorDefense = plugin.getConfig().getDouble("Armor Values." + rare + ".Defense." + levelWeapon);
-					    	            		double armorToughness = plugin.getConfig().getDouble("Armor Values." + rare + ".Toughness." + levelWeapon);
+					    	            		double incDefense = plugin.getConfig().getDouble("Items.Armor." + realName + ".IncDefense");
+					    	            		double incToughness = plugin.getConfig().getDouble("Items.Armor." + realName + ".IncToughness");
+							    				//Config Data
 							    				//Weapon Data
 							    				ItemMeta meta = item.getItemMeta();
 							    				String translator = "";
@@ -256,9 +236,11 @@ public class ArmorLeggings extends SpawnerList implements Listener{
 							    				for(int i = 0; i < enchantmentSetting.length; i++) {
 							    					newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i]));
 							    				}
+							    				double roundOff1 = (double) Math.round((temp1 + incDefense) * 100) / 100;
+							    				double roundOff2 = (double) Math.round((temp2 + incToughness) * 100) / 100;
 							    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-							    				newLore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &6" + armorDefense));
-							    				newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + armorToughness));
+							    				newLore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &6" + roundOff1));
+							    				newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + roundOff2));
 							    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 							    				if(levelWeapon < 15) {
 							    					int xp = plugin.getConfig().getInt("XPValue." + levelWeapon);
@@ -277,6 +259,11 @@ public class ArmorLeggings extends SpawnerList implements Listener{
 							    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + rarity));
 							    				meta.setLore(newLore);
 							    				item.setItemMeta(meta);
+							    				NBTItem newItem = new NBTItem(item);
+							    				newItem.setDouble("Defense", newItem.getDouble("Defense") + incDefense);
+							    				newItem.setDouble("Toughness", newItem.getDouble("Toughness") + incToughness);
+							    				item = newItem.getItem();
+							    				damager.getInventory().setLeggings(item);
 							    				//Armor Data
 												def.runDefense(damager);
 						    				}

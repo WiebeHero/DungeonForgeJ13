@@ -1010,7 +1010,7 @@ public class SkillMenu {
 		int levelNow = join.getCCList().get(p.getUniqueId());
 		double calcNow = join.getCCList().get(p.getUniqueId()) * 0.50;
 		double calcNext = (join.getCCList().get(p.getUniqueId()) + 1.00) * 0.50;
-		if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
+		if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Sloth")) {
 			calcNow = join.getCCList().get(p.getUniqueId()) * 0.75;
 			calcNext = (join.getCCList().get(p.getUniqueId()) + 1.00) * 0.75;
 		}
@@ -1068,7 +1068,7 @@ public class SkillMenu {
 			calcNow = join.getHHList().get(p.getUniqueId()) * 7.50;
 			calcNext = (join.getHHList().get(p.getUniqueId()) + 1.00) * 7.50;
 		}
-		else if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
+		else if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Pride") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
 			calcNow = join.getHHList().get(p.getUniqueId()) * 2.50;
 			calcNext = (join.getHHList().get(p.getUniqueId()) + 1.00) * 2.50;
 		}
@@ -1099,7 +1099,7 @@ public class SkillMenu {
 			calcNow = join.getDFList().get(p.getUniqueId()) * 1.66;
 			calcNext = (join.getDFList().get(p.getUniqueId()) + 1.00) * 1.66;
 		}
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&8Defense: [&7&b" + levelNow + " &6/ &b100&7]"));
+		meta.setDisplayName(new ColorCodeTranslator().colorize("&8Defense: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new ColorCodeTranslator().colorize("&7Increase armor points you recieve from armor."));
 		lore.add(new ColorCodeTranslator().colorize(""));

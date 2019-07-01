@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -23,6 +24,7 @@ import org.bukkit.plugin.Plugin;
 
 import Skills.AttackSpeed;
 import Skills.SkillJoin;
+import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Spawners.SpawnerList;
@@ -197,14 +199,18 @@ public class DFWeaponUpgrade implements Listener{
 								    				String levelStringFinal = levelString[1];
 								    				int levelWeapon = Integer.parseInt(levelStringFinal);
 								    				if(levelWeapon != 15) {
+								    					Bukkit.broadcastMessage("Yes");
 														ItemStack item = item1;
 														damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, (float)2, (float)1);
 									    	            //Config Data
 									    				levelWeapon++;
 									    				String enchantmentsString = plugin.getConfig().getString("Items.Weapons." + realName + ".Enchantments." + levelWeapon);
-									    				double damageWeapon = plugin.getConfig().getDouble("Items.Weapons." + realName + ".Damage." + levelWeapon);
-									    				double speedWeapon = plugin.getConfig().getDouble("Items.Weapons." + realName + ".Speed." + levelWeapon);
+									    				double incDamage = plugin.getConfig().getDouble("Items.Weapons." + realName + ".IncDamage");
+									    				double incSpeed = plugin.getConfig().getDouble("Items.Weapons." + realName + ".IncSpeed");
 									    				String rarity = plugin.getConfig().getString("Items.Weapons." + realName + ".Rarity" );
+									    				NBTItem tempItem = new NBTItem(item);
+									    				double temp1 = tempItem.getDouble("Attack Damage");
+									    				double temp2 = tempItem.getDouble("Attack Speed");
 									    				//Config Data
 									    				//Weapon Data
 									    				ItemMeta meta = item.getItemMeta();
@@ -233,9 +239,11 @@ public class DFWeaponUpgrade implements Listener{
 									    				for(int i = 0; i < enchantmentSetting.length; i++) {
 									    					newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i]));
 									    				}
+									    				double roundOff1 = (double) Math.round((temp1 + incDamage) * 100) / 100;
+									    				double roundOff2 = (double) Math.round((temp2 + incSpeed) * 100) / 100;
 									    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-									    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
-									    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + speedWeapon));
+									    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
+									    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
 									    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 									    				if(levelWeapon < 15) {
 									    					int xp = plugin.getConfig().getInt("XPValue." + levelWeapon);
@@ -254,6 +262,11 @@ public class DFWeaponUpgrade implements Listener{
 									    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + rarity));
 									    				meta.setLore(newLore);
 									    				item.setItemMeta(meta);
+									    				NBTItem newItem = new NBTItem(item);
+									    				newItem.setDouble("Attack Damage", newItem.getDouble("Attack Damage") + incDamage);
+									    				newItem.setDouble("Attack Speed", newItem.getDouble("Attack Speed") + incSpeed);
+									    				item = newItem.getItem();
+									    				damager.getInventory().setItemInMainHand(item);
 									    				//Weapon Data
 									    				speed.attackSpeedRun(damager);
 								    				}

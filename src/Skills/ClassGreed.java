@@ -22,11 +22,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import Skills.Enums.Classes;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class ClassGreed implements Listener{
 	SkillJoin join = new SkillJoin();
+	ClassC c = new ClassC();
 	public ArrayList<UUID> greedCooldown = new ArrayList<UUID>();
 	public ArrayList<UUID> greedArrow = new ArrayList<UUID>();
 	public ArrayList<UUID> arrowHit = new ArrayList<UUID>();
@@ -34,41 +36,39 @@ public class ClassGreed implements Listener{
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(join.getClassList().containsKey(player.getUniqueId())) {
-			if(join.getClassList().get(player.getUniqueId()).equals("Greed")) {
-				if(!greedCooldown.contains(player.getUniqueId())) {
-					if(!greedArrow.contains(player.getUniqueId())) {
-						int level = join.getLevelList().get(player.getUniqueId());
-						long cooldown = 1700 - level * 6;
-						double attackS = 20 + level * 0.30;
-						long duration = 130 + level;
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have prepared a &6Hunting Arrow!"));
-						Location loc = player.getLocation();
-						loc.setY(loc.getY() + 2.5);
-						BlockData bd = Material.COAL_BLOCK.createBlockData();
-						player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
-						AttackSpeed aSpeed = new AttackSpeed();
-						greedCooldown.add(player.getUniqueId());
-						join.getASExtraList().put(player.getUniqueId(), join.getASExtraList().get(player.getUniqueId()) + attackS);
-						aSpeed.attackSpeedRun(player);
-						event.setCancelled(true);
-						new BukkitRunnable() {
-							public void run() {
-								greedCooldown.remove(player.getUniqueId());
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Hunting Arrow &aagain!"));
-							}
-						}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
-						new BukkitRunnable() {
-							public void run() {
-								join.getASExtraList().put(player.getUniqueId(), join.getASExtraList().get(player.getUniqueId()) - attackS);
-								aSpeed.attackSpeedRun(player);
-							}
-						}.runTaskLater(CustomEnchantments.getInstance(), duration);
-					}
+		if(c.getClass(player.getUniqueId()) == Classes.GREED) {
+			if(!greedCooldown.contains(player.getUniqueId())) {
+				if(!greedArrow.contains(player.getUniqueId())) {
+					int level = join.getLevelList().get(player.getUniqueId());
+					long cooldown = 1700 - level * 6;
+					double attackS = 20 + level * 0.30;
+					long duration = 130 + level;
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have prepared a &6Hunting Arrow!"));
+					Location loc = player.getLocation();
+					loc.setY(loc.getY() + 2.5);
+					BlockData bd = Material.COAL_BLOCK.createBlockData();
+					player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
+					AttackSpeed aSpeed = new AttackSpeed();
+					greedCooldown.add(player.getUniqueId());
+					join.getASExtraList().put(player.getUniqueId(), join.getASExtraList().get(player.getUniqueId()) + attackS);
+					aSpeed.attackSpeedRun(player);
+					event.setCancelled(true);
+					new BukkitRunnable() {
+						public void run() {
+							greedCooldown.remove(player.getUniqueId());
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Hunting Arrow &aagain!"));
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
+					new BukkitRunnable() {
+						public void run() {
+							join.getASExtraList().put(player.getUniqueId(), join.getASExtraList().get(player.getUniqueId()) - attackS);
+							aSpeed.attackSpeedRun(player);
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), duration);
 				}
-				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
-				}
+			}
+			else {
+				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
 			}
 		}
 		else {

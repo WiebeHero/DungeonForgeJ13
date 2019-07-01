@@ -9,5 +9,6 @@ public class Enums {
 		PRIDE,
 		GLUTTONY,
 		GREED,
+		NONE,
 	}
 }

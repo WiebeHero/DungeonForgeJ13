@@ -50,7 +50,7 @@ public class SkillMenuInteract implements Listener{
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							menu.SkillMenuInv(player);
-							at.updateAttack(player);
+							at.updateAttack(player.getUniqueId());
 						}
 						else {
 							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
@@ -66,7 +66,7 @@ public class SkillMenuInteract implements Listener{
 							join.getASList().put(player.getUniqueId(), join.getASList().get(player.getUniqueId()) + 1);
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							as.updateAttackSpeed(player);
+							as.updateAttackSpeed(player.getUniqueId());
 							speed.attackSpeedRun(player);
 							menu.SkillMenuInv(player);
 						}
@@ -84,7 +84,7 @@ public class SkillMenuInteract implements Listener{
 							join.getCCList().put(player.getUniqueId(), join.getCCList().get(player.getUniqueId()) + 1);
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							cc.updateCriticalChance(player);
+							cc.updateCriticalChance(player.getUniqueId());
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -101,7 +101,7 @@ public class SkillMenuInteract implements Listener{
 							join.getRDList().put(player.getUniqueId(), join.getRDList().get(player.getUniqueId()) + 1);
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							ra.updateRanged(player);
+							ra.updateRanged(player.getUniqueId());
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -119,7 +119,7 @@ public class SkillMenuInteract implements Listener{
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							menu.SkillMenuInv(player);
-							hh.updateHealth(player);
+							hh.updateHealth(player.getUniqueId());
 							health.updateHealth(player);
 						}
 						else {
@@ -137,7 +137,7 @@ public class SkillMenuInteract implements Listener{
 							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							menu.SkillMenuInv(player);
-							df.updateDefense(player);
+							df.updateDefense(player.getUniqueId());
 							defense.runDefense(player);
 						}
 						else {
@@ -151,19 +151,24 @@ public class SkillMenuInteract implements Listener{
 				else if(skillName.contains("Attack Modifier")) {
 					if(join.getADMODList().get(player.getUniqueId()) < 5) {
 						if(join.getADList().get(player.getUniqueId()) >= 20 + (20 * join.getADMODList().get(player.getUniqueId()))) {
-							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId())));
-								money.getMoneyList().put(player.getUniqueId(), moneyNow);
-								join.getADMODList().put(player.getUniqueId(), join.getADMODList().get(player.getUniqueId()) + 1);
-								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-								menu.SkillMenuInv(player);
+							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getADMODList().get(player.getUniqueId()))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getADMODList().get(player.getUniqueId()))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getADMODList().get(player.getUniqueId())));
+									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+									join.getADMODList().put(player.getUniqueId(), join.getADMODList().get(player.getUniqueId()) + 1);
+									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+									menu.SkillMenuInv(player);
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal level requirement!"));
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Attack Damage Level &crequirement!"));
 						}
 					}
 					else {
@@ -173,19 +178,24 @@ public class SkillMenuInteract implements Listener{
 				else if(skillName.contains("Speed Modifier")) {
 					if(join.getASMODList().get(player.getUniqueId()) < 5) {
 						if(join.getASList().get(player.getUniqueId()) >= 20 + (20 * join.getASMODList().get(player.getUniqueId()))) {
-							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId())));
-								money.getMoneyList().put(player.getUniqueId(), moneyNow);
-								join.getASMODList().put(player.getUniqueId(), join.getASMODList().get(player.getUniqueId()) + 1);
-								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-								menu.SkillMenuInv(player);
+							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getASMODList().get(player.getUniqueId()))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getASMODList().get(player.getUniqueId()))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getASMODList().get(player.getUniqueId())));
+									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+									join.getASMODList().put(player.getUniqueId(), join.getASMODList().get(player.getUniqueId()) + 1);
+									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+									menu.SkillMenuInv(player);
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal level requirement!"));
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Attack Speed Level &crequirement!"));
 						}
 					}
 					else {
@@ -195,19 +205,24 @@ public class SkillMenuInteract implements Listener{
 				else if(skillName.contains("Critical Modifier")) {
 					if(join.getCCMODList().get(player.getUniqueId()) < 5) {
 						if(join.getCCList().get(player.getUniqueId()) >= 20 + (20 * join.getCCMODList().get(player.getUniqueId()))) {
-							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 *join.getCCMODList().get(player.getUniqueId())));
-								money.getMoneyList().put(player.getUniqueId(), moneyNow);
-								join.getCCMODList().put(player.getUniqueId(), join.getCCMODList().get(player.getUniqueId()) + 1);
-								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-								menu.SkillMenuInv(player);
+							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getCCMODList().get(player.getUniqueId()))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getCCMODList().get(player.getUniqueId()))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 *join.getCCMODList().get(player.getUniqueId())));
+									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+									join.getCCMODList().put(player.getUniqueId(), join.getCCMODList().get(player.getUniqueId()) + 1);
+									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+									menu.SkillMenuInv(player);
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal level requirement!"));
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Critical Chance Level &crequirement!"));
 						}
 					}
 					else {
@@ -217,19 +232,24 @@ public class SkillMenuInteract implements Listener{
 				else if(skillName.contains("Ranged Modifier")) {
 					if(join.getRDMODList().get(player.getUniqueId()) < 5) {
 						if(join.getRDList().get(player.getUniqueId()) >= 20 + (20 * join.getRDMODList().get(player.getUniqueId()))) {
-							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId())));
-								money.getMoneyList().put(player.getUniqueId(), moneyNow);
-								join.getRDMODList().put(player.getUniqueId(), join.getRDMODList().get(player.getUniqueId()) + 1);
-								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-								menu.SkillMenuInv(player);
+							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getRDMODList().get(player.getUniqueId()))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getRDMODList().get(player.getUniqueId()))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getRDMODList().get(player.getUniqueId())));
+									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+									join.getRDMODList().put(player.getUniqueId(), join.getRDMODList().get(player.getUniqueId()) + 1);
+									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+									menu.SkillMenuInv(player);
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal level requirement!"));
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Ranged Damage Level &crequirement!"));
 						}
 					}
 					else {
@@ -239,19 +259,24 @@ public class SkillMenuInteract implements Listener{
 				else if(skillName.contains("Health Modifier")) {
 					if(join.getHHMODList().get(player.getUniqueId()) < 5) {
 						if(join.getHHList().get(player.getUniqueId()) >= 20 + (20 * join.getHHMODList().get(player.getUniqueId()))) {
-							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId())));
-								money.getMoneyList().put(player.getUniqueId(), moneyNow);
-								join.getHHMODList().put(player.getUniqueId(), join.getHHMODList().get(player.getUniqueId()) + 1);
-								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-								menu.SkillMenuInv(player);
+							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getHHMODList().get(player.getUniqueId()))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getHHMODList().get(player.getUniqueId()))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getHHMODList().get(player.getUniqueId())));
+									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+									join.getHHMODList().put(player.getUniqueId(), join.getHHMODList().get(player.getUniqueId()) + 1);
+									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+									menu.SkillMenuInv(player);
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal level requirement!"));
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Health Level &crequirement!"));
 						}
 					}
 					else {
@@ -261,19 +286,24 @@ public class SkillMenuInteract implements Listener{
 				else if(skillName.contains("Defense Modifier")) {
 					if(join.getDFMODList().get(player.getUniqueId()) < 5) {
 						if(join.getDFList().get(player.getUniqueId()) >= 20 + (20 * join.getDFMODList().get(player.getUniqueId()))) {
-							if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()))) {
-								double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId())));
-								money.getMoneyList().put(player.getUniqueId(), moneyNow);
-								join.getDFMODList().put(player.getUniqueId(), join.getDFMODList().get(player.getUniqueId()) + 1);
-								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-								menu.SkillMenuInv(player);
+							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getDFMODList().get(player.getUniqueId()))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getDFMODList().get(player.getUniqueId()))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getDFMODList().get(player.getUniqueId())));
+									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+									join.getDFMODList().put(player.getUniqueId(), join.getDFMODList().get(player.getUniqueId()) + 1);
+									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+									menu.SkillMenuInv(player);
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal level requirement!"));
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Health Level &crequirement!"));
 						}
 					}
 					else {

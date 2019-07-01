@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -36,6 +35,7 @@ import org.bukkit.util.Vector;
 import NeededStuff.SwordSwingProgress;
 import Skills.AttackSpeed;
 import Skills.SkillJoin;
+import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Spawners.SpawnerList;
@@ -181,7 +181,6 @@ public class DFWands extends SwordSwingProgress implements Listener{
 		}
 	}
 	int levelVictim;
-	String realName = "";
 	@EventHandler
 	public void weapons(EntityDeathEvent event) {
 		LivingEntity victim = (LivingEntity) event.getEntity();
@@ -224,6 +223,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 						    	String part1 = partName[0];
 						    	Set<String> configSection1 = plugin.getConfig().getConfigurationSection(("Items.Wands")).getKeys(false);
 						    	List<String> configSection2 = new ArrayList<String>(configSection1);
+						    	String realName = "";
 						    	for(int i6 = 0; i6 < configSection2.size(); i6++) {
 						    		if(part1.contains(configSection2.get(i6))) {
 						    			realName = part1;
@@ -338,10 +338,14 @@ public class DFWands extends SwordSwingProgress implements Listener{
 							    				int levelWeapon = Integer.parseInt(levelStringFinal);
 							    				levelWeapon++;
 							    				String enchantmentsString = plugin.getConfig().getString("Items.Wands." + realName + ".Enchantments." + levelWeapon);
-							    				double damageWeapon = plugin.getConfig().getDouble("Items.Wands." + realName + ".Damage." + levelWeapon);
-							    				double speedWeapon = plugin.getConfig().getDouble("Items.Wands." + realName + ".Speed." + levelWeapon);
-							    				double wandRange = plugin.getConfig().getDouble("Items.Wands." + realName + ".Range." + levelWeapon);
+							    				double incDamage = plugin.getConfig().getDouble("Items.Wands." + realName + ".IncDamage");
+							    				double incSpeed = plugin.getConfig().getDouble("Items.Wands." + realName + ".IncSpeed");
+							    				double incRange = plugin.getConfig().getDouble("Items.Wands." + realName + ".Range." + levelWeapon);
 							    				String rarity = plugin.getConfig().getString("Items.Wands." + realName + ".Rarity" );
+							    				NBTItem tempItem = new NBTItem(item);
+							    				double temp1 = tempItem.getDouble("Attack Damage");
+							    				double temp2 = tempItem.getDouble("Attack Speed");
+							    				double temp3 = tempItem.getDouble("Attack Range");
 							    				//Config Data
 							    				//Weapon Data
 							    				ItemMeta meta = item.getItemMeta();
@@ -370,10 +374,13 @@ public class DFWands extends SwordSwingProgress implements Listener{
 							    				for(int i = 0; i < enchantmentSetting.length; i++) {
 							    					newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i]));
 							    				}
+							    				double roundOff1 = (double) Math.round((temp1 + incDamage) * 100) / 100;
+							    				double roundOff2 = (double) Math.round((temp2 + incSpeed) * 100) / 100;
+							    				double roundOff3 = (double) Math.round((temp3 + incRange) * 100) / 100;
 							    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-							    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
-							    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + speedWeapon));
-							    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Range: &6" + wandRange));
+							    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
+							    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
+							    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Range: &6" + roundOff3));
 							    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 							    				if(levelWeapon < 15) {
 							    					int xp = plugin.getConfig().getInt("XPValue." + levelWeapon);
@@ -392,6 +399,12 @@ public class DFWands extends SwordSwingProgress implements Listener{
 							    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + rarity));
 							    				meta.setLore(newLore);
 							    				item.setItemMeta(meta);
+							    				NBTItem newItem = new NBTItem(item);
+							    				newItem.setDouble("Attack Damage", newItem.getDouble("Attack Damage") + incDamage);
+							    				newItem.setDouble("Attack Speed", newItem.getDouble("Attack Speed") + incSpeed);
+							    				newItem.setDouble("Attack Range", newItem.getDouble("Attack Range") + incRange);
+							    				item = newItem.getItem();
+							    				damager.getInventory().setItemInMainHand(item);
 							    				speed.attackSpeedRun(damager);
 							    			}
 								    		else {

@@ -57,6 +57,7 @@ public class DFShop implements Listener{
 		i.setItem(7, emptyVoid());
 		i.setItem(8, emptyVoid());
 		i.setItem(9, emptyVoid());
+		i.setItem(11, foodShop());
 		i.setItem(13, farmableShop());
 		i.setItem(19, blockShop());
 		i.setItem(21, redstoneShop());
@@ -180,9 +181,16 @@ public class DFShop implements Listener{
 		return item;
 	}
 	public ItemStack blockShop() {
-		ItemStack item = new ItemStack(Material.GRASS, 1);
+		ItemStack item = new ItemStack(Material.GRASS_BLOCK, 1);
 		ItemMeta itemmeta = item.getItemMeta();
 		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lBlock Shop"));
+		item.setItemMeta(itemmeta);
+		return item;
+	}
+	public ItemStack foodShop() {
+		ItemStack item = new ItemStack(Material.COOKED_BEEF, 1);
+		ItemMeta itemmeta = item.getItemMeta();
+		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lFood Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}

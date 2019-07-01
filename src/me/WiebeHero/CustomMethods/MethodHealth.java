@@ -1,19 +1,17 @@
 package me.WiebeHero.CustomMethods;
 
+import java.util.UUID;
+
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import Skills.ClassC;
-import Skills.HealthH;
-import Skills.SkillJoin;
 import Skills.Enums.Classes;
+import Skills.SkillJoin;
 
 public class MethodHealth {
 	SkillJoin join = new SkillJoin();
-	HealthH he = new HealthH();
 	MethodItemStack mi = new MethodItemStack();
 	public void setHealth(Entity e, double heal) {
 		if(e instanceof LivingEntity) {
@@ -49,20 +47,18 @@ public class MethodHealth {
 		}
 	}
 	ClassC c = new ClassC();
-	public void updateHealth(Player p) {
-		if(p != null) {
-			join.getHHCalList().put(p.getUniqueId(), 100.00);
-			double amount = join.getHHCalList().get(p.getUniqueId());
-			if(c.getClass(p) == Classes.LUST || c.getClass(p) == Classes.GLUTTONY) {
-				amount = amount + 7.5 * join.getHHList().get(p.getUniqueId());
-			}
-			else if(c.getClass(p) == Classes.WRATH || c.getClass(p) == Classes.GREED || c.getClass(p) == Classes.PRIDE) {
-				amount = amount + 2.5 * join.getHHList().get(p.getUniqueId());
-			}
-			else {
-				amount = amount + 5.0 * join.getHHList().get(p.getUniqueId());
-			}
-			join.getHHCalList().put(p.getUniqueId(), amount);
+	public void updateHealth(UUID id) {
+		join.getHHCalList().put(id, 100.00);
+		double amount = join.getHHCalList().get(id);
+		if(c.getClass(id) == Classes.LUST || c.getClass(id) == Classes.GLUTTONY) {
+			amount = amount + 7.5 * join.getHHList().get(id);
 		}
+		else if(c.getClass(id) == Classes.WRATH || c.getClass(id) == Classes.GREED || c.getClass(id) == Classes.PRIDE) {
+			amount = amount + 2.5 * join.getHHList().get(id);
+		}
+		else {
+			amount = amount + 5.0 * join.getHHList().get(id);
+		}
+		join.getHHCalList().put(id, amount);
 	}
 }
