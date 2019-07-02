@@ -1,5 +1,8 @@
 package Skills;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +18,7 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import net.md_5.bungee.api.ChatColor;
 
 public class ClassMenuSelection implements Listener{
+	ArrayList<UUID> activated = new ArrayList<UUID>();
 	ClassMenu menu = new ClassMenu();
 	SkillJoin join = new SkillJoin();
 	@EventHandler
@@ -30,7 +34,7 @@ public class ClassMenuSelection implements Listener{
 			else {
 				String className = ChatColor.stripColor(item.getItemMeta().getDisplayName());
 				if(className.equals("Wrath") || className.equals("Lust") || className.equals("Gluttony") || className.equals("Envy") || className.equals("Greed") || className.equals("Sloth") || className.equals("Pride")) {
-					join.getClassList().put(player.getUniqueId(), "");
+					activated.add(player.getUniqueId());
 					menu.ClassConfirm(player, item.getItemMeta().getDisplayName(), item);
 					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 0.5F);
 				}
@@ -79,7 +83,7 @@ public class ClassMenuSelection implements Listener{
 					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
 				}
 				else if(decision.equals("No")) {
-					join.getClassList().remove(player.getUniqueId());
+					activated.remove(player.getUniqueId());
 					menu.ClassSelect(player);
 					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 1.0F);
 				}
@@ -92,16 +96,16 @@ public class ClassMenuSelection implements Listener{
 		InventoryView current = event.getView();
 		if(!join.getClassList().containsKey(player.getUniqueId())) {
 			if(current.getTitle().contains("Class Selection")) {
-				new BukkitRunnable() {
-					public void run() {
-						menu.ClassSelect(player);
-					}
-				}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+				if(!activated.contains(player.getUniqueId())) {
+					new BukkitRunnable() {
+						public void run() {
+							menu.ClassSelect(player);
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+				}
 			}
-		}
-		else if(join.getClassList().containsKey(player.getUniqueId())) {
-			if(join.getClassList().get(player.getUniqueId()) == null) {
-				if(current.getTitle().contains("Class")) {
+			else if(current.getTitle().contains("Class:")) {
+				if(activated.contains(player.getUniqueId())) {
 					String className[] = current.getTitle().split(" ");
 					new BukkitRunnable() {
 						public void run() {

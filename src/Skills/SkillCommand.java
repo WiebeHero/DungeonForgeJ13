@@ -18,7 +18,6 @@ public class SkillCommand implements CommandExecutor{
 			if(cmd.getName().equalsIgnoreCase(skill) || cmd.getName().equalsIgnoreCase(skills)) {
 				if(args.length == 0) {
 					menu.SkillMenuInv(player);
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /skill or /skills"));
 				}
 				else {
 					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /skill or /skills"));

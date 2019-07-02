@@ -134,6 +134,7 @@ public class SkillJoin implements Listener{
 		meta1.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		meta1.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+		meta1.setUnbreakable(true);
 		item1.setItemMeta(meta1);
 		net.minecraft.server.v1_13_R2.ItemStack nmsStack1 = CraftItemStack.asNMSCopy(item1);
 		NBTTagCompound compound1 = (nmsStack1.hasTag()) ? nmsStack1.getTag() : new NBTTagCompound();
@@ -158,11 +159,8 @@ public class SkillJoin implements Listener{
 		modifiers1.add(defense);
 		modifiers1.add(toughness);
 		compound1.set("AttributeModifiers", modifiers1);
-		compound1.set("Unbreakable", new NBTTagByte((byte) 1));
 		nmsStack1.setTag(compound1);
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
-		meta1.setUnbreakable(true);
-		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(newItem);
 		item.setDouble("Defense", 0.50);
 		item.setDouble("Toughness", 0.20);
@@ -189,6 +187,7 @@ public class SkillJoin implements Listener{
 		meta1.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		meta1.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+		meta1.setUnbreakable(true);
 		item1.setItemMeta(meta1);
 		net.minecraft.server.v1_13_R2.ItemStack nmsStack1 = CraftItemStack.asNMSCopy(item1);
 		NBTTagCompound compound1 = (nmsStack1.hasTag()) ? nmsStack1.getTag() : new NBTTagCompound();
@@ -213,11 +212,8 @@ public class SkillJoin implements Listener{
 		modifiers1.add(defense);
 		modifiers1.add(toughness);
 		compound1.set("AttributeModifiers", modifiers1);
-		compound1.set("Unbreakable", new NBTTagByte((byte) 1));
 		nmsStack1.setTag(compound1);
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
-		meta1.setUnbreakable(true);
-		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(newItem);
 		item.setDouble("Defense", 0.50);
 		item.setDouble("Toughness", 0.20);
@@ -244,6 +240,7 @@ public class SkillJoin implements Listener{
 		meta1.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		meta1.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+		meta1.setUnbreakable(true);
 		item1.setItemMeta(meta1);
 		net.minecraft.server.v1_13_R2.ItemStack nmsStack1 = CraftItemStack.asNMSCopy(item1);
 		NBTTagCompound compound1 = (nmsStack1.hasTag()) ? nmsStack1.getTag() : new NBTTagCompound();
@@ -268,11 +265,8 @@ public class SkillJoin implements Listener{
 		modifiers1.add(defense);
 		modifiers1.add(toughness);
 		compound1.set("AttributeModifiers", modifiers1);
-		compound1.set("Unbreakable", new NBTTagByte((byte) 1));
 		nmsStack1.setTag(compound1);
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
-		meta1.setUnbreakable(true);
-		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(newItem);
 		item.setDouble("Defense", 0.50);
 		item.setDouble("Toughness", 0.20);
@@ -299,6 +293,7 @@ public class SkillJoin implements Listener{
 		meta1.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		meta1.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+		meta1.setUnbreakable(true);
 		item1.setItemMeta(meta1);
 		net.minecraft.server.v1_13_R2.ItemStack nmsStack1 = CraftItemStack.asNMSCopy(item1);
 		NBTTagCompound compound1 = (nmsStack1.hasTag()) ? nmsStack1.getTag() : new NBTTagCompound();
@@ -325,8 +320,6 @@ public class SkillJoin implements Listener{
 		compound1.set("AttributeModifiers", modifiers1);
 		nmsStack1.setTag(compound1);
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
-		meta1.setUnbreakable(true);
-		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(newItem);
 		item.setDouble("Defense", 0.50);
 		item.setDouble("Toughness", 0.20);
@@ -351,10 +344,8 @@ public class SkillJoin implements Listener{
 		meta1.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		meta1.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+		meta1.setUnbreakable(true);
 		item1.setItemMeta(meta1);
-		meta1.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		meta1.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 		net.minecraft.server.v1_13_R2.ItemStack nmsStack1 = CraftItemStack.asNMSCopy(item1);
 		NBTTagCompound compound1 = (nmsStack1.hasTag()) ? nmsStack1.getTag() : new NBTTagCompound();
 		NBTTagList modifiers1 = new NBTTagList();
@@ -379,8 +370,6 @@ public class SkillJoin implements Listener{
 		compound1.set("AttributeModifiers", modifiers1);
 		nmsStack1.setTag(compound1);
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
-		meta1.setUnbreakable(true);
-		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(newItem);
 		item.setDouble("Attack Damage", 5.0);
 		item.setDouble("Attack Speed", 0.8);

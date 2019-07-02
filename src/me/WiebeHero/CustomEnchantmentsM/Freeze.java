@@ -21,7 +21,6 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import net.md_5.bungee.api.ChatColor;
 
 public class Freeze extends SwordSwingProgress implements Listener {
-	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
 	@EventHandler
 	public void CustomEnchantmentsMAllOut(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player){

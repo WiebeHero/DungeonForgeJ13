@@ -526,7 +526,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		join.loadSkilledProfiles(yml4, f5);
+		if(yml4.getConfigurationSection("Skills.Players") != null) {
+			join.loadSkilledProfiles(yml4, f5);
+		}
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
 		//NeededStuff
@@ -874,6 +876,15 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		else if(player.hasPermission("helper")) {
 			ranks.put(player.getUniqueId(), "&aHelper");
 		}
+		else if(player.hasPermission("qaadmin")) {
+			ranks.put(player.getUniqueId(), "&3QA Admin");
+		}
+		else if(player.hasPermission("qa")) {
+			ranks.put(player.getUniqueId(), "&bQA");
+		}
+		else if(player.hasPermission("youtuber")) {
+			ranks.put(player.getUniqueId(), "&fYou&ctuber");
+		}
 		else if(player.hasPermission("bronze")) {
 			ranks.put(player.getUniqueId(), "&6Bronze");
 		}
@@ -893,7 +904,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			ranks.put(player.getUniqueId(), "&aEmerald");
 		}
 		else {
-			ranks.put(player.getUniqueId(), "");
+			ranks.put(player.getUniqueId(), "&7User");
 		}
 	}
 	public static HashMap<UUID, Scoreboard> scores = new HashMap<UUID, Scoreboard>();

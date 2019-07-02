@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -15,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
@@ -43,7 +45,7 @@ public class CombatTag implements Listener{
 							if(duration == 0) {
 								cancel();
 								activated.remove(damager.getName());
-								sendActionbar(damager, "&aOut of combat!");
+								sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
 							}
 						}
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -67,7 +69,7 @@ public class CombatTag implements Listener{
 							if(duration == 0) {
 								cancel();
 								activated.remove(victim.getName());
-								sendActionbar(victim, "&aOut of combat!");
+								sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
 							}
 						}
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -95,7 +97,7 @@ public class CombatTag implements Listener{
 							if(duration == 0) {
 								cancel();
 								activated.remove(damager.getName());
-								sendActionbar(damager, "&aOut of combat!");
+								sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
 							}
 						}
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -109,7 +111,7 @@ public class CombatTag implements Listener{
 							if(duration == 0) {
 								cancel();
 								activated.remove(victim.getName());
-								sendActionbar(victim, "&aOut of combat!");
+								sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
 							}
 						}
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -135,7 +137,7 @@ public class CombatTag implements Listener{
 								if(duration == 0) {
 									cancel();
 									activated.remove(damager.getName());
-									sendActionbar(damager, "&aOut of combat!");
+									sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -160,7 +162,7 @@ public class CombatTag implements Listener{
 								if(duration == 0) {
 									cancel();
 									activated.remove(damager.getName());
-									sendActionbar(damager, "&aOut of combat!");
+									sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -174,7 +176,7 @@ public class CombatTag implements Listener{
 								if(duration == 0) {
 									cancel();
 									activated.remove(victim.getName());
-									sendActionbar(victim, "&aOut of combat!");
+									sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -199,7 +201,7 @@ public class CombatTag implements Listener{
 									if(duration == 0) {
 										cancel();
 										activated.remove(damager1.getName());
-										sendActionbar(damager1, "&aOut of combat!");
+										sendActionbar(damager1, new ColorCodeTranslator().colorize("&aOut of combat!"));
 									}
 								}
 							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -224,7 +226,7 @@ public class CombatTag implements Listener{
 									if(duration == 0) {
 										cancel();
 										activated.remove(damager1.getName());
-										sendActionbar(damager1, "&aOut of combat!");
+										sendActionbar(damager1, new ColorCodeTranslator().colorize("&aOut of combat!"));
 									}
 								}
 							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -238,7 +240,7 @@ public class CombatTag implements Listener{
 									if(duration == 0) {
 										cancel();
 										activated.remove(victim.getName());
-										sendActionbar(victim, "&aOut of combat!");
+										sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
 									}
 								}
 							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -263,8 +265,21 @@ public class CombatTag implements Listener{
 	}
 	@EventHandler
 	public void combatTagResetDeath(PlayerDeathEvent event) {
-		Player player = event.getEntity();
-		combatTag.put(player.getName(), 0);
+		new BukkitRunnable() {
+			public void run() {
+				Player player = event.getEntity();
+				combatTag.put(player.getName(), 0);
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+	}
+	@EventHandler
+	public void combatTagResetDeath(PlayerRespawnEvent event) {
+		new BukkitRunnable() {
+			public void run() {
+				Player player = event.getPlayer();
+				combatTag.put(player.getName(), 0);
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 	}
 	@EventHandler
 	public void combatTagRegister(PlayerJoinEvent event) {
