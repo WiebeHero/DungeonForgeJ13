@@ -19,17 +19,17 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 import Skills.Defense;
 import Skills.SkillJoin;
 import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import me.WiebeHero.Spawners.SpawnerList;
 
 public class ArmorChestplate extends SpawnerList implements Listener{
-	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
+	public NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
 	public String colorize(String msg)
     {
         String coloredMsg = "";
@@ -83,7 +83,7 @@ public class ArmorChestplate extends SpawnerList implements Listener{
 					    	String stripped1 = ChatColor.stripColor(nameW);
 					    	String[] partName = stripped1.split(Pattern.quote(" ["));
 					    	String part1 = partName[0];
-					    	Set<String> configSection1 = plugin.getConfig().getConfigurationSection(("Items.Armor")).getKeys(false);
+					    	Set<String> configSection1 = CustomEnchantments.getInstance().getConfig().getConfigurationSection(("Items.Armor")).getKeys(false);
 					    	List<String> configSection2 = new ArrayList<String>(configSection1);
 					    	String realName = "";
 					    	for(int i6 = 0; i6 < configSection2.size(); i6++) {
@@ -199,42 +199,39 @@ public class ArmorChestplate extends SpawnerList implements Listener{
 											damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
 						    	            //Config Data
 						    				levelWeapon++;
-						    				String enchantmentsString = plugin.getConfig().getString("Items.Armor." + realName + ".Enchantments." + levelWeapon);
-						    				String rarity = plugin.getConfig().getString("Items.Armor." + realName + ".Rarity" );
+						    				String enchantmentsString = CustomEnchantments.getInstance().getConfig().getString("Items.Armor." + realName + ".Enchantments");
+						    				String rarity = CustomEnchantments.getInstance().getConfig().getString("Items.Armor." + realName + ".Rarity" );
 						    				NBTItem tempItem = new NBTItem(item);
 						    				double temp1 = tempItem.getDouble("Defense");
 						    				double temp2 = tempItem.getDouble("Toughness");
 						    				//Config Data
-				    	            		double incDefense = plugin.getConfig().getDouble("Items.Armor." + realName + ".IncDefense");
-				    	            		double incToughness = plugin.getConfig().getDouble("Items.Armor." + realName + ".IncToughness");
+				    	            		double incDefense = CustomEnchantments.getInstance().getConfig().getDouble("Items.Armor." + realName + ".IncDefense");
+				    	            		double incToughness = CustomEnchantments.getInstance().getConfig().getDouble("Items.Armor." + realName + ".IncToughness");
 						    				//Config Data
 						    				//Weapon Data
 						    				ItemMeta meta = item.getItemMeta();
 						    				String translator = "";
-						    				if(rarity.contains("Common")) {
+						    				if(rarity.equals("Common")) {
 						    					translator = "&7";
 						    				}
-						    				else if(rarity.contains("Rare")) {
+						    				else if(rarity.equals("Rare")) {
 						    					translator = "&a";
 						    				}
-						    				else if(rarity.contains("Epic")) {
+						    				else if(rarity.equals("Epic")) {
 						    					translator = "&b";
 						    				}
-						    				else if(rarity.contains("Legendary")) {
+						    				else if(rarity.equals("Legendary")) {
 						    					translator = "&c";
 						    				}
-						    				else if(rarity.contains("Mythic")) {
+						    				else if(rarity.equals("Mythic")) {
 						    					translator = "&5";
 						    				}
-						    				else if(rarity.contains("Heroic")) {
+						    				else if(rarity.equals("Heroic")) {
 						    					translator = "&e";
 						    				}
 						    				meta.setDisplayName(new ColorCodeTranslator().colorize(translator + realName + " &a[&6Lv " + levelWeapon + "&a]"));
 						    				ArrayList<String> newLore = new ArrayList<String>();
-						    				String enchantmentSetting[] = enchantmentsString.split("//");
-						    				for(int i = 0; i < enchantmentSetting.length; i++) {
-						    					newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i]));
-						    				}
+						    				newLore = enchant.setEnchantments(levelWeapon, enchantmentsString, rarity, newLore);
 						    				double roundOff1 = (double) Math.round((temp1 + incDefense) * 100) / 100;
 						    				double roundOff2 = (double) Math.round((temp2 + incToughness) * 100) / 100;
 						    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
@@ -242,7 +239,7 @@ public class ArmorChestplate extends SpawnerList implements Listener{
 						    				newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + roundOff2));
 						    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 						    				if(levelWeapon < 15) {
-						    					int xp = plugin.getConfig().getInt("XPValue." + levelWeapon);
+						    					int xp = CustomEnchantments.getInstance().getConfig().getInt("XPValue." + levelWeapon);
 						    					newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l" + xp + "&a]"));
 						    				}
 						    				else if(levelWeapon == 15) {
@@ -255,7 +252,7 @@ public class ArmorChestplate extends SpawnerList implements Listener{
 						    					int levelRequired = loreRequired * 5;
 						    					newLore.add(new ColorCodeTranslator().colorize("&7Level Required: &6" + levelRequired));
 						    				}
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + rarity));
+						    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + translator + rarity));
 						    				meta.setLore(newLore);
 						    				item.setItemMeta(meta);
 						    				NBTItem newItem = new NBTItem(item);

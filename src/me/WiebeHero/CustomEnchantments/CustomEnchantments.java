@@ -877,13 +877,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			ranks.put(player.getUniqueId(), "&aHelper");
 		}
 		else if(player.hasPermission("qaadmin")) {
-			ranks.put(player.getUniqueId(), "&3QA Admin");
+			ranks.put(player.getUniqueId(), "&cQA Admin");
 		}
 		else if(player.hasPermission("qa")) {
 			ranks.put(player.getUniqueId(), "&bQA");
 		}
 		else if(player.hasPermission("youtuber")) {
-			ranks.put(player.getUniqueId(), "&fYou&ctuber");
+			ranks.put(player.getUniqueId(), "&dYoutuber");
 		}
 		else if(player.hasPermission("bronze")) {
 			ranks.put(player.getUniqueId(), "&6Bronze");

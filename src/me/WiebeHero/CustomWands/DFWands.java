@@ -29,7 +29,6 @@ import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import NeededStuff.SwordSwingProgress;
@@ -38,13 +37,14 @@ import Skills.SkillJoin;
 import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import me.WiebeHero.Spawners.SpawnerList;
 import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityArrow;
 
 public class DFWands extends SwordSwingProgress implements Listener{
-	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
+	public NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
 	AttackSpeed speed = new AttackSpeed();
 	SkillJoin join = new SkillJoin();
 	@EventHandler
@@ -180,7 +180,6 @@ public class DFWands extends SwordSwingProgress implements Listener{
 			}
 		}
 	}
-	int levelVictim;
 	@EventHandler
 	public void weapons(EntityDeathEvent event) {
 		LivingEntity victim = (LivingEntity) event.getEntity();
@@ -221,7 +220,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 						    	String stripped1 = ChatColor.stripColor(nameW);
 						    	String[] partName = stripped1.split(Pattern.quote(" ["));
 						    	String part1 = partName[0];
-						    	Set<String> configSection1 = plugin.getConfig().getConfigurationSection(("Items.Wands")).getKeys(false);
+						    	Set<String> configSection1 = CustomEnchantments.getInstance().getConfig().getConfigurationSection(("Items.Wands")).getKeys(false);
 						    	List<String> configSection2 = new ArrayList<String>(configSection1);
 						    	String realName = "";
 						    	for(int i6 = 0; i6 < configSection2.size(); i6++) {
@@ -337,11 +336,11 @@ public class DFWands extends SwordSwingProgress implements Listener{
 							    				String levelStringFinal = levelString[1];
 							    				int levelWeapon = Integer.parseInt(levelStringFinal);
 							    				levelWeapon++;
-							    				String enchantmentsString = plugin.getConfig().getString("Items.Wands." + realName + ".Enchantments." + levelWeapon);
-							    				double incDamage = plugin.getConfig().getDouble("Items.Wands." + realName + ".IncDamage");
-							    				double incSpeed = plugin.getConfig().getDouble("Items.Wands." + realName + ".IncSpeed");
-							    				double incRange = plugin.getConfig().getDouble("Items.Wands." + realName + ".Range." + levelWeapon);
-							    				String rarity = plugin.getConfig().getString("Items.Wands." + realName + ".Rarity" );
+							    				String enchantmentsString = CustomEnchantments.getInstance().getConfig().getString("Items.Wands." + realName + ".Enchantments");
+							    				double incDamage = CustomEnchantments.getInstance().getConfig().getDouble("Items.Wands." + realName + ".IncDamage");
+							    				double incSpeed = CustomEnchantments.getInstance().getConfig().getDouble("Items.Wands." + realName + ".IncSpeed");
+							    				double incRange = CustomEnchantments.getInstance().getConfig().getDouble("Items.Wands." + realName + ".IncRange");
+							    				String rarity = CustomEnchantments.getInstance().getConfig().getString("Items.Wands." + realName + ".Rarity" );
 							    				NBTItem tempItem = new NBTItem(item);
 							    				double temp1 = tempItem.getDouble("Attack Damage");
 							    				double temp2 = tempItem.getDouble("Attack Speed");
@@ -350,30 +349,27 @@ public class DFWands extends SwordSwingProgress implements Listener{
 							    				//Weapon Data
 							    				ItemMeta meta = item.getItemMeta();
 							    				String translator = "";
-							    				if(rarity.contains("Common")) {
+							    				if(rarity.equals("Common")) {
 							    					translator = "&7";
 							    				}
-							    				else if(rarity.contains("Rare")) {
+							    				else if(rarity.equals("Rare")) {
 							    					translator = "&a";
 							    				}
-							    				else if(rarity.contains("Epic")) {
+							    				else if(rarity.equals("Epic")) {
 							    					translator = "&b";
 							    				}
-							    				else if(rarity.contains("Legendary")) {
+							    				else if(rarity.equals("Legendary")) {
 							    					translator = "&c";
 							    				}
-							    				else if(rarity.contains("Mythic")) {
+							    				else if(rarity.equals("Mythic")) {
 							    					translator = "&5";
 							    				}
-							    				else if(rarity.contains("Heroic")) {
+							    				else if(rarity.equals("Heroic")) {
 							    					translator = "&e";
 							    				}
 							    				meta.setDisplayName(new ColorCodeTranslator().colorize(translator + realName + " &a[&6Lv " + levelWeapon + "&a]"));
 							    				ArrayList<String> newLore = new ArrayList<String>();
-							    				String enchantmentSetting[] = enchantmentsString.split("//");
-							    				for(int i = 0; i < enchantmentSetting.length; i++) {
-							    					newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i]));
-							    				}
+							    				newLore = enchant.setEnchantments(levelWeapon, enchantmentsString, rarity, newLore);
 							    				double roundOff1 = (double) Math.round((temp1 + incDamage) * 100) / 100;
 							    				double roundOff2 = (double) Math.round((temp2 + incSpeed) * 100) / 100;
 							    				double roundOff3 = (double) Math.round((temp3 + incRange) * 100) / 100;
@@ -383,7 +379,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 							    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Range: &6" + roundOff3));
 							    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 							    				if(levelWeapon < 15) {
-							    					int xp = plugin.getConfig().getInt("XPValue." + levelWeapon);
+							    					int xp = CustomEnchantments.getInstance().getConfig().getInt("XPValue." + levelWeapon);
 							    					newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l" + xp + "&a]"));
 							    				}
 							    				else if(levelWeapon == 15) {

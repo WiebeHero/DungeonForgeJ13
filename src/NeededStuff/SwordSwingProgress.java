@@ -21,7 +21,6 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 public class SwordSwingProgress implements Listener{
 	public static ArrayList<String> names = new ArrayList<String>();
 	public static HashMap<String, Float> swordSwingProgress = new HashMap<String, Float>();
-	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
 	@EventHandler
 	public void swingProgressDamage(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player){
@@ -40,7 +39,7 @@ public class SwordSwingProgress implements Listener{
 							names.remove(player.getName());
 						}
 					}
-				}.runTaskTimer(plugin, 0L, 2L);
+				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
 			}
 		}
 	}
@@ -61,7 +60,7 @@ public class SwordSwingProgress implements Listener{
 						names.remove(player.getName());
 					}
 				}
-			}.runTaskTimer(plugin, 0L, 2L);
+			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
 		}
 	}
 	@EventHandler
@@ -81,7 +80,7 @@ public class SwordSwingProgress implements Listener{
 						names.remove(player.getName());
 					}
 				}
-			}.runTaskTimer(plugin, 0L, 2L);
+			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
 		}
 	}
 	@EventHandler
@@ -101,7 +100,7 @@ public class SwordSwingProgress implements Listener{
 						names.remove(player.getName());
 					}
 				}
-			}.runTaskTimer(plugin, 0L, 2L);
+			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
 		}
 	}
 	@EventHandler
@@ -122,7 +121,7 @@ public class SwordSwingProgress implements Listener{
 							names.remove(player.getName());
 						}
 					}
-				}.runTaskTimer(plugin, 0L, 2L);
+				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
 			}
 		}
 	}
@@ -143,7 +142,7 @@ public class SwordSwingProgress implements Listener{
 						names.remove(player.getName());
 					}
 				}
-			}.runTaskTimer(plugin, 0L, 2L);
+			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
 		}
 	}
 	public final float getSwingProgress(Player player) {

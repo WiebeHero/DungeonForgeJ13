@@ -46,6 +46,6 @@ public class MethodItemStack {
 				room = false;
 			}
 		}
-		return false;
+		return room;
 	}
 }

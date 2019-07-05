@@ -31,8 +31,6 @@ import me.WiebeHero.CustomMethods.MethodCritical;
 import me.WiebeHero.CustomMethods.MethodDefense;
 import me.WiebeHero.CustomMethods.MethodHealth;
 import me.WiebeHero.CustomMethods.MethodRanged;
-import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_13_R2.NBTTagByte;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.NBTTagDouble;
 import net.minecraft.server.v1_13_R2.NBTTagInt;
@@ -86,21 +84,31 @@ public class SkillJoin implements Listener{
 					classMenu.ClassSelect(player);
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), 10L);
-			player.getInventory().addItem(apprenticeSword());
-			player.getInventory().addItem(divineH());
-			player.getInventory().addItem(divineC());
-			player.getInventory().addItem(divineL());
-			player.getInventory().addItem(divineB());
-			player.teleport(player.getWorld().getSpawnLocation());
-			HealthH h = new HealthH();
-			h.updateHealth(player);
+			new BukkitRunnable() {
+				public void run() {
+					player.getInventory().addItem(apprenticeSword());
+					player.getInventory().addItem(divineH());
+					player.getInventory().addItem(divineC());
+					player.getInventory().addItem(divineL());
+					player.getInventory().addItem(divineB());
+					player.teleport(player.getWorld().getSpawnLocation());
+					HealthH h = new HealthH();
+					h.updateHealth(player);
+				}
+			}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+			
 		}
 		else {
-			player.teleport(player.getWorld().getSpawnLocation());
-			ClassC c = new ClassC();
-			c.registerClass(player.getUniqueId());
-			HealthH h = new HealthH();
-			h.updateHealth(player);
+			new BukkitRunnable() {
+				public void run() {
+					player.teleport(player.getWorld().getSpawnLocation());
+					ClassC c = new ClassC();
+					c.registerClass(player.getUniqueId());
+					HealthH h = new HealthH();
+					h.updateHealth(player);
+				}
+			}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+			
 		}
 	}
 	@EventHandler
@@ -126,7 +134,7 @@ public class SkillJoin implements Listener{
 		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.50"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.20"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l1000&a]"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 		lore1.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
@@ -179,7 +187,7 @@ public class SkillJoin implements Listener{
 		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.50"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.20"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l1000&a]"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 		lore1.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
@@ -232,7 +240,7 @@ public class SkillJoin implements Listener{
 		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.50"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.20"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l1000&a]"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 		lore1.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
@@ -285,7 +293,7 @@ public class SkillJoin implements Listener{
 		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.50"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.20"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l1000&a]"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 		lore1.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));

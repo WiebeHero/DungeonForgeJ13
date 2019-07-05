@@ -95,6 +95,7 @@ public class SpawnerList implements Listener{
 					  			int mobMax = 3 + 1 * tier - countMobs;
 					  			for(int i = 0; i <= mobMax; i++) {
 					  				Location spawnLoc = new Location(Bukkit.getWorld(SetSpawner.getWorldList().get(counter)), SetSpawner.getSpawnerLocList().get(counter).getX(), SetSpawner.getSpawnerLocList().get(counter).getY(), SetSpawner.getSpawnerLocList().get(counter).getZ());
+					  				double originalY = spawnLoc.getY();
 					  				double x = spawnLoc.getX();
 					  				double z = spawnLoc.getZ();
 				  					spawnLoc.setX(spawnLoc.getX() + randomLocOffSet());
@@ -145,7 +146,7 @@ public class SpawnerList implements Listener{
 					  					zombie.setBaby(false);
 					  				}
 					  				mob.getEquipment().setHelmet(new ItemStack(Material.STONE_BUTTON, 1));
-				  					if(randomDouble() < 60) {
+				  					if(randomDouble() < 40 + 10 * tier) {
 				  						if(tier == 1) {
 				  							mob.getEquipment().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
 				  						}
@@ -162,38 +163,38 @@ public class SpawnerList implements Listener{
 				  							mob.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE, 1));
 				  						}
 				  					}
-				  					if(randomDouble() < 60) {
+				  					if(randomDouble() < 40 + 10 * tier) {
 				  						if(tier == 1) {
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.LEATHER_LEGGINGS, 1));
+				  							mob.getEquipment().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS, 1));
 				  						}
 				  						else if(tier == 2) {
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.GOLDEN_LEGGINGS, 1));
+				  							mob.getEquipment().setLeggings(new ItemStack(Material.GOLDEN_LEGGINGS, 1));
 				  						}
 				  						else if(tier == 3){
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1));
+				  							mob.getEquipment().setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1));
 				  						}
 				  						else if(tier == 4) {
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.IRON_LEGGINGS, 1));
+				  							mob.getEquipment().setLeggings(new ItemStack(Material.IRON_LEGGINGS, 1));
 				  						}
 				  						else if(tier == 5) {
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
+				  							mob.getEquipment().setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
 				  						}
 				  					}
-				  					if(randomDouble() < 60) {
+				  					if(randomDouble() < 40 + 10 * tier) {
 				  						if(tier == 1) {
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.LEATHER_BOOTS, 1));
+				  							mob.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS, 1));
 				  						}
 				  						else if(tier == 2) {
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.GOLDEN_BOOTS, 1));
+				  							mob.getEquipment().setBoots(new ItemStack(Material.GOLDEN_BOOTS, 1));
 				  						}
 				  						else if(tier == 3){
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.CHAINMAIL_BOOTS, 1));
+				  							mob.getEquipment().setBoots(new ItemStack(Material.CHAINMAIL_BOOTS, 1));
 				  						}
 				  						else if(tier == 4) {
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.IRON_BOOTS, 1));
+				  							mob.getEquipment().setBoots(new ItemStack(Material.IRON_BOOTS, 1));
 				  						}
 				  						else if(tier == 5) {
-				  							mob.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_BOOTS, 1));
+				  							mob.getEquipment().setBoots(new ItemStack(Material.DIAMOND_BOOTS, 1));
 				  						}
 				  					}
 				  					if(randomDouble() < 75) {

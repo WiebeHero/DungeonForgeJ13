@@ -47,15 +47,20 @@ public class PayCommand implements Listener,CommandExecutor{
 								amount = Integer.parseInt(matcher6.group(1)); 
 							}
 							if(amount > 0) {
-								double newMoneyMe = moneyMe - amount;
-								double newMoneyThem = moneyThem + amount;
-								m.getMoneyList().put(uuid1, newMoneyMe);
-								m.getMoneyList().put(uuid2, newMoneyThem);
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have paid &6" + amount + "$ &a&lto " + newPlayer.getName() + "!"));
-								newPlayer.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a&l" + player.getName() + " &aHas paid you &6" + amount + "$!"));
+								if(amount <= moneyMe) {
+									double newMoneyMe = moneyMe - amount;
+									double newMoneyThem = moneyThem + amount;
+									m.getMoneyList().put(uuid1, newMoneyMe);
+									m.getMoneyList().put(uuid2, newMoneyThem);
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have paid &6" + amount + "$ &a&lto " + newPlayer.getName() + "!"));
+									newPlayer.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a&l" + player.getName() + " &ahas paid you &6" + amount + "$!"));
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
+								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNot a valid amount."));
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNot a valid amount!"));
 							}
 						}
 						else {

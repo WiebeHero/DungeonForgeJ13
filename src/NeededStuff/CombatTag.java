@@ -42,7 +42,7 @@ public class CombatTag implements Listener{
 							duration--;
 							sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
 							combatTag.put(damager.getName(), duration);
-							if(duration == 0) {
+							if(duration <= 0) {
 								cancel();
 								activated.remove(damager.getName());
 								sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
@@ -66,7 +66,7 @@ public class CombatTag implements Listener{
 							duration--;
 							sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
 							combatTag.put(victim.getName(), duration);
-							if(duration == 0) {
+							if(duration <= 0) {
 								cancel();
 								activated.remove(victim.getName());
 								sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
@@ -94,7 +94,7 @@ public class CombatTag implements Listener{
 							duration--;
 							sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
 							combatTag.put(damager.getName(), duration);
-							if(duration == 0) {
+							if(duration <= 0) {
 								cancel();
 								activated.remove(damager.getName());
 								sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
@@ -108,7 +108,7 @@ public class CombatTag implements Listener{
 							duration--;
 							sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
 							combatTag.put(victim.getName(), duration);
-							if(duration == 0) {
+							if(duration <= 0) {
 								cancel();
 								activated.remove(victim.getName());
 								sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
@@ -134,7 +134,7 @@ public class CombatTag implements Listener{
 								duration--;
 								sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
 								combatTag.put(damager.getName(), duration);
-								if(duration == 0) {
+								if(duration <= 0) {
 									cancel();
 									activated.remove(damager.getName());
 									sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
@@ -159,7 +159,7 @@ public class CombatTag implements Listener{
 								duration--;
 								sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
 								combatTag.put(damager.getName(), duration);
-								if(duration == 0) {
+								if(duration <= 0) {
 									cancel();
 									activated.remove(damager.getName());
 									sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
@@ -173,7 +173,7 @@ public class CombatTag implements Listener{
 								duration--;
 								sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &" + duration));
 								combatTag.put(victim.getName(), duration);
-								if(duration == 0) {
+								if(duration <= 0) {
 									cancel();
 									activated.remove(victim.getName());
 									sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
@@ -198,7 +198,7 @@ public class CombatTag implements Listener{
 									duration--;
 									sendActionbar(damager1, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
 									combatTag.put(damager1.getName(), duration);
-									if(duration == 0) {
+									if(duration <= 0) {
 										cancel();
 										activated.remove(damager1.getName());
 										sendActionbar(damager1, new ColorCodeTranslator().colorize("&aOut of combat!"));
@@ -223,7 +223,7 @@ public class CombatTag implements Listener{
 									duration--;
 									sendActionbar(damager1, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
 									combatTag.put(damager1.getName(), duration);
-									if(duration == 0) {
+									if(duration <= 0) {
 										cancel();
 										activated.remove(damager1.getName());
 										sendActionbar(damager1, new ColorCodeTranslator().colorize("&aOut of combat!"));
@@ -237,7 +237,7 @@ public class CombatTag implements Listener{
 									duration--;
 									sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
 									combatTag.put(victim.getName(), duration);
-									if(duration == 0) {
+									if(duration <= 0) {
 										cancel();
 										activated.remove(victim.getName());
 										sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));

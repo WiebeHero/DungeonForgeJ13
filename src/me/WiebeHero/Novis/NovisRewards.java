@@ -28,6 +28,7 @@ public class NovisRewards {
 	public static ArrayList<ItemStack> rewards4 = new ArrayList<ItemStack>();
 	public static ArrayList<ItemStack> rewards5 = new ArrayList<ItemStack>();
 	public static ArrayList<ItemStack> rewards6 = new ArrayList<ItemStack>();
+	public NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
 	public NovisRewards() {
 		addRewards();
 	}
@@ -40,32 +41,29 @@ public class NovisRewards {
 			String type = config.getString("Items.Weapons." + listItemsWep.get(i) + ".Type");
 			ItemStack item = new ItemStack(Material.getMaterial(type), 1);
 			ItemMeta meta = item.getItemMeta();
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&7" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Rare")) {
+			if(check.equals("Rare")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&a" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));		
 			}
-			if(check.contains("Epic")) {
+			if(check.equals("Epic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&b" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Legendary")) {
+			if(check.equals("Legendary")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&c" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Mythic")) {
+			if(check.equals("Mythic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&5" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Heroic")) {
+			if(check.equals("Heroic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
 			}
-			String enchantmentsString = config.getString("Items.Weapons." + listItemsWep.get(i) + ".Enchantments.1");
+			String enchantmentsString = config.getString("Items.Weapons." + listItemsWep.get(i) + ".Enchantments");
 			double damageWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".BeginDamage");
 			double speedWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".BeginSpeed");
 			ArrayList<String> newLore = new ArrayList<String>();
-			String enchantmentSetting[] = enchantmentsString.split("//");
-			for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
-				newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i1]));
-			}
+			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
 			newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + speedWeapon));
@@ -110,22 +108,22 @@ public class NovisRewards {
 			tempItem.setDouble("Attack Damage", damageWeapon);
 			tempItem.setDouble("Attack Speed", speedWeapon);
 			item = tempItem.getItem();
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				rewards1.add(item);
 			}
-			else if(check.contains("Rare")) {
+			else if(check.equals("Rare")) {
 				rewards2.add(item);
 			}
-			else if(check.contains("Epic")) {
+			else if(check.equals("Epic")) {
 				rewards3.add(item);
 			}
-			else if(check.contains("Legendary")) {
+			else if(check.equals("Legendary")) {
 				rewards4.add(item);
 			}
-			else if(check.contains("Mythic")) {
+			else if(check.equals("Mythic")) {
 				rewards5.add(item);
 			}
-			else if(check.contains("Heroic")) {
+			else if(check.equals("Heroic")) {
 				rewards6.add(item);
 			}
 		}
@@ -136,33 +134,30 @@ public class NovisRewards {
 			String type = config.getString("Items.Wands." + listItemsWand.get(i) + ".Type");
 			ItemStack item = new ItemStack(Material.getMaterial(type), 1);
 			ItemMeta meta = item.getItemMeta();
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&7" + listItemsWand.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Rare")) {
+			if(check.equals("Rare")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&a" + listItemsWand.get(i) + " &a[&6Lv 1&a]"));		
 			}
-			if(check.contains("Epic")) {
+			if(check.equals("Epic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&b" + listItemsWand.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Legendary")) {
+			if(check.equals("Legendary")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&c" + listItemsWand.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Mythic")) {
+			if(check.equals("Mythic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&5" + listItemsWand.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Heroic")) {
+			if(check.equals("Heroic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsWand.get(i) + " &a[&6Lv 1&a]"));
 			}
-			String enchantmentsString = config.getString("Items.Wands." + listItemsWand.get(i) + ".Enchantments.1");
+			String enchantmentsString = config.getString("Items.Wands." + listItemsWand.get(i) + ".Enchantments");
 			double damageWeapon = config.getDouble("Items.Wands." + listItemsWand.get(i) + ".BeginDamage");
 			double speedWeapon = config.getDouble("Items.Wands." + listItemsWand.get(i) + ".BeginSpeed");
 			double attackRange = config.getDouble("Items.Wands." + listItemsWand.get(i) + ".BeginRange");
 			ArrayList<String> newLore = new ArrayList<String>();
-			String enchantmentSetting[] = enchantmentsString.split("//");
-			for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
-				newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i1]));
-			}
+			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
 			newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + speedWeapon));
@@ -184,22 +179,22 @@ public class NovisRewards {
 			tempItem.setDouble("Attack Speed", speedWeapon);
 			tempItem.setDouble("Attack Range", attackRange);
 			item = tempItem.getItem();
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				rewards1.add(item);
 			}
-			else if(check.contains("Rare")) {
+			else if(check.equals("Rare")) {
 				rewards2.add(item);
 			}
-			else if(check.contains("Epic")) {
+			else if(check.equals("Epic")) {
 				rewards3.add(item);
 			}
-			else if(check.contains("Legendary")) {
+			else if(check.equals("Legendary")) {
 				rewards4.add(item);
 			}
-			else if(check.contains("Mythic")) {
+			else if(check.equals("Mythic")) {
 				rewards5.add(item);
 			}
-			else if(check.contains("Heroic")) {
+			else if(check.equals("Heroic")) {
 				rewards6.add(item);
 			}
 		}
@@ -210,32 +205,29 @@ public class NovisRewards {
 			String type = config.getString("Items.Bows." + listItemsBows.get(i) + ".Type");
 			ItemStack item = new ItemStack(Material.getMaterial(type), 1);
 			ItemMeta meta = item.getItemMeta();
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&7" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Rare")) {
+			if(check.equals("Rare")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&a" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));		
 			}
-			if(check.contains("Epic")) {
+			if(check.equals("Epic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&b" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Legendary")) {
+			if(check.equals("Legendary")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&c" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Mythic")) {
+			if(check.equals("Mythic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&5" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Heroic")) {
+			if(check.equals("Heroic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
 			}
-			String enchantmentsString = config.getString("Items.Bows." + listItemsBows.get(i) + ".Enchantments.1");
+			String enchantmentsString = config.getString("Items.Bows." + listItemsBows.get(i) + ".Enchantments");
 			double damageWeapon = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".BeginDamage");
 			double drawSpeedWeapon = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".BeginSpeed");
 			ArrayList<String> newLore = new ArrayList<String>();
-			String enchantmentSetting[] = enchantmentsString.split("//");
-			for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
-				newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i1]));
-			}
+			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
 			newLore.add(new ColorCodeTranslator().colorize("&7Minimally Drawn: &6" + drawSpeedWeapon + "%"));
@@ -255,22 +247,22 @@ public class NovisRewards {
 			tempItem.setDouble("Attack Damage", damageWeapon);
 			tempItem.setDouble("Draw Speed", drawSpeedWeapon);
 			item = tempItem.getItem();
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				rewards1.add(item);
 			}
-			else if(check.contains("Rare")) {
+			else if(check.equals("Rare")) {
 				rewards2.add(item);
 			}
-			else if(check.contains("Epic")) {
+			else if(check.equals("Epic")) {
 				rewards3.add(item);
 			}
-			else if(check.contains("Legendary")) {
+			else if(check.equals("Legendary")) {
 				rewards4.add(item);
 			}
-			else if(check.contains("Mythic")) {
+			else if(check.equals("Mythic")) {
 				rewards5.add(item);
 			}
-			else if(check.contains("Heroic")) {
+			else if(check.equals("Heroic")) {
 				rewards6.add(item);
 			}
 		}
@@ -281,31 +273,28 @@ public class NovisRewards {
 			String type = config.getString("Items.Shields." + listItemsShields.get(i) + ".Type");
 			ItemStack item = new ItemStack(Material.getMaterial(type), 1);
 			ItemMeta meta = item.getItemMeta();
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&7" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Rare")) {
+			if(check.equals("Rare")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&a" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));		
 			}
-			if(check.contains("Epic")) {
+			if(check.equals("Epic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&b" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Legendary")) {
+			if(check.equals("Legendary")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&c" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Mythic")) {
+			if(check.equals("Mythic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&5" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Heroic")) {
+			if(check.equals("Heroic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
 			}
-			String enchantmentsString = config.getString("Items.Shields." + listItemsShields.get(i) + ".Enchantments.1");
+			String enchantmentsString = config.getString("Items.Shields." + listItemsShields.get(i) + ".Enchantments");
 			double damageWeapon = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".BeginToughness");
 			ArrayList<String> newLore = new ArrayList<String>();
-			String enchantmentSetting[] = enchantmentsString.split("//");
-			for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
-				newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i1]));
-			}
+			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + damageWeapon));
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
@@ -322,22 +311,22 @@ public class NovisRewards {
 			NBTItem tempItem = new NBTItem(item);
 			tempItem.setDouble("Toughness", damageWeapon);
 			item = tempItem.getItem();
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				rewards1.add(item);
 			}
-			else if(check.contains("Rare")) {
+			else if(check.equals("Rare")) {
 				rewards2.add(item);
 			}
-			else if(check.contains("Epic")) {
+			else if(check.equals("Epic")) {
 				rewards3.add(item);
 			}
-			else if(check.contains("Legendary")) {
+			else if(check.equals("Legendary")) {
 				rewards4.add(item);
 			}
-			else if(check.contains("Mythic")) {
+			else if(check.equals("Mythic")) {
 				rewards5.add(item);
 			}
-			else if(check.contains("Heroic")) {
+			else if(check.equals("Heroic")) {
 				rewards6.add(item);
 			}
 		}
@@ -357,32 +346,29 @@ public class NovisRewards {
 			}
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName(new ColorCodeTranslator().colorize("&7" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-			String enchantmentsString = config.getString("Items.Armor." + listItemsArmor.get(i) + ".Enchantments.1");
+			String enchantmentsString = config.getString("Items.Armor." + listItemsArmor.get(i) + ".Enchantments");
 			double armorDefense = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".BeginDefense");
 			double armorToughness = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".BeginToughness");
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&7" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Rare")) {
+			if(check.equals("Rare")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&a" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Epic")) {
+			if(check.equals("Epic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&b" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Legendary")) {
+			if(check.equals("Legendary")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&c" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Mythic")) {
+			if(check.equals("Mythic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&5" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
 			}
-			if(check.contains("Heroic")) {
+			if(check.equals("Heroic")) {
 				meta.setDisplayName(new ColorCodeTranslator().colorize("&e" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
 			}
 			ArrayList<String> newLore = new ArrayList<String>();
-			String enchantmentSetting[] = enchantmentsString.split("//");
-			for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
-				newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i1]));
-			}
+			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &6" + armorDefense));
 			newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + armorToughness));
@@ -455,22 +441,22 @@ public class NovisRewards {
 			newItem.setDouble("Defense", armorDefense);
 			newItem.setDouble("Toughness", armorToughness);
 			item = newItem.getItem();
-			if(check.contains("Common")) {
+			if(check.equals("Common")) {
 				rewards1.add(item);
 			}
-			else if(check.contains("Rare")) {
+			else if(check.equals("Rare")) {
 				rewards2.add(item);
 			}
-			else if(check.contains("Epic")) {
+			else if(check.equals("Epic")) {
 				rewards3.add(item);
 			}
-			else if(check.contains("Legendary")) {
+			else if(check.equals("Legendary")) {
 				rewards4.add(item);
 			}
-			else if(check.contains("Mythic")) {
+			else if(check.equals("Mythic")) {
 				rewards5.add(item);
 			}
-			else if(check.contains("Heroic")) {
+			else if(check.equals("Heroic")) {
 				rewards6.add(item);
 			}
 		}
