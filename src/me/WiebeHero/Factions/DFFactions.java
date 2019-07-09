@@ -131,7 +131,7 @@ public class DFFactions implements Listener,CommandExecutor{
 										chunkTotal.remove(fName);
 										fTop.remove(fName);
 										fHomes.remove(fName);
-										
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have abandoned this faction!"));
 									}
 									else {
 										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou dont have permission to abandon this faction!"));
