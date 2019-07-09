@@ -47,7 +47,7 @@ public class SpawnerList implements Listener{
 				  				if(e instanceof Monster) {
 				  					if(teleportBack.containsKey(e.getUniqueId()) && teleportBack.get(e.getUniqueId()) == counter) {
 				  						Location check2 = e.getLocation();
-				  						if(rightLoc.distance(check2) > 40) {
+				  						if(rightLoc.distance(check2) > 20) {
 				  							for(double y = rightLoc.getY() + 15.00; y > 0.00;) {
 				  								y--;
 				  								rightLoc.setY(y);
@@ -75,13 +75,13 @@ public class SpawnerList implements Listener{
 		  					Location fixedLoc = SetSpawner.getSpawnerLocList().get(counter);
 		  					int countMobs = 0;
 		  					fixedLoc.setWorld(Bukkit.getWorld(SetSpawner.getWorldList().get(counter)));
-		  					for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 80, 80, 80)) {
+		  					for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 45, 45, 45)) {
 		  						if(e1 instanceof Player) {
 		  							check = true;
 		  							break;
 		  						}
 		  					}
-				  			for(Entity e : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 40, 40, 40)) {
+				  			for(Entity e : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 20, 20, 20)) {
 				  				if(e != null) {
 				  					if(teleportBack.containsKey(e.getUniqueId())) {
 					  					if(teleportBack.get(e.getUniqueId()) == counter) {
@@ -100,7 +100,7 @@ public class SpawnerList implements Listener{
 					  				double z = spawnLoc.getZ();
 				  					spawnLoc.setX(spawnLoc.getX() + randomLocOffSet());
 				  					spawnLoc.setZ(spawnLoc.getZ() + randomLocOffSet());
-					  				for(double y1 = spawnLoc.getY() + 15.00; y1 > 0;) {
+					  				for(double y1 = spawnLoc.getY() + 10.00; y1 > 0;) {
 					  					y1--;
 					  					spawnLoc.setY(y1);
 					  					if(spawnLoc.getBlock().getType() != Material.AIR) {
@@ -109,7 +109,7 @@ public class SpawnerList implements Listener{
 					  							break;
 					  						}
 					  						else {
-					  							y1 = spawnLoc.getY() + 13;
+					  							y1 = originalY + 10.00;
 					  							spawnLoc.setX(spawnLoc.getX() + randomLocOffSet());
 							  					spawnLoc.setZ(spawnLoc.getZ() + randomLocOffSet());
 					  						}
@@ -125,16 +125,16 @@ public class SpawnerList implements Listener{
 					  					mob.setCustomName(new ColorCodeTranslator().colorize("&f" + mobName + " &6[&b" + new Random().nextInt(20) + "&6]"));
 					  				}
 					  				else if(tier == 2) {
-					  					mob.setCustomName(new ColorCodeTranslator().colorize("&a" + mobName + " &6[&b" + new Random().nextInt(40) + "&6]"));
+					  					mob.setCustomName(new ColorCodeTranslator().colorize("&a" + mobName + " &6[&b" + (new Random().nextInt(20) + 20) + "&6]"));
 					  				}
 					  				else if(tier == 3) {
-					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(60) + "&6]"));
+					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + (new Random().nextInt(20) + 40) + "&6]"));
 					  				}
 					  				else if(tier == 4) {
-					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(80) + "&6]"));
+					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + (new Random().nextInt(20) + 60) + "&6]"));
 					  				}
 					  				else if(tier == 5) {
-					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + new Random().nextInt(100) + "&6]"));
+					  					mob.setCustomName(new ColorCodeTranslator().colorize("&e" + mobName + " &6[&b" + (new Random().nextInt(20) + 80) + "&6]"));
 					  				}
 					  				mob.setCustomNameVisible(true);
 					  				if(mob instanceof Zombie) {

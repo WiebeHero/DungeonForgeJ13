@@ -32,6 +32,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.lucko.luckperms.LuckPerms;
+import me.lucko.luckperms.api.LuckPermsApi;
 
 public class ModerationGUICommand implements CommandExecutor,Listener{
 	public HashMap<UUID, Boolean> staffModeList = new HashMap<UUID, Boolean>();
@@ -62,6 +64,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
+			LuckPermsApi api = LuckPerms.getApi();
 			if(cmd.getName().equalsIgnoreCase(staffmode)) {
 				if(staffModeList.containsKey(player.getUniqueId())) {
 					if(staffModeList.get(player.getUniqueId()) == true) {
@@ -92,48 +95,54 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(ban)) {
-				if(staffModeList.containsKey(player.getUniqueId())) {
-					if(args.length == 3) {
+				if(api.getUser(player.getUniqueId()).getPrimaryGroup().equalsIgnoreCase("Owner")) {
+					if(args.length >= 3) {
 						String p = args[0];
 						Player offender = Bukkit.getPlayer(p);
 						if(offender != null) {
-							String checkIt = "";
-							String timeS = "";
-							checkIt = args[1];
-							String reason = args[2];
+							String timeS = args[1];
+							String reason = "";
+							for(int i = 2; i < args.length; i++) {
+								if(i == 2) {
+									reason = reason + args[i];
+								}
+								else {
+									reason = reason + " " + args[i];
+								}
+							}
 							int time = 0;
 							Long timeTillMuteOver = null;
-							if(checkIt.contains("minutes") || checkIt.contains("minute") || checkIt.contains("m")) {
+							if(timeS.contains("minutes") || timeS.contains("minute") || timeS.contains("m")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 1000);
 								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
 							}
-							else if(checkIt.contains("hours") || checkIt.contains("hour") || checkIt.contains("h")) {
+							else if(timeS.contains("hours") || timeS.contains("hour") || timeS.contains("h")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000);
 								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
 							}
-							else if(checkIt.contains("days") || checkIt.contains("day") || checkIt.contains("d")) {
+							else if(timeS.contains("days") || timeS.contains("day") || timeS.contains("d")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000 * 24);
 								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
 							}
-							else if(checkIt.contains("months") || checkIt.contains("month") || checkIt.contains("mo")) {
+							else if(timeS.contains("months") || timeS.contains("month") || timeS.contains("mo")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = (long) (System.currentTimeMillis() + time * (60 * 60 * 1000 * 24 * 30.41666666));
 								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
 							}
-							else if(checkIt.contains("years") || checkIt.contains("year") || checkIt.contains("y")) {
+							else if(timeS.contains("years") || timeS.contains("year") || timeS.contains("y")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = System.currentTimeMillis() + (time * ((long)60 * 60 * 1000 * 24 * 365));
 								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
 							}
-							else if(checkIt.equalsIgnoreCase("permanent") || checkIt.equalsIgnoreCase("perm") || checkIt.equalsIgnoreCase("permanents") || checkIt.equalsIgnoreCase("p")) {
+							else if(timeS.equalsIgnoreCase("permanent") || timeS.equalsIgnoreCase("perm") || timeS.equalsIgnoreCase("permanents") || timeS.equalsIgnoreCase("p")) {
 								banPerm.add(player.getUniqueId());
 							}
 							if(!reasonBanList.containsKey(player.getUniqueId())) {
@@ -202,43 +211,43 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 			}
 			else if(cmd.getName().equalsIgnoreCase(mute)) {
 				if(staffModeList.containsKey(player.getUniqueId())) {
-					if(args.length == 3) {
+					if(args.length >= 3) {
 						String p = args[0];
 						Player offender = Bukkit.getPlayer(p);
 						if(offender != null) {
-							String checkIt = "";
-							String timeS = "";
-							checkIt = args[2];
-							timeS = args[1];
-							String reason = args[3];
+							String timeS = args[1];
+							String reason = "";
+							for(int i = 2; i < args.length; i++) {
+								reason = reason + " " + args[i];
+							}
 							int time = 0;
 							Long timeTillMuteOver = null;
-							if(checkIt.contains("minutes") || checkIt.contains("minute") || checkIt.contains("m")) {
+							if(timeS.contains("minutes") || timeS.contains("minute") || timeS.contains("m")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 1000);
 							}
-							else if(checkIt.contains("hours") || checkIt.contains("hour") || checkIt.contains("h")) {
+							else if(timeS.contains("hours") || timeS.contains("hour") || timeS.contains("h")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000);
 							}
-							else if(checkIt.contains("days") || checkIt.contains("day") || checkIt.contains("d")) {
+							else if(timeS.contains("days") || timeS.contains("day") || timeS.contains("d")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000 * 24);
 							}
-							else if(checkIt.contains("months") || checkIt.contains("month") || checkIt.contains("mo")) {
+							else if(timeS.contains("months") || timeS.contains("month") || timeS.contains("mo")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = (long) (System.currentTimeMillis() + time * (60 * 60 * 1000 * 24 * 30.41666666));
 							}
-							else if(checkIt.contains("years") || checkIt.contains("year") || checkIt.contains("y")) {
+							else if(timeS.contains("years") || timeS.contains("year") || timeS.contains("y")) {
 								timeS = timeS.replaceAll("[^\\d.]", "");
 								time = Integer.parseInt(timeS);
 								timeTillMuteOver = System.currentTimeMillis() + (time * ((long)60 * 60 * 1000 * 24 * 365));
 							}
-							else if(checkIt.equalsIgnoreCase("permanent") || checkIt.equalsIgnoreCase("perm") || checkIt.equalsIgnoreCase("permanents") || checkIt.equalsIgnoreCase("p")) {
+							else if(timeS.equalsIgnoreCase("permanent") || timeS.equalsIgnoreCase("perm") || timeS.equalsIgnoreCase("permanents") || timeS.equalsIgnoreCase("p")) {
 								mutePerm.add(player.getUniqueId());
 							}
 							muteTimeList.put(offender.getUniqueId(), timeTillMuteOver);
@@ -436,6 +445,9 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 					message = message + diffYears + " Years.";
 				}
 				player.sendMessage(new ColorCodeTranslator().colorize(message));
+			}
+			else {
+				muteTimeList.remove(player.getUniqueId());
 			}
 		}
 		else if(mutePerm.contains(player.getUniqueId())){

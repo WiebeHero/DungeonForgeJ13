@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -269,6 +268,7 @@ public class CombatTag implements Listener{
 			public void run() {
 				Player player = event.getEntity();
 				combatTag.put(player.getName(), 0);
+				player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 	}

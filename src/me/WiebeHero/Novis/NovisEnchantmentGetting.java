@@ -9,7 +9,6 @@ public class NovisEnchantmentGetting {
 	public ArrayList<String> setEnchantments(int level, String enchants, String rarity, ArrayList<String> lore) {
 		ArrayList<String> newLore = lore;
 		String test[] = enchants.split("//");
-		CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage("Test Succeeded");
 		if(rarity.equals("Common")) {
 			if(level == 1) {
 				newLore.add(new ColorCodeTranslator().colorize("&9" + test[0]) + " 1");
@@ -334,7 +333,6 @@ public class NovisEnchantmentGetting {
 				newLore.add(new ColorCodeTranslator().colorize("&9" + test[2]) + " 2");
 			}
 		}
-		CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(newLore.toString());
 		return newLore;
 	}
 }

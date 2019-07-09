@@ -78,6 +78,7 @@ public class SkillJoin implements Listener{
 	@EventHandler
 	public void skillJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
 		if(!classes.containsKey(player.getUniqueId())) {
 			new BukkitRunnable() {
 				public void run() {
@@ -91,7 +92,6 @@ public class SkillJoin implements Listener{
 					player.getInventory().addItem(divineC());
 					player.getInventory().addItem(divineL());
 					player.getInventory().addItem(divineB());
-					player.teleport(player.getWorld().getSpawnLocation());
 					HealthH h = new HealthH();
 					h.updateHealth(player);
 				}
@@ -101,7 +101,6 @@ public class SkillJoin implements Listener{
 		else {
 			new BukkitRunnable() {
 				public void run() {
-					player.teleport(player.getWorld().getSpawnLocation());
 					ClassC c = new ClassC();
 					c.registerClass(player.getUniqueId());
 					HealthH h = new HealthH();

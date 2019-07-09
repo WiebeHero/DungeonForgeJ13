@@ -47,7 +47,6 @@ import NeededStuff.CombatTag;
 import NeededStuff.DisableCraftItems;
 import NeededStuff.Disparitys;
 import NeededStuff.EnderPearlCooldown;
-import NeededStuff.HomeSystem;
 import NeededStuff.LevelRestrictions;
 import NeededStuff.MOTDSetting;
 import NeededStuff.MoneyCreation;
@@ -256,7 +255,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private SetChest loot = new SetChest();
 	private MoneyCreate money = new MoneyCreate();
 	private SetHomeSystem sethome = new SetHomeSystem();
-	private HomeSystem home = new HomeSystem();
 	private TPACommand tpa = new TPACommand();
 	private ModerationGUICommand mod = new ModerationGUICommand();
 	private ChestList cList = new ChestList();
@@ -455,6 +453,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Factions
 		getServer().getPluginManager().registerEvents(new FactionsHandler(), this);
 		getServer().getPluginManager().registerEvents(fac, this);
+		//Stuff
+		getServer().getPluginManager().registerEvents(sethome, this);
 		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
 		try{
@@ -529,6 +529,20 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		if(yml4.getConfigurationSection("Skills.Players") != null) {
 			join.loadSkilledProfiles(yml4, f5);
 		}
+		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
+		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
+		try{
+			yml5.load(f6);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		if(yml5.getConfigurationSection("Homes") != null) {
+			sethome.loadHomes(yml5, f6);
+		}
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
 		//NeededStuff
@@ -563,7 +577,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(pay.balance).setExecutor(pay);
 		getCommand(pay.money).setExecutor(pay);
 		getCommand(sethome.command).setExecutor(sethome);
-		getCommand(home.homeCommand).setExecutor(home);
+		getCommand(sethome.homeCommand).setExecutor(sethome);
+		getCommand(sethome.homesCommand).setExecutor(sethome);
 		getCommand(tpa.tpa).setExecutor(tpa);
 		getCommand(tpa.tpaccept).setExecutor(tpa);
 		getCommand(tpa.tpdeny).setExecutor(tpa);
@@ -810,6 +825,18 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		join.saveSkilledProfiles(yml4, f5);
+		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
+		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
+		try{
+			yml5.load(f6);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		sethome.saveHomes(yml5, f6);
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {

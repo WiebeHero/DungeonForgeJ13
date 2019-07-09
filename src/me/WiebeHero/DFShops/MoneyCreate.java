@@ -21,7 +21,7 @@ public class MoneyCreate implements Listener{
 	public void moneyCreateJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if(!moneyList.containsKey(player.getUniqueId())) {
-			moneyList.put(player.getUniqueId(), 50000.00);
+			moneyList.put(player.getUniqueId(), 1500.00);
 		}
 	}
 	public void loadMoney(YamlConfiguration yml, File f) {
@@ -53,8 +53,15 @@ public class MoneyCreate implements Listener{
 			e.printStackTrace();
 		}
 		for(Entry<UUID, Double> entry : moneyList.entrySet()) {
+			yml.createSection("List." + entry.getKey());
 			yml.set("List." + entry.getKey(), entry.getValue());
 		}
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
 	}
 	public HashMap<UUID, Double> getMoneyList(){
 		return MoneyCreate.moneyList;

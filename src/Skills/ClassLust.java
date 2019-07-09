@@ -18,6 +18,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import Skills.Enums.Classes;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Factions.DFFactions;
@@ -25,88 +26,84 @@ import me.WiebeHero.Factions.DFFactions;
 public class ClassLust implements Listener{
 	SkillJoin join = new SkillJoin();
 	DFFactions fac = new DFFactions();
+	ClassC c = new ClassC();
 	ArrayList<UUID> cooldownLust = new ArrayList<UUID>();
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(join.getClassList().containsKey(player.getUniqueId())) {
-			if(join.getClassList().get(player.getUniqueId()).equals("Lust")) {
-				if(!cooldownLust.contains(player.getUniqueId())) {
-					String facName = "";
-					for(Entry<String, ArrayList<UUID>> entry : fac.getFactionMemberList().entrySet()) {
-						if(entry.getValue().contains(player.getUniqueId())) {
-							facName = entry.getKey();
-						}
+		if(c.getClass(player.getUniqueId()) == Classes.LUST) {
+			if(!cooldownLust.contains(player.getUniqueId())) {
+				String facName = "";
+				for(Entry<String, ArrayList<UUID>> entry : fac.getFactionMemberList().entrySet()) {
+					if(entry.getValue().contains(player.getUniqueId())) {
+						facName = entry.getKey();
 					}
-					int cc = join.getCCMODList().get(player.getUniqueId());
-					int rd = join.getRDMODList().get(player.getUniqueId());
-					int hh = join.getHHMODList().get(player.getUniqueId());
-					int df = join.getDFMODList().get(player.getUniqueId());
-					int level = join.getLevelList().get(player.getUniqueId());
-					double heal = 10 + level * 0.15;
-					if(hh > 0) {
-						heal = heal + hh * 5;
-					}
-					double damage = 1 + level * 0.04;
-					if(cc > 0) {
-						damage = damage + cc;
-					}
-					double range = 7 + level * 0.07;
-					if(rd > 0) {
-						range = range + rd * 2;
-					}
-					long cooldown = 2000 - 6 * level;
-					double totalHeal = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * (heal / 100);
-					event.setCancelled(true);
-					for(Entity e : player.getNearbyEntities(range, range, range)) {
-						if(e != null && e != player) {
-							if(e instanceof LivingEntity) {
-								if(fac.getFactionMemberList().get(facName) != null && !fac.getFactionMemberList().get(facName).contains(e.getUniqueId())) {
-									LivingEntity victim = (LivingEntity) e;
-									double dealtDamage = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * (damage / 100);
-									victim.damage(dealtDamage);
-									Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.8D, victim.getLocation().getZ() + 0D);
-									victim.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, locCF, 60, 0.15, 0.15, 0.15, 0.1); 
-									victim.getWorld().playSound(victim.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1.5);
-									totalHeal = totalHeal + dealtDamage;
-									if(!cooldownLust.contains(player.getUniqueId())) {
-										cooldownLust.add(player.getUniqueId());
-										new BukkitRunnable() {
-											public void run() {
-												cooldownLust.remove(player.getUniqueId());
-												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Drain Blood &aagain!"));
-											}
-										}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
-									}
+				}
+				int cc = join.getCCMODList().get(player.getUniqueId());
+				int rd = join.getRDMODList().get(player.getUniqueId());
+				int hh = join.getHHMODList().get(player.getUniqueId());
+				int df = join.getDFMODList().get(player.getUniqueId());
+				int level = join.getLevelList().get(player.getUniqueId());
+				double heal = 10 + level * 0.15;
+				if(hh > 0) {
+					heal = heal + hh * 5;
+				}
+				double damage = 1 + level * 0.04;
+				if(cc > 0) {
+					damage = damage + cc;
+				}
+				double range = 7 + level * 0.07;
+				if(rd > 0) {
+					range = range + rd * 2;
+				}
+				long cooldown = 2000 - 6 * level;
+				double totalHeal = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * (heal / 100);
+				event.setCancelled(true);
+				for(Entity e : player.getNearbyEntities(range, range, range)) {
+					if(e != null && e != player) {
+						if(e instanceof LivingEntity) {
+							if(fac.getFactionMemberList().get(facName) != null && !fac.getFactionMemberList().get(facName).contains(e.getUniqueId())) {
+								LivingEntity victim = (LivingEntity) e;
+								double dealtDamage = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * (damage / 100);
+								victim.damage(dealtDamage);
+								Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.8D, victim.getLocation().getZ() + 0D);
+								victim.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, locCF, 60, 0.15, 0.15, 0.15, 0.1); 
+								victim.getWorld().playSound(victim.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1.5);
+								totalHeal = totalHeal + dealtDamage;
+								if(!cooldownLust.contains(player.getUniqueId())) {
+									cooldownLust.add(player.getUniqueId());
+									new BukkitRunnable() {
+										public void run() {
+											cooldownLust.remove(player.getUniqueId());
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Drain Blood &aagain!"));
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
 								}
 							}
 						}
-						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Drain Blood!"));
-							Location locCF = new Location(player.getWorld(), player.getLocation().getX() + 0D, player.getLocation().getY() + 1.8D, player.getLocation().getZ() + 0D);
-							player.getWorld().spawnParticle(Particle.HEART, locCF, 60, 0.15, 0.15, 0.15, 0.1); 
-							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1.5);
-						}
-					}
-					
-					if(df > 0) {
-						player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 600, df * 2), true);
-					}
-					double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-					if(player.getHealth() + totalHeal < maxHealth) {
-						player.setHealth(player.getHealth() + totalHeal);
 					}
 					else {
-						player.setHealth(maxHealth);
+						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Drain Blood!"));
+						Location locCF = new Location(player.getWorld(), player.getLocation().getX() + 0D, player.getLocation().getY() + 1.8D, player.getLocation().getZ() + 0D);
+						player.getWorld().spawnParticle(Particle.HEART, locCF, 60, 0.15, 0.15, 0.15, 0.1); 
+						player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1.5);
 					}
 				}
+				
+				if(df > 0) {
+					player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 600, df * 2), true);
+				}
+				double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+				if(player.getHealth() + totalHeal < maxHealth) {
+					player.setHealth(player.getHealth() + totalHeal);
+				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+					player.setHealth(maxHealth);
 				}
 			}
-		}
-		else {
-			player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have not chosen a class!"));
+			else {
+				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+			}
 		}
 	}
 }

@@ -19,52 +19,49 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import Skills.Enums.Classes;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class ClassSloth implements Listener{
 	SkillJoin join = new SkillJoin();
+	ClassC c = new ClassC();
 	public ArrayList<UUID> slothCooldown = new ArrayList<UUID>();
 	public HashMap<UUID, ArrayList<UUID>> arrowList = new HashMap<UUID, ArrayList<UUID>>();
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(join.getClassList().containsKey(player.getUniqueId())) {
-			if(join.getClassList().get(player.getUniqueId()).equals("Sloth")) {
-				if(!slothCooldown.contains(player.getUniqueId())) {
-					int cc = join.getASMODList().get(player.getUniqueId());
-					Location loc = player.getEyeLocation();
-					Vector vec = loc.getDirection();
-					vec.setY(0.00);
-					loc.add(vec.getX() - (vec.getX()* 2.0),0,vec.getZ() - (vec.getZ() * 2.0));
-					int level = join.getLevelList().get(player.getUniqueId());
-					double arrowA = 10 + level * 0.25;
-					double cooldown = 75 - level * 0.2;
-					event.setCancelled(true);
-					for(int i = 0; i < (int)arrowA; i++) {
-						Arrow arrow = player.getWorld().spawnArrow(loc, rotateVectorAroundY(vec, 180), (float)(1.50 + cc * 0.20), 26);
-						arrow.setShooter(player);
-						arrow.setCritical(true);
-						if(!arrowList.containsKey(player.getUniqueId())) {
-							arrowList.put(player.getUniqueId(), new ArrayList<UUID>());
-						}
-						arrowList.get(player.getUniqueId()).add(arrow.getUniqueId());
+		if(c.getClass(player.getUniqueId()) == Classes.SLOTH) {
+			if(!slothCooldown.contains(player.getUniqueId())) {
+				int cc = join.getASMODList().get(player.getUniqueId());
+				Location loc = player.getEyeLocation();
+				Vector vec = loc.getDirection();
+				vec.setY(0.00);
+				loc.add(vec.getX() - (vec.getX()* 2.0),0,vec.getZ() - (vec.getZ() * 2.0));
+				int level = join.getLevelList().get(player.getUniqueId());
+				double arrowA = 10 + level * 0.25;
+				double cooldown = 75 - level * 0.2;
+				event.setCancelled(true);
+				for(int i = 0; i < (int)arrowA; i++) {
+					Arrow arrow = player.getWorld().spawnArrow(loc, rotateVectorAroundY(vec, 180), (float)(1.50 + cc * 0.20), 26);
+					arrow.setShooter(player);
+					arrow.setCritical(true);
+					if(!arrowList.containsKey(player.getUniqueId())) {
+						arrowList.put(player.getUniqueId(), new ArrayList<UUID>());
 					}
-					slothCooldown.add(player.getUniqueId());
-					new BukkitRunnable() {
-						public void run() {
-							slothCooldown.remove(player.getUniqueId());
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Thorn of the Hedge &aagain!"));
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
+					arrowList.get(player.getUniqueId()).add(arrow.getUniqueId());
 				}
-				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
-				}
+				slothCooldown.add(player.getUniqueId());
+				new BukkitRunnable() {
+					public void run() {
+						slothCooldown.remove(player.getUniqueId());
+						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Thorn of the Hedge &aagain!"));
+					}
+				}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
 			}
-		}
-		else {
-			player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have not chosen a class!"));
+			else {
+				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+			}
 		}
 	}
 	public static Vector rotateVectorAroundY(Vector vector, double degrees) {

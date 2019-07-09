@@ -1,40 +1,30 @@
 package me.WiebeHero.XpTrader;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.FireworkEffect.Type;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
+import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import net.md_5.bungee.api.ChatColor;
 
 public class XPAddWeapons implements Listener{
-	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
+	public NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
 	public ArrayList<String> nameList = new ArrayList<String>();
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
@@ -81,10 +71,6 @@ public class XPAddWeapons implements Listener{
 											configList = config.getConfigurationSection("Items.Bows").getKeys(false);
 											type = "Bows";
 										}
-										else if(lore.contains(ChatColor.stripColor("Attack Damage:")) && !lore.contains(ChatColor.stripColor("Attack Speed:")) && item.getType() == Material.FISHING_ROD){
-											configList = config.getConfigurationSection("Items.Flails").getKeys(false);
-											type = "Flails";
-										}
 										else if(!lore.contains(ChatColor.stripColor("Armor Defense:")) && lore.contains(ChatColor.stripColor("Armor Toughness:"))){
 											configList = config.getConfigurationSection("Items.Shields").getKeys(false);
 											type = "Shields";
@@ -115,107 +101,102 @@ public class XPAddWeapons implements Listener{
 										}
 										int totalXP = 0;
 										int level = 0;
+										double damageWeapon = 0.00;
+				    	            	double speedWeapon = 0.00;
+				    	            	double wandRange = 0.00;
+				    	            	double armorDefense = 0.00;
+				    	            	double armorToughness = 0.00;
+				    	            	double tempAD = 0.00;
+				    	            	double tempAS = 0.00;
+				    	            	double tempWR = 0.00;
+				    	            	double tempDF = 0.00;
+				    	            	double tempT = 0.00;
+				    	            	NBTItem tempItem = null;
 										if(levelCursor == 1 && xpCursor < 500) {
 											totalXP = xpItem + 500;
 											level = levelItem;
+											tempItem = new NBTItem(item);
 										}
 										else if(levelItem == 1 && xpItem < 500) {
 											totalXP = xpCursor + 500;
 											level = levelCursor;
+											tempItem = new NBTItem(item);
 										}
 										else if(levelCursor < levelItem) {
 											totalXP = xpItem + (3000 * (levelCursor - 1) + xpCursor);
 											level = levelItem;
+											tempItem = new NBTItem(item);
 										}
 										else if(levelCursor > levelItem) {
 											totalXP = (3000 * (levelItem - 1) + xpItem) + xpCursor;
 											level = levelCursor;
+											tempItem = new NBTItem(cursor);
 										}
 										else {
 											totalXP = xpItem + (3000 * (levelCursor - 1) + xpCursor);
 											level = levelItem;
+											tempItem = new NBTItem(item);
 										}
 										int xpNeeded = 0;
+										//
+				    	            	
 										for(int i = level; i < 15; i++) {
 											xpNeeded = config.getInt("XPValue." + i);
 											if(totalXP >= xpNeeded) {
 												totalXP = totalXP - xpNeeded;
 												totalXP = Math.abs(totalXP);
 												level = i + 1;
-							    	    		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.75);
+							    	    		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 1.0);
+							    	    		if(type.equals("Weapons")) {
+						    	            		damageWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncDamage") + damageWeapon;
+						    	            		speedWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncSpeed") + speedWeapon;
+						    	            	}
+						    	            	if(type.equals("Wands")) {
+						    	            		damageWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncDamage") + damageWeapon;
+						    	            		speedWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncSpeed") + speedWeapon;
+						    	            		wandRange = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncRange") + wandRange;
+						    	            	}
+						    	            	if(type.equals("Bows")) {
+						    	            		damageWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncDamage") + damageWeapon;
+						    	            		speedWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncSpeed") + speedWeapon;
+						    	            	}
+						    	            	if(type.equals("Armor")) {
+						    	            		armorDefense = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncDefense") + armorDefense;
+						    	            		armorToughness = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncToughness") + armorToughness;
+						    	            	}
+						    	            	if(type.equals("Shields")) {
+						    	            		armorToughness = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncToughness") + armorToughness;
+						    	            	}
 											}
 											else {
 												break;
 											}
 										}
-										File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-										YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-										try{
-											yml.load(f);
-								        }
-								        catch(IOException e){
-								            e.printStackTrace();
-								        } 
-										catch (InvalidConfigurationException e) {
-											e.printStackTrace();
-										}
+										if(type.equals("Weapons")) {
+				    	            		tempAD = tempItem.getDouble("Attack Damage");
+				    	            		tempAS = tempItem.getDouble("Attack Speed");
+					    				}
+					    				else if(type.equals("Armor")) {
+					    					tempDF = tempItem.getDouble("Defense");
+				    	            		tempT = tempItem.getDouble("Toughness");
+				    	            		Bukkit.broadcastMessage(tempDF + " " + tempT);
+					    				}
+					    				else if(type.equals("Wands")) {
+					    					tempAD = tempItem.getDouble("Attack Damage");
+				    	            		tempAS = tempItem.getDouble("Attack Speed");
+				    	            		tempWR = tempItem.getDouble("Attack Range");
+					    				}
+					    				else if(type.equals("Shields")) {
+				    	            		tempAS = tempItem.getDouble("Toughness");
+					    				}
+					    				else if(type.equals("Bows")) {
+				    	            		tempAD = tempItem.getDouble("Attack Damage");
+				    	            		tempAS = tempItem.getDouble("Draw Speed");
+					    				}
 										ItemStack item1 = item;
 										player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, (float)2.00, (float)1.00);
-				    	            	double damageWeapon = 0.00;
-				    	            	double speedWeapon = 0.00;
-				    	            	double wandRange = 0.00;
-				    	            	double armorDefense = 0.00;
-				    	            	double armorToughness = 0.00;
-				    	            	String enchantmentsString = plugin.getConfig().getString("Items." + type + "." + confirm + ".Enchantments." + level);
-				    	            	String rarity = plugin.getConfig().getString("Items." + type + "." + confirm + ".Rarity");
-				    	            	String rare = "";
-			    	            		if(rarity.contains("&7")) {
-			    	            			String split[] = rarity.split("&7");
-			    	            			rare = split[1];
-			    	            		}
-			    	            		if(rarity.contains("&a")) {
-			    	            			String split[] = rarity.split("&a");
-			    	            			rare = split[1];
-			    	            		}
-			    	            		if(rarity.contains("&e")) {
-			    	            			String split[] = rarity.split("&b");
-			    	            			rare = split[1];
-			    	            		}
-			    	            		if(rarity.contains("&c")) {
-			    	            			String split[] = rarity.split("&c");
-			    	            			rare = split[1];
-			    	            		}
-			    	            		if(rarity.contains("&5")) {
-			    	            			String split[] = rarity.split("&5");
-			    	            			rare = split[1];
-			    	            		}
-			    	            		if(rarity.contains("&e")) {
-			    	            			String split[] = rarity.split("&e");
-			    	            			rare = split[1];
-			    	            		}
-				    	            	if(type.equals("Weapons")) {
-				    	            		damageWeapon = plugin.getConfig().getDouble("Items." + type + "." + confirm + ".Damage." + level);
-				    	            		speedWeapon = plugin.getConfig().getDouble("Items." + type + "." + confirm + ".Speed." + level);
-				    	            	}
-				    	            	if(type.equals("Wands")) {
-				    	            		damageWeapon = plugin.getConfig().getDouble("Items." + type + "." + confirm + ".Damage." + level);
-				    	            		speedWeapon = plugin.getConfig().getDouble("Items." + type + "." + confirm + ".Speed." + level);
-				    	            		wandRange = plugin.getConfig().getDouble("Items." + type + "." + confirm + ".Range." + level);
-				    	            	}
-				    	            	if(type.equals("Flails")) {
-				    	            		damageWeapon = plugin.getConfig().getDouble("Items." + type + "." + confirm + ".Damage." + level);
-				    	            		speedWeapon = plugin.getConfig().getDouble("Items." + type + "." + confirm + ".Speed." + level);
-				    	            	}
-				    	            	if(type.equals("Bows")) {
-				    	            		damageWeapon = plugin.getConfig().getDouble("Items." + type + "." + confirm + ".Damage." + level);
-				    	            	}
-				    	            	if(type.equals("Armor")) {
-				    	            		armorDefense = plugin.getConfig().getDouble("Armor Values." + rare + ".Defense." + level);
-				    	            		armorToughness = plugin.getConfig().getDouble("Armor Values." + rare + ".Toughness." + level);
-				    	            	}
-				    	            	if(type.equals("Shields")) {
-				    	            		armorToughness = plugin.getConfig().getDouble("Armor Values." + rare + ".Toughness." + level);
-				    	            	}
+				    	            	String enchantmentsString = CustomEnchantments.getInstance().getConfig().getString("Items." + type + "." + confirm + ".Enchantments");
+				    	            	String rarity = CustomEnchantments.getInstance().getConfig().getString("Items." + type + "." + confirm + ".Rarity");
 					    				//Config Data
 					    				//Weapon Data
 					    				ItemMeta meta = item1.getItemMeta();
@@ -240,39 +221,41 @@ public class XPAddWeapons implements Listener{
 					    				}
 					    				meta.setDisplayName(new ColorCodeTranslator().colorize(translator + confirm + " &a[&6Lv " + level + "&a]"));
 					    				ArrayList<String> newLore = new ArrayList<String>();
-					    				String enchantmentSetting[] = enchantmentsString.split("//");
-					    				for(int i1 = 0; i1 < enchantmentSetting.length; i1++) {
-					    					if(!enchantmentsString.equals("")) {
-					    						newLore.add(new ColorCodeTranslator().colorize("&9" + enchantmentSetting[i1]));
-					    					}
-					    				}
+					    				enchant.setEnchantments(level, enchantmentsString, rarity, newLore);
 					    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 					    				if(type.equals("Weapons")) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + speedWeapon));
+					    					double roundOff1 = (double) Math.round((tempAD + damageWeapon) * 100) / 100;
+						    				double roundOff2 = (double) Math.round((tempAS + speedWeapon) * 100) / 100;
+						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
+						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
 					    				}
 					    				if(type.equals("Armor")) {
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &6" + armorDefense));
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + armorToughness));
-					    				}
-					    				else if(type.equals("Flails")) {
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + speedWeapon));
+					    					double roundOff1 = (double) Math.round((tempDF + armorDefense) * 100) / 100;
+						    				double roundOff2 = (double) Math.round((tempT + armorToughness) * 100) / 100;
+					    					newLore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &6" + roundOff1));
+						    				newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + roundOff2));
 					    				}
 					    				else if(type.equals("Wands")) {
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + speedWeapon));
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Range: &6" + wandRange));
+					    					double roundOff1 = (double) Math.round((tempAD + damageWeapon) * 100) / 100;
+						    				double roundOff2 = (double) Math.round((tempAS + speedWeapon) * 100) / 100;
+						    				double roundOff3 = (double) Math.round((tempWR + wandRange) * 100) / 100;
+					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
+						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
+						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Range: &6" + roundOff3));
 					    				}
 					    				else if(type.equals("Shields")) {
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + armorToughness));
+						    				double roundOff2 = (double) Math.round((tempT + armorToughness) * 100) / 100;
+					    					newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + roundOff2));
 					    				}
 					    				else if(type.equals("Bows")) {
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
+					    					double roundOff1 = (double) Math.round((tempAD + damageWeapon) * 100) / 100;
+						    				double roundOff2 = (double) Math.round((tempAS + speedWeapon) * 100) / 100;
+					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
+					    					newLore.add(new ColorCodeTranslator().colorize("&7Draw Speed: &6" + roundOff2));
 					    				}
 					    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 					    				if(level < 15) {
-					    					int xp = plugin.getConfig().getInt("XPValue." + level);
+					    					int xp = CustomEnchantments.getInstance().getConfig().getInt("XPValue." + level);
 					    					newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l" + totalXP + " &6/ &b&l" + xp + "&a]"));
 					    				}
 					    				else if(level == 15) {
@@ -438,6 +421,31 @@ public class XPAddWeapons implements Listener{
 					    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + rarity));
 					    				meta.setLore(newLore);
 					    				item1.setItemMeta(meta);
+					    				NBTItem newItem = new NBTItem(item1);
+					    				if(type.equals("Weapons")) {
+					    					newItem.setDouble("Attack Damage", tempAD + damageWeapon);
+						    				newItem.setDouble("Attack Speed", tempAS + speedWeapon);
+					    				}
+					    				else if(type.equals("Armor")) {
+					    					newItem.setDouble("Defense", tempDF + armorDefense);
+						    				newItem.setDouble("Toughness", tempT + armorToughness);
+						    				tempDF = newItem.getDouble("Defense");
+				    	            		tempT = newItem.getDouble("Toughness");
+				    	            		Bukkit.broadcastMessage(tempDF + " " + tempT);
+					    				}
+					    				else if(type.equals("Wands")) {
+					    					newItem.setDouble("Attack Damage", tempAD + damageWeapon);
+						    				newItem.setDouble("Attack Speed", tempAS + speedWeapon);
+						    				newItem.setDouble("Attack Range", tempWR + wandRange);
+					    				}
+					    				else if(type.equals("Shields")) {
+					    					newItem.setDouble("Toughness", tempT + armorToughness);
+					    				}
+					    				else if(type.equals("Bows")) {
+					    					newItem.setDouble("Attack Damage", tempAD + armorToughness);
+					    					newItem.setDouble("Draw Speed", tempAS + speedWeapon);
+					    				}
+					    				item1 = newItem.getItem();
 										event.setCancelled(true);
 										event.setCurrentItem(item1);
 										event.getCursor().setAmount(event.getCursor().getAmount() - 1);

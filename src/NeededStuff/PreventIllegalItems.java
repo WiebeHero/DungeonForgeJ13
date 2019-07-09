@@ -3,12 +3,14 @@ package NeededStuff;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PreventIllegalItems implements Listener{
@@ -33,9 +35,8 @@ public class PreventIllegalItems implements Listener{
 			}
 		}
 	}
-	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void preventIllegalPickup(PlayerPickupItemEvent event) {
+	public void preventIllegalPickup(EntityPickupItemEvent event) {
 		Item item = (Item) event.getItem();
 		if(item != null) {
 			if(item.getItemStack().getType() == Material.WOODEN_SWORD || item.getItemStack().getType() == Material.STONE_SWORD || item.getItemStack().getType() == Material.GOLDEN_SWORD || item.getItemStack().getType() == Material.DIAMOND_SWORD || item.getItemStack().getType() == Material.IRON_SWORD || item.getItemStack().getType() == Material.IRON_AXE || item.getItemStack().getType() == Material.WOODEN_AXE || item.getItemStack().getType() == Material.STONE_AXE || item.getItemStack().getType() == Material.GOLDEN_AXE || item.getItemStack().getType() == Material.DIAMOND_AXE) {
@@ -85,6 +86,12 @@ public class PreventIllegalItems implements Listener{
 					event.setCancelled(true);
 				}
 			}
+		}
+	}
+	@EventHandler
+	public void cancelTrade(PlayerInteractEntityEvent event) {
+		if(event.getRightClicked() instanceof Villager) {
+			event.setCancelled(true);
 		}
 	}
 }

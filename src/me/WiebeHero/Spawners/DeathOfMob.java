@@ -17,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 
 public class DeathOfMob implements Listener {
-	private SpawnerList s = new SpawnerList();
 	@EventHandler
 	public void deathEvent(EntityDeathEvent event) {
 		if(event.getEntity().getKiller() instanceof Player) {

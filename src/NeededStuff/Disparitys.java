@@ -49,26 +49,30 @@ public class Disparitys implements Listener{
 						@Override
 						public void run() {
 							double zPlayer = player.getLocation().getZ();
-							for(int i = 1; i < 32; i++) {
-								if(zPlayer > 772 - i * 32) {
-									if(bar != null) {
-										bar.setVisible(true);
-										if(i > 0 && i <= 8) {
-											bar.setColor(BarColor.GREEN);
-											bar.setTitle(new ColorCodeTranslator().colorize("&7Disparity: &a" + i));
-										}
-										else if(i > 8 && i <= 16) {
-											bar.setColor(BarColor.YELLOW);
-											bar.setTitle(new ColorCodeTranslator().colorize("&7Disparity: &e" + i));
-										}
-										else if(i > 16 && i <= 25) {
-											bar.setColor(BarColor.RED);
-											bar.setTitle(new ColorCodeTranslator().colorize("&7Disparity: &c" + i));
-										}
-										listPlayers.put(player.getName(), i);
-										break;
-									}
+							int disparity = 0;
+							for(int i = 1; i < 100; i++) {
+								if(zPlayer > 772 - i * 18) {
+									disparity = i;
+									break;
 								}
+							}
+							if(bar != null) {
+								bar.setVisible(true);
+								double d = (double) disparity / 100;
+								bar.setProgress(d);
+								if(disparity >= 0 && disparity < 33) {
+									bar.setColor(BarColor.GREEN);
+									bar.setTitle(new ColorCodeTranslator().colorize("&7Disparity: &a" + disparity));
+								}
+								else if(disparity >= 33 && disparity < 66) {
+									bar.setColor(BarColor.YELLOW);
+									bar.setTitle(new ColorCodeTranslator().colorize("&7Disparity: &e" + disparity));
+								}
+								else if(disparity >= 66 && disparity <= 100) {
+									bar.setColor(BarColor.RED);
+									bar.setTitle(new ColorCodeTranslator().colorize("&7Disparity: &c" + disparity));
+								}
+								listPlayers.put(player.getName(), disparity);
 							}
 							names.remove(player.getName());
 						}
