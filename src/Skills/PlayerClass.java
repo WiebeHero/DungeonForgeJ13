@@ -450,10 +450,10 @@ public class PlayerClass implements Listener{
 	 */
 	public boolean hasClass(UUID uuid) {
 		if(classList.get(uuid) != Classes.NONE || classList.containsKey(uuid)) {
-			return true;
+			return false;
 		}
 		else {
-			return false;
+			return true;
 		}
 	}
 	/**

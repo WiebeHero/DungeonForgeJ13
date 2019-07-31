@@ -46,9 +46,7 @@ public class SkillJoin implements Listener{
 					player.getInventory().addItem(divineB());
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), 1L);
-			
 		}
-		
 	}
 	@EventHandler
 	public void respawnActivate(PlayerRespawnEvent event) {
