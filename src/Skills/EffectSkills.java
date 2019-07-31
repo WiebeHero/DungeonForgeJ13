@@ -160,7 +160,9 @@ public class EffectSkills implements Listener{
 		}
 	}
 	public void changeHealth(Player p) {
-		p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20 / 100 * (pc.getCalculation(p.getUniqueId(), Skills.MAX_HEALTH_CALC) + 100.00 + pc.getCalculation(p.getUniqueId(), Skills.MAX_HEALTH_EXTRA)));
+		double newHealth = 20 / 100 * (pc.getCalculation(p.getUniqueId(), Skills.MAX_HEALTH_CALC) + 100.00 + pc.getCalculation(p.getUniqueId(), Skills.MAX_HEALTH_EXTRA));
+		double roundOff1 = (double) Math.round(newHealth * 100) / 100;
+		p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
 	}
 	public void runDefense(Player p) {
 		new BukkitRunnable() {
