@@ -24,10 +24,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import Skills.PlayerClass;
+import Skills.SkillEnum.Skills;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class Disparitys implements Listener{
+	PlayerClass pc = new PlayerClass();
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
 	public static HashMap<String, BossBar> disparityList = new HashMap<String, BossBar>();
 	public static HashMap<String, Integer> listPlayers = new HashMap<String, Integer>();
@@ -50,7 +53,7 @@ public class Disparitys implements Listener{
 						public void run() {
 							double zPlayer = player.getLocation().getZ();
 							int disparity = 0;
-							for(int i = 1; i < 100; i++) {
+							for(int i = 1; i <= 100; i++) {
 								if(zPlayer > 772 - i * 18) {
 									disparity = i;
 									break;
@@ -130,8 +133,8 @@ public class Disparitys implements Listener{
 				Player damager = (Player) event.getDamager();
 				if(damager.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
 					Player victim = (Player) event.getEntity();
-					int levelD = yml.getInt("Skills.Players." + damager.getUniqueId() + ".Level");
-					int levelV = yml.getInt("Skills.Players." + victim.getUniqueId() + ".Level");
+					int levelD = pc.getSkill(damager.getUniqueId(), Skills.LEVEL);
+					int levelV = pc.getSkill(victim.getUniqueId(), Skills.LEVEL);
 					int disparity = listPlayers.get(victim.getName());
 					int lowerL = levelV - levelD;
 					int higherL = levelD - levelV;
@@ -167,8 +170,8 @@ public class Disparitys implements Listener{
 						e.printStackTrace();
 					}
 					if(shooter.getWorld().getName().equalsIgnoreCase("dfwn-1")) {
-						int levelD = yml.getInt("Skills.Players." + shooter.getUniqueId() + ".Level");
-						int levelV = yml.getInt("Skills.Players." + victim.getUniqueId() + ".Level");
+						int levelD = pc.getSkill(damager.getUniqueId(), Skills.LEVEL);
+						int levelV = pc.getSkill(victim.getUniqueId(), Skills.LEVEL);
 						int disparity = 0;
 						if(listPlayers.get(victim.getName()) != null) {
 							disparity = listPlayers.get(victim.getName());

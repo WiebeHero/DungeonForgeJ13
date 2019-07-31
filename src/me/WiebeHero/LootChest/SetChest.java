@@ -1,5 +1,8 @@
 package me.WiebeHero.LootChest;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -9,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -21,7 +26,6 @@ public class SetChest implements Listener,CommandExecutor {
 	public static HashMap<Integer, Location> chestLocations = new HashMap<Integer, Location>();
 	public static HashMap<Integer, Integer> chestTier = new HashMap<Integer, Integer>();
 	public static HashMap<Integer, Integer> chestRadius = new HashMap<Integer, Integer>();
-	public static HashMap<Integer, String> chestWorld = new HashMap<Integer, String>();
 	int counter;
 	public String cmdNovis = "Loot";
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -49,7 +53,6 @@ public class SetChest implements Listener,CommandExecutor {
 								chestLocations.put(chestLocations.size() + 1, player.getLocation());
 								chestTier.put(chestTier.size() + 1, tier);
 								chestRadius.put(chestRadius.size() + 1, radius);
-								chestWorld.put(chestWorld.size() + 1, player.getLocation().getWorld().getName());
 								player.getLocation().getBlock().setType(Material.CHEST);
 							}
 							else {
@@ -83,7 +86,38 @@ public class SetChest implements Listener,CommandExecutor {
 	public static HashMap<Integer, Location> getChestLocationList(){
 		return SetChest.chestLocations;
 	}
-	public static HashMap<Integer, String> getChestWorldsList(){
-		return SetChest.chestWorld;
+	public void loadLootChests(YamlConfiguration yml, File f) {
+		try{
+			yml.load(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		Set<String> set = yml.getConfigurationSection("Loot.Chests").getKeys(false);
+		for(int i = 1; i < set.size(); i++) {
+			Location loc = (Location) yml.get("Loot.Chests." + i + ".Location");
+			int tier = yml.getInt("Loot.Chests." + i + ".Tier");
+			int radius = yml.getInt("Loot.Chests." + i + ".Radius");
+			chestLocations.put(i, loc);
+			chestTier.put(i, tier);
+			chestRadius.put(i, radius);
+		}
+	}
+	public void saveLootChests(YamlConfiguration yml, File f) {
+		yml.createSection("Loot.Chests");
+		for(int i = 1; i < chestLocations.size(); i++) {
+			yml.set("Loot.Chests." + i + ".Location", chestLocations.get(i));
+			yml.set("Loot.Chests." + i + ".Tier", chestTier.get(i));
+			yml.set("Loot.Chests." + i + ".Radius", chestRadius.get(i));
+		}
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
 	}
 }

@@ -8,29 +8,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
+import Skills.SkillEnum.Skills;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
-import me.WiebeHero.CustomMethods.MethodAttack;
-import me.WiebeHero.CustomMethods.MethodAttackSpeed;
-import me.WiebeHero.CustomMethods.MethodCritical;
-import me.WiebeHero.CustomMethods.MethodDefense;
-import me.WiebeHero.CustomMethods.MethodHealth;
-import me.WiebeHero.CustomMethods.MethodRanged;
 import me.WiebeHero.DFShops.MoneyCreate;
 import net.md_5.bungee.api.ChatColor;
 
 public class SkillMenuInteract implements Listener{
 	SkillJoin join = new SkillJoin();
+	PlayerClass pc = new PlayerClass();
 	SkillMenu menu = new SkillMenu();
-	AttackSpeed speed = new AttackSpeed();
-	HealthH health = new HealthH();
-	Defense defense = new Defense();
 	MoneyCreate money = new MoneyCreate();
-	MethodAttack at = new MethodAttack();
-	MethodAttackSpeed as = new MethodAttackSpeed();
-	MethodCritical cc = new MethodCritical();
-	MethodDefense df = new MethodDefense();
-	MethodHealth hh = new MethodHealth();
-	MethodRanged ra = new MethodRanged();
+	EffectSkills sk = new EffectSkills();
 	@EventHandler
 	public void skillMenuClick(InventoryClickEvent event) {
 		ItemStack item = event.getCurrentItem();
@@ -44,13 +32,12 @@ public class SkillMenuInteract implements Listener{
 			else {
 				String skillName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
 				if(skillName.contains("Attack Damage")) {
-					if(join.getSkillPoints().get(player.getUniqueId()) > 0) {
-						if(join.getADList().get(player.getUniqueId()) < 100) {
-							join.getADList().put(player.getUniqueId(), join.getADList().get(player.getUniqueId()) + 1);
-							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
+					if(pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) > 0) {
+						if(pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE) < 100) {
+							pc.setSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE, pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE) + 1);
+							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							menu.SkillMenuInv(player);
-							at.updateAttack(player.getUniqueId());
 						}
 						else {
 							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
@@ -61,13 +48,12 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Attack Speed")) {
-					if(join.getSkillPoints().get(player.getUniqueId()) > 0) {
-						if(join.getASList().get(player.getUniqueId()) < 100) {
-							join.getASList().put(player.getUniqueId(), join.getASList().get(player.getUniqueId()) + 1);
-							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
+					if(pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) > 0) {
+						if(pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED) < 100) {
+							pc.setSkill(player.getUniqueId(), Skills.ATTACK_SPEED, pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED) + 1);
+							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							as.updateAttackSpeed(player.getUniqueId());
-							speed.attackSpeedRun(player);
+							sk.attackSpeed(player);
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -79,12 +65,11 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Critical Chance")) {
-					if(join.getSkillPoints().get(player.getUniqueId()) > 0) {
-						if(join.getCCList().get(player.getUniqueId()) < 100) {
-							join.getCCList().put(player.getUniqueId(), join.getCCList().get(player.getUniqueId()) + 1);
-							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
+					if(pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) > 0) {
+						if(pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE) < 100) {
+							pc.setSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE, pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE) + 1);
+							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							cc.updateCriticalChance(player.getUniqueId());
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -96,12 +81,11 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Ranged Damage")) {
-					if(join.getSkillPoints().get(player.getUniqueId()) > 0) {
-						if(join.getRDList().get(player.getUniqueId()) < 100) {
-							join.getRDList().put(player.getUniqueId(), join.getRDList().get(player.getUniqueId()) + 1);
-							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
+					if(pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) > 0) {
+						if(pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE) < 100) {
+							pc.setSkill(player.getUniqueId(), Skills.RANGED_DAMAGE, pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE) + 1);
+							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							ra.updateRanged(player.getUniqueId());
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -113,14 +97,13 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Health")) {
-					if(join.getSkillPoints().get(player.getUniqueId()) > 0) {
-						if(join.getHHList().get(player.getUniqueId()) < 100) {
-							join.getHHList().put(player.getUniqueId(), join.getHHList().get(player.getUniqueId()) + 1);
-							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
+					if(pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) > 0) {
+						if(pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH) < 100) {
+							pc.setSkill(player.getUniqueId(), Skills.MAX_HEALTH, pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH) + 1);
+							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							menu.SkillMenuInv(player);
-							hh.updateHealth(player.getUniqueId());
-							health.updateHealth(player);
+							sk.changeHealth(player);
 						}
 						else {
 							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
@@ -131,14 +114,13 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Defense")) {
-					if(join.getSkillPoints().get(player.getUniqueId()) > 0) {
-						if(join.getDFList().get(player.getUniqueId()) < 100) {
-							join.getDFList().put(player.getUniqueId(), join.getDFList().get(player.getUniqueId()) + 1);
-							join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) - 1);
+					if(pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) > 0) {
+						if(pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE) < 100) {
+							pc.setSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE, pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE) + 1);
+							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							menu.SkillMenuInv(player);
-							df.updateDefense(player.getUniqueId());
-							defense.runDefense(player);
+							sk.runDefense(player);
 						}
 						else {
 							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
@@ -149,13 +131,13 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Attack Modifier")) {
-					if(join.getADMODList().get(player.getUniqueId()) < 5) {
-						if(join.getADList().get(player.getUniqueId()) >= 20 + (20 * join.getADMODList().get(player.getUniqueId()))) {
-							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getADMODList().get(player.getUniqueId()))) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getADMODList().get(player.getUniqueId()))) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getADMODList().get(player.getUniqueId())));
+					if(pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER) < 5) {
+						if(pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE) >= 20 + (20 * pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER))) {
+							if(pc.getSkill(player.getUniqueId(), Skills.LEVEL) >= 10 + (10 * pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER)));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
-									join.getADMODList().put(player.getUniqueId(), join.getADMODList().get(player.getUniqueId()) + 1);
+									pc.setSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER, pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER) + 1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
 								}
@@ -176,13 +158,13 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Speed Modifier")) {
-					if(join.getASMODList().get(player.getUniqueId()) < 5) {
-						if(join.getASList().get(player.getUniqueId()) >= 20 + (20 * join.getASMODList().get(player.getUniqueId()))) {
-							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getASMODList().get(player.getUniqueId()))) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getASMODList().get(player.getUniqueId()))) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getASMODList().get(player.getUniqueId())));
+					if(pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED_MODIFIER) < 5) {
+						if(pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED) >= 20 + (20 * pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED_MODIFIER))) {
+							if(pc.getSkill(player.getUniqueId(), Skills.LEVEL) >= 10 + (10 * pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED_MODIFIER))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED_MODIFIER))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED_MODIFIER)));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
-									join.getASMODList().put(player.getUniqueId(), join.getASMODList().get(player.getUniqueId()) + 1);
+									pc.setSkill(player.getUniqueId(), Skills.ATTACK_SPEED_MODIFIER, pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED_MODIFIER) + 1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
 								}
@@ -203,13 +185,13 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Critical Modifier")) {
-					if(join.getCCMODList().get(player.getUniqueId()) < 5) {
-						if(join.getCCList().get(player.getUniqueId()) >= 20 + (20 * join.getCCMODList().get(player.getUniqueId()))) {
-							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getCCMODList().get(player.getUniqueId()))) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getCCMODList().get(player.getUniqueId()))) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 *join.getCCMODList().get(player.getUniqueId())));
+					if(pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE_MODIFIER) < 5) {
+						if(pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE) >= 20 + (20 * pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE_MODIFIER))) {
+							if(pc.getSkill(player.getUniqueId(), Skills.LEVEL) >= 10 + (10 * pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE_MODIFIER))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE_MODIFIER))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 *pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE_MODIFIER)));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
-									join.getCCMODList().put(player.getUniqueId(), join.getCCMODList().get(player.getUniqueId()) + 1);
+									pc.setSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE_MODIFIER, pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE_MODIFIER) + 1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
 								}
@@ -230,13 +212,13 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Ranged Modifier")) {
-					if(join.getRDMODList().get(player.getUniqueId()) < 5) {
-						if(join.getRDList().get(player.getUniqueId()) >= 20 + (20 * join.getRDMODList().get(player.getUniqueId()))) {
-							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getRDMODList().get(player.getUniqueId()))) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getRDMODList().get(player.getUniqueId()))) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getRDMODList().get(player.getUniqueId())));
+					if(pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER) < 5) {
+						if(pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE) >= 20 + (20 * pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER))) {
+							if(pc.getSkill(player.getUniqueId(), Skills.LEVEL) >= 10 + (10 * pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER)));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
-									join.getRDMODList().put(player.getUniqueId(), join.getRDMODList().get(player.getUniqueId()) + 1);
+									pc.setSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER, pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER) + 1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
 								}
@@ -257,13 +239,13 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Health Modifier")) {
-					if(join.getHHMODList().get(player.getUniqueId()) < 5) {
-						if(join.getHHList().get(player.getUniqueId()) >= 20 + (20 * join.getHHMODList().get(player.getUniqueId()))) {
-							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getHHMODList().get(player.getUniqueId()))) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getHHMODList().get(player.getUniqueId()))) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getHHMODList().get(player.getUniqueId())));
+					if(pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER) < 5) {
+						if(pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH) >= 20 + (20 * pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER))) {
+							if(pc.getSkill(player.getUniqueId(), Skills.LEVEL) >= 10 + (10 * pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER)));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
-									join.getHHMODList().put(player.getUniqueId(), join.getHHMODList().get(player.getUniqueId()) + 1);
+									pc.setSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER, pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER) + 1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
 								}
@@ -284,13 +266,13 @@ public class SkillMenuInteract implements Listener{
 					}
 				}
 				else if(skillName.contains("Defense Modifier")) {
-					if(join.getDFMODList().get(player.getUniqueId()) < 5) {
-						if(join.getDFList().get(player.getUniqueId()) >= 20 + (20 * join.getDFMODList().get(player.getUniqueId()))) {
-							if(join.getLevelList().get(player.getUniqueId()) >= 10 + (10 * join.getDFMODList().get(player.getUniqueId()))) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * join.getDFMODList().get(player.getUniqueId()))) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * join.getDFMODList().get(player.getUniqueId())));
+					if(pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE_MODIFIER) < 5) {
+						if(pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE) >= 20 + (20 * pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE_MODIFIER))) {
+							if(pc.getSkill(player.getUniqueId(), Skills.LEVEL) >= 10 + (10 * pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE_MODIFIER))) {
+								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE_MODIFIER))) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE_MODIFIER)));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
-									join.getDFMODList().put(player.getUniqueId(), join.getDFMODList().get(player.getUniqueId()) + 1);
+									pc.setSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE_MODIFIER, pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE_MODIFIER) + 1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
 								}

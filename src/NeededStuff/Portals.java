@@ -26,7 +26,7 @@ public class Portals implements Listener,CommandExecutor{
 	public void teleportToFacWorld(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
 		if(p.getWorld().getName().equals("DFWarzone-1")) {
-			if(p.getLocation().getX() >= -167 && p.getLocation().getX() <= -168 && p.getLocation().getZ() >= 862 && p.getLocation().getZ() >= 865 && p.getLocation().getY() <= 64 && p.getLocation().getY() >= 67){
+			if(p.getLocation().getX() >= 167 && p.getLocation().getX() <= 168 && p.getLocation().getZ() >= 862 && p.getLocation().getZ() >= 865 && p.getLocation().getY() <= 64 && p.getLocation().getY() >= 67){
 				Location loc = Bukkit.getWorld("FactionWorld-1").getSpawnLocation();
 				int x = new Random().nextInt(250) - 250;
 				int z = new Random().nextInt(250) - 250;
@@ -38,6 +38,7 @@ public class Portals implements Listener,CommandExecutor{
 						loc.setY(y1 + 2.00);
 						if(loc.getBlock().getType() == Material.AIR) {
 							p.teleport(loc);
+							break;
 						}
 						else {
 							y1 = 256.00;
@@ -79,6 +80,7 @@ public class Portals implements Listener,CommandExecutor{
 												loc.setY(y1 + 2.00);
 												if(loc.getBlock().getType() == Material.AIR) {
 													player.teleport(loc);
+													break;
 												}
 												else {
 													y1 = 256.00;

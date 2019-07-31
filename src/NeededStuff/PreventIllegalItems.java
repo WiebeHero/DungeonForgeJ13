@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -18,17 +19,17 @@ public class PreventIllegalItems implements Listener{
 	public void preventIllegalClick(InventoryClickEvent event) {
 		ItemStack item = event.getCurrentItem();
 		if(item != null) {
-			if(item.getType() == Material.WOODEN_SWORD || item.getType() == Material.STONE_SWORD || item.getType() == Material.GOLDEN_SWORD || item.getType() == Material.DIAMOND_SWORD || item.getType() == Material.IRON_SWORD || item.getType() == Material.IRON_AXE || item.getType() == Material.WOODEN_AXE || item.getType() == Material.STONE_AXE || item.getType() == Material.GOLDEN_AXE || item.getType() == Material.DIAMOND_AXE) {
+			if(item.getType() == Material.BOW || item.getType() == Material.WOODEN_SWORD || item.getType() == Material.STONE_SWORD || item.getType() == Material.GOLDEN_SWORD || item.getType() == Material.DIAMOND_SWORD || item.getType() == Material.IRON_SWORD || item.getType() == Material.IRON_AXE || item.getType() == Material.WOODEN_AXE || item.getType() == Material.STONE_AXE || item.getType() == Material.GOLDEN_AXE || item.getType() == Material.DIAMOND_AXE) {
 				if(!item.getItemMeta().hasDisplayName()) {
 					event.setCurrentItem(null);	
 				}
 			}
-			else if(item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_LEGGINGS || item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.CHAINMAIL_HELMET || item.getType() == Material.CHAINMAIL_CHESTPLATE || item.getType() == Material.CHAINMAIL_LEGGINGS || item.getType() == Material.CHAINMAIL_BOOTS || item.getType() == Material.IRON_HELMET || item.getType() == Material.IRON_CHESTPLATE || item.getType() == Material.IRON_LEGGINGS || item.getType() == Material.IRON_BOOTS || item.getType() == Material.GOLDEN_HELMET || item.getType() == Material.GOLDEN_CHESTPLATE || item.getType() == Material.GOLDEN_LEGGINGS || item.getType() == Material.GOLDEN_BOOTS || item.getType() == Material.DIAMOND_HELMET || item.getType() == Material.DIAMOND_CHESTPLATE || item.getType() == Material.DIAMOND_LEGGINGS || item.getType() == Material.DIAMOND_BOOTS) {
+			else if(item.getType() == Material.BOW || item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_LEGGINGS || item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.CHAINMAIL_HELMET || item.getType() == Material.CHAINMAIL_CHESTPLATE || item.getType() == Material.CHAINMAIL_LEGGINGS || item.getType() == Material.CHAINMAIL_BOOTS || item.getType() == Material.IRON_HELMET || item.getType() == Material.IRON_CHESTPLATE || item.getType() == Material.IRON_LEGGINGS || item.getType() == Material.IRON_BOOTS || item.getType() == Material.GOLDEN_HELMET || item.getType() == Material.GOLDEN_CHESTPLATE || item.getType() == Material.GOLDEN_LEGGINGS || item.getType() == Material.GOLDEN_BOOTS || item.getType() == Material.DIAMOND_HELMET || item.getType() == Material.DIAMOND_CHESTPLATE || item.getType() == Material.DIAMOND_LEGGINGS || item.getType() == Material.DIAMOND_BOOTS) {
 				if(!item.getItemMeta().hasDisplayName()) {
 					event.setCurrentItem(null);	
 				}
 			}
-			else if(item.getType() == Material.ENDER_EYE || item.getType() == Material.END_CRYSTAL) {
+			else if(item.getType() == Material.BOW || item.getType() == Material.ENDER_EYE || item.getType() == Material.END_CRYSTAL) {
 				if(!item.getItemMeta().hasDisplayName()) {
 					event.setCurrentItem(null);	
 				}
@@ -39,19 +40,19 @@ public class PreventIllegalItems implements Listener{
 	public void preventIllegalPickup(EntityPickupItemEvent event) {
 		Item item = (Item) event.getItem();
 		if(item != null) {
-			if(item.getItemStack().getType() == Material.WOODEN_SWORD || item.getItemStack().getType() == Material.STONE_SWORD || item.getItemStack().getType() == Material.GOLDEN_SWORD || item.getItemStack().getType() == Material.DIAMOND_SWORD || item.getItemStack().getType() == Material.IRON_SWORD || item.getItemStack().getType() == Material.IRON_AXE || item.getItemStack().getType() == Material.WOODEN_AXE || item.getItemStack().getType() == Material.STONE_AXE || item.getItemStack().getType() == Material.GOLDEN_AXE || item.getItemStack().getType() == Material.DIAMOND_AXE) {
+			if(item.getItemStack().getType() == Material.BOW ||item.getItemStack().getType() == Material.WOODEN_SWORD || item.getItemStack().getType() == Material.STONE_SWORD || item.getItemStack().getType() == Material.GOLDEN_SWORD || item.getItemStack().getType() == Material.DIAMOND_SWORD || item.getItemStack().getType() == Material.IRON_SWORD || item.getItemStack().getType() == Material.IRON_AXE || item.getItemStack().getType() == Material.WOODEN_AXE || item.getItemStack().getType() == Material.STONE_AXE || item.getItemStack().getType() == Material.GOLDEN_AXE || item.getItemStack().getType() == Material.DIAMOND_AXE) {
 				if(!item.getItemStack().getItemMeta().hasDisplayName()) {
 					event.setCancelled(true);
 					event.getItem().remove();
 				}
 			}
-			else if(item.getItemStack().getType() == Material.LEATHER_HELMET || item.getItemStack().getType() == Material.LEATHER_CHESTPLATE || item.getItemStack().getType() == Material.LEATHER_LEGGINGS || item.getItemStack().getType() == Material.LEATHER_BOOTS || item.getItemStack().getType() == Material.CHAINMAIL_HELMET || item.getItemStack().getType() == Material.CHAINMAIL_CHESTPLATE || item.getItemStack().getType() == Material.CHAINMAIL_LEGGINGS || item.getItemStack().getType() == Material.CHAINMAIL_BOOTS || item.getItemStack().getType() == Material.IRON_HELMET || item.getItemStack().getType() == Material.IRON_CHESTPLATE || item.getItemStack().getType() == Material.IRON_LEGGINGS || item.getItemStack().getType() == Material.IRON_BOOTS || item.getItemStack().getType() == Material.GOLDEN_HELMET || item.getItemStack().getType() == Material.GOLDEN_CHESTPLATE || item.getItemStack().getType() == Material.GOLDEN_LEGGINGS || item.getItemStack().getType() == Material.GOLDEN_BOOTS || item.getItemStack().getType() == Material.DIAMOND_HELMET || item.getItemStack().getType() == Material.DIAMOND_CHESTPLATE || item.getItemStack().getType() == Material.DIAMOND_LEGGINGS || item.getItemStack().getType() == Material.DIAMOND_BOOTS) {
+			else if(item.getItemStack().getType() == Material.BOW || item.getItemStack().getType() == Material.LEATHER_HELMET || item.getItemStack().getType() == Material.LEATHER_CHESTPLATE || item.getItemStack().getType() == Material.LEATHER_LEGGINGS || item.getItemStack().getType() == Material.LEATHER_BOOTS || item.getItemStack().getType() == Material.CHAINMAIL_HELMET || item.getItemStack().getType() == Material.CHAINMAIL_CHESTPLATE || item.getItemStack().getType() == Material.CHAINMAIL_LEGGINGS || item.getItemStack().getType() == Material.CHAINMAIL_BOOTS || item.getItemStack().getType() == Material.IRON_HELMET || item.getItemStack().getType() == Material.IRON_CHESTPLATE || item.getItemStack().getType() == Material.IRON_LEGGINGS || item.getItemStack().getType() == Material.IRON_BOOTS || item.getItemStack().getType() == Material.GOLDEN_HELMET || item.getItemStack().getType() == Material.GOLDEN_CHESTPLATE || item.getItemStack().getType() == Material.GOLDEN_LEGGINGS || item.getItemStack().getType() == Material.GOLDEN_BOOTS || item.getItemStack().getType() == Material.DIAMOND_HELMET || item.getItemStack().getType() == Material.DIAMOND_CHESTPLATE || item.getItemStack().getType() == Material.DIAMOND_LEGGINGS || item.getItemStack().getType() == Material.DIAMOND_BOOTS) {
 				if(!item.getItemStack().getItemMeta().hasDisplayName()) {
 					event.setCancelled(true);
 					event.getItem().remove();
 				}
 			}
-			else if(item.getItemStack().getType() == Material.ENDER_EYE || item.getItemStack().getType() == Material.END_CRYSTAL) {
+			else if(item.getItemStack().getType() == Material.BOW || item.getItemStack().getType() == Material.ENDER_EYE || item.getItemStack().getType() == Material.END_CRYSTAL) {
 				if(!item.getItemStack().getItemMeta().hasDisplayName()) {
 					event.setCancelled(true);
 					event.getItem().remove();
@@ -84,6 +85,18 @@ public class PreventIllegalItems implements Listener{
 				}
 				else {
 					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void cancelIllegalShoot(EntityShootBowEvent event) {
+		if(event.getEntity() instanceof Player) {
+			if(event.getBow() != null) {
+				if(event.getBow().hasItemMeta()) {
+					if(!event.getBow().getItemMeta().hasDisplayName()) {
+						event.setCancelled(true);
+					}
 				}
 			}
 		}

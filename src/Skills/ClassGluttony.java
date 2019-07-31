@@ -16,23 +16,24 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import Skills.Enums.Classes;
+import Skills.SkillEnum.Skills;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class ClassGluttony implements Listener{
+	PlayerClass pc = new PlayerClass();
 	SkillJoin join = new SkillJoin();
-	ClassC c = new ClassC();
 	ArrayList<UUID> gluttonyCooldown = new ArrayList<UUID>();
 	ArrayList<UUID> gluttonyDecrease = new ArrayList<UUID>();
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(c.getClass(player.getUniqueId()) == Classes.GLUTTONY) {
+		if(pc.getClass(player.getUniqueId()) == Classes.GLUTTONY) {
 			if(!gluttonyCooldown.contains(player.getUniqueId())) {
-				int level = join.getLevelList().get(player.getUniqueId());
-				int cc = join.getCCMODList().get(player.getUniqueId());
-				int as = join.getASMODList().get(player.getUniqueId());
-				int hh = join.getHHMODList().get(player.getUniqueId());
+				int level = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
+				int cc = pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE_MODIFIER);
+				int as = pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED_MODIFIER);
+				int hh = pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER);
 				double heal = 10 + level * 0.25;
 				if(hh > 0) {
 					heal = heal + hh * 5;
@@ -88,19 +89,21 @@ public class ClassGluttony implements Listener{
 	}
 	@EventHandler
 	public void damageDecrease(EntityDamageByEntityEvent event) {
-		if(event.getEntity() instanceof Player) {
-			if(event.getDamager() instanceof LivingEntity) {
-				LivingEntity attacker = (LivingEntity) event.getDamager();
-				Player victim = (Player) event.getEntity();
-				if(gluttonyDecrease.contains(victim.getUniqueId())) {
-					int level = join.getLevelList().get(victim.getUniqueId());
-					int df = join.getDFMODList().get(victim.getUniqueId());
-					if(df > 0) {
-						double damageBack = df * 5;
-						attacker.damage(event.getFinalDamage() / 100 * damageBack);
+		if(!event.isCancelled()) {
+			if(event.getEntity() instanceof Player) {
+				if(event.getDamager() instanceof LivingEntity) {
+					LivingEntity attacker = (LivingEntity) event.getDamager();
+					Player victim = (Player) event.getEntity();
+					if(gluttonyDecrease.contains(victim.getUniqueId())) {
+						int level = pc.getSkill(victim.getUniqueId(), Skills.LEVEL);
+						int df = pc.getSkill(victim.getUniqueId(), Skills.ARMOR_DEFENSE_MODIFIER);
+						if(df > 0) {
+							double damageBack = df * 5;
+							attacker.damage(event.getFinalDamage() / 100 * damageBack);
+						}
+						double decrease = 20 + level * 0.30;
+						event.setDamage(event.getFinalDamage() / 100 * (100 - decrease));
 					}
-					double decrease = 20 + level * 0.30;
-					event.setDamage(event.getFinalDamage() / 100 * (100 - decrease));
 				}
 			}
 		}

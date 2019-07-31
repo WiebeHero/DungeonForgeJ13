@@ -47,7 +47,7 @@ public class DFFactions implements Listener,CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
-			if(CombatTag.getCombatTag().get(player.getName()) == 0) {
+			if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 				File f =  new File("plugins/CustomEnchantments/factionsConfig.yml");
 				YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
 				if(!(cmd.getName().equalsIgnoreCase(label)) || cmd.getName().equalsIgnoreCase(faction)) {
@@ -82,7 +82,7 @@ public class DFFactions implements Listener,CommandExecutor{
 								String facName = args[1];
 								Pattern p = Pattern.compile( "[0-9]" );
 							    Matcher m = p.matcher(facName);
-							    if(m.find() == false && facName.indexOf("_-=+[]{}:;''<>/?!@#$%^&*()") != -1) {
+							    if(m.find() == false && facName.indexOf("_-=+[]{}:;''<>/?!@#$%^&*()") == -1) {
 							    	if(facName.length() > 8) {
 							    		if(fName.equals("")) {
 							    			if(!factionNameList.contains(facName)) {
@@ -195,7 +195,7 @@ public class DFFactions implements Listener,CommandExecutor{
 									player.sendMessage(new ColorCodeTranslator().colorize("&7Members Online: &b" + listOnline));
 									player.sendMessage(new ColorCodeTranslator().colorize("&7Members Offline: &b" + listOffline));
 									if(fHomes.get(fName) != null) {
-										player.sendMessage(new ColorCodeTranslator().colorize("&7Faction Home: &bSet"));
+										player.sendMessage(new ColorCodeTranslator().colorize("&7Faction Home: &bSet at " + "&6X: " + fHomes.get(fName).getX() + " Y: " + fHomes.get(fName).getY() + " Z: " + fHomes.get(fName).getZ()));
 									}
 									else {
 										player.sendMessage(new ColorCodeTranslator().colorize("&7Faction Home: &cNot Set"));
@@ -225,6 +225,7 @@ public class DFFactions implements Listener,CommandExecutor{
 													if(yap.size() < 12) {
 														yap.add(player.getLocation().getChunk());
 														chunkList.put(fName, yap);
+														chunkTotal.put(fName, chunkTotal.get(fName) + 1);
 														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have claimed this chunk!"));
 													}
 													else {
@@ -273,6 +274,7 @@ public class DFFactions implements Listener,CommandExecutor{
 											if(rank >= 3) {
 												if(chunkList.get(fName).contains(player.getLocation().getChunk())) {
 													chunkList.get(fName).remove(player.getLocation().getChunk());
+													chunkTotal.put(fName, chunkTotal.get(fName) - 1);
 													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have unclaimed this chunk!"));
 												}
 												else {
@@ -359,6 +361,7 @@ public class DFFactions implements Listener,CommandExecutor{
 													count--;
 													if(count == 0) {
 														player.teleport(fHomes.get(fName));
+														cancel();
 													}
 												}
 												else {
@@ -626,7 +629,7 @@ public class DFFactions implements Listener,CommandExecutor{
 										if(p != player) {
 											if(factionList.get(fName).contains(p.getUniqueId())) {
 												int rankMe = ranked.get(player.getUniqueId());
-												int rankOther = ranked.get(player.getUniqueId());
+												int rankOther = ranked.get(p.getUniqueId());
 												if(rankMe > rankOther) {
 													ranked.put(p.getUniqueId(), ranked.get(p.getUniqueId()) - 1);
 													if(ranked.get(p.getUniqueId()) == 2) {
@@ -639,7 +642,7 @@ public class DFFactions implements Listener,CommandExecutor{
 													}
 												}
 												else {
-													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have permission to promote this faction member!"));
+													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have permission to demote this faction member!"));
 												}
 											}
 											else {
@@ -847,6 +850,17 @@ public class DFFactions implements Listener,CommandExecutor{
 			}
 		}
 	}
+	public void loadFactionHomesList(YamlConfiguration yml, File f) {
+		fHomes.clear();
+		String facName = "";
+		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
+		ArrayList<String> facNames = new ArrayList<String>(set);
+		for(int i = 0; i < facNames.size(); i++) {
+			facName = facNames.get(i);
+			Location loc = (Location) yml.get("Factions.List." + facName + ".Faction Home");
+			fHomes.put(facName, loc);
+		}
+	}
 	public void loadChunkList(YamlConfiguration yml, File f) {
 		chunkList.clear();
 		String facName = "";
@@ -956,6 +970,9 @@ public class DFFactions implements Listener,CommandExecutor{
 	public HashMap<String, Integer> getFTop() {
 		return DFFactions.fTop;
 	}
+	public HashMap<String, Location> getFHomes() {
+		return DFFactions.fHomes;
+	}
 	public HashMap<String, ArrayList<Chunk>> getChunkList() {
 		return DFFactions.chunkList;
 	}
@@ -976,6 +993,15 @@ public class DFFactions implements Listener,CommandExecutor{
 	}
 	public HashMap<String, ArrayList<UUID>> getPlayerAllyList() {
 		return DFFactions.playerAlliedList;
+	}
+	public boolean isTeammate(UUID uuid1, UUID uuid2) {
+		boolean isTeammate = false;
+		for(Entry<String, ArrayList<UUID>> entry : DFFactions.factionList.entrySet()) {
+			if(entry.getValue().contains(uuid1) && entry.getValue().contains(uuid2)) {
+				isTeammate = true;
+			}
+		}
+		return isTeammate;
 	}
 }
 				

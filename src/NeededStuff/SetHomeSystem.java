@@ -8,7 +8,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -89,8 +91,30 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 						}
 					}
 					else if(innerList.containsKey(args[0])) {
-						player.teleport(innerList.get(args[0]));
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aTeleported!"));
+						final Location loc = innerList.get(args[0]);
+						double locX = player.getLocation().getX();
+						double locY = player.getLocation().getY();
+						double locZ = player.getLocation().getZ();
+						new BukkitRunnable() {
+							int count = 10;
+							@Override
+							public void run() {
+								if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
+									player.sendMessage(new ColorCodeTranslator().colorize("&aSending you to spawn in " + count + "..."));
+									count--;
+									if(count == 0) {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aTeleported!"));
+										player.teleport(loc);
+										count = 10;
+										cancel();
+									}
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
+									cancel();
+								}
+							}	
+						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 					}
 					else {
 						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
@@ -98,8 +122,30 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 				}
 				else {
 					if(innerList.containsKey("Home")) {
-						player.teleport(innerList.get("Home"));
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aTeleported!"));
+						final Location loc = innerList.get("Home");
+						double locX = player.getLocation().getX();
+						double locY = player.getLocation().getY();
+						double locZ = player.getLocation().getZ();
+						new BukkitRunnable() {
+							int count = 10;
+							@Override
+							public void run() {
+								if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
+									player.sendMessage(new ColorCodeTranslator().colorize("&aSending you to spawn in " + count + "..."));
+									count--;
+									if(count == 0) {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aTeleported!"));
+										player.teleport(loc);
+										count = 10;
+										cancel();
+									}
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
+									cancel();
+								}
+							}	
+						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 					}
 					else {
 						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));

@@ -3,7 +3,6 @@ package me.WiebeHero.CraftRecipes;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,7 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
-public class CallRecipe implements Listener{
+public class CallRecipe implements Listener {
 	public ArrayList<ItemStack> stackList = new ArrayList<ItemStack>(); 
 	@EventHandler(priority = EventPriority.NORMAL)
     public void PotionListener(InventoryClickEvent e){
@@ -79,7 +78,7 @@ public class CallRecipe implements Listener{
 			        new BrewingRecipe(stackCreator(new ItemStack(Material.CAKE), null, null), new ArrayList<ItemStack>(Arrays.asList(thick(Material.POTION), thick(Material.SPLASH_POTION), thick(Material.LINGERING_POTION))), (inventory, item, ingridient) -> {//Some lambda magic
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 600, 0), true);
-			            meta.setColor(Color.fromRGB(111, 55, 23));
+			            meta.setColor(Color.fromRGB(255, 198, 0));
 			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Haste"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
@@ -89,7 +88,7 @@ public class CallRecipe implements Listener{
 			        new BrewingRecipe(stackCreator(new ItemStack(Material.REDSTONE), null, null), new ArrayList<ItemStack>(Arrays.asList(hastePotion(Material.POTION), hastePotion(Material.SPLASH_POTION), hastePotion(Material.LINGERING_POTION))), (inventory, item, ingridient) -> {//Some lambda magic
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 900, 0), true);
-			            meta.setColor(Color.fromRGB(111, 55, 23));
+			            meta.setColor(Color.fromRGB(255, 198, 0));
 			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Haste"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
@@ -99,7 +98,7 @@ public class CallRecipe implements Listener{
 			        new BrewingRecipe(stackCreator(new ItemStack(Material.GLOWSTONE_DUST), null, null), new ArrayList<ItemStack>(Arrays.asList(hastePotion(Material.POTION), hastePotion(Material.SPLASH_POTION), hastePotion(Material.LINGERING_POTION))), (inventory, item, ingridient) -> {//Some lambda magic
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 300, 1), true);
-			            meta.setColor(Color.fromRGB(111, 55, 23));
+			            meta.setColor(Color.fromRGB(255, 198, 0));
 			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Haste"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
@@ -132,7 +131,7 @@ public class CallRecipe implements Listener{
 			        new BrewingRecipe(stackCreator(new ItemStack(Material.GLOWSTONE_DUST), null, null), new ArrayList<ItemStack>(Arrays.asList(blindnessPotion(Material.POTION), blindnessPotion(Material.SPLASH_POTION), blindnessPotion(Material.LINGERING_POTION))), (inventory, item, ingridient) -> {//Some lambda magic
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 300, 1), true);
-			            meta.setColor(Color.fromRGB(111, 55, 23));
+			            meta.setColor(Color.fromRGB(0, 0, 0));
 			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Blindness"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {

@@ -19,7 +19,6 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import net.md_5.bungee.api.ChatColor;
 

@@ -2,11 +2,8 @@ package me.WiebeHero.CustomEnchantmentsM;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -15,10 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
 
 import NeededStuff.SwordSwingProgress;
@@ -26,7 +21,6 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class SoulBurst extends SwordSwingProgress implements Listener{
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void CustomEnchantmentsMWolfPack(PlayerDeathEvent event) {
 		if(event.getEntity() instanceof Player) {

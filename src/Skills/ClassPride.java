@@ -21,13 +21,15 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import Skills.Enums.Classes;
+import Skills.SkillEnum.Skills;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodMovementSpeed;
 
 public class ClassPride implements Listener{
 	SkillJoin join = new SkillJoin();
-	ClassC c = new ClassC();
+	PlayerClass pc = new PlayerClass();
+	EffectSkills sk = new EffectSkills();
 	MethodMovementSpeed move = new MethodMovementSpeed();
 	public ArrayList<UUID> prideCooldown = new ArrayList<UUID>();
 	public HashMap<UUID, Double> prideAbsorb = new HashMap<UUID, Double>();
@@ -36,12 +38,12 @@ public class ClassPride implements Listener{
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(c.getClass(player.getUniqueId()) == Classes.PRIDE) {
+		if(pc.getClass(player.getUniqueId()) == Classes.PRIDE) {
 			if(!prideCooldown.contains(player.getUniqueId())) {
 				prideCooldown.add(player.getUniqueId());
 				prideExtraAS.add(player.getUniqueId());
-				int level = join.getLevelList().get(player.getUniqueId());
-				int rd = join.getRDMODList().get(player.getUniqueId());
+				int level = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
+				int rd = pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER);
 				long duration = 100 + level * 2;
 				long cooldown = 2000 - level * 6;
 				if(rd > 0) {
@@ -56,16 +58,15 @@ public class ClassPride implements Listener{
 				player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
 				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Quick Attack!"));
 				move.setSpeed(player, move.getSpeed(player) / 100 * (100 + speed));
-				AttackSpeed aSpeed = new AttackSpeed();
 				prideExtraAS.add(player.getUniqueId());
-				join.getASExtraList().put(player.getUniqueId(), join.getASExtraList().get(player.getUniqueId()) + attackS);
-				aSpeed.attackSpeedRun(player);
+				pc.setCalculation(player.getUniqueId(), Skills.ATTACK_SPEED_EXTRA, pc.getCalculation(player.getUniqueId(), Skills.ATTACK_DAMAGE_EXTRA) + attackS);
+				sk.attackSpeed(player);
 				event.setCancelled(true);
 				new BukkitRunnable() {
 					public void run() {
 						prideExtraAS.remove(player.getUniqueId());
 						prideAbsorb.remove(player.getUniqueId());
-						aSpeed.attackSpeedRun(player);
+						sk.attackSpeed(player);
 						move.setSpeed(player, move.getSpeed(player) - speed / 1000 - temp.get(player.getUniqueId()));
 						temp.remove(player.getUniqueId());
 					}
@@ -84,49 +85,51 @@ public class ClassPride implements Listener{
 	}
 	@EventHandler
 	public void decreaseDamage(EntityDamageByEntityEvent event) {
-		if(event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			if(prideExtraAS.contains(player.getUniqueId())) {
-				int df = join.getDFMODList().get(player.getUniqueId());
-				if(df > 0) {
-					double damage = event.getDamage() / 100 * (df * 5);
-					prideAbsorb.put(player.getUniqueId(), damage);
+		if(!event.isCancelled()) {
+			if(event.getEntity() instanceof Player) {
+				Player player = (Player) event.getEntity();
+				if(prideExtraAS.contains(player.getUniqueId())) {
+					int df = pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE_MODIFIER);
+					if(df > 0) {
+						double damage = event.getDamage() / 100 * (df * 5);
+						prideAbsorb.put(player.getUniqueId(), damage);
+					}
+					int level = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
+					double decrease = 10 + level * 0.15;
+					event.setDamage(event.getFinalDamage() / 100.00 * (100.00 - decrease));
 				}
-				int level = join.getLevelList().get(player.getUniqueId());
-				double decrease = 10 + level * 0.15;
-				event.setDamage(event.getFinalDamage() / 100.00 * (100.00 - decrease));
 			}
-		}
-		else if(event.getDamager() instanceof Player) {
-			Player player = (Player) event.getDamager();
-			LivingEntity victim = (LivingEntity) event.getEntity();
-			if(prideExtraAS.contains(player.getUniqueId())) {
-				int as = join.getASMODList().get(player.getUniqueId());
-				if(as > 0) {
-					if(!temp.containsKey(player.getUniqueId())) {
-						temp.put(player.getUniqueId(), 0.00);
+			else if(event.getDamager() instanceof Player) {
+				Player player = (Player) event.getDamager();
+				LivingEntity victim = (LivingEntity) event.getEntity();
+				if(prideExtraAS.contains(player.getUniqueId())) {
+					int as = pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED_MODIFIER);
+					if(as > 0) {
+						if(!temp.containsKey(player.getUniqueId())) {
+							temp.put(player.getUniqueId(), 0.00);
+						}
+						temp.put(player.getUniqueId(), temp.get(player.getUniqueId()) + 0.001 * as);
+						player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(move.getSpeed(player) + 0.001 * as);
 					}
-					temp.put(player.getUniqueId(), temp.get(player.getUniqueId()) + 0.001 * as);
-					player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(move.getSpeed(player) + 0.001 * as);
-				}
-				int ad = join.getADMODList().get(player.getUniqueId());
-				if(ad > 0) {
-					int amp = 0;
-					int durationAdd = 20 * ad;
-					PotionEffectType type = PotionEffectType.WEAKNESS;
-					if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() == amp) {
-						int durationNow = victim.getPotionEffect(type).getDuration();
-						victim.removePotionEffect(type);
-						victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
+					int ad = pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER);
+					if(ad > 0) {
+						int amp = 0;
+						int durationAdd = 20 * ad;
+						PotionEffectType type = PotionEffectType.WEAKNESS;
+						if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() == amp) {
+							int durationNow = victim.getPotionEffect(type).getDuration();
+							victim.removePotionEffect(type);
+							victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
+						}
+						else {
+							victim.removePotionEffect(type);
+							victim.addPotionEffect(new PotionEffect(type, durationAdd, amp));
+						}
 					}
-					else {
-						victim.removePotionEffect(type);
-						victim.addPotionEffect(new PotionEffect(type, durationAdd, amp));
+					if(prideAbsorb.containsKey(player.getUniqueId())) {
+						event.setDamage(event.getFinalDamage() + prideAbsorb.get(player.getUniqueId()));
+						prideAbsorb.put(player.getUniqueId(), 0.00);
 					}
-				}
-				if(prideAbsorb.containsKey(player.getUniqueId())) {
-					event.setDamage(event.getFinalDamage() + prideAbsorb.get(player.getUniqueId()));
-					prideAbsorb.put(player.getUniqueId(), 0.00);
 				}
 			}
 		}

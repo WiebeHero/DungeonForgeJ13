@@ -23,7 +23,6 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class DisarmorB implements Listener{
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void CustomEnchantmentsMAllOut(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Arrow){

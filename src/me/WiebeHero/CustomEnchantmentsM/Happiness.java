@@ -15,15 +15,14 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import NeededStuff.SwordSwingProgress;
-import Skills.ClassC;
-import Skills.SkillJoin;
 import Skills.Enums.Classes;
+import Skills.PlayerClass;
+import Skills.SkillEnum.Skills;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import net.md_5.bungee.api.ChatColor;
 
 public class Happiness extends SwordSwingProgress implements Listener {
-	ClassC c = new ClassC();
-	SkillJoin join = new SkillJoin();
+	PlayerClass pc = new PlayerClass();
 	@EventHandler
 	public void CustomEnchantmentsMAllOut(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player){
@@ -49,13 +48,13 @@ public class Happiness extends SwordSwingProgress implements Listener {
 											check = check.replaceAll("[^\\d.]", "");
 											int level = Integer.parseInt(check) - 1;
 											if(i <= 4 + level) {
-												if(c.getClass(victim.getUniqueId()) == Classes.WRATH) {
+												if(pc.getClass(victim.getUniqueId()) == Classes.WRATH) {
 													animation(victim, damager);
 													double extra = level * 5;
-													join.getADExtraList().put(damager.getUniqueId(), join.getADExtraList().get(damager.getUniqueId()) + extra);
+													pc.setCalculation(damager.getUniqueId(), Skills.ATTACK_DAMAGE_EXTRA, pc.getSkill(damager.getUniqueId(), Skills.ATTACK_DAMAGE_EXTRA) + extra);
 													new BukkitRunnable() {
 														public void run() {
-															join.getADExtraList().put(damager.getUniqueId(), join.getADExtraList().get(damager.getUniqueId()) - extra);
+															pc.setCalculation(damager.getUniqueId(), Skills.ATTACK_DAMAGE_EXTRA, pc.getSkill(damager.getUniqueId(), Skills.ATTACK_DAMAGE_EXTRA) - extra);
 														}
 													}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 												}

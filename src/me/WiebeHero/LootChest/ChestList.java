@@ -2,13 +2,20 @@ package me.WiebeHero.LootChest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,7 +30,6 @@ public class ChestList implements Listener {
 					for(int counter = 1; counter < SetChest.getChestTierList().size() + 1; counter++) {
 						int tier = SetChest.getChestTierList().get(counter);
 	  					Location loc = SetChest.getChestLocationList().get(counter);
-	  					loc.setWorld(Bukkit.getWorld(SetChest.getChestWorldsList().get(counter)));
 		  				if(SetChest.getChestRadiusList().get(counter) == 1) {
 				  			if(loc.getBlock().getType() == Material.CHEST) {
 				  				Block block = loc.getBlock();
@@ -154,7 +160,7 @@ public class ChestList implements Listener {
 	  				}
 				}
 			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 60L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 6000L);
 	}
 	public int randomSlot() {
 		int i = new Random().nextInt(26);
@@ -205,4 +211,26 @@ public class ChestList implements Listener {
 		}
 		return chest;
 	}
+	@EventHandler
+    public void onChestCloses(InventoryCloseEvent event){
+        if(event.getInventory().getType() == InventoryType.CHEST) {
+            Block block = event.getInventory().getLocation().getBlock();
+            BlockState bs = block.getState();
+            if(bs instanceof Chest) {
+            	Chest chest = (Chest) bs;
+            	for(Entry<Integer, Location> entry : SetChest.getChestLocationList().entrySet()) {
+                	if(entry.getValue().distance(chest.getLocation()) <= 1.5) {
+                		new BukkitRunnable() {
+                			public void run() {
+                				chest.getBlockInventory().clear();
+                        		chest.getBlock().setType(Material.AIR);
+                        		chest.getLocation().getWorld().spawnParticle(Particle.CLOUD, chest.getLocation().getX() + 0.5, chest.getLocation().getY() + 0.5, chest.getLocation().getZ() + 0.5, 45, 0.0000001, 0.0000001, 0.0000001, 0.15);
+                        		chest.getWorld().playSound(chest.getLocation(), Sound.ENTITY_CHICKEN_EGG, 2.0F, 1.0F);
+                			}
+                		}.runTaskLater(CustomEnchantments.getInstance(), 15L);
+                	}
+                }
+            }
+        }
+    }
 }

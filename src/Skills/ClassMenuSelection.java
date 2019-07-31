@@ -3,6 +3,7 @@ package Skills;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,12 +14,14 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import Skills.Enums.Classes;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import net.md_5.bungee.api.ChatColor;
 
 public class ClassMenuSelection implements Listener{
 	ArrayList<UUID> activated = new ArrayList<UUID>();
+	PlayerClass pc = new PlayerClass();
 	ClassMenu menu = new ClassMenu();
 	SkillJoin join = new SkillJoin();
 	@EventHandler
@@ -41,6 +44,7 @@ public class ClassMenuSelection implements Listener{
 			}
 		}
 		else if(current.getTitle().contains("Class:")) {
+			UUID uuid = player.getUniqueId();
 			event.setCancelled(true);
 			if(item == null || !item.hasItemMeta()) {
 				return;
@@ -49,35 +53,12 @@ public class ClassMenuSelection implements Listener{
 				String decision = ChatColor.stripColor(item.getItemMeta().getDisplayName());
 				if(decision.equals("Yes")) {
 					String className[] = ChatColor.stripColor(current.getTitle()).split(" ");
-					join.getClassList().put(player.getUniqueId(), className[1]);
-					join.getADList().put(player.getUniqueId(), 0);
-					join.getADCalList().put(player.getUniqueId(), 100.00);
-					join.getADExtraList().put(player.getUniqueId(), 0.00);
-					join.getASList().put(player.getUniqueId(), 0);
-					join.getASCalList().put(player.getUniqueId(), 100.00);
-					join.getASExtraList().put(player.getUniqueId(), 0.00);
-					join.getCCList().put(player.getUniqueId(), 0);
-					join.getCCCalList().put(player.getUniqueId(), 0.00);
-					join.getCCExtraList().put(player.getUniqueId(), 0.00);
-					join.getRDList().put(player.getUniqueId(), 0);
-					join.getRDCalList().put(player.getUniqueId(), 100.00);
-					join.getRDExtraList().put(player.getUniqueId(), 0.00);
-					join.getHHList().put(player.getUniqueId(), 0);
-					join.getHHCalList().put(player.getUniqueId(), 100.00);
-					join.getHHExtraList().put(player.getUniqueId(), 0.00);
-					join.getDFList().put(player.getUniqueId(), 0);
-					join.getDFCalList().put(player.getUniqueId(), 100.00);
-					join.getDFExtraList().put(player.getUniqueId(), 0.00);
-					join.getADMODList().put(player.getUniqueId(), 0);
-					join.getASMODList().put(player.getUniqueId(), 0);
-					join.getCCMODList().put(player.getUniqueId(), 0);
-					join.getRDMODList().put(player.getUniqueId(), 0);
-					join.getHHMODList().put(player.getUniqueId(), 0);
-					join.getDFMODList().put(player.getUniqueId(), 0);
-					join.getSkillPoints().put(player.getUniqueId(), 3);
-					join.getLevelList().put(player.getUniqueId(), 1);
-					join.getXPList().put(player.getUniqueId(), 0);
-					join.getMXPList().put(player.getUniqueId(), 1500);
+					String temp = className[1].toUpperCase();
+					Classes currentClass = Enum.valueOf(Classes.class, temp);
+					pc.setClass(uuid, currentClass);
+					Bukkit.broadcastMessage(currentClass.toString());
+					pc.createProfile(uuid, pc.getClass(uuid));
+					activated.remove(player.getUniqueId());
 					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have chosen the class " + className[1]));
 					player.closeInventory();
 					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
@@ -93,8 +74,9 @@ public class ClassMenuSelection implements Listener{
 	@EventHandler
 	public void closeInvClass(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
+		UUID uuid = player.getUniqueId();
 		InventoryView current = event.getView();
-		if(!join.getClassList().containsKey(player.getUniqueId())) {
+		if(pc.hasClass(uuid)) {
 			if(current.getTitle().contains("Class Selection")) {
 				if(!activated.contains(player.getUniqueId())) {
 					new BukkitRunnable() {

@@ -32,7 +32,7 @@ public class XPAddWeapons implements Listener{
 		ItemStack item = event.getCurrentItem();
 		ItemStack cursor = event.getCursor();
 		if(event.getClickedInventory() != null) {
-			if(event.getClickedInventory().getType() == InventoryType.PLAYER && player.getGameMode().equals(GameMode.SURVIVAL)) {
+			if(event.getClickedInventory().getType() == InventoryType.PLAYER && player.getGameMode().equals(GameMode.SURVIVAL) && event.getSlot() != 36 && event.getSlot() != 37 && event.getSlot() != 38 && event.getSlot() != 39) {
 				if(item != null && cursor != null) {
 					if(item.hasItemMeta() && cursor.hasItemMeta()) {
 						if(item.getItemMeta().hasDisplayName() && cursor.getItemMeta().hasDisplayName()) {

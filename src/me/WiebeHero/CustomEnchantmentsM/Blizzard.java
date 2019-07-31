@@ -2,7 +2,6 @@ package me.WiebeHero.CustomEnchantmentsM;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;

@@ -1,7 +1,6 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

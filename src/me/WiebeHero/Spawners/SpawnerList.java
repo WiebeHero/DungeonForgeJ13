@@ -36,30 +36,32 @@ public class SpawnerList implements Listener{
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
 					if(!SetSpawner.getSpawnerLocList().isEmpty()) {
 						for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
-							Location spawnerLoc = new Location(Bukkit.getWorld(SetSpawner.getWorldList().get(counter)), SetSpawner.getSpawnerLocList().get(counter).getX(), SetSpawner.getSpawnerLocList().get(counter).getY(), SetSpawner.getSpawnerLocList().get(counter).getZ());
-		  					spawnerLoc.setPitch(0.0F);
-		  					spawnerLoc.setYaw(0.0F);
-				  			spawnerLoc.setX(spawnerLoc.getX() + randomLocOffSet());
-				  			spawnerLoc.setZ(spawnerLoc.getZ() + randomLocOffSet());
-				  			Location rightLoc = SetSpawner.getSpawnerLocList().get(counter);
-				  			rightLoc.setWorld(Bukkit.getWorld(SetSpawner.getWorldList().get(counter)));
-				  			for(Entity e : rightLoc.getWorld().getNearbyEntities(rightLoc, 80, 80, 80)) {
-				  				if(e instanceof Monster) {
-				  					if(teleportBack.containsKey(e.getUniqueId()) && teleportBack.get(e.getUniqueId()) == counter) {
-				  						Location check2 = e.getLocation();
-				  						if(rightLoc.distance(check2) > 20) {
-				  							for(double y = rightLoc.getY() + 15.00; y > 0.00;) {
-				  								y--;
-				  								rightLoc.setY(y);
-				  								if(rightLoc.getBlock().getType() != Material.AIR) {
-				  									break;
-				  								}
-				  							}
-				  							e.teleport(spawnerLoc);
-				  						}
-				  					}
-				  				}
-				  			}
+							if(SetSpawner.getSpawnerLocList().get(counter) != null) {
+								Location spawnerLoc = new Location(Bukkit.getWorld(SetSpawner.getSpawnerLocList().get(counter).getWorld().getName()), SetSpawner.getSpawnerLocList().get(counter).getX(), SetSpawner.getSpawnerLocList().get(counter).getY(), SetSpawner.getSpawnerLocList().get(counter).getZ());
+			  					spawnerLoc.setPitch(0.0F);
+			  					spawnerLoc.setYaw(0.0F);
+					  			spawnerLoc.setX(spawnerLoc.getX() + randomLocOffSet());
+					  			spawnerLoc.setZ(spawnerLoc.getZ() + randomLocOffSet());
+					  			Location rightLoc = SetSpawner.getSpawnerLocList().get(counter);
+					  			for(Entity e : rightLoc.getWorld().getNearbyEntities(rightLoc, 50, 50, 50)) {
+					  				if(e instanceof Monster) {
+					  					if(teleportBack.containsKey(e.getUniqueId()) && teleportBack.get(e.getUniqueId()) == counter) {
+					  						Location check2 = e.getLocation();
+					  						if(rightLoc.distance(check2) > 15) {
+					  							for(double y = spawnerLoc.getY() + 15.00; y > 0.00;) {
+					  								y--;
+					  								spawnerLoc.setY(y);
+					  								if(spawnerLoc.getBlock().getType() != Material.AIR) {
+					  									spawnerLoc.add(0, 3.0, 0);
+					  									break;
+					  								}
+					  							}
+					  							e.teleport(spawnerLoc);
+					  						}
+					  					}
+					  				}
+					  			}
+							}
 						}
 					}
 				}
@@ -74,14 +76,14 @@ public class SpawnerList implements Listener{
 							boolean check = false;
 		  					Location fixedLoc = SetSpawner.getSpawnerLocList().get(counter);
 		  					int countMobs = 0;
-		  					fixedLoc.setWorld(Bukkit.getWorld(SetSpawner.getWorldList().get(counter)));
-		  					for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 45, 45, 45)) {
+		  					fixedLoc.setWorld(Bukkit.getWorld(SetSpawner.getSpawnerLocList().get(counter).getWorld().getName()));
+		  					for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 35, 35, 35)) {
 		  						if(e1 instanceof Player) {
 		  							check = true;
 		  							break;
 		  						}
 		  					}
-				  			for(Entity e : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 20, 20, 20)) {
+				  			for(Entity e : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 15, 15, 15)) {
 				  				if(e != null) {
 				  					if(teleportBack.containsKey(e.getUniqueId())) {
 					  					if(teleportBack.get(e.getUniqueId()) == counter) {
@@ -94,7 +96,7 @@ public class SpawnerList implements Listener{
 					  			int tier = SetSpawner.getTieredList().get(counter);
 					  			int mobMax = 3 + 1 * tier - countMobs;
 					  			for(int i = 0; i <= mobMax; i++) {
-					  				Location spawnLoc = new Location(Bukkit.getWorld(SetSpawner.getWorldList().get(counter)), SetSpawner.getSpawnerLocList().get(counter).getX(), SetSpawner.getSpawnerLocList().get(counter).getY(), SetSpawner.getSpawnerLocList().get(counter).getZ());
+					  				Location spawnLoc = new Location(Bukkit.getWorld(SetSpawner.getSpawnerLocList().get(counter).getWorld().getName()), SetSpawner.getSpawnerLocList().get(counter).getX(), SetSpawner.getSpawnerLocList().get(counter).getY(), SetSpawner.getSpawnerLocList().get(counter).getZ());
 					  				double originalY = spawnLoc.getY();
 					  				double x = spawnLoc.getX();
 					  				double z = spawnLoc.getZ();

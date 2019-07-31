@@ -4,17 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.Factions.DFFactions;
 
 public class Chat implements Listener{

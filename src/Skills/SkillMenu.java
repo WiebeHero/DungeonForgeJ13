@@ -2,6 +2,7 @@ package Skills;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,35 +11,41 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import Skills.Enums.Classes;
+import Skills.SkillEnum.Skills;
+import Skills.SkillsUD.UD;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 
 public class SkillMenu {
+	public PlayerClass pc = new PlayerClass();
 	SkillJoin join = new SkillJoin();
 	ClassMenu menu = new ClassMenu();
 	public void SkillMenuInv(Player player) {
 		Inventory i = Bukkit.getServer().createInventory(null, 36, new ColorCodeTranslator().colorize("&7Skills of: &6" + player.getName()));
+		pc.resetCalculations(player.getUniqueId());
 		i.setItem(0, skillBook(player));
 		i.setItem(1, empty());
 		i.setItem(2, empty());
 		i.setItem(3, empty());
-		int level = join.getLevelList().get(player.getUniqueId());
+		UUID uuid = player.getUniqueId();
+		int level = pc.getSkill(uuid, Skills.LEVEL);
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Wrath
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
-		if(join.getClassList().get(player.getUniqueId()).equals("Wrath")) {
+		if(pc.getClass(uuid) == Classes.WRATH) {
 			i.setItem(4, menu.classWrath(level));
-			if(join.getADList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ATTACK_DAMAGE) < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getADMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ATTACK_DAMAGE);
 				double calcNow = cLevel * 0.1;
 				double calcNext = (cLevel + 1) * 0.1;
-				int pLevelReq = 10 + (10 * join.getADMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getADMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE));
 				i.setItem(19, modCreator(player, Material.BLACK_WOOL, "&4Attack Modifier, Extra Hatred: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability deals an additional amount of damage to your enemy",
 				"&7Appropiate to how many enemies were struck by your ability.",
@@ -55,18 +62,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getASList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ATTACK_SPEED) < 20) {
 				i.setItem(20, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getASMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER);
 				double calcNow = cLevel;
 				double calcNext = cLevel + 1;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
 				i.setItem(20, modCreator(player, Material.COOKED_CHICKEN, "&9Speed Modifier, Electrocute: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability slows your enemy down by 10% (+2% Per Enemy Struck)",
 				"&7This effect will last for a few seconds.",
@@ -83,18 +90,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getCCList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.CRITICAL_CHANCE) < 20) {
 				i.setItem(21, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getCCMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER);
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) + 5;
-				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
 				i.setItem(21, modCreator(player, Material.DIAMOND_SWORD, "&5Critical Modifier, Thunderstrike: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability has a chance to deal double damage.",
 				"",
@@ -110,18 +117,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getRDList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.RANGED_DAMAGE) < 20) {
 				i.setItem(23, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getRDMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER);
 				double calcNow = cLevel;
 				double calcNext = (cLevel + 1);
-				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
 				i.setItem(23, modCreator(player, Material.GRASS_BLOCK, "&dRanged Modifier, Globular: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your abilities range increases.",
 				"",
@@ -148,7 +155,7 @@ public class SkillMenu {
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Lust
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
-		else if(join.getClassList().get(player.getUniqueId()).equals("Lust")) {
+		else if(pc.getClass(player.getUniqueId()) == Classes.LUST) {
 			i.setItem(4, menu.classLust(level));
 			i.setItem(19, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
@@ -157,18 +164,18 @@ public class SkillMenu {
 			i.setItem(20, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
 			"&7is one of your downsides."))));
-			if(join.getCCList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.CRITICAL_CHANCE) < 20) {
 				i.setItem(21, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getCCMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER);
 				double calcNow = cLevel * 1;
 				double calcNext = (cLevel + 1) * 1;
-				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
 				i.setItem(21, modCreator(player, Material.BLAZE_ROD, "&5Critical Modifier, Critical State: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability deals an additional % of damage to your enemy.",
 				"",
@@ -184,18 +191,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getRDList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.RANGED_DAMAGE) < 20) {
 				i.setItem(23, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getRDMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER);
 				double calcNow = cLevel * 2;
 				double calcNext = (cLevel + 1) * 2;
-				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
 				i.setItem(23, modCreator(player, Material.ARMOR_STAND, "&dRanged Modifier, All Around: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Increase the range of your ability by a certain amount of blocks.",
 				"",
@@ -211,18 +218,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getHHList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.MAX_HEALTH) < 20) {
 				i.setItem(24, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getHHMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER);
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) + 5;
-				int pLevelReq = 10 + (10 * join.getHHMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getHHMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
 				i.setItem(24, modCreator(player, Material.ROSE_RED, "&cHealth Modifier, Heartbeat: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your abilities recovery is increased by a certain %.",
 				"",
@@ -238,18 +245,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getDFList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ARMOR_DEFENSE) < 20) {
 				i.setItem(25, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getDFMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER);
 				double calcNow = cLevel * 8;
 				double calcNext = (cLevel + 1) * 8;
-				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
 				i.setItem(25, modCreator(player, Material.DIAMOND_CHESTPLATE, "&7Defense Modifier, Maximum Overdrive: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Increase your MAX HP for 30 seconds.",
 				"",
@@ -269,23 +276,23 @@ public class SkillMenu {
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Gluttony
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
-		else if(join.getClassList().get(player.getUniqueId()).equals("Gluttony")) {
+		else if(pc.getClass(player.getUniqueId()) == Classes.GLUTTONY) {
 			i.setItem(4, menu.classGluttony(level));
 			i.setItem(19, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
 			"&7is one of your downsides."))));
-			if(join.getASList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ATTACK_SPEED) < 20) {
 				i.setItem(20, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getASMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER);
 				double calcNow = cLevel * 1;
 				double calcNext = (cLevel + 1) * 1;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
 				i.setItem(20, modCreator(player, Material.LEATHER_BOOTS, "&9Speed Modifier, Gotta Go Fast: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7When you activate your ability, your movement speed is increased",
 				"&7by a certain %.",
@@ -302,18 +309,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getCCList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.CRITICAL_CHANCE) < 20) {
 				i.setItem(21, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getCCMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER);
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) * 5;
-				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
 				i.setItem(21, modCreator(player, Material.POTION, "&5Critical Modifier, Critical Extension: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Increase the duration by a %",
 				"",
@@ -332,18 +339,18 @@ public class SkillMenu {
 			i.setItem(23, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
 			"&7is one of your downsides."))));
-			if(join.getHHList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.MAX_HEALTH) < 20) {
 				i.setItem(24, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getHHMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER);
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) * 5;
-				int pLevelReq = 10 + (10 * join.getHHMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getHHMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
 				i.setItem(24, modCreator(player, Material.POPPY, "&cHealth Modifier, Healing Stand: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your abilities recovery is increased by a certain %.",
 				"",
@@ -359,18 +366,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getDFList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ARMOR_DEFENSE) < 20) {
 				i.setItem(25, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getDFMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER);
 				double calcNow = cLevel * 4;
 				double calcNext = (cLevel + 1) * 4;
-				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
 				i.setItem(25, modCreator(player, Material.IRON_BLOCK, "&7Defense Modifier, Reflection: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7While your ability is active, reflect some % of the damage",
 				"&7done to you, back to the attacker.",
@@ -391,20 +398,20 @@ public class SkillMenu {
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Greed
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
-		else if(join.getClassList().get(player.getUniqueId()).equals("Greed")) {
+		else if(pc.getClass(player.getUniqueId()) == Classes.GREED) {
 			i.setItem(4, menu.classGreed(level));
-			if(join.getADList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ATTACK_DAMAGE) < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getADMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER);
 				double calcNow = cLevel * 2;
 				double calcNext = (cLevel + 1) * 2;
-				int pLevelReq = 10 + (10 * join.getADMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getADMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
 				i.setItem(19, modCreator(player, Material.ARROW, "&4Attack Modifier, Hunters Eye: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability deals additional damage to an enemy.",
 				"",
@@ -420,18 +427,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getASList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ATTACK_SPEED) < 20) {
 				i.setItem(20, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getASMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER);
 				double calcNow = cLevel * 10;
 				double calcNext = (cLevel + 1) * 10;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
 				i.setItem(20, modCreator(player, Material.ARMOR_STAND, "&9Speed Modifier, Hunt Down: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7When you shoot someone with your ability, your movement speed",
 				"&7Increases by a certain %",
@@ -448,18 +455,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getCCList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.CRITICAL_CHANCE) < 20) {
 				i.setItem(21, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getCCMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER);
 				double calcNow = 15 + (cLevel * 5);
 				double calcNext = 15 + ((cLevel + 1) * 5);
-				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
 				i.setItem(21, modCreator(player, Material.WITHER_SKELETON_SKULL, "&5Critical Modifier, Death Shot: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7You wither your enemy for a certain amount of seconds.",
 				"",
@@ -475,18 +482,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getRDList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.RANGED_DAMAGE) < 20) {
 				i.setItem(23, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getRDMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER);
 				double calcNow = cLevel * 0.5;
 				double calcNext = (cLevel + 1) * 0.5;
-				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
 				i.setItem(23, modCreator(player, Material.REDSTONE, "&dRanged Modifier, Hunters Blood: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Increase the duration of your ability.",
 				"",
@@ -512,20 +519,20 @@ public class SkillMenu {
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Sloth
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
-		else if(join.getClassList().get(player.getUniqueId()).equals("Sloth")) {
+		else if(pc.getClass(player.getUniqueId()) == Classes.SLOTH) {
 			i.setItem(4, menu.classSloth(level));
-			if(join.getADList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ATTACK_DAMAGE) < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getADMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER);
 				double calcNow = cLevel;
 				double calcNext = (cLevel + 1);
-				int pLevelReq = 10 + (10 * join.getADMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getADMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
 				i.setItem(19, modCreator(player, Material.ENCHANTED_BOOK, "&4Attack Modifier, Sharpened Thorns: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your ability deals additional damage to an enemy.",
 				"",
@@ -545,18 +552,18 @@ public class SkillMenu {
 			i.setItem(20, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
 			"&7is one of your downsides."))));
-			if(join.getCCList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.CRITICAL_CHANCE) < 20) {
 				i.setItem(21, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getCCMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER);
 				double calcNow = cLevel * 10;
 				double calcNext = (cLevel + 1) * 10;
-				int pLevelReq = 10 + (10 * join.getCCMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getCCMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getCCMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.CRITICAL_CHANCE_MODIFIER));
 				i.setItem(21, modCreator(player, Material.FIRE_CHARGE, "&5Critical Modifier, Critical Charge: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your thorns gain an additional % of force.",
 				"",
@@ -573,20 +580,20 @@ public class SkillMenu {
 				))));
 			}
 			i.setItem(23, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
-			"&7This ability modifier doesn't exist, because this",
+			"&7This ability modifier doesn't exist, be  cause this",
 			"&7is one of your downsides."))));
-			if(join.getHHList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.MAX_HEALTH) < 20) {
 				i.setItem(24, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getHHMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER);
 				double calcNow = cLevel;
 				double calcNext = cLevel + 1;
-				int pLevelReq = 10 + (10 * join.getHHMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getHHMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
 				i.setItem(24, modCreator(player, Material.RED_STAINED_GLASS, "&cHealth Modifier, Combo Shot: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your thorns heal you for a % amount of HP per enemy shot.",
 				"",
@@ -602,18 +609,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getDFList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ARMOR_DEFENSE) < 20) {
 				i.setItem(25, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getDFMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER);
 				double calcNow = 90 - cLevel * 10;
 				double calcNext = 90 - (cLevel + 1) * 10;
-				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
 				i.setItem(25, modCreator(player, Material.CREEPER_HEAD, "&7Defense Modifier, Reflex: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7When you get hit, there is a small chance that &6Hedge of the Thorn",
 				"&7will activate. This will not reset the cooldown, however it shoots",
@@ -635,20 +642,20 @@ public class SkillMenu {
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Envy
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
-		else if(join.getClassList().get(player.getUniqueId()).equals("Envy")) {
+		else if(pc.getClass(player.getUniqueId()) == Classes.ENVY) {
 			i.setItem(4, menu.classEnvy(level));
-			if(join.getADList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ATTACK_DAMAGE) < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getADMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER);
 				double calcNow = cLevel;
 				double calcNext = (cLevel + 1);
-				int pLevelReq = 10 + (10 * join.getADMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getADMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
 				i.setItem(19, modCreator(player, Material.GOLDEN_SWORD, "&4Attack Modifier, Sharp Edge: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7After you succesfully performed your ability, your next",
 				"&7attack against the same enemy deals an additional amount of damage.",
@@ -671,18 +678,18 @@ public class SkillMenu {
 			i.setItem(21, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
 			"&7is one of your downsides."))));
-			if(join.getRDList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.RANGED_DAMAGE) < 20) {
 				i.setItem(23, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getRDMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER);
 				double calcNow = cLevel * 10;
 				double calcNext = (cLevel + 1) * 10;
-				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
 				i.setItem(23, modCreator(player, Material.GOLDEN_BOOTS, "&5Critical Modifier, Retreatfull: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7After you succesfully executed this attack, your",
 				"&7Movement Speed increases by a certain % for 15 seconds",
@@ -699,18 +706,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getHHList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.MAX_HEALTH) < 20) {
 				i.setItem(24, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getHHMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER);
 				double calcNow = 1 + cLevel * 0.75;
 				double calcNext = 1 + (cLevel + 1) * 0.75;
-				int pLevelReq = 10 + (10 * join.getHHMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getHHMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getHHMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.MAX_HEALTH_MODIFIER));
 				i.setItem(24, modCreator(player, Material.RED_STAINED_GLASS, "&cHealth Modifier, Regenerative Comeback: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7You heal some HP after you succesfully performed your ability",
 				"&7For a few seconds.",
@@ -727,18 +734,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getDFList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ARMOR_DEFENSE) < 20) {
 				i.setItem(25, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getDFMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER);
 				double calcNow = cLevel * 7.5;
 				double calcNext = (cLevel + 1) * 7.5;
-				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
 				i.setItem(25, modCreator(player, Material.GOLDEN_CHESTPLATE, "&7Defense Modifier, Guard Up: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7When your ability runs out before you could perform it, the next",
 				"&7attacks damage you recieve will be decreased by a certain %",
@@ -759,20 +766,20 @@ public class SkillMenu {
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Pride
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
-		else if(join.getClassList().get(player.getUniqueId()).equals("Pride")) {
+		else if(pc.getClass(player.getUniqueId()) == Classes.PRIDE) {
 			i.setItem(4, menu.classPride(level));
-			if(join.getADList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ATTACK_DAMAGE) < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getADMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER);
 				double calcNow = cLevel;
 				double calcNext = (cLevel + 1);
-				int pLevelReq = 10 + (10 * join.getADMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getADMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getADMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ATTACK_DAMAGE_MODIFIER));
 				i.setItem(19, modCreator(player, Material.FERMENTED_SPIDER_EYE, "&4Attack Modifier, Weakening Strike: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7When your ability is active, your strikes apply weakness 1",
 				"&7to the enemy for a few seconds",
@@ -789,18 +796,18 @@ public class SkillMenu {
 				"&6Player Level: " + pLevelReq
 				))));
 			}
-			if(join.getASList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ATTACK_SPEED) < 20) {
 				i.setItem(20, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getASMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER);
 				double calcNow = cLevel * 0.5;
 				double calcNext = (cLevel + 1) * 0.5;
-				int pLevelReq = 10 + (10 * join.getASMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getASMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getASMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ATTACK_SPEED_MODIFIER));
 				i.setItem(20, modCreator(player, Material.BONE, "&9Speed Modifier, Quick Attack: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Every hit you deal while your ability is active increases",
 				"&7your Movement Speed by a certain %",
@@ -820,18 +827,18 @@ public class SkillMenu {
 			i.setItem(21, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
 			"&7is one of your downsides."))));
-			if(join.getRDList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.RANGED_DAMAGE) < 20) {
 				i.setItem(23, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getRDMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER);
 				double calcNow = cLevel * 2;
 				double calcNext = (cLevel + 1) * 2;
-				int pLevelReq = 10 + (10 * join.getRDMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getRDMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getRDMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.RANGED_DAMAGE_MODIFIER));
 				i.setItem(23, modCreator(player, Material.ICE, "&cHealth Modifier, Cooling: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7Your abilities cooldown decreases by a few seconds.",
 				"",
@@ -850,18 +857,18 @@ public class SkillMenu {
 			i.setItem(24, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
 			"&7is one of your downsides."))));
-			if(join.getDFList().get(player.getUniqueId()) < 20) {
+			if(pc.getSkill(uuid, Skills.ARMOR_DEFENSE) < 20) {
 				i.setItem(25, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
 				"&7to unlock this ability modifier!"))));
 			}
 			else {
-				int cLevel = join.getDFMODList().get(player.getUniqueId());
+				int cLevel = pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER);
 				double calcNow = cLevel * 5;
 				double calcNext = (cLevel + 1) * 5;
-				int pLevelReq = 10 + (10 * join.getDFMODList().get(player.getUniqueId()));
-				int levelReq = 20 + (20 * join.getDFMODList().get(player.getUniqueId()));
-				double moneyReq = 20000.00 + (20000.00 * join.getDFMODList().get(player.getUniqueId()));
+				int pLevelReq = 10 + (10 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				int levelReq = 20 + (20 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
+				double moneyReq = 20000.00 + (20000.00 * pc.getSkill(uuid, Skills.ARMOR_DEFENSE_MODIFIER));
 				i.setItem(25, modCreator(player, Material.IRON_CHESTPLATE, "&7Defense Modifier, Absorb: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
 				"&7While your ability is active, you absorb part of the incoming damage",
 				"&7and return this damage back to the attacker on your next attacker",
@@ -915,7 +922,7 @@ public class SkillMenu {
 	}
 	public ItemStack skillBook(Player p) {
 		ItemStack item = new ItemStack(Material.BOOK);
-		int skillPoints = join.getSkillPoints().get(p.getUniqueId());
+		int skillPoints = pc.getSkill(p.getUniqueId(), Skills.SKILL_POINTS);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Skill Points: &6" + skillPoints));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -938,9 +945,9 @@ public class SkillMenu {
 	}
 	public ItemStack progression(Player p) {
 		ItemStack item = new ItemStack(Material.ENCHANTING_TABLE);
-		int level = join.getLevelList().get(p.getUniqueId());
-		int xp = join.getXPList().get(p.getUniqueId());
-		int maxxp = join.getMXPList().get(p.getUniqueId());
+		int level = pc.getSkill(p.getUniqueId(), Skills.LEVEL);
+		int xp = pc.getSkill(p.getUniqueId(), Skills.XP);
+		int maxxp = pc.getSkill(p.getUniqueId(), Skills.MAXXP);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&6Progression Table"));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -953,16 +960,18 @@ public class SkillMenu {
 	public ItemStack ad(Player p) {
 		ItemStack item = new ItemStack(Material.IRON_SWORD);
 		ItemMeta meta = item.getItemMeta();
-		int levelNow = join.getADList().get(p.getUniqueId());
-		double calcNow = join.getADList().get(p.getUniqueId()) * 2.5;
-		double calcNext = (join.getADList().get(p.getUniqueId()) + 1.00) * 2.5;
-		if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Envy")) {
-			calcNow = join.getADList().get(p.getUniqueId()) * 3.75;
-			calcNext = (join.getADList().get(p.getUniqueId()) + 1.00) * 3.75;
+		UUID uuid = p.getUniqueId();
+		int levelNow = pc.getSkill(uuid, Skills.ATTACK_DAMAGE);
+		double calcNow = pc.getCalculation(uuid, Skills.ATTACK_DAMAGE_CALC);
+		double calcNext = pc.getCalculation(uuid, Skills.ATTACK_DAMAGE_CALC);
+		if(pc.getResult(uuid, Skills.ATTACK_DAMAGE) == UD.UPSIDE) {
+			calcNext = calcNext + 3.75;
 		}
-		else if(join.getClassList().get(p.getUniqueId()).equals("Lust") || join.getClassList().get(p.getUniqueId()).equals("Gluttony")) {
-			calcNow = join.getADList().get(p.getUniqueId()) * 1.25;
-			calcNext = (join.getADList().get(p.getUniqueId()) + 1.00) * 1.25;
+		else if(pc.getResult(uuid, Skills.ATTACK_DAMAGE) == UD.DOWNSIDE) {
+			calcNext = calcNext + 1.25;
+		}
+		else if(pc.getResult(uuid, Skills.ATTACK_DAMAGE) == UD.NEUTRAL){
+			calcNext = calcNext + 2.5;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&4Attack Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -980,16 +989,18 @@ public class SkillMenu {
 	public ItemStack as(Player p) {
 		ItemStack item = new ItemStack(Material.FEATHER);
 		ItemMeta meta = item.getItemMeta();
-		int levelNow = join.getASList().get(p.getUniqueId());
-		double calcNow = join.getASList().get(p.getUniqueId()) * 0.40;
-		double calcNext = (join.getASList().get(p.getUniqueId()) + 1.00) * 0.40;
-		if(join.getClassList().get(p.getUniqueId()).equals("Greed") || join.getClassList().get(p.getUniqueId()).equals("Pride")) {
-			calcNow = join.getASList().get(p.getUniqueId()) * 0.60;
-			calcNext = (join.getASList().get(p.getUniqueId()) + 1.00) * 0.60;
+		UUID uuid = p.getUniqueId();
+		int levelNow = pc.getSkill(uuid, Skills.ATTACK_SPEED);
+		double calcNow = pc.getCalculation(uuid, Skills.ATTACK_SPEED_CALC);
+		double calcNext = pc.getCalculation(uuid, Skills.ATTACK_SPEED_CALC);
+		if(pc.getResult(uuid, Skills.ATTACK_SPEED) == UD.UPSIDE) {
+			calcNext = calcNext + 0.60;
 		}
-		else if(join.getClassList().get(p.getUniqueId()).equals("Lust") || join.getClassList().get(p.getUniqueId()).equals("Envy") || join.getClassList().get(p.getUniqueId()).equals("Sloth")) {
-			calcNow = join.getASList().get(p.getUniqueId()) * 0.20;
-			calcNext = (join.getASList().get(p.getUniqueId()) + 1.00) * 0.20;
+		else if(pc.getResult(uuid, Skills.ATTACK_SPEED) == UD.DOWNSIDE) {
+			calcNext = calcNext + 0.20;
+		}
+		else if(pc.getResult(uuid, Skills.ATTACK_SPEED) == UD.NEUTRAL){
+			calcNext = calcNext + 0.40;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&9Attack Speed: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -1007,16 +1018,18 @@ public class SkillMenu {
 	public ItemStack cc(Player p) {
 		ItemStack item = new ItemStack(Material.BLAZE_POWDER);
 		ItemMeta meta = item.getItemMeta();
-		int levelNow = join.getCCList().get(p.getUniqueId());
-		double calcNow = join.getCCList().get(p.getUniqueId()) * 0.50;
-		double calcNext = (join.getCCList().get(p.getUniqueId()) + 1.00) * 0.50;
-		if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Sloth")) {
-			calcNow = join.getCCList().get(p.getUniqueId()) * 0.75;
-			calcNext = (join.getCCList().get(p.getUniqueId()) + 1.00) * 0.75;
+		UUID uuid = p.getUniqueId();
+		int levelNow = pc.getSkill(uuid, Skills.CRITICAL_CHANCE);
+		double calcNow = pc.getCalculation(uuid, Skills.CRITICAL_CHANCE_CALC);
+		double calcNext = pc.getCalculation(uuid, Skills.CRITICAL_CHANCE_CALC);
+		if(pc.getResult(uuid, Skills.CRITICAL_CHANCE) == UD.UPSIDE) {
+			calcNext = calcNext + 0.75;
 		}
-		else if(join.getClassList().get(p.getUniqueId()).equals("Pride") || join.getClassList().get(p.getUniqueId()).equals("Envy")) {
-			calcNow = join.getCCList().get(p.getUniqueId()) * 0.25;
-			calcNext = (join.getCCList().get(p.getUniqueId()) + 1.00) * 0.25;
+		else if(pc.getResult(uuid, Skills.CRITICAL_CHANCE) == UD.DOWNSIDE) {
+			calcNext = calcNext + 0.25;
+		}
+		else if(pc.getResult(uuid, Skills.CRITICAL_CHANCE) == UD.NEUTRAL){
+			calcNext = calcNext + 0.50;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&5Critical Chance: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -1034,16 +1047,18 @@ public class SkillMenu {
 	public ItemStack rd(Player p) {
 		ItemStack item = new ItemStack(Material.BOW);
 		ItemMeta meta = item.getItemMeta();
-		int levelNow = join.getRDList().get(p.getUniqueId());
-		double calcNow = join.getRDList().get(p.getUniqueId()) * 3.00;
-		double calcNext = (join.getRDList().get(p.getUniqueId()) + 1.00) * 3.00;
-		if(join.getClassList().get(p.getUniqueId()).equals("Greed") || join.getClassList().get(p.getUniqueId()).equals("Lust") || join.getClassList().get(p.getUniqueId()).equals("Envy")) {
-			calcNow = join.getRDList().get(p.getUniqueId()) * 4.50;
-			calcNext = (join.getRDList().get(p.getUniqueId()) + 1.00) * 4.50;
+		UUID uuid = p.getUniqueId();
+		int levelNow = pc.getSkill(uuid, Skills.RANGED_DAMAGE);
+		double calcNow = pc.getCalculation(uuid, Skills.RANGED_DAMAGE_CALC);
+		double calcNext = pc.getCalculation(uuid, Skills.RANGED_DAMAGE_CALC);
+		if(pc.getResult(uuid, Skills.RANGED_DAMAGE) == UD.UPSIDE) {
+			calcNext = calcNext + 4.5;
 		}
-		else if(join.getClassList().get(p.getUniqueId()).equals("Sloth") || join.getClassList().get(p.getUniqueId()).equals("Gluttony")) {
-			calcNow = join.getRDList().get(p.getUniqueId()) * 1.50;
-			calcNext = (join.getRDList().get(p.getUniqueId()) + 1.00) * 1.50;
+		else if(pc.getResult(uuid, Skills.RANGED_DAMAGE) == UD.DOWNSIDE) {
+			calcNext = calcNext + 1.5;
+		}
+		else if(pc.getResult(uuid, Skills.RANGED_DAMAGE) == UD.NEUTRAL){
+			calcNext = calcNext + 3.0;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&dRanged Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -1061,16 +1076,18 @@ public class SkillMenu {
 	public ItemStack hh(Player p) {
 		ItemStack item = new ItemStack(Material.APPLE);
 		ItemMeta meta = item.getItemMeta();
-		int levelNow = join.getHHList().get(p.getUniqueId());
-		double calcNow = join.getHHList().get(p.getUniqueId()) * 5.00;
-		double calcNext = (join.getHHList().get(p.getUniqueId()) + 1.00) * 5.00;
-		if(join.getClassList().get(p.getUniqueId()).equals("Lust") || join.getClassList().get(p.getUniqueId()).equals("Gluttony")) {
-			calcNow = join.getHHList().get(p.getUniqueId()) * 7.50;
-			calcNext = (join.getHHList().get(p.getUniqueId()) + 1.00) * 7.50;
+		UUID uuid = p.getUniqueId();
+		int levelNow = pc.getSkill(uuid, Skills.MAX_HEALTH);
+		double calcNow = pc.getCalculation(uuid, Skills.MAX_HEALTH_CALC);
+		double calcNext = pc.getCalculation(uuid, Skills.MAX_HEALTH_CALC);
+		if(pc.getResult(uuid, Skills.MAX_HEALTH) == UD.UPSIDE) {
+			calcNext = calcNext + 7.5;
 		}
-		else if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Pride") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
-			calcNow = join.getHHList().get(p.getUniqueId()) * 2.50;
-			calcNext = (join.getHHList().get(p.getUniqueId()) + 1.00) * 2.50;
+		else if(pc.getResult(uuid, Skills.MAX_HEALTH) == UD.DOWNSIDE) {
+			calcNext = calcNext + 2.5;
+		}
+		else if(pc.getResult(uuid, Skills.MAX_HEALTH) == UD.NEUTRAL){
+			calcNext = calcNext + 5.0;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&cHealth: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -1088,16 +1105,18 @@ public class SkillMenu {
 	public ItemStack df(Player p) {
 		ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
 		ItemMeta meta = item.getItemMeta();
-		int levelNow = join.getDFList().get(p.getUniqueId());
-		double calcNow = join.getDFList().get(p.getUniqueId()) * 3.33;
-		double calcNext = (join.getDFList().get(p.getUniqueId()) + 1.00) * 3.33;
-		if(join.getClassList().get(p.getUniqueId()).equals("Gluttony") || join.getClassList().get(p.getUniqueId()).equals("Sloth") || join.getClassList().get(p.getUniqueId()).equals("Pride")) {
-			calcNow = join.getDFList().get(p.getUniqueId()) * 5.00;
-			calcNext = (join.getDFList().get(p.getUniqueId()) + 1.00) * 5.00;
+		UUID uuid = p.getUniqueId();
+		int levelNow = pc.getSkill(uuid, Skills.ARMOR_DEFENSE);
+		double calcNow = pc.getCalculation(uuid, Skills.ARMOR_DEFENSE_CALC);
+		double calcNext = pc.getCalculation(uuid, Skills.ARMOR_DEFENSE_CALC);
+		if(pc.getResult(uuid, Skills.ARMOR_DEFENSE) == UD.UPSIDE) {
+			calcNext = calcNext + 1.50;
 		}
-		else if(join.getClassList().get(p.getUniqueId()).equals("Wrath") || join.getClassList().get(p.getUniqueId()).equals("Greed")) {
-			calcNow = join.getDFList().get(p.getUniqueId()) * 1.66;
-			calcNext = (join.getDFList().get(p.getUniqueId()) + 1.00) * 1.66;
+		else if(pc.getResult(uuid, Skills.ARMOR_DEFENSE) == UD.DOWNSIDE) {
+			calcNext = calcNext + 0.5;
+		}
+		else if(pc.getResult(uuid, Skills.ARMOR_DEFENSE) == UD.NEUTRAL){
+			calcNext = calcNext + 1.0;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&8Defense: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();

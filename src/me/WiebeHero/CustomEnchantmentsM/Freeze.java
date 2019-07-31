@@ -12,12 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import NeededStuff.SwordSwingProgress;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import net.md_5.bungee.api.ChatColor;
 
 public class Freeze extends SwordSwingProgress implements Listener {

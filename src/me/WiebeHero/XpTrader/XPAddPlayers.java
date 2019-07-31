@@ -9,12 +9,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import Skills.SkillJoin;
+
+import Skills.PlayerClass;
+import Skills.SkillEnum.Skills;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.Spawners.SpawnerList;
 
 public class XPAddPlayers extends SpawnerList implements Listener {
-	SkillJoin join = new SkillJoin();
+	PlayerClass pc = new PlayerClass();
 	@EventHandler
 	public void xpAddPlayer(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -32,25 +34,25 @@ public class XPAddPlayers extends SpawnerList implements Listener {
 				    		}
 				    		xpAmount = xpAmount.replaceAll("[^\\d.]", "");
 							int xpAdd = Integer.parseInt(xpAmount);
-							int xp = join.getXPList().get(player.getUniqueId());
-							int maxxp = join.getMXPList().get(player.getUniqueId());
-							int level = join.getLevelList().get(player.getUniqueId());
+							int xp = pc.getSkill(player.getUniqueId(), Skills.XP);
+							int maxxp = pc.getSkill(player.getUniqueId(), Skills.MAXXP);
+							int level = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
 							int finalXP = xp + xpAdd;
 							if(level < 100) {
 								if(finalXP >= maxxp) {
 									level++;
 									xp = finalXP - maxxp;
 									int maxxpFinal = (int)(double)(maxxp / 100.00 * 107.00);
-									join.getLevelList().put(player.getUniqueId(), level);
-									join.getMXPList().put(player.getUniqueId(), maxxpFinal);
-									join.getXPList().put(player.getUniqueId(), xp);
-									join.getSkillPoints().put(player.getUniqueId(), join.getSkillPoints().get(player.getUniqueId()) + 2);
+									pc.setSkill(player.getUniqueId(), Skills.LEVEL, level);
+									pc.setSkill(player.getUniqueId(), Skills.MAXXP, maxxpFinal);
+									pc.setSkill(player.getUniqueId(), Skills.LEVEL, xp);
+									pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) + 3);
 									player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
 									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have leveled up to level &6" + level + "&a!"));
 									
 								}
 								else if(finalXP > 0){
-									join.getXPList().put(player.getUniqueId(), finalXP);
+									pc.setSkill(player.getUniqueId(), Skills.XP, finalXP);
 								}
 							}
 							float barprogress = (float) finalXP / maxxp;
@@ -58,6 +60,10 @@ public class XPAddPlayers extends SpawnerList implements Listener {
 								if(!(barprogress > 1)) {
 									player.setLevel(level);
 									player.setExp((float)barprogress);
+								}
+								else {
+									player.setLevel(level);
+									player.setExp((float)barprogress - 1.0F);
 								}
 							}
 							player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);

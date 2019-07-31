@@ -11,11 +11,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import Skills.SkillEnum.Skills;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.Spawners.SpawnerList;
 import net.md_5.bungee.api.ChatColor;
 
 public class XPEarningMobs implements Listener{
+	PlayerClass pc = new PlayerClass();
 	SkillJoin join = new SkillJoin();
 	@EventHandler
 	public void xpEarnMobs10(EntityDeathEvent event) {
@@ -23,10 +25,10 @@ public class XPEarningMobs implements Listener{
 			if(event.getEntity() instanceof LivingEntity) {
 				Player player = event.getEntity().getKiller();
 				LivingEntity victim = event.getEntity();
-				int level = join.getLevelList().get(player.getUniqueId());
-				int xp = join.getXPList().get(player.getUniqueId());
-				int maxxp = join.getMXPList().get(player.getUniqueId());
-				int skillPoints = join.getSkillPoints().get(player.getUniqueId());
+				int level = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
+				int xp = pc.getSkill(player.getUniqueId(), Skills.XP);
+				int maxxp = pc.getSkill(player.getUniqueId(), Skills.MAXXP);
+				int skillPoints = pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS);
 				int finalXP = 0;
 				if(SpawnerList.getMobList().containsKey(event.getEntity().getUniqueId())) {
 					int tier = SpawnerList.getMobList().get(event.getEntity().getUniqueId());
@@ -101,7 +103,7 @@ public class XPEarningMobs implements Listener{
 						finalXP = 3 + xp;
 					}
 					else if(victim.getType().equals(EntityType.PLAYER)) {
-						int levelVictim = join.getLevelList().get(victim.getUniqueId());
+						int levelVictim = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
 						if(levelVictim > 1) {
 							int i2 = new Random().nextInt(50 + 5 * levelVictim) + 50 + 5 * levelVictim;
 							finalXP = i2 + xp;
@@ -117,10 +119,10 @@ public class XPEarningMobs implements Listener{
 								level++;
 								int finalSkillPoints = skillPoints + 3;
 								maxxp = (int)(double)(maxxp / 100.00 * 107.00);
-								join.getLevelList().put(player.getUniqueId(), level);
-								join.getXPList().put(player.getUniqueId(), finalXP);
-								join.getMXPList().put(player.getUniqueId(), maxxp);
-								join.getSkillPoints().put(player.getUniqueId(), finalSkillPoints);
+								pc.setSkill(player.getUniqueId(), Skills.LEVEL, level);
+								pc.setSkill(player.getUniqueId(), Skills.XP, finalXP);
+								pc.setSkill(player.getUniqueId(), Skills.MAXXP, maxxp);
+								pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, finalSkillPoints);
 							}
 							else {
 								break;
@@ -130,7 +132,7 @@ public class XPEarningMobs implements Listener{
 	    	            player.sendMessage(new ColorCodeTranslator().colorize("&aYou have leveled up to level: &6&l" + level));
 					}
 					else if(finalXP > 0){
-						join.getXPList().put(player.getUniqueId(), finalXP);
+						pc.setSkill(player.getUniqueId(), Skills.XP, finalXP);
 					}
 				}
 				float barprogress = (float) finalXP / maxxp;
@@ -138,6 +140,10 @@ public class XPEarningMobs implements Listener{
 					if(!(barprogress > 1)) {
 						player.setLevel(level);
 						player.setExp((float)barprogress);
+					}
+					else {
+						player.setLevel(level);
+						player.setExp((float)barprogress - 1.0F);
 					}
 				}
 			}

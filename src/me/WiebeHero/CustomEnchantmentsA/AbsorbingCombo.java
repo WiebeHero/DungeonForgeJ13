@@ -1,7 +1,6 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
 import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

@@ -13,8 +13,10 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
@@ -36,6 +38,10 @@ import org.bukkit.scoreboard.Team;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 
 import NeededStuff.AFKSystem;
 import NeededStuff.CancelJoinLeaveAdvancementMessages;
@@ -59,8 +65,6 @@ import NeededStuff.SpawnCommand;
 import NeededStuff.SwordSwingProgress;
 import NeededStuff.TNTExplodeCovered;
 import NeededStuff.TPACommand;
-import Skills.AttackDamage;
-import Skills.AttackSpeed;
 import Skills.ClassEnvy;
 import Skills.ClassGluttony;
 import Skills.ClassGreed;
@@ -69,10 +73,10 @@ import Skills.ClassMenuSelection;
 import Skills.ClassPride;
 import Skills.ClassSloth;
 import Skills.ClassWrath;
-import Skills.CriticalChance;
-import Skills.Defense;
-import Skills.RangedDamage;
+import Skills.EffectSkills;
+import Skills.PlayerClass;
 import Skills.SkillCommand;
+import Skills.SkillEnum.Skills;
 import Skills.SkillJoin;
 import Skills.SkillMenuInteract;
 import Skills.XPEarningMobs;
@@ -260,7 +264,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ChestList cList = new ChestList();
 	private LootRewards lootR = new LootRewards();
 	private ConfigManager cfgm;
-	private SkillJoin join = new SkillJoin();
+	private PlayerClass pc = new PlayerClass();
 	int level;
 	public Scoreboard scoreboard;
 	public static boolean shutdown = false;
@@ -417,11 +421,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new SkillJoin(), this);
 		getServer().getPluginManager().registerEvents(new ClassMenuSelection(), this);
 		getServer().getPluginManager().registerEvents(new XPEarningMobs(), this);
-		getServer().getPluginManager().registerEvents(new AttackDamage(), this);
-		getServer().getPluginManager().registerEvents(new AttackSpeed(), this);
-		getServer().getPluginManager().registerEvents(new CriticalChance(), this);
-		getServer().getPluginManager().registerEvents(new RangedDamage(), this);
-		getServer().getPluginManager().registerEvents(new Defense(), this);
+		getServer().getPluginManager().registerEvents(new EffectSkills(), this);
 		getServer().getPluginManager().registerEvents(new ClassWrath(), this);
 		getServer().getPluginManager().registerEvents(new ClassLust(), this);
 		getServer().getPluginManager().registerEvents(new ClassGluttony(), this);
@@ -436,7 +436,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Novis
 		getServer().getPluginManager().registerEvents(new NovisInventory(), this);
 		//Loot Chest
-		getServer().getPluginManager().registerEvents(new ChestList(), this);
+		getServer().getPluginManager().registerEvents(cList, this);
 		//Brewing Recipes
 		getServer().getPluginManager().registerEvents(new UnblockBrewing(), this);
 		getServer().getPluginManager().registerEvents(new CallRecipe(), this);
@@ -527,7 +527,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		if(yml4.getConfigurationSection("Skills.Players") != null) {
-			join.loadSkilledProfiles(yml4, f5);
+			pc.registerProfiles(yml4, f5);
 		}
 		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
 		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
@@ -542,6 +542,20 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 		if(yml5.getConfigurationSection("Homes") != null) {
 			sethome.loadHomes(yml5, f6);
+		}
+		File f7 =  new File("plugins/CustomEnchantments/lootConfig.yml");
+		YamlConfiguration yml6 = YamlConfiguration.loadConfiguration(f7);
+		try{
+			yml6.load(f7);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		if(yml6.getConfigurationSection("Loot.Chests") != null) {
+			loot.loadLootChests(yml6, f7);
 		}
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
@@ -638,7 +652,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			public void run() {
 				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 10 minutes!"));
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 264000L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 276000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -649,24 +663,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 						p.kickPlayer(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
 					}
 				}
-				for(Entity e : Bukkit.getWorld("DFWarzone-1").getEntities()) {
-					if(e != null) {
-						e.remove();
-					}
-				}
-				for(Entity e : Bukkit.getWorld("FactionWorld-1").getEntities()) {
-					if(e != null) {
-						e.remove();
-					}
-				}
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 258000L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 282000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 minute!"));
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 253200L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 286800L);
 		
 		new BukkitRunnable() {
 			@Override
@@ -677,6 +681,28 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}.runTaskLater(CustomEnchantments.getInstance(), 288000L);
 	}
 	public void onDisable() {
+		for(Entity e : Bukkit.getWorld("DFWarzone-1").getEntities()) {
+			if(e != null && !(e instanceof Player)) {
+				e.remove();
+			}
+		}
+		for(Entity e : Bukkit.getWorld("FactionWorld-1").getEntities()) {
+			if(e != null && !(e instanceof Player)) {
+				e.remove();
+			}
+		}
+		File f5 =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
+		YamlConfiguration yml4 = YamlConfiguration.loadConfiguration(f5);
+		try{
+			yml4.load(f5);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		pc.saveProfiles(yml4, f5);
 		for(Team t : scoreboard.getTeams()) {
 			t.unregister();
 		}
@@ -699,6 +725,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		HashMap<String, ArrayList<Chunk>> chunkList = new HashMap<String, ArrayList<Chunk>>(fac.getChunkList());
 		HashMap<String, Integer> chunkTotalList = new HashMap<String, Integer>(fac.getTotalChunkList());
 		HashMap<String, Integer> fTopList = new HashMap<String, Integer>(fac.getFTop());
+		HashMap<String, Location> fHomeList = new HashMap<String, Location>(fac.getFHomes());
 		for(int i = 0; i < factionNameList.size(); i++) {
 			yml.createSection("Factions.List." + factionNameList.get(i));
 			for(int i1 = 0; i1 < factionMemberList.get(factionNameList.get(i)).size(); i1++) {
@@ -712,6 +739,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 					list.add(entry.getValue().get(i1).toString());
 				}
 			}
+			yml.set("Factions.List." + factionNameList.get(i) + ".Faction Home", fHomeList.get(factionNameList.get(i)));
 			yml.set("Factions.List." + factionNameList.get(i) + ".Chunks List", list);
 			yml.set("Factions.List." + factionNameList.get(i) + ".Faction Points", fTopList.get(factionNameList.get(i)));
 			yml.set("Factions.List." + factionNameList.get(i) + ".Allies", factionAllyList.get(factionNameList.get(i)));
@@ -787,20 +815,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		for(int i = 1; i <= SetSpawner.getSpawnerLocList().size(); i++) {
-			yml2.set("Spawners.UUID." + i + ".Location.X", SetSpawner.getSpawnerLocList().get(i).getX());
-			yml2.set("Spawners.UUID." + i + ".Location.Y", SetSpawner.getSpawnerLocList().get(i).getY());
-			yml2.set("Spawners.UUID." + i + ".Location.Z", SetSpawner.getSpawnerLocList().get(i).getZ());
-			yml2.set("Spawners.UUID." + i + ".Location.World", SetSpawner.getWorldList().get(i));
-			yml2.set("Spawners.UUID." + i + ".Tier", SetSpawner.getTieredList().get(i));
-			yml2.set("Spawners.UUID." + i + ".Type", (String) SetSpawner.getTypeList().get(i));
-		}
-		try{
-			yml2.save(f3);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
+		command.saveSpawners(yml2, f3);
 		File f4 =  new File("plugins/CustomEnchantments/cashConfig.yml");
 		YamlConfiguration yml3 = YamlConfiguration.loadConfiguration(f4);
 		try{
@@ -813,18 +828,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		money.saveMoney(yml3, f4);
-		File f5 =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-		YamlConfiguration yml4 = YamlConfiguration.loadConfiguration(f5);
-		try{
-			yml4.load(f5);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		join.saveSkilledProfiles(yml4, f5);
+		
 		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
 		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
 		try{
@@ -837,6 +841,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		sethome.saveHomes(yml5, f6);
+		File f7 =  new File("plugins/CustomEnchantments/lootConfig.yml");
+		YamlConfiguration yml6 = YamlConfiguration.loadConfiguration(f7);
+		loot.saveLootChests(yml6, f7);
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {
@@ -935,11 +942,20 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 	}
 	public static HashMap<UUID, Scoreboard> scores = new HashMap<UUID, Scoreboard>();
-	@SuppressWarnings("deprecation")
 	public void registerNameTag(Player player) {
+		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+		World world = player.getWorld();
+		RegionManager regions = container.get(BukkitAdapter.adapt(world));
 		if(!scores.containsKey(player.getUniqueId())) {
+			UUID uuid = player.getUniqueId();
 			int level = 1;
-			double cash = 1500;
+			if(pc.getSkill(uuid, Skills.LEVEL) != 0) {
+				level = pc.getSkill(uuid, Skills.LEVEL);
+			}
+			double cash = 1500.0;
+			if(money.getMoneyList().get(player.getUniqueId()) != null) {
+				cash = money.getMoneyList().get(player.getUniqueId());
+			}
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
 			Scoreboard board = manager.getNewScoreboard();
 			org.bukkit.scoreboard.Scoreboard b = board;
@@ -974,7 +990,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Team t = board.getTeam(player.getName() + "1");
 			board.getTeam(player.getName() + "1").addPlayer(player);
 			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + join.getClassList().get(player.getUniqueId())));
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + pc.getClass(player.getUniqueId())));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + t.getSuffix()));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 			//Faction Info
@@ -993,32 +1009,63 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6" + facN));
 			}
 			else {
-				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6None"));
+				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &7None"));
 			}
-			if(player.getWorld().getName() == Bukkit.getWorld("DFWarzone-1").getName()) {
-				facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&lWarzone"));
+			if(player.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
+				if(regions.hasRegion("spawn")) {
+					if(regions.getRegion("spawn").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
+						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&lSpawn"));
+					}
+					else {
+						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
+					}
+				}
+				else if(regions.hasRegion("warzone")) {
+					if(regions.getRegion("warzone").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
+						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&lWarzone"));
+					}
+					else {
+						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
+					}
+				}
+				else {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
+				}
 			}
 			else if(!facN.equals("")) {
-				boolean check = false;
+				String tempName = "";
 				for(Entry<String, ArrayList<Chunk>> entry : fac.getChunkList().entrySet()) {
 					if(!entry.getKey().equals(facN)) {
 						if(entry.getValue().contains(player.getLocation().getChunk())) {
-							check = true;
+							tempName = entry.getKey();
 						}
 					}
 				}
 				if(fac.getChunkList().get(facN).contains(player.getLocation().getChunk())) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&lFriendly"));
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&l" + facN));
 				}
-				else if(check == true) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6&cEnemy"));
+				else if(!tempName.equals("")) {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&l" + tempName));
 				}
 				else {
 					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
 				}
 			}
 			else {
-				facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Unknown"));
+				String tempName = "";
+				for(Entry<String, ArrayList<Chunk>> entry : fac.getChunkList().entrySet()) {
+					if(!entry.getKey().equals(facN)) {
+						if(entry.getValue().contains(player.getLocation().getChunk())) {
+							tempName = entry.getKey();
+						}
+					}
+				}
+				if(!tempName.equals("")) {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&l" + tempName));
+				}
+				else {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Wilderniss"));
+				}
 			}
 			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + cash));
 			Score level1 = o.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + level));
@@ -1039,13 +1086,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			blank3.setScore(2);
 			adress.setScore(1);
 			player.setScoreboard(b);
-			player.setScoreboard(board);
 			scores.put(player.getUniqueId(), b);
 		}
 		else {
+			UUID uuid = player.getUniqueId();
 			int level = 1;
-			if(join.getLevelList().get(player.getUniqueId()) != null) {
-				level = join.getLevelList().get(player.getUniqueId());
+			if(pc.getSkill(uuid, Skills.LEVEL) != 0) {
+				level = pc.getSkill(uuid, Skills.LEVEL);
 			}
 			double cash = 1500.0;
 			if(money.getMoneyList().get(player.getUniqueId()) != null) {
@@ -1084,7 +1131,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Team t = board.getTeam(player.getName() + "1");
 			board.getTeam(player.getName() + "1").addPlayer(player);
 			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + join.getClassList().get(player.getUniqueId())));
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + pc.getClass(player.getUniqueId())));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + t.getSuffix()));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 			
@@ -1104,32 +1151,63 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6" + facN));
 			}
 			else {
-				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6None"));
+				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &7None"));
 			}
-			if(player.getWorld().getName() == Bukkit.getWorld("DFWarzone-1").getName()) {
-				facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&lWarzone"));
+			if(player.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
+				if(regions.hasRegion("spawn")) {
+					if(regions.getRegion("spawn").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
+						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&lSpawn"));
+					}
+					else {
+						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
+					}
+				}
+				else if(regions.hasRegion("warzone")) {
+					if(regions.getRegion("warzone").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
+						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&lWarzone"));
+					}
+					else {
+						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
+					}
+				}
+				else {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
+				}
 			}
 			else if(!facN.equals("")) {
-				boolean check = false;
+				String tempName = "";
 				for(Entry<String, ArrayList<Chunk>> entry : fac.getChunkList().entrySet()) {
 					if(!entry.getKey().equals(facN)) {
 						if(entry.getValue().contains(player.getLocation().getChunk())) {
-							check = true;
+							tempName = entry.getKey();
 						}
 					}
 				}
 				if(fac.getChunkList().get(facN).contains(player.getLocation().getChunk())) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&lFriendly"));
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&l" + facN));
 				}
-				else if(check == true) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6&cEnemy"));
+				else if(!tempName.equals("")) {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&l" + tempName));
 				}
 				else {
 					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
 				}
 			}
 			else {
-				facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Unknown"));
+				String tempName = "";
+				for(Entry<String, ArrayList<Chunk>> entry : fac.getChunkList().entrySet()) {
+					if(!entry.getKey().equals(facN)) {
+						if(entry.getValue().contains(player.getLocation().getChunk())) {
+							tempName = entry.getKey();
+						}
+					}
+				}
+				if(!tempName.equals("")) {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&l" + tempName));
+				}
+				else {
+					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Wilderniss"));
+				}
 			}
 			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + cash));
 			Score level1 = o.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + level));
@@ -1150,7 +1228,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			blank3.setScore(2);
 			adress.setScore(1);
 			player.setScoreboard(b);
-			player.setScoreboard(board);
 		}
 	}
 	public ItemStack createHead(String paramString)

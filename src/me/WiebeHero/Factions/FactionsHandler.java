@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -18,6 +19,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 
@@ -174,6 +179,46 @@ public class FactionsHandler implements Listener{
 					if(f.getFactionMemberList().get(fName).contains(victim.getUniqueId())) {
 						event.setCancelled(true);
 						damager.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void damagePlayersInSpawn(EntityDamageByEntityEvent event) {
+		if(!event.isCancelled()) {
+			if(event.getDamager() instanceof Player) {
+				if(event.getEntity() instanceof Player) {
+					Player damager = (Player) event.getDamager();
+					Player victim = (Player) event.getDamager();
+					RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+					RegionManager regions = container.get((com.sk89q.worldedit.world.World) damager.getWorld());
+					if(damager.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
+						if(regions.hasRegion("spawn") && regions.hasRegion("warzone")) {
+							if(regions.getRegion("spawn").contains(victim.getLocation().getBlockX(), victim.getLocation().getBlockY(), victim.getLocation().getBlockZ())) {
+								if(regions.getRegion("warzone").contains(damager.getLocation().getBlockX(), damager.getLocation().getBlockY(), damager.getLocation().getBlockZ())) {
+									event.setCancelled(true);
+								}
+							}
+						}
+					}
+				}
+			}
+			if(event.getDamager() instanceof Projectile) {
+				Projectile projectile = (Projectile) event.getDamager();
+				if(projectile.getShooter() != null && projectile.getShooter() instanceof Player) {
+					Player damager = (Player) projectile.getShooter();
+					Player victim = (Player) event.getDamager();
+					RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+					RegionManager regions = container.get((com.sk89q.worldedit.world.World) damager.getWorld());
+					if(damager.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
+						if(regions.hasRegion("spawn") && regions.hasRegion("warzone")) {
+							if(regions.getRegion("spawn").contains(victim.getLocation().getBlockX(), victim.getLocation().getBlockY(), victim.getLocation().getBlockZ())) {
+								if(regions.getRegion("warzone").contains(damager.getLocation().getBlockX(), damager.getLocation().getBlockY(), damager.getLocation().getBlockZ())) {
+									event.setCancelled(true);
+								}
+							}
+						}
 					}
 				}
 			}

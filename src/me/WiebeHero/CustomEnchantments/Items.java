@@ -3,7 +3,6 @@ package me.WiebeHero.CustomEnchantments;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;

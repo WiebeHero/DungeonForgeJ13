@@ -20,8 +20,9 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import Skills.Defense;
-import Skills.SkillJoin;
+import Skills.EffectSkills;
+import Skills.PlayerClass;
+import Skills.SkillEnum.Skills;
 import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
@@ -42,8 +43,8 @@ public class ArmorHelmet extends SpawnerList implements Listener{
         }
         return coloredMsg;
     }
-	Defense def = new Defense();
-	SkillJoin join = new SkillJoin();
+	EffectSkills sk = new EffectSkills();
+	PlayerClass pc = new PlayerClass();
 	@EventHandler
 	public void armor(EntityDeathEvent event) {
 		LivingEntity victim = (LivingEntity) event.getEntity();
@@ -143,7 +144,7 @@ public class ArmorHelmet extends SpawnerList implements Listener{
 											totalxpearned = 3 + firstInt;
 										}
 										else if(victim.getType().equals(EntityType.PLAYER)) {
-											int levelVictim = join.getLevelList().get(victim.getUniqueId());
+											int levelVictim = pc.getSkill(damager.getUniqueId(), Skills.LEVEL);
 											if(levelVictim > 1) {
 												int i6 = new Random().nextInt(50) + 50;
 												totalxpearned = i6 + firstInt;
@@ -261,11 +262,11 @@ public class ArmorHelmet extends SpawnerList implements Listener{
 							    				item = newItem.getItem();
 							    				damager.getInventory().setHelmet(item);
 							    				//Armor Data
-							    				def.runDefense(damager);
+							    				sk.runDefense(damager);
 						    				}
 						    			}	
 							    		else {
-							    			int level = join.getLevelList().get(damager.getUniqueId());
+							    			int level = pc.getSkill(damager.getUniqueId(), Skills.LEVEL);
 							    			List<String> loreList = damager.getInventory().getHelmet().getItemMeta().getLore();
 							    			String line = "";
 							    			for (int j=0; j<damager.getInventory().getHelmet().getItemMeta().getLore().size(); j++) {

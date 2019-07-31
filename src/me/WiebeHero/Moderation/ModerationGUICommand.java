@@ -32,11 +32,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.lucko.luckperms.LuckPerms;
 import me.lucko.luckperms.api.LuckPermsApi;
+import me.lucko.luckperms.api.User;
 
 public class ModerationGUICommand implements CommandExecutor,Listener{
 	public HashMap<UUID, Boolean> staffModeList = new HashMap<UUID, Boolean>();
+	public HashMap<UUID, Integer> staffRankList = new HashMap<UUID, Integer>();
 	public HashMap<UUID, Boolean> vanishMode = new HashMap<UUID, Boolean>();
 	public ArrayList<UUID> staffChat = new ArrayList<UUID>();
 	public HashMap<UUID, ItemStack[]> saveInv = new HashMap<UUID, ItemStack[]>();
@@ -64,7 +67,6 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
-			LuckPermsApi api = LuckPerms.getApi();
 			if(cmd.getName().equalsIgnoreCase(staffmode)) {
 				if(staffModeList.containsKey(player.getUniqueId())) {
 					if(staffModeList.get(player.getUniqueId()) == true) {
@@ -95,114 +97,227 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(ban)) {
-				if(api.getUser(player.getUniqueId()).getPrimaryGroup().equalsIgnoreCase("Owner")) {
-					if(args.length >= 3) {
-						String p = args[0];
-						Player offender = Bukkit.getPlayer(p);
-						if(offender != null) {
-							String timeS = args[1];
-							String reason = "";
-							for(int i = 2; i < args.length; i++) {
-								if(i == 2) {
-									reason = reason + args[i];
+				if(staffModeList.containsKey(player.getUniqueId())) {
+					if(staffRankList.get(player.getUniqueId()) >= 3) {
+						if(args.length >= 3) {
+							String p = args[0];
+							Player offender = Bukkit.getPlayer(p);
+							if(offender != null) {
+								if(staffRankList.containsKey(offender.getUniqueId())) {
+									if(staffRankList.get(player.getUniqueId()) > staffRankList.get(offender.getUniqueId())) {
+										String timeS = args[1];
+										String reason = "";
+										for(int i = 2; i < args.length; i++) {
+											if(i == 2) {
+												reason = reason + args[i];
+											}
+											else {
+												reason = reason + " " + args[i];
+											}
+										}
+										int time = 0;
+										Long timeTillMuteOver = null;
+										if(timeS.contains("minutes") || timeS.contains("minute") || timeS.contains("m")) {
+											timeS = timeS.replaceAll("[^\\d.]", "");
+											time = Integer.parseInt(timeS);
+											timeTillMuteOver = System.currentTimeMillis() + time * (60 * 1000);
+											banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+										}
+										else if(timeS.contains("hours") || timeS.contains("hour") || timeS.contains("h")) {
+											timeS = timeS.replaceAll("[^\\d.]", "");
+											time = Integer.parseInt(timeS);
+											timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000);
+											banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+										}
+										else if(timeS.contains("days") || timeS.contains("day") || timeS.contains("d")) {
+											timeS = timeS.replaceAll("[^\\d.]", "");
+											time = Integer.parseInt(timeS);
+											timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000 * 24);
+											banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+										}
+										else if(timeS.contains("months") || timeS.contains("month") || timeS.contains("mo")) {
+											timeS = timeS.replaceAll("[^\\d.]", "");
+											time = Integer.parseInt(timeS);
+											timeTillMuteOver = (long) (System.currentTimeMillis() + time * (60 * 60 * 1000 * 24 * 30.41666666));
+											banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+										}
+										else if(timeS.contains("years") || timeS.contains("year") || timeS.contains("y")) {
+											timeS = timeS.replaceAll("[^\\d.]", "");
+											time = Integer.parseInt(timeS);
+											timeTillMuteOver = System.currentTimeMillis() + (time * ((long)60 * 60 * 1000 * 24 * 365));
+											banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+										}
+										else if(timeS.equalsIgnoreCase("permanent") || timeS.equalsIgnoreCase("perm") || timeS.equalsIgnoreCase("permanents") || timeS.equalsIgnoreCase("p")) {
+											banPerm.add(player.getUniqueId());
+										}
+										if(!reasonBanList.containsKey(player.getUniqueId())) {
+											reasonBanList.put(player.getUniqueId(), new ArrayList<String>());
+											reasonBanList.get(player.getUniqueId()).add(reason);
+										}
+										else {
+											reasonBanList.get(player.getUniqueId()).add(reason);
+										}
+										long now = System.currentTimeMillis();
+										long future = System.currentTimeMillis() + (banTimeList.get(player.getUniqueId()) - System.currentTimeMillis());
+										long timeDifference = future - now;
+										long diffSeconds = timeDifference / 1000 % 60;
+									    long diffMinutes = timeDifference / (60 * 1000) % 60;
+									    long diffHours = timeDifference / (60 * 60 * 1000) % 24;
+									    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
+									    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
+									    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
+										String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have banned &6" + offender.getName() + " &afor &6");
+										if(diffSeconds > 0) {
+											message = message + diffSeconds + " Seconds, ";
+										}
+										if(diffMinutes > 0) {
+											message = message + diffMinutes + " Minutes, ";
+										}
+										if(diffHours > 0) {
+											message = message + diffHours + " Hours, ";
+										}
+										if(diffDays > 0) {
+											message = message + diffDays + " Days, ";
+										}
+										if(diffMonths > 0) {
+											message = message + diffMonths + " Months, ";
+										}
+										if(diffYears > 0) {
+											message = message + diffYears + " Years.";
+										}
+										player.sendMessage(new ColorCodeTranslator().colorize(message));
+										if(reasonBanList.get(offender.getUniqueId()) == null) {
+											reasonBanList.put(offender.getUniqueId(), new ArrayList<String>());
+											reasonBanList.get(offender.getUniqueId()).add(reason);
+										}
+										else {
+											reasonBanList.get(offender.getUniqueId()).add(reason);
+										}
+										if(banOffends.get(offender.getUniqueId()) == null) {
+											banOffends.put(offender.getUniqueId(), 1);
+										}
+										else {
+											banOffends.put(offender.getUniqueId(), banOffends.get(offender.getUniqueId()) + 1);
+										}
+										if(bannedBy.get(player.getUniqueId()) == null) {
+											bannedBy.put(player.getUniqueId(), new ArrayList<UUID>());
+										}
+										bannedBy.get(player.getUniqueId()).add(offender.getUniqueId());
+										offender.kickPlayer(offender.getName());
+									}
+									else {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't ban staff higher then you!"));
+									}
 								}
 								else {
-									reason = reason + " " + args[i];
+									String timeS = args[1];
+									String reason = "";
+									for(int i = 2; i < args.length; i++) {
+										if(i == 2) {
+											reason = reason + args[i];
+										}
+										else {
+											reason = reason + " " + args[i];
+										}
+									}
+									int time = 0;
+									Long timeTillMuteOver = null;
+									if(timeS.contains("minutes") || timeS.contains("minute") || timeS.contains("m")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = System.currentTimeMillis() + time * (60 * 1000);
+										banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+									}
+									else if(timeS.contains("hours") || timeS.contains("hour") || timeS.contains("h")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000);
+										banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+									}
+									else if(timeS.contains("days") || timeS.contains("day") || timeS.contains("d")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000 * 24);
+										banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+									}
+									else if(timeS.contains("months") || timeS.contains("month") || timeS.contains("mo")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = (long) (System.currentTimeMillis() + time * (60 * 60 * 1000 * 24 * 30.41666666));
+										banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+									}
+									else if(timeS.contains("years") || timeS.contains("year") || timeS.contains("y")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = System.currentTimeMillis() + (time * ((long)60 * 60 * 1000 * 24 * 365));
+										banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+									}
+									else if(timeS.equalsIgnoreCase("permanent") || timeS.equalsIgnoreCase("perm") || timeS.equalsIgnoreCase("permanents") || timeS.equalsIgnoreCase("p")) {
+										banPerm.add(player.getUniqueId());
+									}
+									if(!reasonBanList.containsKey(player.getUniqueId())) {
+										reasonBanList.put(player.getUniqueId(), new ArrayList<String>());
+										reasonBanList.get(player.getUniqueId()).add(reason);
+									}
+									else {
+										reasonBanList.get(player.getUniqueId()).add(reason);
+									}
+									long now = System.currentTimeMillis();
+									long future = System.currentTimeMillis() + (banTimeList.get(player.getUniqueId()) - System.currentTimeMillis());
+									long timeDifference = future - now;
+									long diffSeconds = timeDifference / 1000 % 60;
+								    long diffMinutes = timeDifference / (60 * 1000) % 60;
+								    long diffHours = timeDifference / (60 * 60 * 1000) % 24;
+								    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
+								    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
+								    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
+									String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have banned &6" + offender.getName() + " &afor &6");
+									if(diffSeconds > 0) {
+										message = message + diffSeconds + " Seconds, ";
+									}
+									if(diffMinutes > 0) {
+										message = message + diffMinutes + " Minutes, ";
+									}
+									if(diffHours > 0) {
+										message = message + diffHours + " Hours, ";
+									}
+									if(diffDays > 0) {
+										message = message + diffDays + " Days, ";
+									}
+									if(diffMonths > 0) {
+										message = message + diffMonths + " Months, ";
+									}
+									if(diffYears > 0) {
+										message = message + diffYears + " Years.";
+									}
+									player.sendMessage(new ColorCodeTranslator().colorize(message));
+									if(reasonBanList.get(offender.getUniqueId()) == null) {
+										reasonBanList.put(offender.getUniqueId(), new ArrayList<String>());
+										reasonBanList.get(offender.getUniqueId()).add(reason);
+									}
+									else {
+										reasonBanList.get(offender.getUniqueId()).add(reason);
+									}
+									if(banOffends.get(offender.getUniqueId()) == null) {
+										banOffends.put(offender.getUniqueId(), 1);
+									}
+									else {
+										banOffends.put(offender.getUniqueId(), banOffends.get(offender.getUniqueId()) + 1);
+									}
+									if(bannedBy.get(player.getUniqueId()) == null) {
+										bannedBy.put(player.getUniqueId(), new ArrayList<UUID>());
+									}
+									bannedBy.get(player.getUniqueId()).add(offender.getUniqueId());
+									offender.kickPlayer(offender.getName());
 								}
 							}
-							int time = 0;
-							Long timeTillMuteOver = null;
-							if(timeS.contains("minutes") || timeS.contains("minute") || timeS.contains("m")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 1000);
-								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
-							}
-							else if(timeS.contains("hours") || timeS.contains("hour") || timeS.contains("h")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000);
-								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
-							}
-							else if(timeS.contains("days") || timeS.contains("day") || timeS.contains("d")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000 * 24);
-								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
-							}
-							else if(timeS.contains("months") || timeS.contains("month") || timeS.contains("mo")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = (long) (System.currentTimeMillis() + time * (60 * 60 * 1000 * 24 * 30.41666666));
-								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
-							}
-							else if(timeS.contains("years") || timeS.contains("year") || timeS.contains("y")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = System.currentTimeMillis() + (time * ((long)60 * 60 * 1000 * 24 * 365));
-								banTimeList.put(offender.getUniqueId(), timeTillMuteOver);
-							}
-							else if(timeS.equalsIgnoreCase("permanent") || timeS.equalsIgnoreCase("perm") || timeS.equalsIgnoreCase("permanents") || timeS.equalsIgnoreCase("p")) {
-								banPerm.add(player.getUniqueId());
-							}
-							if(!reasonBanList.containsKey(player.getUniqueId())) {
-								reasonBanList.put(player.getUniqueId(), new ArrayList<String>());
-								reasonBanList.get(player.getUniqueId()).add(reason);
-							}
 							else {
-								reasonBanList.get(player.getUniqueId()).add(reason);
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 							}
-							long now = System.currentTimeMillis();
-							long future = System.currentTimeMillis() + (banTimeList.get(player.getUniqueId()) - System.currentTimeMillis());
-							long timeDifference = future - now;
-							long diffSeconds = timeDifference / 1000 % 60;
-						    long diffMinutes = timeDifference / (60 * 1000) % 60;
-						    long diffHours = timeDifference / (60 * 60 * 1000) % 24;
-						    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
-						    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
-						    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
-							String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have banned &6" + offender.getName() + " &afor &6");
-							if(diffSeconds > 0) {
-								message = message + diffSeconds + " Seconds, ";
-							}
-							if(diffMinutes > 0) {
-								message = message + diffMinutes + " Minutes, ";
-							}
-							if(diffHours > 0) {
-								message = message + diffHours + " Hours, ";
-							}
-							if(diffDays > 0) {
-								message = message + diffDays + " Days, ";
-							}
-							if(diffMonths > 0) {
-								message = message + diffMonths + " Months, ";
-							}
-							if(diffYears > 0) {
-								message = message + diffYears + " Years.";
-							}
-							player.sendMessage(new ColorCodeTranslator().colorize(message));
-							if(reasonBanList.get(offender.getUniqueId()) == null) {
-								reasonBanList.put(offender.getUniqueId(), new ArrayList<String>());
-								reasonBanList.get(offender.getUniqueId()).add(reason);
-							}
-							else {
-								reasonBanList.get(offender.getUniqueId()).add(reason);
-							}
-							if(banOffends.get(offender.getUniqueId()) == null) {
-								banOffends.put(offender.getUniqueId(), 1);
-							}
-							else {
-								banOffends.put(offender.getUniqueId(), banOffends.get(offender.getUniqueId()) + 1);
-							}
-							if(bannedBy.get(player.getUniqueId()) == null) {
-								bannedBy.put(player.getUniqueId(), new ArrayList<UUID>());
-							}
-							bannedBy.get(player.getUniqueId()).add(offender.getUniqueId());
-							offender.kickPlayer(offender.getName());
 						}
-						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
-						}
+					}
+					else {
+						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have the permission to ban someone!"));
 					}
 				}
 				else {
@@ -215,78 +330,159 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 						String p = args[0];
 						Player offender = Bukkit.getPlayer(p);
 						if(offender != null) {
-							String timeS = args[1];
-							String reason = "";
-							for(int i = 2; i < args.length; i++) {
-								reason = reason + " " + args[i];
-							}
-							int time = 0;
-							Long timeTillMuteOver = null;
-							if(timeS.contains("minutes") || timeS.contains("minute") || timeS.contains("m")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 1000);
-							}
-							else if(timeS.contains("hours") || timeS.contains("hour") || timeS.contains("h")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000);
-							}
-							else if(timeS.contains("days") || timeS.contains("day") || timeS.contains("d")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000 * 24);
-							}
-							else if(timeS.contains("months") || timeS.contains("month") || timeS.contains("mo")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = (long) (System.currentTimeMillis() + time * (60 * 60 * 1000 * 24 * 30.41666666));
-							}
-							else if(timeS.contains("years") || timeS.contains("year") || timeS.contains("y")) {
-								timeS = timeS.replaceAll("[^\\d.]", "");
-								time = Integer.parseInt(timeS);
-								timeTillMuteOver = System.currentTimeMillis() + (time * ((long)60 * 60 * 1000 * 24 * 365));
-							}
-							else if(timeS.equalsIgnoreCase("permanent") || timeS.equalsIgnoreCase("perm") || timeS.equalsIgnoreCase("permanents") || timeS.equalsIgnoreCase("p")) {
-								mutePerm.add(player.getUniqueId());
-							}
-							muteTimeList.put(offender.getUniqueId(), timeTillMuteOver);
-							if(!reasonMuteList.containsKey(player.getUniqueId())) {
-								reasonMuteList.put(player.getUniqueId(), new ArrayList<String>());
-								reasonMuteList.get(player.getUniqueId()).add(reason);
+							if(staffRankList.containsKey(offender.getUniqueId())) {
+								if(staffRankList.get(player.getUniqueId()) > staffRankList.get(offender.getUniqueId())) {
+									String timeS = args[1];
+									String reason = "";
+									for(int i = 2; i < args.length; i++) {
+										reason = reason + " " + args[i];
+									}
+									int time = 0;
+									Long timeTillMuteOver = null;
+									if(timeS.contains("minutes") || timeS.contains("minute") || timeS.contains("m")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = System.currentTimeMillis() + time * (60 * 1000);
+									}
+									else if(timeS.contains("hours") || timeS.contains("hour") || timeS.contains("h")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000);
+									}
+									else if(timeS.contains("days") || timeS.contains("day") || timeS.contains("d")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000 * 24);
+									}
+									else if(timeS.contains("months") || timeS.contains("month") || timeS.contains("mo")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = (long) (System.currentTimeMillis() + time * (60 * 60 * 1000 * 24 * 30.41666666));
+									}
+									else if(timeS.contains("years") || timeS.contains("year") || timeS.contains("y")) {
+										timeS = timeS.replaceAll("[^\\d.]", "");
+										time = Integer.parseInt(timeS);
+										timeTillMuteOver = System.currentTimeMillis() + (time * ((long)60 * 60 * 1000 * 24 * 365));
+									}
+									else if(timeS.equalsIgnoreCase("permanent") || timeS.equalsIgnoreCase("perm") || timeS.equalsIgnoreCase("permanents") || timeS.equalsIgnoreCase("p")) {
+										mutePerm.add(player.getUniqueId());
+									}
+									muteTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+									if(!reasonMuteList.containsKey(player.getUniqueId())) {
+										reasonMuteList.put(player.getUniqueId(), new ArrayList<String>());
+										reasonMuteList.get(player.getUniqueId()).add(reason);
+									}
+									else {
+										reasonMuteList.get(player.getUniqueId()).add(reason);
+									}
+									long now = System.currentTimeMillis();
+									long future = System.currentTimeMillis() + (muteTimeList.get(player.getUniqueId()) - System.currentTimeMillis());
+									long timeDifference = future - now;
+									long diffSeconds = timeDifference / 1000 % 60;
+								    long diffMinutes = timeDifference / (60 * 1000) % 60;
+								    long diffHours = timeDifference / (60 * 60 * 1000) % 24;
+								    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
+								    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
+								    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
+									String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have muted &6" + offender.getName() + " &afor &6");
+									if(diffSeconds > 0) {
+										message = message + diffSeconds + " Seconds, ";
+									}
+									if(diffMinutes > 0) {
+										message = message + diffMinutes + " Minutes, ";
+									}
+									if(diffHours > 0) {
+										message = message + diffHours + " Hours, ";
+									}
+									if(diffDays > 0) {
+										message = message + diffDays + " Days, ";
+									}
+									if(diffMonths > 0) {
+										message = message + diffMonths + " Months, ";
+									}
+									if(diffYears > 0) {
+										message = message + diffYears + " Years.";
+									}
+									player.sendMessage(new ColorCodeTranslator().colorize(message));
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't ban staff higher then you!"));
+								}
 							}
 							else {
-								reasonMuteList.get(player.getUniqueId()).add(reason);
+								String timeS = args[1];
+								String reason = "";
+								for(int i = 2; i < args.length; i++) {
+									reason = reason + " " + args[i];
+								}
+								int time = 0;
+								Long timeTillMuteOver = null;
+								if(timeS.contains("minutes") || timeS.contains("minute") || timeS.contains("m")) {
+									timeS = timeS.replaceAll("[^\\d.]", "");
+									time = Integer.parseInt(timeS);
+									timeTillMuteOver = System.currentTimeMillis() + time * (60 * 1000);
+								}
+								else if(timeS.contains("hours") || timeS.contains("hour") || timeS.contains("h")) {
+									timeS = timeS.replaceAll("[^\\d.]", "");
+									time = Integer.parseInt(timeS);
+									timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000);
+								}
+								else if(timeS.contains("days") || timeS.contains("day") || timeS.contains("d")) {
+									timeS = timeS.replaceAll("[^\\d.]", "");
+									time = Integer.parseInt(timeS);
+									timeTillMuteOver = System.currentTimeMillis() + time * (60 * 60 * 1000 * 24);
+								}
+								else if(timeS.contains("months") || timeS.contains("month") || timeS.contains("mo")) {
+									timeS = timeS.replaceAll("[^\\d.]", "");
+									time = Integer.parseInt(timeS);
+									timeTillMuteOver = (long) (System.currentTimeMillis() + time * (60 * 60 * 1000 * 24 * 30.41666666));
+								}
+								else if(timeS.contains("years") || timeS.contains("year") || timeS.contains("y")) {
+									timeS = timeS.replaceAll("[^\\d.]", "");
+									time = Integer.parseInt(timeS);
+									timeTillMuteOver = System.currentTimeMillis() + (time * ((long)60 * 60 * 1000 * 24 * 365));
+								}
+								else if(timeS.equalsIgnoreCase("permanent") || timeS.equalsIgnoreCase("perm") || timeS.equalsIgnoreCase("permanents") || timeS.equalsIgnoreCase("p")) {
+									mutePerm.add(player.getUniqueId());
+								}
+								muteTimeList.put(offender.getUniqueId(), timeTillMuteOver);
+								if(!reasonMuteList.containsKey(player.getUniqueId())) {
+									reasonMuteList.put(player.getUniqueId(), new ArrayList<String>());
+									reasonMuteList.get(player.getUniqueId()).add(reason);
+								}
+								else {
+									reasonMuteList.get(player.getUniqueId()).add(reason);
+								}
+								long now = System.currentTimeMillis();
+								long future = System.currentTimeMillis() + (muteTimeList.get(player.getUniqueId()) - System.currentTimeMillis());
+								long timeDifference = future - now;
+								long diffSeconds = timeDifference / 1000 % 60;
+							    long diffMinutes = timeDifference / (60 * 1000) % 60;
+							    long diffHours = timeDifference / (60 * 60 * 1000) % 24;
+							    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
+							    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
+							    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
+								String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have muted &6" + offender.getName() + " &afor &6");
+								if(diffSeconds > 0) {
+									message = message + diffSeconds + " Seconds, ";
+								}
+								if(diffMinutes > 0) {
+									message = message + diffMinutes + " Minutes, ";
+								}
+								if(diffHours > 0) {
+									message = message + diffHours + " Hours, ";
+								}
+								if(diffDays > 0) {
+									message = message + diffDays + " Days, ";
+								}
+								if(diffMonths > 0) {
+									message = message + diffMonths + " Months, ";
+								}
+								if(diffYears > 0) {
+									message = message + diffYears + " Years.";
+								}
+								player.sendMessage(new ColorCodeTranslator().colorize(message));
 							}
-							long now = System.currentTimeMillis();
-							long future = System.currentTimeMillis() + (muteTimeList.get(player.getUniqueId()) - System.currentTimeMillis());
-							long timeDifference = future - now;
-							long diffSeconds = timeDifference / 1000 % 60;
-						    long diffMinutes = timeDifference / (60 * 1000) % 60;
-						    long diffHours = timeDifference / (60 * 60 * 1000) % 24;
-						    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
-						    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
-						    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
-							String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have muted &6" + offender.getName() + " &afor &6");
-							if(diffSeconds > 0) {
-								message = message + diffSeconds + " Seconds, ";
-							}
-							if(diffMinutes > 0) {
-								message = message + diffMinutes + " Minutes, ";
-							}
-							if(diffHours > 0) {
-								message = message + diffHours + " Hours, ";
-							}
-							if(diffDays > 0) {
-								message = message + diffDays + " Days, ";
-							}
-							if(diffMonths > 0) {
-								message = message + diffMonths + " Months, ";
-							}
-							if(diffYears > 0) {
-								message = message + diffYears + " Years.";
-							}
-							player.sendMessage(new ColorCodeTranslator().colorize(message));
 						}
 						else {
 							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
@@ -296,24 +492,43 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 			}
 			else if(cmd.getName().equalsIgnoreCase(unban)) {
 				if(staffModeList.containsKey(player.getUniqueId())) {
-					if(args.length == 1) {
-						Player offender = Bukkit.getPlayer(args[0]);
-						if(offender != null) {
-							if(banTimeList.containsKey(offender.getUniqueId())|| banPerm.contains(offender.getUniqueId())) {
-								banTimeList.remove(offender.getUniqueId());
-								banPerm.remove(offender.getUniqueId());
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + offender.getName()));
+					if(staffRankList.get(player.getUniqueId()) >= 3) {
+						if(args.length == 1) {
+							Player offender = Bukkit.getPlayer(args[0]);
+							if(offender != null) {
+								if(staffRankList.containsKey(offender.getUniqueId())) {
+									if(staffRankList.get(player.getUniqueId()) > staffRankList.get(offender.getUniqueId())) {
+										if(banTimeList.containsKey(offender.getUniqueId())|| banPerm.contains(offender.getUniqueId())) {
+											banTimeList.remove(offender.getUniqueId());
+											banPerm.remove(offender.getUniqueId());
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + offender.getName()));
+										}
+										else {
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
+										}
+									}
+								}
+								else {
+									if(banTimeList.containsKey(offender.getUniqueId())|| banPerm.contains(offender.getUniqueId())) {
+										banTimeList.remove(offender.getUniqueId());
+										banPerm.remove(offender.getUniqueId());
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + offender.getName()));
+									}
+									else {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not banned!"));
+									}
+								}
 							}
-							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not banned!"));
+							else{
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 							}
 						}
-						else{
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
+						else {
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /unban (Player Name)"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /unban (Player Name)"));
+						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have the permission to ban someone!"));
 					}
 				}
 				else {
@@ -325,13 +540,27 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 					if(args.length == 1) {
 						Player offender = Bukkit.getPlayer(args[0]);
 						if(offender != null) {
-							if(muteTimeList.containsKey(offender.getUniqueId())|| mutePerm.contains(offender.getUniqueId())) {
-								muteTimeList.remove(offender.getUniqueId());
-								mutePerm.remove(offender.getUniqueId());
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + offender.getName()));
+							if(staffRankList.containsKey(offender.getUniqueId())) {
+								if(staffRankList.get(player.getUniqueId()) > staffRankList.get(offender.getUniqueId())) {
+									if(muteTimeList.containsKey(offender.getUniqueId())|| mutePerm.contains(offender.getUniqueId())) {
+										muteTimeList.remove(offender.getUniqueId());
+										mutePerm.remove(offender.getUniqueId());
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + offender.getName()));
+									}
+									else {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
+									}
+								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
+								if(muteTimeList.containsKey(offender.getUniqueId())|| mutePerm.contains(offender.getUniqueId())) {
+									muteTimeList.remove(offender.getUniqueId());
+									mutePerm.remove(offender.getUniqueId());
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + offender.getName()));
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
+								}
 							}
 						}
 						else{
@@ -525,9 +754,39 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 	@EventHandler
 	public void staffList(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if(player.hasPermission("owner") || player.hasPermission("manager") || player.hasPermission("headadmin") || player.hasPermission("admin") || player.hasPermission("headmod") || player.hasPermission("mod") || player.hasPermission("helper+") || player.hasPermission("helper")) {
-			if(!staffModeList.containsKey(player.getUniqueId())) {
+		LuckPermsApi api = LuckPerms.getApi();
+		User user = api.getUser(player.getUniqueId());
+		if(user.getPrimaryGroup().equalsIgnoreCase("owner") || user.getPrimaryGroup().equalsIgnoreCase("manager") || user.getPrimaryGroup().equalsIgnoreCase("headadmin") || user.getPrimaryGroup().equalsIgnoreCase("teamadmin") || user.getPrimaryGroup().equalsIgnoreCase("admin") || user.getPrimaryGroup().equalsIgnoreCase("headmod") || user.getPrimaryGroup().equalsIgnoreCase("mod") || user.getPrimaryGroup().equalsIgnoreCase("helper+") || user.getPrimaryGroup().equalsIgnoreCase("helper")) {
+			if(!staffModeList.containsKey(player.getUniqueId()) && !staffRankList.containsKey(player.getUniqueId())) {
 				staffModeList.put(player.getUniqueId(), false);
+				if(user.getPrimaryGroup().equalsIgnoreCase("owner")) {
+					staffRankList.put(player.getUniqueId(), 8);
+				}
+				if(user.getPrimaryGroup().equalsIgnoreCase("manager")) {
+					staffRankList.put(player.getUniqueId(), 7);
+				}
+				if(user.getPrimaryGroup().equalsIgnoreCase("teamadmin")) {
+					staffRankList.put(player.getUniqueId(), 6);
+				}
+				if(user.getPrimaryGroup().equalsIgnoreCase("headadmin")) {
+					staffRankList.put(player.getUniqueId(), 6);
+				}
+				if(user.getPrimaryGroup().equalsIgnoreCase("admin")) {
+					staffRankList.put(player.getUniqueId(), 5);
+				}
+				if(user.getPrimaryGroup().equalsIgnoreCase("headmod")) {
+					staffRankList.put(player.getUniqueId(), 4);
+				}
+				if(user.getPrimaryGroup().equalsIgnoreCase("mod")) {
+					staffRankList.put(player.getUniqueId(), 3);
+				}
+				if(user.getPrimaryGroup().equalsIgnoreCase("helper+")) {
+					staffRankList.put(player.getUniqueId(), 2);
+				}
+				if(user.getPrimaryGroup().equalsIgnoreCase("helper")) {
+					staffRankList.put(player.getUniqueId(), 1);
+				}
+				
 			}
 		}
 	}
@@ -569,7 +828,6 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 			}
 		}
 	}
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void activatePerk(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -590,14 +848,14 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 								if(vanishMode.get(player.getUniqueId()) == true) {
 									vanishMode.put(player.getUniqueId(), false);
 									for(Player p : Bukkit.getOnlinePlayers()) {
-										p.showPlayer(player);
+										p.showPlayer(CustomEnchantments.getInstance(), player);
 									}
 									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &c&lVanish Disabled."));
 								}
 								else if(vanishMode.get(player.getUniqueId()) == false) {
 									vanishMode.put(player.getUniqueId(), true);
 									for(Player p : Bukkit.getOnlinePlayers()) {
-										p.hidePlayer(player);
+										p.hidePlayer(CustomEnchantments.getInstance(), player);
 									}
 									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a&lVanish Enabled."));
 								}

@@ -52,6 +52,7 @@ public class Bleed extends SwordSwingProgress implements Listener{
 													public void run() {
 														if(count <= (14 + level * 2)) {
 															victim.damage(1 + level * 0.5);
+															count++;
 														}
 														else {
 															cancel();

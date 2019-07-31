@@ -3,7 +3,6 @@ package me.WiebeHero.Novis;
 import java.util.ArrayList;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class NovisEnchantmentGetting {
 	public ArrayList<String> setEnchantments(int level, String enchants, String rarity, ArrayList<String> lore) {

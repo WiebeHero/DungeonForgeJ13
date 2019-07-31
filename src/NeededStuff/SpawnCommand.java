@@ -26,7 +26,7 @@ public class SpawnCommand implements Listener,CommandExecutor{
 			double locX = loc.getX();
 			double locZ = loc.getZ();
 			if(cmd.getName().equalsIgnoreCase(spawn)) {
-				if(CombatTag.getCombatTag().get(player.getName()) == 0) {
+				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 					if(!(spawning.contains(player.getUniqueId().toString()))) {
 						spawning.add(player.getUniqueId().toString());
 						new BukkitRunnable() {

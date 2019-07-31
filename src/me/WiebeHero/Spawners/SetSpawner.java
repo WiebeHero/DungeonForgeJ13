@@ -1,11 +1,14 @@
 package me.WiebeHero.Spawners;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,15 +21,8 @@ import org.bukkit.event.Listener;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 
 public class SetSpawner implements Listener,CommandExecutor{
-	
-	String id;
-	int newId;
 	public String cmdSpawner = "spawner";
-	public String getLast(Set<String> set) {
-        return set.stream().skip(set.stream().count() - 1).findFirst().get();
-    }
 	public static HashMap<Integer, Location> locationSpawner = new HashMap<Integer, Location>();
-	public static HashMap<Integer, String> worldSpawner = new HashMap<Integer, String>();
 	public static HashMap<Integer, Integer> tieredList = new HashMap<Integer, Integer>();
 	public static HashMap<Integer, String> entityTypeList = new HashMap<Integer, String>();
 	@Override
@@ -35,7 +31,73 @@ public class SetSpawner implements Listener,CommandExecutor{
 			Player player = (Player) sender;
 			if(player.isOp()) {
 				if(cmd.getName().equalsIgnoreCase(cmdSpawner)) {
-					if(args.length == 3) {
+					if(args.length == 1) {
+						if(args[0].equalsIgnoreCase("delete")) {
+							boolean deleted = false;
+							int total = 0;
+							for(Entry<Integer, Location> entry : locationSpawner.entrySet()) {
+								if(entry.getValue().distance(player.getLocation()) <= 1.5) {
+									locationSpawner.remove(entry.getKey());
+									tieredList.remove(entry.getKey());
+									entityTypeList.remove(entry.getKey());
+									deleted = true;
+									total++;
+								}
+							}
+							if(deleted == true) {
+								if(total == 1) {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted a total of &6" + total + " &aspawner!"));
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted a total of &6" + total + " &aspawners!"));
+								}
+							}
+							else if(deleted == false){
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNo spawners could be deleted! Get closer to the spawner!"));
+							}
+							else {
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cSomething went wrong when deleting the spawner..."));
+							}
+						}
+						else if(args[0].equalsIgnoreCase("see")) {
+							for(Entry<Integer, Location> entry : locationSpawner.entrySet()) {
+								if(entry.getValue().distance(player.getLocation()) <= 30) {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSpawner ID: &6" + entry.getKey() + " &aSpawner Coords: &6" + entry.getValue().getBlockX() + " " + entry.getValue().getBlockY() + " " + entry.getValue().getBlockZ()));
+									player.sendBlockChange(entry.getValue(), Material.YELLOW_STAINED_GLASS.createBlockData());
+								}
+							}
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSpawners will only be shown to you as yellow stained glass!"));
+						}
+						else if(args[0].equalsIgnoreCase("deleteall")) {
+							for(Entry<Integer, Location> entry : locationSpawner.entrySet()) {
+								locationSpawner.remove(entry.getKey());
+								tieredList.remove(entry.getKey());
+								entityTypeList.remove(entry.getKey());
+							}
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted all the spawners!"));
+						}
+					}
+					else if(args.length == 2) {
+						if(args[0].equalsIgnoreCase("delete")) {
+							int id = -1;
+							try {
+								id = Integer.parseInt(args[1]);
+							}
+							catch(NumberFormatException ex){
+								ex.printStackTrace();
+							}
+							if(id != -1) {
+								locationSpawner.remove(id);
+								tieredList.remove(id);
+								entityTypeList.remove(id);
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted the spawner with id &6" + id));
+							}
+							else {
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis spawner doesn't exist!"));
+							}
+						}
+					}
+					else if(args.length == 3) {
 						if(args[0].equalsIgnoreCase("create")) {
 							int tier = 0;
 							try{
@@ -57,7 +119,6 @@ public class SetSpawner implements Listener,CommandExecutor{
 									locationSpawner.put(locationSpawner.size() + 1, player.getLocation());
 									tieredList.put(tieredList.size() + 1, tier);
 									entityTypeList.put(entityTypeList.size() + 1, args[2]);
-									worldSpawner.put(worldSpawner.size() + 1, player.getWorld().getName());
 								}
 								else {
 									player.sendMessage(new ColorCodeTranslator().colorize("&cInvalid mob type."));
@@ -98,9 +159,22 @@ public class SetSpawner implements Listener,CommandExecutor{
 				locationSpawner.put(i, loc);
 				tieredList.put(i, tier);
 				entityTypeList.put(i, type);
-				worldSpawner.put(i, worldName);
 			}
 		}
+	}
+	public void saveSpawners(YamlConfiguration yml, File f) {
+		yml.createSection("Spawners.UUID");
+		for(Entry<Integer, Location> entry : locationSpawner.entrySet()) {
+			yml.set("Spawners.UUID." + entry.getKey() + ".Location", entry.getValue());
+			yml.set("Spawners.UUID." + entry.getKey() + ".Tier", tieredList.get(entry.getKey()));
+			yml.set("Spawners.UUID." + entry.getKey() + ".EntityType", (String) entityTypeList.get(entry.getKey()));
+		}
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
 	}
 	public static HashMap<Integer, Location> getSpawnerLocList(){
 		return locationSpawner;
@@ -111,7 +185,5 @@ public class SetSpawner implements Listener,CommandExecutor{
 	public static HashMap<Integer, String> getTypeList(){
 		return entityTypeList;
 	}
-	public static HashMap<Integer, String> getWorldList(){
-		return worldSpawner;
-	}
+	
 }

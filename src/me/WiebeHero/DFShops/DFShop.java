@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -310,13 +311,14 @@ public class DFShop implements Listener{
 			  				double money = m.getMoneyList().get(player.getUniqueId());
 			  				if(money >= cost) {
 			  					if(item.getType() != Material.SPAWNER) {
-				  					player.sendMessage(new ColorCodeTranslator().colorize("&aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a for " + cost + "$!"));
+				  					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a for " + cost + "$!"));
 				  					player.getInventory().addItem(new ItemStack(item.getType(), amount));
 				  					money = money - cost;
 				  					m.getMoneyList().put(player.getUniqueId(), money);
+				  					CustomEnchantments.getInstance().registerNameTag(player);
 			  					}
 			  					else {
-			  						player.sendMessage(new ColorCodeTranslator().colorize("&aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a foraa " + cost + "$!"));
+			  						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a foraa " + cost + "$!"));
 			  						ItemStack item1 = new ItemStack(item);
 			  						ItemMeta itemmeta = (ItemMeta) item1.getItemMeta();
 			  						itemmeta.setLore(null);
@@ -324,14 +326,15 @@ public class DFShop implements Listener{
 			  						player.getInventory().addItem(item1);
 				  					money = money - cost;
 				  					m.getMoneyList().put(player.getUniqueId(), money);
+				  					CustomEnchantments.getInstance().registerNameTag(player);
 			  					}
 			  				}
 			  				else {
-			  					player.sendMessage(new ColorCodeTranslator().colorize("&cYou don't have enough money!"));
+			  					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
 			  				}
 						}
 						else {
-		  					player.sendMessage(new ColorCodeTranslator().colorize("&cYou can't buy this item!"));
+		  					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't buy this item!"));
 		  				}
 					}
 				}
@@ -354,17 +357,18 @@ public class DFShop implements Listener{
 			  					}
 			  				}
 		  					if(amountSell >= amount) {
-			  					player.sendMessage(new ColorCodeTranslator().colorize("&aYou have sold " + amount + " " + item.getItemMeta().getDisplayName() + "&a" + " for " + sell + "$!"));
+			  					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have sold " + amount + " " + item.getItemMeta().getDisplayName() + "&a" + " for " + sell + "$!"));
 			  					player.getInventory().removeItem(new ItemStack(item.getType(), amount));
 			  					money = money + sell;
 			  					m.getMoneyList().put(player.getUniqueId(), money);
+			  					CustomEnchantments.getInstance().registerNameTag(player);
 		  					}
 		  					else {
-		  						player.sendMessage(new ColorCodeTranslator().colorize("&cYou don't have enough items!"));
+		  						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough items!"));
 		  					}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&cYou can't sell this item!"));
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't sell this item!"));
 						}
 					}
 				}
@@ -435,7 +439,14 @@ public class DFShop implements Listener{
 					s.update();
 				}
 			}
-			
+		}
+	}
+	@EventHandler
+	public void onDeath(PlayerDeathEvent event) {
+		if(!event.isCancelled()) {
+			Player player = event.getEntity();
+			m.getMoneyList().put(player.getUniqueId(), m.getMoneyList().get(player.getUniqueId()) - m.getMoneyList().get(player.getUniqueId()) / 100 * 10);
+			player.sendMessage("&2&l[DungeonForge]: &cYou lost 10% of your current balance due to punishment of death.");
 		}
 	}
 }

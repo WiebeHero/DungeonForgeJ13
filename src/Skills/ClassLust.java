@@ -19,19 +19,20 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import Skills.Enums.Classes;
+import Skills.SkillEnum.Skills;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Factions.DFFactions;
 
 public class ClassLust implements Listener{
+	PlayerClass pc = new PlayerClass();
 	SkillJoin join = new SkillJoin();
 	DFFactions fac = new DFFactions();
-	ClassC c = new ClassC();
 	ArrayList<UUID> cooldownLust = new ArrayList<UUID>();
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(c.getClass(player.getUniqueId()) == Classes.LUST) {
+		if(pc.getClass(player.getUniqueId()) == Classes.LUST) {
 			if(!cooldownLust.contains(player.getUniqueId())) {
 				String facName = "";
 				for(Entry<String, ArrayList<UUID>> entry : fac.getFactionMemberList().entrySet()) {
@@ -39,11 +40,11 @@ public class ClassLust implements Listener{
 						facName = entry.getKey();
 					}
 				}
-				int cc = join.getCCMODList().get(player.getUniqueId());
-				int rd = join.getRDMODList().get(player.getUniqueId());
-				int hh = join.getHHMODList().get(player.getUniqueId());
-				int df = join.getDFMODList().get(player.getUniqueId());
-				int level = join.getLevelList().get(player.getUniqueId());
+				int cc = pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE_MODIFIER);
+				int rd = pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER);
+				int hh = pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER);
+				int df = pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER);
+				int level = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
 				double heal = 10 + level * 0.15;
 				if(hh > 0) {
 					heal = heal + hh * 5;
@@ -62,7 +63,7 @@ public class ClassLust implements Listener{
 				for(Entity e : player.getNearbyEntities(range, range, range)) {
 					if(e != null && e != player) {
 						if(e instanceof LivingEntity) {
-							if(fac.getFactionMemberList().get(facName) != null && !fac.getFactionMemberList().get(facName).contains(e.getUniqueId())) {
+							if(!fac.isTeammate(player.getUniqueId(), e.getUniqueId())) {
 								LivingEntity victim = (LivingEntity) e;
 								double dealtDamage = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * (damage / 100);
 								victim.damage(dealtDamage);

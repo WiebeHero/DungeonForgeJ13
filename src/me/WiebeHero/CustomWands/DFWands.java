@@ -32,8 +32,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import NeededStuff.SwordSwingProgress;
-import Skills.AttackSpeed;
-import Skills.SkillJoin;
+import Skills.EffectSkills;
+import Skills.PlayerClass;
+import Skills.SkillEnum.Skills;
 import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
@@ -45,8 +46,8 @@ import net.minecraft.server.v1_13_R2.EntityArrow;
 
 public class DFWands extends SwordSwingProgress implements Listener{
 	public NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
-	AttackSpeed speed = new AttackSpeed();
-	SkillJoin join = new SkillJoin();
+	PlayerClass pc = new PlayerClass();
+	EffectSkills sk = new EffectSkills();
 	@EventHandler
 	public void beam (PlayerAnimationEvent event){
 		if(event.getAnimationType() == PlayerAnimationType.ARM_SWING) {
@@ -280,7 +281,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 												totalxpearned = 3 + firstInt;
 											}
 											else if(victim.getType() == EntityType.PLAYER) {
-												int levelVictim = join.getLevelList().get(victim.getUniqueId());
+												int levelVictim = pc.getSkill(damager.getUniqueId(), Skills.LEVEL);
 												if(levelVictim >= 0) {
 													int i6 = new Random().nextInt(50) + 50;
 													totalxpearned = i6 + firstInt;
@@ -401,7 +402,7 @@ public class DFWands extends SwordSwingProgress implements Listener{
 							    				newItem.setDouble("Attack Range", newItem.getDouble("Attack Range") + incRange);
 							    				item = newItem.getItem();
 							    				damager.getInventory().setItemInMainHand(item);
-							    				speed.attackSpeedRun(damager);
+							    				sk.attackSpeed(damager);
 							    			}
 								    		else {
 									    		lore.set(getLine, new ColorCodeTranslator().colorize("&7Upgrade Progress: " + "&a[&b&l" + (totalxpearned) + " &6/ " + "&b&l" + secondInt + "&a]"));

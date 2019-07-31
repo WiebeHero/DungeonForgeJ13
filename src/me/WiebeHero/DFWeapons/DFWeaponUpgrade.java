@@ -21,8 +21,9 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import Skills.AttackSpeed;
-import Skills.SkillJoin;
+import Skills.EffectSkills;
+import Skills.PlayerClass;
+import Skills.SkillEnum.Skills;
 import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
@@ -43,8 +44,8 @@ public class DFWeaponUpgrade implements Listener{
         }
         return coloredMsg;
     }
-	SkillJoin join = new SkillJoin();
-	AttackSpeed speed = new AttackSpeed();
+	PlayerClass pc = new PlayerClass();
+	EffectSkills sk = new EffectSkills();
 	@EventHandler
 	public void weapons(EntityDeathEvent event) {
 		LivingEntity victim = (LivingEntity) event.getEntity();
@@ -146,7 +147,7 @@ public class DFWeaponUpgrade implements Listener{
 													totalxpearned = 3 + firstInt;
 												}
 												else if(victim.getType() == EntityType.PLAYER) {
-													int levelVictim = join.getLevelList().get(victim.getUniqueId());
+													int levelVictim = pc.getSkill(damager.getUniqueId(), Skills.LEVEL);
 													if(levelVictim >= 0) {
 														int i6 = new Random().nextInt(50) + 50;
 														totalxpearned = i6 + firstInt;
@@ -265,7 +266,7 @@ public class DFWeaponUpgrade implements Listener{
 									    				item = newItem.getItem();
 									    				damager.getInventory().setItemInMainHand(item);
 									    				//Weapon Data
-									    				speed.attackSpeedRun(damager);
+									    				sk.attackSpeed(damager);
 								    				}
 								    			}
 									    		else {

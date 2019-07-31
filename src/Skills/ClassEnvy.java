@@ -19,12 +19,13 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import Skills.Enums.Classes;
+import Skills.SkillEnum.Skills;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class ClassEnvy implements Listener{
 	SkillJoin join = new SkillJoin();
-	ClassC c = new ClassC();
+	PlayerClass pc = new PlayerClass();
 	ArrayList<UUID> envyCooldown = new ArrayList<UUID>();
 	ArrayList<UUID> envyDamage = new ArrayList<UUID>();
 	ArrayList<UUID> envyExtra = new ArrayList<UUID>();
@@ -32,10 +33,9 @@ public class ClassEnvy implements Listener{
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(c.getClass(player.getUniqueId()) == Classes.ENVY) {
+		if(pc.getClass(player.getUniqueId()) == Classes.ENVY) {
 			if(!envyCooldown.contains(player.getUniqueId())) {
-				int level = join.getLevelList().get(player.getUniqueId());
-				int df = join.getDFMODList().get(player.getUniqueId());
+				int level = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
 				double duration = 5 + level * 0.05;
 				double cooldown = 65 - level * 0.25;
 				envyDamage.add(player.getUniqueId());
@@ -69,74 +69,12 @@ public class ClassEnvy implements Listener{
 	}
 	@EventHandler
 	public void extraDamage(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof Player) {
-			if(event.getEntity() instanceof LivingEntity) {
-				Player player = (Player) event.getDamager();
-				if(envyDamage.contains(player.getUniqueId())) {
-					int level = join.getLevelList().get(player.getUniqueId());
-					double damage = 50 + level * 0.50;
-					double heal = 10 + level * 0.4;
-					envyDamage.remove(player.getUniqueId());
-					event.setDamage(event.getFinalDamage() / 100 * (100 + damage));
-					double totalHeal = event.getFinalDamage() / 100 * heal;
-					double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-					if(player.getHealth() + totalHeal <= maxHealth) {
-						player.setHealth(player.getHealth() + totalHeal);
-					}
-					else {
-						player.setHealth(maxHealth);
-					}
-					int ad = join.getADMODList().get(player.getUniqueId());
-					if(ad > 0) {
-						envyExtra.add(player.getUniqueId());
-					}
-					int rd = join.getRDMODList().get(player.getUniqueId());
-					if(rd > 0) {
-						double speed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
-						player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(speed / 100 * (100 + rd * 5));
-						new BukkitRunnable() {
-							public void run() {
-								player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(speed);
-							}
-						}.runTaskLater(CustomEnchantments.getInstance(), 300L);
-					}
-					int hh = join.getHHMODList().get(player.getUniqueId());
-					if(hh > 0) {
-						new BukkitRunnable() {
-							int duration = 8 - hh;
-							public void run() {
-								if(duration != 0) {
-									if(player.getHealth() + 1 + (0.75 * hh) <= maxHealth) {
-										player.setHealth(player.getHealth() + totalHeal);
-									}
-									else {
-										player.setHealth(maxHealth);
-									}
-									duration--;
-								}
-								else {
-									if(player.getHealth() + 1 + (0.75 * hh) <= maxHealth) {
-										player.setHealth(player.getHealth() + totalHeal);
-									}
-									else {
-										player.setHealth(maxHealth);
-									}
-									cancel();
-								}
-							}
-						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-					}
-					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_HURT, 2.0F, 1.0F);
-				}
-			}
-		}
-		else if(event.getDamager() instanceof Arrow) {
-			if(event.getEntity() instanceof LivingEntity) {
-				Arrow arrow = (Arrow) event.getDamager();
-				if(arrow.getShooter() instanceof Player) {
-					Player player = (Player) arrow.getShooter();
+		if(!event.isCancelled()) {
+			if(event.getDamager() instanceof Player) {
+				if(event.getEntity() instanceof LivingEntity) {
+					Player player = (Player) event.getDamager();
 					if(envyDamage.contains(player.getUniqueId())) {
-						int level = join.getLevelList().get(player.getUniqueId());
+						int level = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
 						double damage = 50 + level * 0.50;
 						double heal = 10 + level * 0.4;
 						envyDamage.remove(player.getUniqueId());
@@ -149,11 +87,75 @@ public class ClassEnvy implements Listener{
 						else {
 							player.setHealth(maxHealth);
 						}
-						int ad = join.getADMODList().get(player.getUniqueId());
+						int ad = pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER);
 						if(ad > 0) {
 							envyExtra.add(player.getUniqueId());
 						}
+						int rd = pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE_MODIFIER);
+						if(rd > 0) {
+							double speed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
+							player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(speed / 100 * (100 + rd * 5));
+							new BukkitRunnable() {
+								public void run() {
+									player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(speed);
+								}
+							}.runTaskLater(CustomEnchantments.getInstance(), 300L);
+						}
+						int hh = pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH_MODIFIER);
+						if(hh > 0) {
+							new BukkitRunnable() {
+								int duration = 8 - hh;
+								public void run() {
+									if(duration != 0) {
+										if(player.getHealth() + 1 + (0.75 * hh) <= maxHealth) {
+											player.setHealth(player.getHealth() + totalHeal);
+										}
+										else {
+											player.setHealth(maxHealth);
+										}
+										duration--;
+									}
+									else {
+										if(player.getHealth() + 1 + (0.75 * hh) <= maxHealth) {
+											player.setHealth(player.getHealth() + totalHeal);
+										}
+										else {
+											player.setHealth(maxHealth);
+										}
+										cancel();
+									}
+								}
+							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+						}
 						player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_HURT, 2.0F, 1.0F);
+					}
+				}
+			}
+			else if(event.getDamager() instanceof Arrow) {
+				if(event.getEntity() instanceof LivingEntity) {
+					Arrow arrow = (Arrow) event.getDamager();
+					if(arrow.getShooter() instanceof Player) {
+						Player player = (Player) arrow.getShooter();
+						if(envyDamage.contains(player.getUniqueId())) {
+							int level = pc.getSkill(player.getUniqueId(), Skills.LEVEL);
+							double damage = 50 + level * 0.50;
+							double heal = 10 + level * 0.4;
+							envyDamage.remove(player.getUniqueId());
+							event.setDamage(event.getFinalDamage() / 100 * (100 + damage));
+							double totalHeal = event.getFinalDamage() / 100 * heal;
+							double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+							if(player.getHealth() + totalHeal <= maxHealth) {
+								player.setHealth(player.getHealth() + totalHeal);
+							}
+							else {
+								player.setHealth(maxHealth);
+							}
+							int ad = pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER);
+							if(ad > 0) {
+								envyExtra.add(player.getUniqueId());
+							}
+							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_HURT, 2.0F, 1.0F);
+						}
 					}
 				}
 			}
@@ -161,26 +163,30 @@ public class ClassEnvy implements Listener{
 	}
 	@EventHandler
 	public void extraEDamage(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof Player) {
-			if(event.getEntity() instanceof LivingEntity) {
-				Player player = (Player) event.getDamager();
-				if(envyExtra.contains(player.getUniqueId())) {
-					envyExtra.remove(player.getUniqueId());
-					int ad = join.getADMODList().get(player.getUniqueId());
-					event.setDamage(event.getFinalDamage() + ad);
+		if(!event.isCancelled()) {
+			if(event.getDamager() instanceof Player) {
+				if(event.getEntity() instanceof LivingEntity) {
+					Player player = (Player) event.getDamager();
+					if(envyExtra.contains(player.getUniqueId())) {
+						envyExtra.remove(player.getUniqueId());
+						int ad = pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER);
+						event.setDamage(event.getFinalDamage() + ad);
+					}
 				}
 			}
 		}
 	}
 	@EventHandler
 	public void blockDamage(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof LivingEntity) {
-			if(event.getEntity() instanceof Player) {
-				Player player = (Player) event.getEntity();
-				if(envyBlock.contains(player.getUniqueId())) {
-					envyBlock.remove(player.getUniqueId());
-					int df = join.getADMODList().get(player.getUniqueId());
-					event.setDamage(event.getFinalDamage() / 100 * (100 - df * 5));
+		if(!event.isCancelled()) {
+			if(event.getDamager() instanceof LivingEntity) {
+				if(event.getEntity() instanceof Player) {
+					Player player = (Player) event.getEntity();
+					if(envyBlock.contains(player.getUniqueId())) {
+						envyBlock.remove(player.getUniqueId());
+						int df = pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER);
+						event.setDamage(event.getFinalDamage() / 100 * (100 - df * 5));
+					}
 				}
 			}
 		}

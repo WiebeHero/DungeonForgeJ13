@@ -3,6 +3,7 @@ package NeededStuff;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
@@ -22,28 +23,28 @@ import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class CombatTag implements Listener{
-	public ArrayList<String> activated = new ArrayList<String>();
-	public static HashMap<String, Integer> combatTag = new HashMap<String, Integer>();
+	public ArrayList<UUID> activated = new ArrayList<UUID>();
+	public static HashMap<UUID, Integer> combatTag = new HashMap<UUID, Integer>();
 	
 	@EventHandler
 	public void combatTagActivate(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player) {
 			if(event.getEntity() instanceof Monster) {
 				Player damager = (Player) event.getDamager();
-				combatTag.put(damager.getName(), 10);
-				if(!activated.contains(damager.getName())) {
+				combatTag.put(damager.getUniqueId(), 10);
+				if(!activated.contains(damager.getUniqueId())) {
 					damager.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-					activated.add(damager.getName());
+					activated.add(damager.getUniqueId());
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							int duration = combatTag.get(damager.getName());
+							int duration = combatTag.get(damager.getUniqueId());
 							duration--;
 							sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
-							combatTag.put(damager.getName(), duration);
+							combatTag.put(damager.getUniqueId(), duration);
 							if(duration <= 0) {
 								cancel();
-								activated.remove(damager.getName());
+								activated.remove(damager.getUniqueId());
 								sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
 							}
 						}
@@ -54,20 +55,20 @@ public class CombatTag implements Listener{
 		else if(event.getDamager() instanceof Monster) {
 			if(event.getEntity() instanceof Player) {
 				Player victim = (Player) event.getEntity();
-				combatTag.put(victim.getName(), 10);
-				if(!activated.contains(victim.getName())) {
+				combatTag.put(victim.getUniqueId(), 10);
+				if(!activated.contains(victim.getUniqueId())) {
 					victim.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-					activated.add(victim.getName());
+					activated.add(victim.getUniqueId());
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							int duration = combatTag.get(victim.getName());
+							int duration = combatTag.get(victim.getUniqueId());
 							duration--;
 							sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
-							combatTag.put(victim.getName(), duration);
+							combatTag.put(victim.getUniqueId(), duration);
 							if(duration <= 0) {
 								cancel();
-								activated.remove(victim.getName());
+								activated.remove(victim.getUniqueId());
 								sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
 							}
 						}
@@ -79,23 +80,23 @@ public class CombatTag implements Listener{
 			if(event.getEntity() instanceof Player) {
 				Player damager = (Player) event.getDamager();
 				Player victim = (Player) event.getEntity();
-				combatTag.put(damager.getName(), 20);
-				combatTag.put(victim.getName(), 20);
-				if(!activated.contains(damager.getName()) && !activated.contains(victim.getName())) {
+				combatTag.put(damager.getUniqueId(), 20);
+				combatTag.put(victim.getUniqueId(), 20);
+				if(!activated.contains(damager.getUniqueId()) && !activated.contains(victim.getUniqueId())) {
 					damager.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
 					victim.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-					activated.add(damager.getName());
-					activated.add(victim.getName());
+					activated.add(damager.getUniqueId());
+					activated.add(victim.getUniqueId());
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							int duration = combatTag.get(damager.getName());
+							int duration = combatTag.get(damager.getUniqueId());
 							duration--;
 							sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
-							combatTag.put(damager.getName(), duration);
+							combatTag.put(damager.getUniqueId(), duration);
 							if(duration <= 0) {
 								cancel();
-								activated.remove(damager.getName());
+								activated.remove(damager.getUniqueId());
 								sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
 							}
 						}
@@ -103,13 +104,13 @@ public class CombatTag implements Listener{
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							int duration = combatTag.get(victim.getName());
+							int duration = combatTag.get(victim.getUniqueId());
 							duration--;
 							sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
-							combatTag.put(victim.getName(), duration);
+							combatTag.put(victim.getUniqueId(), duration);
 							if(duration <= 0) {
 								cancel();
-								activated.remove(victim.getName());
+								activated.remove(victim.getUniqueId());
 								sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
 							}
 						}
@@ -122,20 +123,20 @@ public class CombatTag implements Listener{
 			if(arrow.getShooter() instanceof Player) {
 				Player damager = (Player) arrow.getShooter();
 				if(event.getEntity() instanceof LivingEntity) {
-					combatTag.put(damager.getName(), 20);
-					if(!activated.contains(damager.getName())) {
+					combatTag.put(damager.getUniqueId(), 20);
+					if(!activated.contains(damager.getUniqueId())) {
 						damager.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-						activated.add(damager.getName());
+						activated.add(damager.getUniqueId());
 						new BukkitRunnable() {
 							@Override
 							public void run() {
-								int duration = combatTag.get(damager.getName());
+								int duration = combatTag.get(damager.getUniqueId());
 								duration--;
 								sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
-								combatTag.put(damager.getName(), duration);
+								combatTag.put(damager.getUniqueId(), duration);
 								if(duration <= 0) {
 									cancel();
-									activated.remove(damager.getName());
+									activated.remove(damager.getUniqueId());
 									sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
 								}
 							}
@@ -144,23 +145,23 @@ public class CombatTag implements Listener{
 				}
 				else if(event.getEntity() instanceof Player) {
 					Player victim = (Player) event.getEntity();
-					combatTag.put(damager.getName(), 20);
-					combatTag.put(victim.getName(), 20);
-					if(!activated.contains(damager.getName()) && !activated.contains(victim.getName())) {
+					combatTag.put(damager.getUniqueId(), 20);
+					combatTag.put(victim.getUniqueId(), 20);
+					if(!activated.contains(damager.getUniqueId()) && !activated.contains(victim.getUniqueId())) {
 						damager.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
 						victim.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-						activated.add(damager.getName());
-						activated.add(victim.getName());
+						activated.add(damager.getUniqueId());
+						activated.add(victim.getUniqueId());
 						new BukkitRunnable() {
 							@Override
 							public void run() {
-								int duration = combatTag.get(damager.getName());
+								int duration = combatTag.get(damager.getUniqueId());
 								duration--;
 								sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
-								combatTag.put(damager.getName(), duration);
+								combatTag.put(damager.getUniqueId(), duration);
 								if(duration <= 0) {
 									cancel();
-									activated.remove(damager.getName());
+									activated.remove(damager.getUniqueId());
 									sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
 								}
 							}
@@ -168,13 +169,13 @@ public class CombatTag implements Listener{
 						new BukkitRunnable() {
 							@Override
 							public void run() {
-								int duration = combatTag.get(victim.getName());
+								int duration = combatTag.get(victim.getUniqueId());
 								duration--;
 								sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &" + duration));
-								combatTag.put(victim.getName(), duration);
+								combatTag.put(victim.getUniqueId(), duration);
 								if(duration <= 0) {
 									cancel();
-									activated.remove(victim.getName());
+									activated.remove(victim.getUniqueId());
 									sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
 								}
 							}
@@ -186,20 +187,20 @@ public class CombatTag implements Listener{
 				if(arrow.getShooter() instanceof Player) {
 					Player damager1 = (Player) arrow.getShooter();
 					if(event.getEntity() instanceof LivingEntity) {
-						combatTag.put(damager1.getName(), 20);
-						if(!activated.contains(damager1.getName())) {
+						combatTag.put(damager1.getUniqueId(), 20);
+						if(!activated.contains(damager1.getUniqueId())) {
 							damager1.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-							activated.add(damager1.getName());
+							activated.add(damager1.getUniqueId());
 							new BukkitRunnable() {
 								@Override
 								public void run() {
-									int duration = combatTag.get(damager1.getName());
+									int duration = combatTag.get(damager1.getUniqueId());
 									duration--;
 									sendActionbar(damager1, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
-									combatTag.put(damager1.getName(), duration);
+									combatTag.put(damager1.getUniqueId(), duration);
 									if(duration <= 0) {
 										cancel();
-										activated.remove(damager1.getName());
+										activated.remove(damager1.getUniqueId());
 										sendActionbar(damager1, new ColorCodeTranslator().colorize("&aOut of combat!"));
 									}
 								}
@@ -208,23 +209,23 @@ public class CombatTag implements Listener{
 					}
 					else if(event.getEntity() instanceof Player) {
 						Player victim = (Player) event.getEntity();
-						combatTag.put(damager1.getName(), 20);
-						combatTag.put(victim.getName(), 20);
-						if(!activated.contains(damager1.getName()) && !activated.contains(victim.getName())) {
+						combatTag.put(damager1.getUniqueId(), 20);
+						combatTag.put(victim.getUniqueId(), 20);
+						if(!activated.contains(damager1.getUniqueId()) && !activated.contains(victim.getUniqueId())) {
 							damager1.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
 							victim.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-							activated.add(damager1.getName());
-							activated.add(victim.getName());
+							activated.add(damager1.getUniqueId());
+							activated.add(victim.getUniqueId());
 							new BukkitRunnable() {
 								@Override
 								public void run() {
-									int duration = combatTag.get(damager1.getName());
+									int duration = combatTag.get(damager1.getUniqueId());
 									duration--;
 									sendActionbar(damager1, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
-									combatTag.put(damager1.getName(), duration);
+									combatTag.put(damager1.getUniqueId(), duration);
 									if(duration <= 0) {
 										cancel();
-										activated.remove(damager1.getName());
+										activated.remove(damager1.getUniqueId());
 										sendActionbar(damager1, new ColorCodeTranslator().colorize("&aOut of combat!"));
 									}
 								}
@@ -232,13 +233,13 @@ public class CombatTag implements Listener{
 							new BukkitRunnable() {
 								@Override
 								public void run() {
-									int duration = combatTag.get(victim.getName());
+									int duration = combatTag.get(victim.getUniqueId());
 									duration--;
 									sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
-									combatTag.put(victim.getName(), duration);
+									combatTag.put(victim.getUniqueId(), duration);
 									if(duration <= 0) {
 										cancel();
-										activated.remove(victim.getName());
+										activated.remove(victim.getUniqueId());
 										sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
 									}
 								}
@@ -255,10 +256,10 @@ public class CombatTag implements Listener{
 	@EventHandler
 	public void combatTagLeave(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if(combatTag.containsKey(player.getName())) {
-			if(combatTag.get(player.getName()) != 0) {
+		if(combatTag.containsKey(player.getUniqueId())) {
+			if(combatTag.get(player.getUniqueId()) != 0) {
 				player.setHealth(0.00);
-				combatTag.put(player.getName(), 0);
+				combatTag.put(player.getUniqueId(), 0);
 			}
 		}
 	}
@@ -267,7 +268,7 @@ public class CombatTag implements Listener{
 		new BukkitRunnable() {
 			public void run() {
 				Player player = event.getEntity();
-				combatTag.put(player.getName(), 0);
+				combatTag.put(player.getUniqueId(), 0);
 				player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
@@ -277,16 +278,16 @@ public class CombatTag implements Listener{
 		new BukkitRunnable() {
 			public void run() {
 				Player player = event.getPlayer();
-				combatTag.put(player.getName(), 0);
+				combatTag.put(player.getUniqueId(), 0);
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 	}
 	@EventHandler
 	public void combatTagRegister(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		combatTag.put(player.getName(), 0);
+		combatTag.put(player.getUniqueId(), 0);
 	}
-	public static HashMap<String, Integer> getCombatTag(){
+	public static HashMap<UUID, Integer> getCombatTag(){
 		return combatTag;
 	}
 	public static void sendActionbar(Player player, String msg) {
@@ -312,8 +313,14 @@ public class CombatTag implements Listener{
             return null;
         }
     }
-         
     public static String getVersion() {
         return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+    }
+    public boolean inCombat(UUID uuid) {
+    	boolean inCombat = false;
+    	if(combatTag.containsKey(uuid)) {
+    		inCombat = true;
+    	}
+    	return inCombat;
     }
 }

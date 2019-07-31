@@ -7,21 +7,19 @@ import org.bukkit.inventory.ItemStack;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
-import Skills.SkillJoin;
-import me.WiebeHero.CustomMethods.MethodHealth;
+import Skills.EffectSkills;
 import me.WiebeHero.CustomMethods.MethodItemStack;
 
 public class Reinforced implements Listener{
-	MethodHealth he = new MethodHealth();
 	MethodItemStack it = new MethodItemStack(); 
-	SkillJoin join = new SkillJoin();
+	EffectSkills sk = new EffectSkills();
 	@EventHandler
 	public void armorSwitch1(PlayerArmorChangeEvent event) {
 		Player player = event.getPlayer();
 		ItemStack armorNew = event.getNewItem();
 		ItemStack armorOld = event.getOldItem();
 		if(it.loreContains(armorNew, "Reinforced") || it.loreContains(armorOld, "Reinforced")) {
-			he.updateHealth(player.getUniqueId());
+			sk.changeHealth(player);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package me.WiebeHero.Novis;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -13,7 +14,6 @@ import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.Inventory;
@@ -41,7 +41,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 	//
 	//
 	//--------------------------------------------------------------------------------------------------------------------
-	public void NewInventory1(Player player) {
+	public void NewInventory1(Player player, ArrayList<ItemStack> finalLootList, String rarity) {
 		Inventory i = plugin.getServer().createInventory(null, 27, (new ColorCodeTranslator().colorize("&6Decrypting Crystal...")));
 		player.openInventory(i);
 		check.add(player.getName());
@@ -52,8 +52,8 @@ public class NovisInventory extends NovisRewards implements Listener{
 			int counter = 17;
 			@Override
 			public void run() {
-				int finalRewards = new Random().nextInt(NovisRewards.rewards1.size());
-				if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
+				int finalRewards = new Random().nextInt(finalLootList.size());
+				if(player.getOpenInventory().getTitle().contains(ChatColor.stripColor("Decrypting "))) {
 					i.setItem(0, emptyVoid(player));
 					i.setItem(1, emptyVoid(player));
 					i.setItem(2, emptyVoid(player));
@@ -64,13 +64,13 @@ public class NovisInventory extends NovisRewards implements Listener{
 					i.setItem(7, emptyVoid(player));
 					i.setItem(8, emptyVoid(player));
 					i.setItem(9, emptyVoid(player));
-					i.setItem(10, rewards1.get(rewards1()));
-					i.setItem(11, rewards1.get(rewards1()));
-					i.setItem(12, rewards1.get(rewards1()));
-					i.setItem(13, rewards1.get(rewards1()));
-					i.setItem(14, rewards1.get(rewards1()));
-					i.setItem(15, rewards1.get(rewards1()));
-					i.setItem(16, rewards1.get(rewards1()));
+					i.setItem(10, finalLootList.get(randomNumber(rarity)));
+					i.setItem(11, finalLootList.get(randomNumber(rarity)));
+					i.setItem(12, finalLootList.get(randomNumber(rarity)));
+					i.setItem(13, finalLootList.get(randomNumber(rarity)));
+					i.setItem(14, finalLootList.get(randomNumber(rarity)));
+					i.setItem(15, finalLootList.get(randomNumber(rarity)));
+					i.setItem(16, finalLootList.get(randomNumber(rarity)));
 					i.setItem(17, emptyVoid(player));
 					i.setItem(18, emptyVoid(player));
 					i.setItem(19, emptyVoid(player));
@@ -91,7 +91,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 						bt2 = new BukkitRunnable() {
 							@Override
 							public void run() {
-								if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
+								if(player.getOpenInventory().getTitle().contains(ChatColor.stripColor("Decrypting "))) {
 									i.setItem(0, emptyVoid(player));
 									i.setItem(1, emptyVoid(player));
 									i.setItem(2, emptyVoid(player));
@@ -103,11 +103,11 @@ public class NovisInventory extends NovisRewards implements Listener{
 									i.setItem(8, emptyVoid(player));
 									i.setItem(9, emptyVoid(player));
 									i.setItem(10, emptyVoid(player));
-									i.setItem(11, rewards1.get(rewards1()));
-									i.setItem(12, rewards1.get(rewards1()));
-									i.setItem(13, rewards1.get(rewards1()));
-									i.setItem(14, rewards1.get(rewards1()));
-									i.setItem(15, rewards1.get(rewards1()));
+									i.setItem(11, finalLootList.get(randomNumber(rarity)));
+									i.setItem(12, finalLootList.get(randomNumber(rarity)));
+									i.setItem(13, finalLootList.get(randomNumber(rarity)));
+									i.setItem(14, finalLootList.get(randomNumber(rarity)));
+									i.setItem(15, finalLootList.get(randomNumber(rarity)));
 									i.setItem(16, emptyVoid(player));
 									i.setItem(17, emptyVoid(player));
 									i.setItem(18, emptyVoid(player));
@@ -128,7 +128,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 										bt3 = new BukkitRunnable() {
 											@Override
 											public void run() {
-												if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
+												if(player.getOpenInventory().getTitle().contains(ChatColor.stripColor("Decrypting "))) {
 													i.setItem(0, emptyVoid(player));
 													i.setItem(1, emptyVoid(player));
 													i.setItem(2, emptyVoid(player));
@@ -141,9 +141,9 @@ public class NovisInventory extends NovisRewards implements Listener{
 													i.setItem(9, emptyVoid(player));
 													i.setItem(10, emptyVoid(player));
 													i.setItem(11, emptyVoid(player));
-													i.setItem(12, rewards1.get(rewards1()));
-													i.setItem(13, rewards1.get(rewards1()));
-													i.setItem(14, rewards1.get(rewards1()));
+													i.setItem(12, finalLootList.get(randomNumber(rarity)));
+													i.setItem(13, finalLootList.get(randomNumber(rarity)));
+													i.setItem(14, finalLootList.get(randomNumber(rarity)));
 													i.setItem(15, emptyVoid(player));
 													i.setItem(16, emptyVoid(player));
 													i.setItem(17, emptyVoid(player));
@@ -178,7 +178,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 																i.setItem(10, emptyVoid(player));
 																i.setItem(11, emptyVoid(player));
 																i.setItem(12, emptyVoid(player));
-																i.setItem(13, rewards1.get(finalRewards));
+																i.setItem(13, finalLootList.get(randomNumber(rarity)));
 																i.setItem(14, emptyVoid(player));
 																i.setItem(15, emptyVoid(player));
 																i.setItem(16, emptyVoid(player));
@@ -196,833 +196,41 @@ public class NovisInventory extends NovisRewards implements Listener{
 																	((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
 																}
 																cancel();
-																player.getInventory().addItem(rewards1.get(finalRewards));
+																player.getInventory().addItem(finalLootList.get(finalRewards));
 																new BukkitRunnable() {
 																	@Override
 																	public void run() {
-																		if(player.getInventory().getName().equals(ChatColor.stripColor("Decrypting..."))) {
+																		if(player.getOpenInventory().getTitle().contains(ChatColor.stripColor("Decrypting "))) {
 																			player.closeInventory();
 																		}
 																	}
-																}.runTaskLater(plugin, 0L);
+																}.runTaskLater(CustomEnchantments.getInstance(), 0L);
 															}
-														}.runTaskTimer(plugin, 0L, 16L);
+														}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 16L);
 													}
 												}
 												else {
 													cancel();
-													player.getInventory().addItem(rewards1.get(finalRewards));
+													player.getInventory().addItem(finalLootList.get(finalRewards));
 												}
 											}
-										}.runTaskTimer(plugin, 0L, 12L);
+										}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 12L);
 									}
 								}
 								else {
 									cancel();
-									player.getInventory().addItem(rewards1.get(finalRewards));
+									player.getInventory().addItem(finalLootList.get(finalRewards));
 								}
 							}
-						}.runTaskTimer(plugin, 0L, 6L);
+						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 6L);
 					}				
 				}
 				else {
 					cancel();
-					player.getInventory().addItem(rewards1.get(finalRewards));
+					player.getInventory().addItem(finalLootList.get(finalRewards));
 				}
 			}
-		}.runTaskTimer(plugin, 0L, 3L);
-	}
-	//--------------------------------------------------------------------------------------------------------------------
-	//
-	//
-	//Rare
-	//
-	//
-	//--------------------------------------------------------------------------------------------------------------------
-	public void NewInventory2(Player player) {
-		Inventory i = plugin.getServer().createInventory(null, 27, (new ColorCodeTranslator().colorize("&6Decrypting Crystal...")));
-		player.openInventory(i);
-		check.add(player.getName());
-		//--------------------------------------------------------------------------------------------------------------------
-		//Inventory Animation
-		//--------------------------------------------------------------------------------------------------------------------
-		bt1 = new BukkitRunnable() {
-			int counter = 17;
-			@Override
-			public void run() {
-				int finalRewards = new Random().nextInt(NovisRewards.rewards2.size());
-				if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-					i.setItem(0, emptyVoid(player));
-					i.setItem(1, emptyVoid(player));
-					i.setItem(2, emptyVoid(player));
-					i.setItem(3, emptyVoid(player));
-					i.setItem(4, emptyVoid(player));
-					i.setItem(5, emptyVoid(player));
-					i.setItem(6, emptyVoid(player));
-					i.setItem(7, emptyVoid(player));
-					i.setItem(8, emptyVoid(player));
-					i.setItem(9, emptyVoid(player));
-					i.setItem(10, rewards2.get(rewards2()));
-					i.setItem(11, rewards2.get(rewards2()));
-					i.setItem(12, rewards2.get(rewards2()));
-					i.setItem(13, rewards2.get(rewards2()));
-					i.setItem(14, rewards2.get(rewards2()));
-					i.setItem(15, rewards2.get(rewards2()));
-					i.setItem(16, rewards2.get(rewards2()));
-					i.setItem(17, emptyVoid(player));
-					i.setItem(18, emptyVoid(player));
-					i.setItem(19, emptyVoid(player));
-					i.setItem(20, emptyVoid(player));
-					i.setItem(21, emptyVoid(player));
-					i.setItem(22, emptyVoid(player));
-					i.setItem(23, emptyVoid(player));
-					i.setItem(24, emptyVoid(player));
-					i.setItem(25, emptyVoid(player));
-					i.setItem(26, emptyVoid(player));
-					for(Player victim1 : Bukkit.getOnlinePlayers()) {
-						((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.4);
-					}
-					counter--;
-					if(counter == 0) {
-						cancel();
-						counter = 9;
-						bt2 = new BukkitRunnable() {
-							@Override
-							public void run() {
-								if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-									i.setItem(0, emptyVoid(player));
-									i.setItem(1, emptyVoid(player));
-									i.setItem(2, emptyVoid(player));
-									i.setItem(3, emptyVoid(player));
-									i.setItem(4, emptyVoid(player));
-									i.setItem(5, emptyVoid(player));
-									i.setItem(6, emptyVoid(player));
-									i.setItem(7, emptyVoid(player));
-									i.setItem(8, emptyVoid(player));
-									i.setItem(9, emptyVoid(player));
-									i.setItem(10, emptyVoid(player));
-									i.setItem(11, rewards2.get(rewards2()));
-									i.setItem(12, rewards2.get(rewards2()));
-									i.setItem(13, rewards2.get(rewards2()));
-									i.setItem(14, rewards2.get(rewards2()));
-									i.setItem(15, rewards2.get(rewards2()));
-									i.setItem(16, emptyVoid(player));
-									i.setItem(17, emptyVoid(player));
-									i.setItem(18, emptyVoid(player));
-									i.setItem(19, emptyVoid(player));
-									i.setItem(20, emptyVoid(player));
-									i.setItem(21, emptyVoid(player));
-									i.setItem(23, emptyVoid(player));
-									i.setItem(24, emptyVoid(player));
-									i.setItem(25, emptyVoid(player));
-									i.setItem(26, emptyVoid(player));
-									for(Player victim1 : Bukkit.getOnlinePlayers()) {
-										((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.6);
-									}
-									counter--;
-									if(counter == 0) {
-										cancel();
-										counter = 5;
-										bt3 = new BukkitRunnable() {
-											@Override
-											public void run() {
-												if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-													i.setItem(0, emptyVoid(player));
-													i.setItem(1, emptyVoid(player));
-													i.setItem(2, emptyVoid(player));
-													i.setItem(3, emptyVoid(player));
-													i.setItem(4, emptyVoid(player));
-													i.setItem(5, emptyVoid(player));
-													i.setItem(6, emptyVoid(player));
-													i.setItem(7, emptyVoid(player));
-													i.setItem(8, emptyVoid(player));
-													i.setItem(9, emptyVoid(player));
-													i.setItem(10, emptyVoid(player));
-													i.setItem(11, emptyVoid(player));
-													i.setItem(12, rewards2.get(rewards2()));
-													i.setItem(13, rewards2.get(rewards2()));
-													i.setItem(14, rewards2.get(rewards2()));
-													i.setItem(15, emptyVoid(player));
-													i.setItem(16, emptyVoid(player));
-													i.setItem(17, emptyVoid(player));
-													i.setItem(18, emptyVoid(player));
-													i.setItem(19, emptyVoid(player));
-													i.setItem(20, emptyVoid(player));
-													i.setItem(21, emptyVoid(player));
-													i.setItem(22, emptyVoid(player));
-													i.setItem(23, emptyVoid(player));
-													i.setItem(24, emptyVoid(player));
-													i.setItem(25, emptyVoid(player));
-													i.setItem(26, emptyVoid(player));
-													for(Player victim1 : Bukkit.getOnlinePlayers()) {
-														((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.8);
-													}
-													counter--;
-													if(counter == 0) {
-														cancel();
-														bt4 = new BukkitRunnable() {
-															@Override
-															public void run() {
-																i.setItem(0, emptyVoid(player));
-																i.setItem(1, emptyVoid(player));
-																i.setItem(2, emptyVoid(player));
-																i.setItem(3, emptyVoid(player));
-																i.setItem(4, emptyVoid(player));
-																i.setItem(5, emptyVoid(player));
-																i.setItem(6, emptyVoid(player));
-																i.setItem(7, emptyVoid(player));
-																i.setItem(8, emptyVoid(player));
-																i.setItem(9, emptyVoid(player));
-																i.setItem(10, emptyVoid(player));
-																i.setItem(11, emptyVoid(player));
-																i.setItem(12, emptyVoid(player));
-																i.setItem(13, rewards2.get(finalRewards));
-																i.setItem(14, emptyVoid(player));
-																i.setItem(15, emptyVoid(player));
-																i.setItem(16, emptyVoid(player));
-																i.setItem(17, emptyVoid(player));
-																i.setItem(18, emptyVoid(player));
-																i.setItem(19, emptyVoid(player));
-																i.setItem(20, emptyVoid(player));
-																i.setItem(21, emptyVoid(player));
-																i.setItem(22, emptyVoid(player));
-																i.setItem(23, emptyVoid(player));
-																i.setItem(24, emptyVoid(player));
-																i.setItem(25, emptyVoid(player));
-																i.setItem(26, emptyVoid(player));
-																for(Player victim1 : Bukkit.getOnlinePlayers()) {
-																	((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
-																}
-																cancel();
-																player.getInventory().addItem(rewards2.get(finalRewards));
-																new BukkitRunnable() {
-																	@Override
-																	public void run() {
-																		if(player.getInventory().getName().equals(ChatColor.stripColor("Decrypting..."))) {
-																			player.closeInventory();
-																		}
-																	}
-																}.runTaskLater(plugin, 0L);
-															}
-														}.runTaskTimer(plugin, 0L, 16L);
-													}
-												}
-												else {
-													cancel();
-													player.getInventory().addItem(rewards2.get(finalRewards));
-												}
-											}
-										}.runTaskTimer(plugin, 0L, 12L);
-									}
-								}
-								else {
-									cancel();
-									player.getInventory().addItem(rewards2.get(finalRewards));
-								}
-							}
-						}.runTaskTimer(plugin, 0L, 6L);
-					}				
-				}
-				else {
-					cancel();
-					player.getInventory().addItem(rewards2.get(finalRewards));
-				}
-			}
-		}.runTaskTimer(plugin, 0L, 3L);
-	}
-	//--------------------------------------------------------------------------------------------------------------------
-	//
-	//
-	//Rare
-	//
-	//
-	//--------------------------------------------------------------------------------------------------------------------
-	public void NewInventory3(Player player) {
-		Inventory i = plugin.getServer().createInventory(null, 27, (new ColorCodeTranslator().colorize("&6Decrypting Crystal...")));
-		player.openInventory(i);
-		check.add(player.getName());
-		//--------------------------------------------------------------------------------------------------------------------
-		//Inventory Animation
-		//--------------------------------------------------------------------------------------------------------------------
-		bt1 = new BukkitRunnable() {
-			int counter = 17;
-			@Override
-			public void run() {
-				int finalRewards = new Random().nextInt(NovisRewards.rewards3.size());
-				if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-					i.setItem(0, emptyVoid(player));
-					i.setItem(1, emptyVoid(player));
-					i.setItem(2, emptyVoid(player));
-					i.setItem(3, emptyVoid(player));
-					i.setItem(4, emptyVoid(player));
-					i.setItem(5, emptyVoid(player));
-					i.setItem(6, emptyVoid(player));
-					i.setItem(7, emptyVoid(player));
-					i.setItem(8, emptyVoid(player));
-					i.setItem(9, emptyVoid(player));
-					i.setItem(10, rewards3.get(rewards3()));
-					i.setItem(11, rewards3.get(rewards3()));
-					i.setItem(12, rewards3.get(rewards3()));
-					i.setItem(13, rewards3.get(rewards3()));
-					i.setItem(14, rewards3.get(rewards3()));
-					i.setItem(15, rewards3.get(rewards3()));
-					i.setItem(16, rewards3.get(rewards3()));
-					i.setItem(17, emptyVoid(player));
-					i.setItem(18, emptyVoid(player));
-					i.setItem(19, emptyVoid(player));
-					i.setItem(20, emptyVoid(player));
-					i.setItem(21, emptyVoid(player));
-					i.setItem(22, emptyVoid(player));
-					i.setItem(23, emptyVoid(player));
-					i.setItem(24, emptyVoid(player));
-					i.setItem(25, emptyVoid(player));
-					i.setItem(26, emptyVoid(player));
-					for(Player victim1 : Bukkit.getOnlinePlayers()) {
-						((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.4);
-					}
-					counter--;
-					if(counter == 0) {
-						cancel();
-						counter = 9;
-						bt2 = new BukkitRunnable() {
-							@Override
-							public void run() {
-								if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-									i.setItem(0, emptyVoid(player));
-									i.setItem(1, emptyVoid(player));
-									i.setItem(2, emptyVoid(player));
-									i.setItem(3, emptyVoid(player));
-									i.setItem(4, emptyVoid(player));
-									i.setItem(5, emptyVoid(player));
-									i.setItem(6, emptyVoid(player));
-									i.setItem(7, emptyVoid(player));
-									i.setItem(8, emptyVoid(player));
-									i.setItem(9, emptyVoid(player));
-									i.setItem(10, emptyVoid(player));
-									i.setItem(11, rewards3.get(rewards3()));
-									i.setItem(12, rewards3.get(rewards3()));
-									i.setItem(13, rewards3.get(rewards3()));
-									i.setItem(14, rewards3.get(rewards3()));
-									i.setItem(15, rewards3.get(rewards3()));
-									i.setItem(16, emptyVoid(player));
-									i.setItem(17, emptyVoid(player));
-									i.setItem(18, emptyVoid(player));
-									i.setItem(19, emptyVoid(player));
-									i.setItem(20, emptyVoid(player));
-									i.setItem(21, emptyVoid(player));
-									i.setItem(23, emptyVoid(player));
-									i.setItem(24, emptyVoid(player));
-									i.setItem(25, emptyVoid(player));
-									i.setItem(26, emptyVoid(player));
-									for(Player victim1 : Bukkit.getOnlinePlayers()) {
-										((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.6);
-									}
-									counter--;
-									if(counter == 0) {
-										cancel();
-										counter = 5;
-										bt3 = new BukkitRunnable() {
-											@Override
-											public void run() {
-												if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-													i.setItem(0, emptyVoid(player));
-													i.setItem(1, emptyVoid(player));
-													i.setItem(2, emptyVoid(player));
-													i.setItem(3, emptyVoid(player));
-													i.setItem(4, emptyVoid(player));
-													i.setItem(5, emptyVoid(player));
-													i.setItem(6, emptyVoid(player));
-													i.setItem(7, emptyVoid(player));
-													i.setItem(8, emptyVoid(player));
-													i.setItem(9, emptyVoid(player));
-													i.setItem(10, emptyVoid(player));
-													i.setItem(11, emptyVoid(player));
-													i.setItem(12, rewards3.get(rewards3()));
-													i.setItem(13, rewards3.get(rewards3()));
-													i.setItem(14, rewards3.get(rewards3()));
-													i.setItem(15, emptyVoid(player));
-													i.setItem(16, emptyVoid(player));
-													i.setItem(17, emptyVoid(player));
-													i.setItem(18, emptyVoid(player));
-													i.setItem(19, emptyVoid(player));
-													i.setItem(20, emptyVoid(player));
-													i.setItem(21, emptyVoid(player));
-													i.setItem(22, emptyVoid(player));
-													i.setItem(23, emptyVoid(player));
-													i.setItem(24, emptyVoid(player));
-													i.setItem(25, emptyVoid(player));
-													i.setItem(26, emptyVoid(player));
-													for(Player victim1 : Bukkit.getOnlinePlayers()) {
-														((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.8);
-													}
-													counter--;
-													if(counter == 0) {
-														cancel();
-														bt4 = new BukkitRunnable() {
-															@Override
-															public void run() {
-																i.setItem(0, emptyVoid(player));
-																i.setItem(1, emptyVoid(player));
-																i.setItem(2, emptyVoid(player));
-																i.setItem(3, emptyVoid(player));
-																i.setItem(4, emptyVoid(player));
-																i.setItem(5, emptyVoid(player));
-																i.setItem(6, emptyVoid(player));
-																i.setItem(7, emptyVoid(player));
-																i.setItem(8, emptyVoid(player));
-																i.setItem(9, emptyVoid(player));
-																i.setItem(10, emptyVoid(player));
-																i.setItem(11, emptyVoid(player));
-																i.setItem(12, emptyVoid(player));
-																i.setItem(13, rewards3.get(finalRewards));
-																i.setItem(14, emptyVoid(player));
-																i.setItem(15, emptyVoid(player));
-																i.setItem(16, emptyVoid(player));
-																i.setItem(17, emptyVoid(player));
-																i.setItem(18, emptyVoid(player));
-																i.setItem(19, emptyVoid(player));
-																i.setItem(20, emptyVoid(player));
-																i.setItem(21, emptyVoid(player));
-																i.setItem(22, emptyVoid(player));
-																i.setItem(23, emptyVoid(player));
-																i.setItem(24, emptyVoid(player));
-																i.setItem(25, emptyVoid(player));
-																i.setItem(26, emptyVoid(player));
-																for(Player victim1 : Bukkit.getOnlinePlayers()) {
-																	((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
-																}
-																cancel();
-																player.getInventory().addItem(rewards3.get(finalRewards));
-																new BukkitRunnable() {
-																	@Override
-																	public void run() {
-																		if(player.getInventory().getName().equals(ChatColor.stripColor("Decrypting..."))) {
-																			player.closeInventory();
-																		}
-																	}
-																}.runTaskLater(plugin, 0L);
-															}
-														}.runTaskTimer(plugin, 0L, 16L);
-													}
-												}
-												else {
-													cancel();
-													player.getInventory().addItem(rewards3.get(finalRewards));
-												}
-											}
-										}.runTaskTimer(plugin, 0L, 12L);
-									}
-								}
-								else {
-									cancel();
-									player.getInventory().addItem(rewards3.get(finalRewards));
-								}
-							}
-						}.runTaskTimer(plugin, 0L, 6L);
-					}				
-				}
-				else {
-					cancel();
-					player.getInventory().addItem(rewards3.get(finalRewards));
-				}
-			}
-		}.runTaskTimer(plugin, 0L, 3L);
-	}
-	//--------------------------------------------------------------------------------------------------------------------
-	//
-	//
-	//Legendary
-	//
-	//
-	//--------------------------------------------------------------------------------------------------------------------
-	public void NewInventory4(Player player) {
-		Inventory i = plugin.getServer().createInventory(null, 27, (new ColorCodeTranslator().colorize("&6Decrypting Crystal...")));
-		player.openInventory(i);
-		check.add(player.getName());
-		//--------------------------------------------------------------------------------------------------------------------
-		//Inventory Animation
-		//--------------------------------------------------------------------------------------------------------------------
-		bt1 = new BukkitRunnable() {
-			int counter = 17;
-			@Override
-			public void run() {
-				int finalRewards = new Random().nextInt(NovisRewards.rewards4.size());
-				if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-					i.setItem(0, emptyVoid(player));
-					i.setItem(1, emptyVoid(player));
-					i.setItem(2, emptyVoid(player));
-					i.setItem(3, emptyVoid(player));
-					i.setItem(4, emptyVoid(player));
-					i.setItem(5, emptyVoid(player));
-					i.setItem(6, emptyVoid(player));
-					i.setItem(7, emptyVoid(player));
-					i.setItem(8, emptyVoid(player));
-					i.setItem(9, emptyVoid(player));
-					i.setItem(10, rewards4.get(rewards4()));
-					i.setItem(11, rewards4.get(rewards4()));
-					i.setItem(12, rewards4.get(rewards4()));
-					i.setItem(13, rewards4.get(rewards4()));
-					i.setItem(14, rewards4.get(rewards4()));
-					i.setItem(15, rewards4.get(rewards4()));
-					i.setItem(16, rewards4.get(rewards4()));
-					i.setItem(17, emptyVoid(player));
-					i.setItem(18, emptyVoid(player));
-					i.setItem(19, emptyVoid(player));
-					i.setItem(20, emptyVoid(player));
-					i.setItem(21, emptyVoid(player));
-					i.setItem(22, emptyVoid(player));
-					i.setItem(23, emptyVoid(player));
-					i.setItem(24, emptyVoid(player));
-					i.setItem(25, emptyVoid(player));
-					i.setItem(26, emptyVoid(player));
-					for(Player victim1 : Bukkit.getOnlinePlayers()) {
-						((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.4);
-					}
-					counter--;
-					if(counter == 0) {
-						cancel();
-						counter = 9;
-						bt2 = new BukkitRunnable() {
-							@Override
-							public void run() {
-								if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-									i.setItem(0, emptyVoid(player));
-									i.setItem(1, emptyVoid(player));
-									i.setItem(2, emptyVoid(player));
-									i.setItem(3, emptyVoid(player));
-									i.setItem(4, emptyVoid(player));
-									i.setItem(5, emptyVoid(player));
-									i.setItem(6, emptyVoid(player));
-									i.setItem(7, emptyVoid(player));
-									i.setItem(8, emptyVoid(player));
-									i.setItem(9, emptyVoid(player));
-									i.setItem(10, emptyVoid(player));
-									i.setItem(11, rewards4.get(rewards4()));
-									i.setItem(12, rewards4.get(rewards4()));
-									i.setItem(13, rewards4.get(rewards4()));
-									i.setItem(14, rewards4.get(rewards4()));
-									i.setItem(15, rewards4.get(rewards4()));
-									i.setItem(16, emptyVoid(player));
-									i.setItem(17, emptyVoid(player));
-									i.setItem(18, emptyVoid(player));
-									i.setItem(19, emptyVoid(player));
-									i.setItem(20, emptyVoid(player));
-									i.setItem(21, emptyVoid(player));
-									i.setItem(23, emptyVoid(player));
-									i.setItem(24, emptyVoid(player));
-									i.setItem(25, emptyVoid(player));
-									i.setItem(26, emptyVoid(player));
-									for(Player victim1 : Bukkit.getOnlinePlayers()) {
-										((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.6);
-									}
-									counter--;
-									if(counter == 0) {
-										cancel();
-										counter = 5;
-										bt3 = new BukkitRunnable() {
-											@Override
-											public void run() {
-												if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-													i.setItem(0, emptyVoid(player));
-													i.setItem(1, emptyVoid(player));
-													i.setItem(2, emptyVoid(player));
-													i.setItem(3, emptyVoid(player));
-													i.setItem(4, emptyVoid(player));
-													i.setItem(5, emptyVoid(player));
-													i.setItem(6, emptyVoid(player));
-													i.setItem(7, emptyVoid(player));
-													i.setItem(8, emptyVoid(player));
-													i.setItem(9, emptyVoid(player));
-													i.setItem(10, emptyVoid(player));
-													i.setItem(11, emptyVoid(player));
-													i.setItem(12, rewards4.get(rewards4()));
-													i.setItem(13, rewards4.get(rewards4()));
-													i.setItem(14, rewards4.get(rewards4()));
-													i.setItem(15, emptyVoid(player));
-													i.setItem(16, emptyVoid(player));
-													i.setItem(17, emptyVoid(player));
-													i.setItem(18, emptyVoid(player));
-													i.setItem(19, emptyVoid(player));
-													i.setItem(20, emptyVoid(player));
-													i.setItem(21, emptyVoid(player));
-													i.setItem(22, emptyVoid(player));
-													i.setItem(23, emptyVoid(player));
-													i.setItem(24, emptyVoid(player));
-													i.setItem(25, emptyVoid(player));
-													i.setItem(26, emptyVoid(player));
-													for(Player victim1 : Bukkit.getOnlinePlayers()) {
-														((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.8);
-													}
-													counter--;
-													if(counter == 0) {
-														cancel();
-														bt4 = new BukkitRunnable() {
-															@Override
-															public void run() {
-																i.setItem(0, emptyVoid(player));
-																i.setItem(1, emptyVoid(player));
-																i.setItem(2, emptyVoid(player));
-																i.setItem(3, emptyVoid(player));
-																i.setItem(4, emptyVoid(player));
-																i.setItem(5, emptyVoid(player));
-																i.setItem(6, emptyVoid(player));
-																i.setItem(7, emptyVoid(player));
-																i.setItem(8, emptyVoid(player));
-																i.setItem(9, emptyVoid(player));
-																i.setItem(10, emptyVoid(player));
-																i.setItem(11, emptyVoid(player));
-																i.setItem(12, emptyVoid(player));
-																i.setItem(13, rewards4.get(finalRewards));
-																i.setItem(14, emptyVoid(player));
-																i.setItem(15, emptyVoid(player));
-																i.setItem(16, emptyVoid(player));
-																i.setItem(17, emptyVoid(player));
-																i.setItem(18, emptyVoid(player));
-																i.setItem(19, emptyVoid(player));
-																i.setItem(20, emptyVoid(player));
-																i.setItem(21, emptyVoid(player));
-																i.setItem(22, emptyVoid(player));
-																i.setItem(23, emptyVoid(player));
-																i.setItem(24, emptyVoid(player));
-																i.setItem(25, emptyVoid(player));
-																i.setItem(26, emptyVoid(player));
-																for(Player victim1 : Bukkit.getOnlinePlayers()) {
-																	((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
-																}
-																cancel();
-																player.getInventory().addItem(rewards4.get(finalRewards));
-																new BukkitRunnable() {
-																	@Override
-																	public void run() {
-																		if(player.getInventory().getName().equals(ChatColor.stripColor("Decrypting..."))) {
-																			player.closeInventory();
-																		}
-																	}
-																}.runTaskLater(plugin, 0L);
-															}
-														}.runTaskTimer(plugin, 0L, 16L);
-													}
-												}
-												else {
-													cancel();
-													player.getInventory().addItem(rewards4.get(finalRewards));
-												}
-											}
-										}.runTaskTimer(plugin, 0L, 12L);
-									}
-								}
-								else {
-									cancel();
-									player.getInventory().addItem(rewards4.get(finalRewards));
-								}
-							}
-						}.runTaskTimer(plugin, 0L, 6L);
-					}				
-				}
-				else {
-					cancel();
-					player.getInventory().addItem(rewards4.get(finalRewards));
-				}
-			}
-		}.runTaskTimer(plugin, 0L, 3L);
-	}
-	//--------------------------------------------------------------------------------------------------------------------
-	//
-	//
-	//Legendary
-	//
-	//
-	//--------------------------------------------------------------------------------------------------------------------
-	public void NewInventory5(Player player) {
-		Inventory i = plugin.getServer().createInventory(null, 27, (new ColorCodeTranslator().colorize("&6Decrypting Crystal...")));
-		player.openInventory(i);
-		check.add(player.getName());
-		//--------------------------------------------------------------------------------------------------------------------
-		//Inventory Animation
-		//--------------------------------------------------------------------------------------------------------------------
-		bt1 = new BukkitRunnable() {
-			int counter = 17;
-			@Override
-			public void run() {
-				int finalRewards = new Random().nextInt(NovisRewards.rewards5.size());
-				if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-					i.setItem(0, emptyVoid(player));
-					i.setItem(1, emptyVoid(player));
-					i.setItem(2, emptyVoid(player));
-					i.setItem(3, emptyVoid(player));
-					i.setItem(4, emptyVoid(player));
-					i.setItem(5, emptyVoid(player));
-					i.setItem(6, emptyVoid(player));
-					i.setItem(7, emptyVoid(player));
-					i.setItem(8, emptyVoid(player));
-					i.setItem(9, emptyVoid(player));
-					i.setItem(10, rewards5.get(rewards5()));
-					i.setItem(11, rewards5.get(rewards5()));
-					i.setItem(12, rewards5.get(rewards5()));
-					i.setItem(13, rewards5.get(rewards5()));
-					i.setItem(14, rewards5.get(rewards5()));
-					i.setItem(15, rewards5.get(rewards5()));
-					i.setItem(16, rewards5.get(rewards5()));
-					i.setItem(17, emptyVoid(player));
-					i.setItem(18, emptyVoid(player));
-					i.setItem(19, emptyVoid(player));
-					i.setItem(20, emptyVoid(player));
-					i.setItem(21, emptyVoid(player));
-					i.setItem(22, emptyVoid(player));
-					i.setItem(23, emptyVoid(player));
-					i.setItem(24, emptyVoid(player));
-					i.setItem(25, emptyVoid(player));
-					i.setItem(26, emptyVoid(player));
-					for(Player victim1 : Bukkit.getOnlinePlayers()) {
-						((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.4);
-					}
-					counter--;
-					if(counter == 0) {
-						cancel();
-						counter = 9;
-						bt2 = new BukkitRunnable() {
-							@Override
-							public void run() {
-								if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-									i.setItem(0, emptyVoid(player));
-									i.setItem(1, emptyVoid(player));
-									i.setItem(2, emptyVoid(player));
-									i.setItem(3, emptyVoid(player));
-									i.setItem(4, emptyVoid(player));
-									i.setItem(5, emptyVoid(player));
-									i.setItem(6, emptyVoid(player));
-									i.setItem(7, emptyVoid(player));
-									i.setItem(8, emptyVoid(player));
-									i.setItem(9, emptyVoid(player));
-									i.setItem(10, emptyVoid(player));
-									i.setItem(11, rewards5.get(rewards5()));
-									i.setItem(12, rewards5.get(rewards5()));
-									i.setItem(13, rewards5.get(rewards5()));
-									i.setItem(14, rewards5.get(rewards5()));
-									i.setItem(15, rewards5.get(rewards5()));
-									i.setItem(16, emptyVoid(player));
-									i.setItem(17, emptyVoid(player));
-									i.setItem(18, emptyVoid(player));
-									i.setItem(19, emptyVoid(player));
-									i.setItem(20, emptyVoid(player));
-									i.setItem(21, emptyVoid(player));
-									i.setItem(23, emptyVoid(player));
-									i.setItem(24, emptyVoid(player));
-									i.setItem(25, emptyVoid(player));
-									i.setItem(26, emptyVoid(player));
-									for(Player victim1 : Bukkit.getOnlinePlayers()) {
-										((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.6);
-									}
-									counter--;
-									if(counter == 0) {
-										cancel();
-										counter = 5;
-										bt3 = new BukkitRunnable() {
-											@Override
-											public void run() {
-												if(player.getOpenInventory().getTopInventory().getName().contains(ChatColor.stripColor("Decrypting "))) {
-													i.setItem(0, emptyVoid(player));
-													i.setItem(1, emptyVoid(player));
-													i.setItem(2, emptyVoid(player));
-													i.setItem(3, emptyVoid(player));
-													i.setItem(4, emptyVoid(player));
-													i.setItem(5, emptyVoid(player));
-													i.setItem(6, emptyVoid(player));
-													i.setItem(7, emptyVoid(player));
-													i.setItem(8, emptyVoid(player));
-													i.setItem(9, emptyVoid(player));
-													i.setItem(10, emptyVoid(player));
-													i.setItem(11, emptyVoid(player));
-													i.setItem(12, rewards5.get(rewards5()));
-													i.setItem(13, rewards5.get(rewards5()));
-													i.setItem(14, rewards5.get(rewards5()));
-													i.setItem(15, emptyVoid(player));
-													i.setItem(16, emptyVoid(player));
-													i.setItem(17, emptyVoid(player));
-													i.setItem(18, emptyVoid(player));
-													i.setItem(19, emptyVoid(player));
-													i.setItem(20, emptyVoid(player));
-													i.setItem(21, emptyVoid(player));
-													i.setItem(22, emptyVoid(player));
-													i.setItem(23, emptyVoid(player));
-													i.setItem(24, emptyVoid(player));
-													i.setItem(25, emptyVoid(player));
-													i.setItem(26, emptyVoid(player));
-													for(Player victim1 : Bukkit.getOnlinePlayers()) {
-														((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.8);
-													}
-													counter--;
-													if(counter == 0) {
-														cancel();
-														bt4 = new BukkitRunnable() {
-															@Override
-															public void run() {
-																i.setItem(0, emptyVoid(player));
-																i.setItem(1, emptyVoid(player));
-																i.setItem(2, emptyVoid(player));
-																i.setItem(3, emptyVoid(player));
-																i.setItem(4, emptyVoid(player));
-																i.setItem(5, emptyVoid(player));
-																i.setItem(6, emptyVoid(player));
-																i.setItem(7, emptyVoid(player));
-																i.setItem(8, emptyVoid(player));
-																i.setItem(9, emptyVoid(player));
-																i.setItem(10, emptyVoid(player));
-																i.setItem(11, emptyVoid(player));
-																i.setItem(12, emptyVoid(player));
-																i.setItem(13, rewards5.get(finalRewards));
-																i.setItem(14, emptyVoid(player));
-																i.setItem(15, emptyVoid(player));
-																i.setItem(16, emptyVoid(player));
-																i.setItem(17, emptyVoid(player));
-																i.setItem(18, emptyVoid(player));
-																i.setItem(19, emptyVoid(player));
-																i.setItem(20, emptyVoid(player));
-																i.setItem(21, emptyVoid(player));
-																i.setItem(22, emptyVoid(player));
-																i.setItem(23, emptyVoid(player));
-																i.setItem(24, emptyVoid(player));
-																i.setItem(25, emptyVoid(player));
-																i.setItem(26, emptyVoid(player));
-																for(Player victim1 : Bukkit.getOnlinePlayers()) {
-																	((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
-																}
-																cancel();
-																player.getInventory().addItem(rewards5.get(finalRewards));
-																new BukkitRunnable() {
-																	@Override
-																	public void run() {
-																		if(player.getInventory().getName().equals(ChatColor.stripColor("Decrypting..."))) {
-																			player.closeInventory();
-																		}
-																	}
-																}.runTaskLater(plugin, 0L);
-															}
-														}.runTaskTimer(plugin, 0L, 16L);
-													}
-												}
-												else {
-													cancel();
-													player.getInventory().addItem(rewards5.get(finalRewards));
-												}
-											}
-										}.runTaskTimer(plugin, 0L, 12L);
-									}
-								}
-								else {
-									cancel();
-									player.getInventory().addItem(rewards5.get(finalRewards));
-								}
-							}
-						}.runTaskTimer(plugin, 0L, 6L);
-					}				
-				}
-				else {
-					cancel();
-					player.getInventory().addItem(rewards5.get(finalRewards));
-				}
-			}
-		}.runTaskTimer(plugin, 0L, 3L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 3L);
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//Activate Novis
@@ -1042,61 +250,69 @@ public class NovisInventory extends NovisRewards implements Listener{
 									if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Common Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player);
+										novis1.NewInventory1(player, listSelection("Common"), "Common");
 										check.add(player.getName());
-										plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
 												  check.remove(player.getName());
 											  }
-										}, 50L);
+										}, 20L);
 									}
 									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Rare Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory2(player);
+										novis1.NewInventory1(player, listSelection("Rare"), "Rare");
 										check.add(player.getName());
-										plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
 												  check.remove(player.getName());
 											  }
-										}, 50L);
+										}, 20L);
 									}
 									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Epic Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory3(player);
+										novis1.NewInventory1(player, listSelection("Epic"), "Epic");
 										check.add(player.getName());
-										plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
 												  check.remove(player.getName());
 											  }
-										}, 50L);
+										}, 20L);
 									}
 									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Legendary Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory4(player);
+										novis1.NewInventory1(player, listSelection("Legendary"), "Legendary");
 										check.add(player.getName());
-										plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
 												  check.remove(player.getName());
 											  }
-										}, 50L);
+										}, 20L);
 									}
 									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Mythic Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory5(player);
+										novis1.NewInventory1(player, listSelection("Mythic"), "Mythic");
 										check.add(player.getName());
-										plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
 												  check.remove(player.getName());
 											  }
-										}, 50L);
+										}, 20L);
 									}
-								}
-								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&cThere is a cooldown!"));
+									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Heroic Crystal"))) {
+										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+										NovisInventory novis1 = new NovisInventory();
+										novis1.NewInventory1(player, listSelection("Heroic"), "Heroic");
+										check.add(player.getName());
+										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
+											  public void run() {
+												  check.remove(player.getName());
+											  }
+										}, 20L);
+									}
 								}
 							}
 						}
@@ -1109,7 +325,6 @@ public class NovisInventory extends NovisRewards implements Listener{
 	//Random GUI Color
 	//--------------------------------------------------------------------------------------------------------------------
 	public ItemStack emptyVoid(Player player) {
-		int randomInt = new Random().nextInt(6) + 1;
 		ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
 		ItemMeta itemmeta = item.getItemMeta();
 		itemmeta.setDisplayName(" ");
@@ -1121,8 +336,6 @@ public class NovisInventory extends NovisRewards implements Listener{
 	//--------------------------------------------------------------------------------------------------------------------
 	@EventHandler
 	public void novisPreventClick(InventoryClickEvent event) {		
-		Player player = (Player) event.getWhoClicked();
-		ClickType click = event.getClick();
 		ItemStack item = event.getCurrentItem();
 		InventoryView open = event.getView();
 		if(open == null) {
@@ -1138,25 +351,48 @@ public class NovisInventory extends NovisRewards implements Listener{
 	//--------------------------------------------------------------------------------------------------------------------
 	//Random Reward Selection
 	//--------------------------------------------------------------------------------------------------------------------
-	public int rewards1() {
-		int rewardsR1 = new Random().nextInt(NovisRewards.rewards1.size());
-		return rewardsR1;
+	public int randomNumber(String s) {
+		int number = 0;
+		if(s.contains("Common")) {
+			number = new Random().nextInt(NovisRewards.rewards1.size());
+		}
+		if(s.contains("Rare")) {
+			number = new Random().nextInt(NovisRewards.rewards2.size());
+		}
+		if(s.contains("Epic")) {
+			number = new Random().nextInt(NovisRewards.rewards3.size());
+		}
+		if(s.contains("Legendary")) {
+			number = new Random().nextInt(NovisRewards.rewards4.size());
+		}
+		if(s.contains("Mythic")) {
+			number = new Random().nextInt(NovisRewards.rewards5.size());
+		}
+		if(s.contains("Heroic")) {
+			number = new Random().nextInt(NovisRewards.rewards6.size());
+		}
+		return number;
 	}
-	public int rewards2() {
-		int rewardsR1 = new Random().nextInt(NovisRewards.rewards2.size());
-		return rewardsR1;
+	public ArrayList<ItemStack> listSelection(String s) {
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+		if(s.contains("Common")) {
+			list = NovisRewards.rewards1;
+		}
+		if(s.contains("Rare")) {
+			list = NovisRewards.rewards2;
+		}
+		if(s.contains("Epic")) {
+			list = NovisRewards.rewards3;
+		}
+		if(s.contains("Legendary")) {
+			list = NovisRewards.rewards4;
+		}
+		if(s.contains("Mythic")) {
+			list = NovisRewards.rewards5;
+		}
+		if(s.contains("Heroic")) {
+			list = NovisRewards.rewards6;
+		}
+		return list;
 	}
-	public int rewards3() {
-		int rewardsR1 = new Random().nextInt(NovisRewards.rewards3.size());
-		return rewardsR1;
-	}
-	public int rewards4() {
-		int rewardsR1 = new Random().nextInt(NovisRewards.rewards4.size());
-		return rewardsR1;
-	}
-	public int rewards5() {
-		int rewardsR1 = new Random().nextInt(NovisRewards.rewards5.size());
-		return rewardsR1;
-	}
-	
 }
