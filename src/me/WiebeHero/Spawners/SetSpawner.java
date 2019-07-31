@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -95,6 +96,10 @@ public class SetSpawner implements Listener,CommandExecutor{
 							else {
 								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis spawner doesn't exist!"));
 							}
+						}
+						else if(args[0].equalsIgnoreCase("heal")) {
+							Player target = Bukkit.getPlayer(args[1]);
+							target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.00);
 						}
 					}
 					else if(args.length == 3) {
