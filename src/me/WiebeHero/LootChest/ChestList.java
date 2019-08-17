@@ -163,7 +163,7 @@ public class ChestList implements Listener {
 	  				}
 				}
 			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 50L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 6000L);
 	}
 	public int randomSlot() {
 		int i = new Random().nextInt(26);
