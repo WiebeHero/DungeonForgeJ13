@@ -805,8 +805,10 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 	public void foodChangeStaff(FoodLevelChangeEvent event) {
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			if(staffModeList.get(player.getUniqueId()) == true) {
-				player.setFoodLevel(20);
+			if(staffModeList.containsKey(player.getUniqueId())) {
+				if(staffModeList.get(player.getUniqueId()) == true) {
+					player.setFoodLevel(20);
+				}
 			}
 		}
 	}
@@ -814,8 +816,10 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 	public void cancelHealthLoss(EntityDamageEvent event) {
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			if(staffModeList.get(player.getUniqueId()) == true) {
-				event.setCancelled(true);
+			if(staffModeList.containsKey(player.getUniqueId())) {
+				if(staffModeList.get(player.getUniqueId()) == true) {
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
@@ -823,41 +827,45 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 	public void cancelHealthLossEntity(EntityDamageByEntityEvent event) {
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			if(staffModeList.get(player.getUniqueId()) == true) {
-				event.setCancelled(true);
+			if(staffModeList.containsKey(player.getUniqueId())) {
+				if(staffModeList.get(player.getUniqueId()) == true) {
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
 	@EventHandler
 	public void activatePerk(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if(staffModeList.get(player.getUniqueId()) == true) {
-			if(player.getInventory().getItemInMainHand() != null) {
-				if(player.getInventory().getItemInMainHand().hasItemMeta()) {
-					if(player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
-						String name = ChatColor.stripColor(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName());
-						if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-							ModerationGUI gui = new ModerationGUI();
-							if(name.equals("Teleport")) {
-								gui.InventoryTeleport(player, 1);
-							}
-							else if(name.equals("Report")) {
-								
-							}
-							else if(name.equals("Vanish")) {
-								if(vanishMode.get(player.getUniqueId()) == true) {
-									vanishMode.put(player.getUniqueId(), false);
-									for(Player p : Bukkit.getOnlinePlayers()) {
-										p.showPlayer(CustomEnchantments.getInstance(), player);
-									}
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &c&lVanish Disabled."));
+		if(staffModeList.containsKey(player.getUniqueId())) {
+			if(staffModeList.get(player.getUniqueId()) == true) {
+				if(player.getInventory().getItemInMainHand() != null) {
+					if(player.getInventory().getItemInMainHand().hasItemMeta()) {
+						if(player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
+							String name = ChatColor.stripColor(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName());
+							if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+								ModerationGUI gui = new ModerationGUI();
+								if(name.equals("Teleport")) {
+									gui.InventoryTeleport(player, 1);
 								}
-								else if(vanishMode.get(player.getUniqueId()) == false) {
-									vanishMode.put(player.getUniqueId(), true);
-									for(Player p : Bukkit.getOnlinePlayers()) {
-										p.hidePlayer(CustomEnchantments.getInstance(), player);
+								else if(name.equals("Report")) {
+									
+								}
+								else if(name.equals("Vanish")) {
+									if(vanishMode.get(player.getUniqueId()) == true) {
+										vanishMode.put(player.getUniqueId(), false);
+										for(Player p : Bukkit.getOnlinePlayers()) {
+											p.showPlayer(CustomEnchantments.getInstance(), player);
+										}
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &c&lVanish Disabled."));
 									}
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a&lVanish Enabled."));
+									else if(vanishMode.get(player.getUniqueId()) == false) {
+										vanishMode.put(player.getUniqueId(), true);
+										for(Player p : Bukkit.getOnlinePlayers()) {
+											p.hidePlayer(CustomEnchantments.getInstance(), player);
+										}
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a&lVanish Enabled."));
+									}
 								}
 							}
 						}

@@ -47,7 +47,7 @@ public class SpawnerList implements Listener{
 					  				if(e instanceof Monster) {
 					  					if(teleportBack.containsKey(e.getUniqueId()) && teleportBack.get(e.getUniqueId()) == counter) {
 					  						Location check2 = e.getLocation();
-					  						if(rightLoc.distance(check2) > 15) {
+					  						if(rightLoc.distance(check2) > 30) {
 					  							for(double y = spawnerLoc.getY() + 15.00; y > 0.00;) {
 					  								y--;
 					  								spawnerLoc.setY(y);
@@ -78,13 +78,13 @@ public class SpawnerList implements Listener{
 			  					Location fixedLoc = SetSpawner.getSpawnerLocList().get(counter);
 			  					int countMobs = 0;
 			  					fixedLoc.setWorld(Bukkit.getWorld(SetSpawner.getSpawnerLocList().get(counter).getWorld().getName()));
-			  					for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 35, 35, 35)) {
+			  					for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 40, 40, 40)) {
 			  						if(e1 instanceof Player) {
 			  							check = true;
 			  							break;
 			  						}
 			  					}
-					  			for(Entity e : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 15, 15, 15)) {
+					  			for(Entity e : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 25, 25, 25)) {
 					  				if(e != null) {
 					  					if(teleportBack.containsKey(e.getUniqueId())) {
 						  					if(teleportBack.get(e.getUniqueId()) == counter) {
@@ -346,7 +346,7 @@ public class SpawnerList implements Listener{
 					}
 				}
 			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 100L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 6000L);
 	}
 	public double randomDouble() {
 		double i = ThreadLocalRandom.current().nextDouble() * 100;
