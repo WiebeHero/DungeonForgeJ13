@@ -278,7 +278,7 @@ public class ClassMenu implements Listener{
 		lore.add(new ColorCodeTranslator().colorize("&7Ability: &6Hunting Arrow"));
 		lore.add(new ColorCodeTranslator().colorize("&7When you activate your ability, the next ranged attack that hits your enemy"));
 		lore.add(new ColorCodeTranslator().colorize("&7causes them to take &4" + String.format("%.2f", damage) + "% &7extra damage from any source for &b" + String.format("%.2f", duration) + " Seconds."));
-		lore.add(new ColorCodeTranslator().colorize("&7Additionally, your Attack Speed is increased by " + String.format("%.2f", attackS) + "%"));
+		lore.add(new ColorCodeTranslator().colorize("&7Additionally, your Attack Speed is increased by &9" + String.format("%.2f", attackS) + "%"));
 		lore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b" + String.format("%.2f", cooldown) + " Seconds"));
 		m.setLore(lore);
 		i.setItemMeta(m);
@@ -301,7 +301,7 @@ public class ClassMenu implements Listener{
 		lore.add(new ColorCodeTranslator().colorize("&9Attack Speed -"));
 		lore.add(new ColorCodeTranslator().colorize("&7-------------------"));
 		lore.add(new ColorCodeTranslator().colorize("&7Ability: &6Deadly Thorns"));
-		lore.add(new ColorCodeTranslator().colorize("&7When you activate your ability, you will fire " + String.format("%.0f", arrow) + " arrows from your back."));
+		lore.add(new ColorCodeTranslator().colorize("&7When you activate your ability, you will fire &a" + String.format("%.0f", arrow) + " &7arrows from your back."));
 		lore.add(new ColorCodeTranslator().colorize("&7These arrows will deal &4" + String.format("%.2f", damage) + " Damage &7and will apply "));
 		lore.add(new ColorCodeTranslator().colorize("&apoison 2 &7for &b" + String.format("%.2f", duration) + " seconds &7on the enemy that it hits."));
 		lore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b" + String.format("%.2f", cooldown) + " Seconds"));
@@ -326,8 +326,8 @@ public class ClassMenu implements Listener{
 		lore.add(new ColorCodeTranslator().colorize("&9Attack Speed -"));
 		lore.add(new ColorCodeTranslator().colorize("&7-------------------"));
 		lore.add(new ColorCodeTranslator().colorize("&7Ability: &6Special Attack"));
-		lore.add(new ColorCodeTranslator().colorize("&7When you activate your ability, your next attack will deal &4" + String.format("%.2f", damage) + "% Extra Damage."));
-		lore.add(new ColorCodeTranslator().colorize("&7Additionally, you recover &c" + String.format("%.2f", heal) + "% of the damage done as HP."));
+		lore.add(new ColorCodeTranslator().colorize("&7When you activate your ability, your next attack will deal &4" + String.format("%.2f", damage) + "% &7Extra Damage."));
+		lore.add(new ColorCodeTranslator().colorize("&7Additionally, you recover &c" + String.format("%.2f", heal) + "% &7of the damage done as HP."));
 		lore.add(new ColorCodeTranslator().colorize("&7You have &b" + String.format("%.2f", duration) + " seconds &7to execute the attack."));
 		lore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b" + String.format("%.2f", cooldown) + " Seconds"));
 		m.setLore(lore);
@@ -351,9 +351,9 @@ public class ClassMenu implements Listener{
 		lore.add(new ColorCodeTranslator().colorize("&cHealth -"));
 		lore.add(new ColorCodeTranslator().colorize("&7-------------------"));
 		lore.add(new ColorCodeTranslator().colorize("&7Ability: &6Quick Attack"));
-		lore.add(new ColorCodeTranslator().colorize("&7When you activate your ability, your &9movement speed increases by " + String.format("%.2f", speed) + "%"));
-		lore.add(new ColorCodeTranslator().colorize("&7Additionally, you reduce &8" + String.format("%.2f", decrease) + "% of any incomming damage"));
-		lore.add(new ColorCodeTranslator().colorize("&7and increase your &9attack speed by " + String.format("%.2f", decrease) + "while this is active."));
+		lore.add(new ColorCodeTranslator().colorize("&7When you activate your ability, your Movement Speed increases by &9" + String.format("%.2f", speed) + "%"));
+		lore.add(new ColorCodeTranslator().colorize("&7Additionally, you reduce &8" + String.format("%.2f", decrease) + "% &7of any incomming damage"));
+		lore.add(new ColorCodeTranslator().colorize("&7and increase your Attack Speed by &9" + String.format("%.2f", decrease) + "while this is active."));
 		lore.add(new ColorCodeTranslator().colorize("&7This effect runs out after &b" + String.format("%.2f", duration) + " seconds."));
 		lore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b" + String.format("%.2f", cooldown) + " Seconds"));
 		m.setLore(lore);

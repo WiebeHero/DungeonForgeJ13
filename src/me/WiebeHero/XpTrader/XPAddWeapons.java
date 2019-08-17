@@ -63,10 +63,6 @@ public class XPAddWeapons implements Listener{
 											configList = config.getConfigurationSection("Items.Weapons").getKeys(false);
 											type = "Weapons";
 										}
-										else if(lore.contains(ChatColor.stripColor("Attack Damage:")) && lore.contains(ChatColor.stripColor("Attack Speed:")) && lore.contains(ChatColor.stripColor("Attack Range:"))){
-											configList = config.getConfigurationSection("Items.Wands").getKeys(false);
-											type = "Wands";
-										}
 										else if(lore.contains(ChatColor.stripColor("Attack Damage:")) && !lore.contains(ChatColor.stripColor("Attack Speed:")) && !lore.contains(ChatColor.stripColor("Attack Range:"))){
 											configList = config.getConfigurationSection("Items.Bows").getKeys(false);
 											type = "Bows";
@@ -138,8 +134,6 @@ public class XPAddWeapons implements Listener{
 											tempItem = new NBTItem(item);
 										}
 										int xpNeeded = 0;
-										//
-				    	            	
 										for(int i = level; i < 15; i++) {
 											xpNeeded = config.getInt("XPValue." + i);
 											if(totalXP >= xpNeeded) {
@@ -150,11 +144,6 @@ public class XPAddWeapons implements Listener{
 							    	    		if(type.equals("Weapons")) {
 						    	            		damageWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncDamage") + damageWeapon;
 						    	            		speedWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncSpeed") + speedWeapon;
-						    	            	}
-						    	            	if(type.equals("Wands")) {
-						    	            		damageWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncDamage") + damageWeapon;
-						    	            		speedWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncSpeed") + speedWeapon;
-						    	            		wandRange = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncRange") + wandRange;
 						    	            	}
 						    	            	if(type.equals("Bows")) {
 						    	            		damageWeapon = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncDamage") + damageWeapon;
@@ -179,19 +168,13 @@ public class XPAddWeapons implements Listener{
 					    				else if(type.equals("Armor")) {
 					    					tempDF = tempItem.getDouble("Defense");
 				    	            		tempT = tempItem.getDouble("Toughness");
-				    	            		Bukkit.broadcastMessage(tempDF + " " + tempT);
-					    				}
-					    				else if(type.equals("Wands")) {
-					    					tempAD = tempItem.getDouble("Attack Damage");
-				    	            		tempAS = tempItem.getDouble("Attack Speed");
-				    	            		tempWR = tempItem.getDouble("Attack Range");
 					    				}
 					    				else if(type.equals("Shields")) {
 				    	            		tempAS = tempItem.getDouble("Toughness");
 					    				}
 					    				else if(type.equals("Bows")) {
 				    	            		tempAD = tempItem.getDouble("Attack Damage");
-				    	            		tempAS = tempItem.getDouble("Draw Speed");
+				    	            		tempAS = tempItem.getDouble("Attack Speed");
 					    				}
 										ItemStack item1 = item;
 										player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, (float)2.00, (float)1.00);

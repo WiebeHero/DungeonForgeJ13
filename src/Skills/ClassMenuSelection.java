@@ -56,7 +56,6 @@ public class ClassMenuSelection implements Listener{
 					String temp = className[1].toUpperCase();
 					Classes currentClass = Enum.valueOf(Classes.class, temp);
 					pc.setClass(uuid, currentClass);
-					Bukkit.broadcastMessage(currentClass.toString());
 					pc.createProfile(uuid, pc.getClass(uuid));
 					activated.remove(player.getUniqueId());
 					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have chosen the class " + className[1]));
