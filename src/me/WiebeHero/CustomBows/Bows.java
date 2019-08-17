@@ -236,7 +236,7 @@ public class Bows extends SpawnerList implements Listener{
 								    				//Config Data
 								    				NBTItem tempItem = new NBTItem(item);
 								    				double temp1 = tempItem.getDouble("Attack Damage");
-								    				double temp2 = tempItem.getDouble("Draw Speed");
+								    				double temp2 = tempItem.getDouble("Attack Speed");
 								    				//Weapon Data
 								    				ItemMeta meta = item.getItemMeta();
 								    				String translator = "";
@@ -265,7 +265,7 @@ public class Bows extends SpawnerList implements Listener{
 								    				double roundOff2 = (double) Math.round((temp2 + incSpeed) * 100) / 100;
 								    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 								    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
-								    				newLore.add(new ColorCodeTranslator().colorize("&7Minimally Drawn: &6" + roundOff2 + "%"));
+								    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
 								    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 								    				if(levelWeapon < 15) {
 								    					int xp = CustomEnchantments.getInstance().getConfig().getInt("XPValue." + levelWeapon);

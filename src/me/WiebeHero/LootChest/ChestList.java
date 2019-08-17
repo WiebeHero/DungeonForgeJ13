@@ -2,7 +2,6 @@ package me.WiebeHero.LootChest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import org.bukkit.Location;
@@ -27,140 +26,144 @@ public class ChestList implements Listener {
 			@Override
 			public void run() {
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
-					for(int counter = 1; counter < SetChest.getChestTierList().size() + 1; counter++) {
-						int tier = SetChest.getChestTierList().get(counter);
-	  					Location loc = SetChest.getChestLocationList().get(counter);
-		  				if(SetChest.getChestRadiusList().get(counter) == 1) {
-				  			if(loc.getBlock().getType() == Material.CHEST) {
-				  				Block block = loc.getBlock();
-					  			Chest chest = (Chest) block.getState();
-				  				Inventory inv = chest.getBlockInventory();
-				  				inv.clear();
-				  				for(int i = 0; i <= tieredSlots(tier) + tier + 1; i++) {
-				  					int slot = randomSlot();
-				  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
-				  						i--;
+					if(!SetChest.getChestLocationList().isEmpty()) {
+						for(int counter = 1; counter <= SetChest.getChestLocationList().lastKey(); counter++) {
+							if(SetChest.getChestLocationList().get(counter) != null) {
+								int tier = SetChest.getChestTierList().get(counter);
+			  					Location loc = SetChest.getChestLocationList().get(counter);
+				  				if(SetChest.getChestRadiusList().get(counter) == 1) {
+						  			if(loc.getBlock().getType() == Material.CHEST) {
+						  				Block block = loc.getBlock();
+							  			Chest chest = (Chest) block.getState();
+						  				Inventory inv = chest.getBlockInventory();
+						  				inv.clear();
+						  				for(int i = 0; i <= tieredSlots(tier) + tier + 1; i++) {
+						  					int slot = randomSlot();
+						  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
+						  						i--;
+						  					}
+						  					if(tier == 1) {
+						  						inv.setItem(slot, LootRewards.getTier1List().get(rewards(tier)));
+						  					}
+						  					if(tier == 2) {
+						  						inv.setItem(slot, LootRewards.getTier2List().get(rewards(tier)));
+						  					}
+						  					if(tier == 3) {
+						  						inv.setItem(slot, LootRewards.getTier3List().get(rewards(tier)));
+						  					}
+						  					if(tier == 4) {
+						  						inv.setItem(slot, LootRewards.getTier4List().get(rewards(tier)));
+							  				}
+						  				}
+						  			}
+						  			else {
+						  				loc.getBlock().setType(Material.CHEST);
+						  				Block block = loc.getBlock();
+							  			Chest chest = (Chest) block.getState();
+						  				Inventory inv = chest.getBlockInventory();
+						  				inv.clear();
+						  				for(int i = 0; i <= tieredSlots(tier) + tier + 1; i++) {
+						  					int slot = randomSlot();
+						  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
+						  						i--;
+						  					}
+						  					if(tier == 1) {
+						  						inv.setItem(slot, LootRewards.getTier1List().get(rewards(tier)));
+						  					}
+						  					if(tier == 2) {
+						  						inv.setItem(slot, LootRewards.getTier2List().get(rewards(tier)));
+						  					}
+						  					if(tier == 3) {
+						  						inv.setItem(slot, LootRewards.getTier3List().get(rewards(tier)));
+						  					}
+						  					if(tier == 4) {
+						  						inv.setItem(slot, LootRewards.getTier4List().get(rewards(tier)));
+							  				}
+						  					
+						  				}
+						  			}
+					  			}
+				  				else {
+				  					if(ChestList.checkChest(SetChest.getChestLocationList().get(counter).getBlock(), SetChest.getChestRadiusList().get(counter)) == null) {
+				  						Location tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY() + SetChest.getChestRadiusList().get(counter), loc.getZ());
+				  						tempLoc.setX(tempLoc.getX() + randomCoords(SetChest.getChestRadiusList().get(counter)));
+				  						tempLoc.setZ(tempLoc.getZ() + randomCoords(SetChest.getChestRadiusList().get(counter)));
+				  						int count = 0;
+				  						for(double y = tempLoc.getY(); y > loc.getY() - SetChest.getChestRadiusList().get(counter);) {
+				  							y--;
+				  							tempLoc.setY(y);
+				  							if(tempLoc.getBlock().getType() != Material.AIR) {
+				  								tempLoc.setY(y + 1.0);
+				  								if(tempLoc.getBlock().getType() == Material.AIR) {
+				  									tempLoc.getBlock().setType(Material.CHEST);
+				  					  				Block block = tempLoc.getBlock();
+				  						  			Chest chest = (Chest) block.getState();
+				  					  				Inventory inv = chest.getBlockInventory();
+				  					  				inv.clear();
+				  					  				for(int i = 0; i <= tieredSlots(tier) + tier + 1; i++) {
+				  					  					int slot = randomSlot();
+				  					  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
+				  					  						i--;
+				  					  					}
+				  					  					if(tier == 1) {
+				  					  						inv.setItem(slot, LootRewards.getTier1List().get(rewards(tier)));
+				  					  					}
+				  					  					if(tier == 2) {
+				  					  						inv.setItem(slot, LootRewards.getTier2List().get(rewards(tier)));
+				  					  					}
+				  					  					if(tier == 3) {
+				  					  						inv.setItem(slot, LootRewards.getTier3List().get(rewards(tier)));
+				  					  					}
+				  					  					if(tier == 4) {
+				  					  						inv.setItem(slot, LootRewards.getTier4List().get(rewards(tier)));
+				  						  				}
+				  					  				}
+				  					  				break;
+				  								}
+				  								else {
+				  									tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY() + SetChest.getChestRadiusList().get(counter), loc.getZ());
+				  									tempLoc.setX(tempLoc.getX() + randomCoords(SetChest.getChestRadiusList().get(counter)));
+				  			  						tempLoc.setZ(tempLoc.getZ() + randomCoords(SetChest.getChestRadiusList().get(counter)));
+				  			  						y = tempLoc.getY();
+				  			  						count++;
+				  			  						if(count == 5) {
+				  			  							break;
+				  			  						}
+				  								}
+				  							}
+				  						}
 				  					}
-				  					if(tier == 1) {
-				  						inv.setItem(slot, LootRewards.getTier1List().get(rewards(tier)));
+				  					else {
+				  						Block temp = ChestList.checkChest(SetChest.getChestLocationList().get(counter).getBlock(), SetChest.getChestRadiusList().get(counter));
+				  						Chest chest = (Chest) temp.getState();
+						  				Inventory inv = chest.getBlockInventory();
+						  				inv.clear();
+						  				for(int i = 0; i <= tieredSlots(tier) + tier + 1; i++) {
+						  					int slot = randomSlot();
+						  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
+						  						i--;
+						  					}
+						  					if(tier == 1) {
+						  						inv.setItem(slot, LootRewards.getTier1List().get(rewards(tier)));
+						  					}
+						  					if(tier == 2) {
+						  						inv.setItem(slot, LootRewards.getTier2List().get(rewards(tier)));
+						  					}
+						  					if(tier == 3) {
+						  						inv.setItem(slot, LootRewards.getTier3List().get(rewards(tier)));
+						  					}
+						  					if(tier == 4) {
+						  						inv.setItem(slot, LootRewards.getTier4List().get(rewards(tier)));
+							  				}
+						  				}
 				  					}
-				  					if(tier == 2) {
-				  						inv.setItem(slot, LootRewards.getTier2List().get(rewards(tier)));
-				  					}
-				  					if(tier == 3) {
-				  						inv.setItem(slot, LootRewards.getTier3List().get(rewards(tier)));
-				  					}
-				  					if(tier == 4) {
-				  						inv.setItem(slot, LootRewards.getTier4List().get(rewards(tier)));
-					  				}
 				  				}
-				  			}
-				  			else {
-				  				loc.getBlock().setType(Material.CHEST);
-				  				Block block = loc.getBlock();
-					  			Chest chest = (Chest) block.getState();
-				  				Inventory inv = chest.getBlockInventory();
-				  				inv.clear();
-				  				for(int i = 0; i <= tieredSlots(tier) + tier + 1; i++) {
-				  					int slot = randomSlot();
-				  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
-				  						i--;
-				  					}
-				  					if(tier == 1) {
-				  						inv.setItem(slot, LootRewards.getTier1List().get(rewards(tier)));
-				  					}
-				  					if(tier == 2) {
-				  						inv.setItem(slot, LootRewards.getTier2List().get(rewards(tier)));
-				  					}
-				  					if(tier == 3) {
-				  						inv.setItem(slot, LootRewards.getTier3List().get(rewards(tier)));
-				  					}
-				  					if(tier == 4) {
-				  						inv.setItem(slot, LootRewards.getTier4List().get(rewards(tier)));
-					  				}
-				  					
-				  				}
-				  			}
-			  			}
-		  				else {
-		  					if(ChestList.checkChest(SetChest.getChestLocationList().get(counter).getBlock(), SetChest.getChestRadiusList().get(counter)) == null) {
-		  						Location tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY() + SetChest.getChestRadiusList().get(counter), loc.getZ());
-		  						tempLoc.setX(tempLoc.getX() + randomCoords(SetChest.getChestRadiusList().get(counter)));
-		  						tempLoc.setZ(tempLoc.getZ() + randomCoords(SetChest.getChestRadiusList().get(counter)));
-		  						int count = 0;
-		  						for(double y = tempLoc.getY(); y > loc.getY() - SetChest.getChestRadiusList().get(counter);) {
-		  							y--;
-		  							tempLoc.setY(y);
-		  							if(tempLoc.getBlock().getType() != Material.AIR) {
-		  								tempLoc.setY(y + 1.0);
-		  								if(tempLoc.getBlock().getType() == Material.AIR) {
-		  									tempLoc.getBlock().setType(Material.CHEST);
-		  					  				Block block = tempLoc.getBlock();
-		  						  			Chest chest = (Chest) block.getState();
-		  					  				Inventory inv = chest.getBlockInventory();
-		  					  				inv.clear();
-		  					  				for(int i = 0; i <= tieredSlots(tier) + tier + 1; i++) {
-		  					  					int slot = randomSlot();
-		  					  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
-		  					  						i--;
-		  					  					}
-		  					  					if(tier == 1) {
-		  					  						inv.setItem(slot, LootRewards.getTier1List().get(rewards(tier)));
-		  					  					}
-		  					  					if(tier == 2) {
-		  					  						inv.setItem(slot, LootRewards.getTier2List().get(rewards(tier)));
-		  					  					}
-		  					  					if(tier == 3) {
-		  					  						inv.setItem(slot, LootRewards.getTier3List().get(rewards(tier)));
-		  					  					}
-		  					  					if(tier == 4) {
-		  					  						inv.setItem(slot, LootRewards.getTier4List().get(rewards(tier)));
-		  						  				}
-		  					  				}
-		  					  				break;
-		  								}
-		  								else {
-		  									tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY() + SetChest.getChestRadiusList().get(counter), loc.getZ());
-		  									tempLoc.setX(tempLoc.getX() + randomCoords(SetChest.getChestRadiusList().get(counter)));
-		  			  						tempLoc.setZ(tempLoc.getZ() + randomCoords(SetChest.getChestRadiusList().get(counter)));
-		  			  						y = tempLoc.getY();
-		  			  						count++;
-		  			  						if(count == 5) {
-		  			  							break;
-		  			  						}
-		  								}
-		  							}
-		  						}
-		  					}
-		  					else {
-		  						Block temp = ChestList.checkChest(SetChest.getChestLocationList().get(counter).getBlock(), SetChest.getChestRadiusList().get(counter));
-		  						Chest chest = (Chest) temp.getState();
-				  				Inventory inv = chest.getBlockInventory();
-				  				inv.clear();
-				  				for(int i = 0; i <= tieredSlots(tier) + tier + 1; i++) {
-				  					int slot = randomSlot();
-				  					if(inv.getItem(slot) != null && inv.getItem(slot).getType() == Material.AIR) {
-				  						i--;
-				  					}
-				  					if(tier == 1) {
-				  						inv.setItem(slot, LootRewards.getTier1List().get(rewards(tier)));
-				  					}
-				  					if(tier == 2) {
-				  						inv.setItem(slot, LootRewards.getTier2List().get(rewards(tier)));
-				  					}
-				  					if(tier == 3) {
-				  						inv.setItem(slot, LootRewards.getTier3List().get(rewards(tier)));
-				  					}
-				  					if(tier == 4) {
-				  						inv.setItem(slot, LootRewards.getTier4List().get(rewards(tier)));
-					  				}
-				  				}
-		  					}
-		  				}
+							}
+						}
 	  				}
 				}
 			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 6000L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 50L);
 	}
 	public int randomSlot() {
 		int i = new Random().nextInt(26);
@@ -214,23 +217,25 @@ public class ChestList implements Listener {
 	@EventHandler
     public void onChestCloses(InventoryCloseEvent event){
         if(event.getInventory().getType() == InventoryType.CHEST) {
-            Block block = event.getInventory().getLocation().getBlock();
-            BlockState bs = block.getState();
-            if(bs instanceof Chest) {
-            	Chest chest = (Chest) bs;
-            	for(Entry<Integer, Location> entry : SetChest.getChestLocationList().entrySet()) {
-                	if(entry.getValue().distance(chest.getLocation()) <= 1.5) {
-                		new BukkitRunnable() {
-                			public void run() {
-                				chest.getBlockInventory().clear();
-                        		chest.getBlock().setType(Material.AIR);
-                        		chest.getLocation().getWorld().spawnParticle(Particle.CLOUD, chest.getLocation().getX() + 0.5, chest.getLocation().getY() + 0.5, chest.getLocation().getZ() + 0.5, 45, 0.0000001, 0.0000001, 0.0000001, 0.15);
-                        		chest.getWorld().playSound(chest.getLocation(), Sound.ENTITY_CHICKEN_EGG, 2.0F, 1.0F);
-                			}
-                		}.runTaskLater(CustomEnchantments.getInstance(), 15L);
-                	}
-                }
-            }
+        	if(event.getInventory().getLocation() != null) {
+	            Block block = event.getInventory().getLocation().getBlock();
+	            if(block != null) {
+	            	if(block.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
+	            		BlockState bs = block.getState();
+			            if(bs instanceof Chest) {
+			            	Chest chest = (Chest) bs;
+	                		new BukkitRunnable() {
+	                			public void run() {
+	                				chest.getBlockInventory().clear();
+	                        		chest.getBlock().setType(Material.AIR);
+	                        		chest.getLocation().getWorld().spawnParticle(Particle.CLOUD, chest.getLocation().getX() + 0.5, chest.getLocation().getY() + 0.5, chest.getLocation().getZ() + 0.5, 45, 0.0000001, 0.0000001, 0.0000001, 0.15);
+	                        		chest.getWorld().playSound(chest.getLocation(), Sound.ENTITY_CHICKEN_EGG, 2.0F, 1.0F);
+	                			}
+	                		}.runTaskLater(CustomEnchantments.getInstance(), 15L);
+			            }
+	            	}
+	            }
+        	}
         }
     }
 }

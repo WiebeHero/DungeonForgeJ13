@@ -9,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -21,17 +20,17 @@ public class PreventIllegalItems implements Listener{
 		if(item != null) {
 			if(item.getType() == Material.BOW || item.getType() == Material.WOODEN_SWORD || item.getType() == Material.STONE_SWORD || item.getType() == Material.GOLDEN_SWORD || item.getType() == Material.DIAMOND_SWORD || item.getType() == Material.IRON_SWORD || item.getType() == Material.IRON_AXE || item.getType() == Material.WOODEN_AXE || item.getType() == Material.STONE_AXE || item.getType() == Material.GOLDEN_AXE || item.getType() == Material.DIAMOND_AXE) {
 				if(!item.getItemMeta().hasDisplayName()) {
-					event.setCurrentItem(null);	
+					event.setCurrentItem(null);
 				}
 			}
 			else if(item.getType() == Material.BOW || item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_LEGGINGS || item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.CHAINMAIL_HELMET || item.getType() == Material.CHAINMAIL_CHESTPLATE || item.getType() == Material.CHAINMAIL_LEGGINGS || item.getType() == Material.CHAINMAIL_BOOTS || item.getType() == Material.IRON_HELMET || item.getType() == Material.IRON_CHESTPLATE || item.getType() == Material.IRON_LEGGINGS || item.getType() == Material.IRON_BOOTS || item.getType() == Material.GOLDEN_HELMET || item.getType() == Material.GOLDEN_CHESTPLATE || item.getType() == Material.GOLDEN_LEGGINGS || item.getType() == Material.GOLDEN_BOOTS || item.getType() == Material.DIAMOND_HELMET || item.getType() == Material.DIAMOND_CHESTPLATE || item.getType() == Material.DIAMOND_LEGGINGS || item.getType() == Material.DIAMOND_BOOTS) {
 				if(!item.getItemMeta().hasDisplayName()) {
-					event.setCurrentItem(null);	
+					event.setCurrentItem(null);
 				}
 			}
-			else if(item.getType() == Material.BOW || item.getType() == Material.ENDER_EYE || item.getType() == Material.END_CRYSTAL) {
+			else if(item.getType() == Material.BOW || item.getType() == Material.ENDER_EYE || item.getType() == Material.END_CRYSTAL || item.getType() == Material.ENDER_CHEST || item.getType() == Material.HOPPER || item.getType() == Material.BEACON) {
 				if(!item.getItemMeta().hasDisplayName()) {
-					event.setCurrentItem(null);	
+					event.setCurrentItem(null);
 				}
 			}
 		}
@@ -58,13 +57,6 @@ public class PreventIllegalItems implements Listener{
 					event.getItem().remove();
 				}
 			}
-		}
-	}
-	@EventHandler
-	public void preventIllegalCraft(CraftItemEvent event) {
-		ItemStack item = event.getCurrentItem();
-		if(item.getType() == Material.ENDER_CHEST || item.getType() == Material.HOPPER) {
-			event.setCancelled(true);
 		}
 	}
 	@EventHandler

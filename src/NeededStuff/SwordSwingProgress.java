@@ -3,6 +3,7 @@ package NeededStuff;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 
 public class SwordSwingProgress implements Listener{
 	public static ArrayList<String> names = new ArrayList<String>();
@@ -38,7 +40,7 @@ public class SwordSwingProgress implements Listener{
 							names.remove(player.getName());
 						}
 					}
-				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
+				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 			}
 		}
 	}
@@ -59,7 +61,7 @@ public class SwordSwingProgress implements Listener{
 						names.remove(player.getName());
 					}
 				}
-			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
+			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 		}
 	}
 	@EventHandler
@@ -79,7 +81,7 @@ public class SwordSwingProgress implements Listener{
 						names.remove(player.getName());
 					}
 				}
-			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
+			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 		}
 	}
 	@EventHandler
@@ -100,7 +102,7 @@ public class SwordSwingProgress implements Listener{
 							names.remove(player.getName());
 						}
 					}
-				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
+				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 			}
 		}
 	}
@@ -122,7 +124,7 @@ public class SwordSwingProgress implements Listener{
 							names.remove(player.getName());
 						}
 					}
-				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
+				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 			}
 		}
 	}
@@ -143,10 +145,14 @@ public class SwordSwingProgress implements Listener{
 						names.remove(player.getName());
 					}
 				}
-			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
+			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 		}
 	}
 	public final float getSwingProgress(Player player) {
 	    return player.getCooledAttackStrength(0);
+	}
+	public float getAttackStrength(Player p) {
+		float i = swordSwingProgress.get(p.getName());
+		return i;
 	}
 }

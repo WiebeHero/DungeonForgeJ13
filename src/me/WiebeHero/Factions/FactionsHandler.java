@@ -188,9 +188,9 @@ public class FactionsHandler implements Listener{
 	public void damagePlayersInSpawn(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
 			if(event.getDamager() instanceof Player) {
-				if(event.getEntity() instanceof Player) {
+				if(event.getEntity() instanceof Player && event.getEntity() instanceof Player) {
 					Player damager = (Player) event.getDamager();
-					Player victim = (Player) event.getDamager();
+					Player victim = (Player) event.getEntity();
 					RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 					RegionManager regions = container.get((com.sk89q.worldedit.world.World) damager.getWorld());
 					if(damager.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
@@ -206,9 +206,9 @@ public class FactionsHandler implements Listener{
 			}
 			if(event.getDamager() instanceof Projectile) {
 				Projectile projectile = (Projectile) event.getDamager();
-				if(projectile.getShooter() != null && projectile.getShooter() instanceof Player) {
+				if(projectile.getShooter() != null && projectile.getShooter() instanceof Player && event.getEntity() instanceof Player) {
 					Player damager = (Player) projectile.getShooter();
-					Player victim = (Player) event.getDamager();
+					Player victim = (Player) event.getEntity();
 					RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 					RegionManager regions = container.get((com.sk89q.worldedit.world.World) damager.getWorld());
 					if(damager.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {

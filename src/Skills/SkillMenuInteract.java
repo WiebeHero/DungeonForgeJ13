@@ -37,6 +37,7 @@ public class SkillMenuInteract implements Listener{
 							pc.setSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE, pc.getSkill(player.getUniqueId(), Skills.ATTACK_DAMAGE) + 1);
 							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+							pc.resetCalculations(player.getUniqueId());
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -53,6 +54,7 @@ public class SkillMenuInteract implements Listener{
 							pc.setSkill(player.getUniqueId(), Skills.ATTACK_SPEED, pc.getSkill(player.getUniqueId(), Skills.ATTACK_SPEED) + 1);
 							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+							pc.resetCalculations(player.getUniqueId());
 							sk.attackSpeed(player);
 							menu.SkillMenuInv(player);
 						}
@@ -70,6 +72,7 @@ public class SkillMenuInteract implements Listener{
 							pc.setSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE, pc.getSkill(player.getUniqueId(), Skills.CRITICAL_CHANCE) + 1);
 							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+							pc.resetCalculations(player.getUniqueId());
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -86,6 +89,7 @@ public class SkillMenuInteract implements Listener{
 							pc.setSkill(player.getUniqueId(), Skills.RANGED_DAMAGE, pc.getSkill(player.getUniqueId(), Skills.RANGED_DAMAGE) + 1);
 							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+							pc.resetCalculations(player.getUniqueId());
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -102,6 +106,7 @@ public class SkillMenuInteract implements Listener{
 							pc.setSkill(player.getUniqueId(), Skills.MAX_HEALTH, pc.getSkill(player.getUniqueId(), Skills.MAX_HEALTH) + 1);
 							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+							pc.resetCalculations(player.getUniqueId());
 							menu.SkillMenuInv(player);
 							sk.changeHealth(player);
 						}
@@ -119,6 +124,7 @@ public class SkillMenuInteract implements Listener{
 							pc.setSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE, pc.getSkill(player.getUniqueId(), Skills.ARMOR_DEFENSE) + 1);
 							pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) - 1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+							pc.resetCalculations(player.getUniqueId());
 							menu.SkillMenuInv(player);
 							sk.runDefense(player);
 						}

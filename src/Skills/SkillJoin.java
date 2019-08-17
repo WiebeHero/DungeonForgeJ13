@@ -27,6 +27,7 @@ import net.minecraft.server.v1_13_R2.NBTTagString;
 public class SkillJoin implements Listener{
 	public ClassMenu classMenu = new ClassMenu();
 	public PlayerClass pc = new PlayerClass();
+	public EffectSkills es = new EffectSkills();
 	@EventHandler
 	public void skillJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
@@ -46,6 +47,12 @@ public class SkillJoin implements Listener{
 					player.getInventory().addItem(divineB());
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+		}
+		else {
+			pc.resetCalculations(player.getUniqueId());
+			es.changeHealth(player);
+			es.attackSpeed(player);
+			es.runDefense(player);
 		}
 	}
 	@EventHandler

@@ -50,7 +50,6 @@ import NeededStuff.CancelWeaponPlaced;
 import NeededStuff.Chat;
 import NeededStuff.ChatItem;
 import NeededStuff.CombatTag;
-import NeededStuff.DisableCraftItems;
 import NeededStuff.Disparitys;
 import NeededStuff.EnderPearlCooldown;
 import NeededStuff.LevelRestrictions;
@@ -81,6 +80,7 @@ import Skills.SkillJoin;
 import Skills.SkillMenuInteract;
 import Skills.XPEarningMobs;
 import me.WiebeHero.CraftRecipes.CallRecipe;
+import me.WiebeHero.CraftRecipes.CraftableWeapons;
 import me.WiebeHero.CraftRecipes.UnblockBrewing;
 import me.WiebeHero.CustomArmor.Common.ArmorBoots;
 import me.WiebeHero.CustomArmor.Common.ArmorChestplate;
@@ -144,7 +144,6 @@ import me.WiebeHero.CustomEnchantmentsB.ParalyzeB;
 import me.WiebeHero.CustomEnchantmentsB.PickpocketB;
 import me.WiebeHero.CustomEnchantmentsB.PierceB;
 import me.WiebeHero.CustomEnchantmentsB.PoisonB;
-import me.WiebeHero.CustomEnchantmentsB.PoisonousCloud;
 import me.WiebeHero.CustomEnchantmentsB.Sandstorm;
 import me.WiebeHero.CustomEnchantmentsB.WeaknessB;
 import me.WiebeHero.CustomEnchantmentsB.WitherB;
@@ -222,7 +221,6 @@ import me.WiebeHero.CustomItemsFOOD.PurifiedSpiderEye;
 import me.WiebeHero.CustomItemsFOOD.SeasonedCarrot;
 import me.WiebeHero.CustomItemsFOOD.SkyFish;
 import me.WiebeHero.CustomItemsFOOD.TrickyFish;
-import me.WiebeHero.CustomWands.DFWands;
 import me.WiebeHero.DFShops.DFShop;
 import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.DFShops.PayCommand;
@@ -235,7 +233,6 @@ import me.WiebeHero.LootChest.LootRewards;
 import me.WiebeHero.LootChest.SetChest;
 import me.WiebeHero.Moderation.ModerationGUI;
 import me.WiebeHero.Moderation.ModerationGUICommand;
-import me.WiebeHero.Novis.NovisCommands;
 import me.WiebeHero.Novis.NovisInventory;
 import me.WiebeHero.Shields.DFShields;
 import me.WiebeHero.Spawners.DeathOfMob;
@@ -251,7 +248,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private SkillCommand skillCommand = new SkillCommand();
 	private SetSpawner command = new SetSpawner();
 	private SpawnerList sp = new SpawnerList();
-	private NovisCommands novis = new NovisCommands();
 	private DFFactions fac = new DFFactions();
 	private Portals p = new Portals();
 	private PayCommand pay = new PayCommand();
@@ -265,6 +261,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private LootRewards lootR = new LootRewards();
 	private ConfigManager cfgm;
 	private PlayerClass pc = new PlayerClass();
+	private CraftableWeapons cw = new CraftableWeapons();
 	int level;
 	public Scoreboard scoreboard;
 	public static boolean shutdown = false;
@@ -400,7 +397,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new WeaknessB(), this);
 		getServer().getPluginManager().registerEvents(new WitherB(), this);
 		getServer().getPluginManager().registerEvents(new Lightning(), this);
-		getServer().getPluginManager().registerEvents(new PoisonousCloud(), this);
 		getServer().getPluginManager().registerEvents(new Sandstorm(), this);
 		getServer().getPluginManager().registerEvents(new GrapplingHook(), this);
 		//Custom Weapons
@@ -412,8 +408,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new ArmorBoots(), this);
 		//Custom Shields
 		getServer().getPluginManager().registerEvents(new DFShields(), this);
-		//Custom Wands
-		getServer().getPluginManager().registerEvents(new DFWands(), this);
 		//Custom Bows
 		getServer().getPluginManager().registerEvents(new Bows(), this);
 		//Skills
@@ -455,6 +449,22 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(fac, this);
 		//Stuff
 		getServer().getPluginManager().registerEvents(sethome, this);
+		//Crafteable Weapons and item recipes ;)
+		getServer().getPluginManager().registerEvents(cw, this);
+		cw.addChainHemlet();
+		cw.addChainChestplate();
+		cw.addChainLeggings();
+		cw.addChainBoots();
+		cw.addLongBow();
+		cw.addBow();
+		cw.addShortBow();
+		cw.addAmuletOfHealth();
+		cw.addAmuletOfDefense();
+		cw.addAmuletOfCharge();
+		cw.addAmuletOffResistance();
+		cw.addAmuletOfPower();
+		cw.addAmuletOfSpeed();
+		cw.addAmuletOfToughness();
 		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
 		try{
@@ -467,14 +477,16 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		if(yml.getConfigurationSection("Factions.List") != null) {
-			fac.loadFactionNameList(yml, f1);
-			fac.loadAllyList(yml, f1);
-			fac.loadChunkList(yml, f1);
-			fac.loadChunkTotalList(yml, f1);
-			fac.loadFTop(yml, f1);
-			fac.loadMemberList(yml, f1);
-			fac.loadRankedList(yml, f1);
-			fac.loadPlayersAlliedList(yml, f1);
+			if(!yml.get("Factions.List").equals("{}")) {
+				fac.loadFactionNameList(yml, f1);
+				fac.loadAllyList(yml, f1);
+				fac.loadChunkList(yml, f1);
+				fac.loadChunkTotalList(yml, f1);
+				fac.loadFTop(yml, f1);
+				fac.loadMemberList(yml, f1);
+				fac.loadRankedList(yml, f1);
+				fac.loadPlayersAlliedList(yml, f1);
+			}
 		}
 		File f2 =  new File("plugins/CustomEnchantments/modConfig.yml");
 		YamlConfiguration yml1 = YamlConfiguration.loadConfiguration(f2);
@@ -488,14 +500,16 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		if(yml1.getConfigurationSection("Moderation.Punishments") != null) {
-			mod.loadBanTime(yml1, f2);
-			mod.loadMuteTime(yml1, f2);
-			mod.loadPermBan(yml1, f2);
-			mod.loadPermMute(yml1, f2);
-			mod.loadReasonBanList(yml1, f2);
-			mod.loadReasonMuteList(yml1, f2);
-			mod.loadWarnOffenseList(yml1, f2);
-			mod.loadWarnReasonList(yml1, f2);
+			if(!yml1.get("Moderation.Punishments").equals("{}")) {
+				mod.loadBanTime(yml1, f2);
+				mod.loadMuteTime(yml1, f2);
+				mod.loadPermBan(yml1, f2);
+				mod.loadPermMute(yml1, f2);
+				mod.loadReasonBanList(yml1, f2);
+				mod.loadReasonMuteList(yml1, f2);
+				mod.loadWarnOffenseList(yml1, f2);
+				mod.loadWarnReasonList(yml1, f2);
+			}
 		}
 		File f3 = new File("plugins/CustomEnchantments/spawnerConfig.yml");
 		YamlConfiguration yml2 = YamlConfiguration.loadConfiguration(f3);
@@ -513,7 +527,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		if(yml3.getConfigurationSection("List") != null) {
-			money.loadMoney(yml3, f4);
+			if(!yml3.get("List").equals("{}")) {
+				money.loadMoney(yml3, f4);
+			}
 		}
 		File f5 = new File("plugins/CustomEnchantments/playerskillsDF.yml");
 		YamlConfiguration yml4 = YamlConfiguration.loadConfiguration(f5);
@@ -527,7 +543,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		if(yml4.getConfigurationSection("Skills.Players") != null) {
-			pc.registerProfiles(yml4, f5);
+			if(!yml4.get("Skills.Players").equals("{}")) {
+				pc.registerProfiles(yml4, f5);
+			}
 		}
 		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
 		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
@@ -541,7 +559,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		if(yml5.getConfigurationSection("Homes") != null) {
-			sethome.loadHomes(yml5, f6);
+			if(!yml5.get("Homes").equals("{}")) {
+				sethome.loadHomes(yml5, f6);
+			}
 		}
 		File f7 =  new File("plugins/CustomEnchantments/lootConfig.yml");
 		YamlConfiguration yml6 = YamlConfiguration.loadConfiguration(f7);
@@ -555,7 +575,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		if(yml6.getConfigurationSection("Loot.Chests") != null) {
-			loot.loadLootChests(yml6, f7);
+			if(!yml6.get("Loot.Chests").equals("{}")) {
+				loot.loadLootChests(yml6, f7);
+			}
 		}
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
@@ -570,7 +592,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new Disparitys(), this);
 		getServer().getPluginManager().registerEvents(new LevelRestrictions(), this);
 		getServer().getPluginManager().registerEvents(new RestrictInteractionWithBlocks(), this);
-		getServer().getPluginManager().registerEvents(new DisableCraftItems(), this);
 		getServer().getPluginManager().registerEvents(new EnderPearlCooldown(), this);
 		getServer().getPluginManager().registerEvents(new MOTDSetting(), this);
 		getServer().getPluginManager().registerEvents(new ChatItem(), this);
@@ -582,7 +603,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new HitDelay(), this);
 		//Commands
 		getCommand(command.cmdSpawner).setExecutor(command);
-		getCommand(novis.cmdNovis).setExecutor(novis);
 		getCommand(loot.cmdNovis).setExecutor(loot);
 		getCommand(fac.faction).setExecutor(fac);
 		getCommand(p.rtp).setExecutor(p);
@@ -881,7 +901,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			scoreboard.getObjective("myHealth").unregister();
 		}
 		Objective o = scoreboard.registerNewObjective("myHealth", "health", "display");
-		o.setDisplayName(ChatColor.RED + "â�¤");
+		o.setDisplayName(ChatColor.RED + "");
 		o.setDisplaySlot(DisplaySlot.BELOW_NAME);
 	}
 	public static HashMap<UUID, String> ranks = new HashMap<UUID, String>();
@@ -969,17 +989,22 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			if(board.getTeam("GRAY") == null) {
 				board.registerNewTeam("GRAY");
 				board.getTeam("GRAY").setPrefix(ChatColor.GRAY + "");
+				board.getTeam("GRAY").setColor(ChatColor.GRAY);
 				board.registerNewTeam("GREEN");
 				board.getTeam("GREEN").setPrefix(ChatColor.GREEN + "");
+				board.getTeam("GREEN").setColor(ChatColor.GREEN);
 				board.registerNewTeam("AQUA");
 				board.getTeam("AQUA").setPrefix(ChatColor.AQUA + "");
+				board.getTeam("AQUA").setColor(ChatColor.AQUA);
 				board.registerNewTeam("RED");
 				board.getTeam("RED").setPrefix(ChatColor.RED + "");
+				board.getTeam("RED").setColor(ChatColor.RED);
 				board.registerNewTeam("PURPLE");
 				board.getTeam("PURPLE").setPrefix(ChatColor.DARK_PURPLE + "");
+				board.getTeam("PURPLE").setColor(ChatColor.DARK_PURPLE);
 				board.registerNewTeam("YELLOW");
 				board.getTeam("YELLOW").setPrefix(ChatColor.YELLOW + "");
-				board.registerNewTeam("OWNER");
+				board.getTeam("YELLOW").setColor(ChatColor.YELLOW);
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -1110,17 +1135,22 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			if(board.getTeam("GRAY") == null) {
 				board.registerNewTeam("GRAY");
 				board.getTeam("GRAY").setPrefix(ChatColor.GRAY + "");
+				board.getTeam("GRAY").setColor(ChatColor.GRAY);
 				board.registerNewTeam("GREEN");
 				board.getTeam("GREEN").setPrefix(ChatColor.GREEN + "");
+				board.getTeam("GREEN").setColor(ChatColor.GREEN);
 				board.registerNewTeam("AQUA");
 				board.getTeam("AQUA").setPrefix(ChatColor.AQUA + "");
+				board.getTeam("AQUA").setColor(ChatColor.AQUA);
 				board.registerNewTeam("RED");
 				board.getTeam("RED").setPrefix(ChatColor.RED + "");
+				board.getTeam("RED").setColor(ChatColor.RED);
 				board.registerNewTeam("PURPLE");
 				board.getTeam("PURPLE").setPrefix(ChatColor.DARK_PURPLE + "");
+				board.getTeam("PURPLE").setColor(ChatColor.DARK_PURPLE);
 				board.registerNewTeam("YELLOW");
 				board.getTeam("YELLOW").setPrefix(ChatColor.YELLOW + "");
-				board.registerNewTeam("OWNER");
+				board.getTeam("YELLOW").setColor(ChatColor.YELLOW);
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);

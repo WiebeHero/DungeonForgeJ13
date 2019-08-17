@@ -994,13 +994,13 @@ public class SkillMenu {
 		double calcNow = pc.getCalculation(uuid, Skills.ATTACK_SPEED_CALC);
 		double calcNext = pc.getCalculation(uuid, Skills.ATTACK_SPEED_CALC);
 		if(pc.getResult(uuid, Skills.ATTACK_SPEED) == UD.UPSIDE) {
-			calcNext = calcNext + 0.60;
+			calcNext = calcNext + 0.90;
 		}
 		else if(pc.getResult(uuid, Skills.ATTACK_SPEED) == UD.DOWNSIDE) {
-			calcNext = calcNext + 0.20;
+			calcNext = calcNext + 0.30;
 		}
 		else if(pc.getResult(uuid, Skills.ATTACK_SPEED) == UD.NEUTRAL){
-			calcNext = calcNext + 0.40;
+			calcNext = calcNext + 0.60;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&9Attack Speed: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -1113,10 +1113,10 @@ public class SkillMenu {
 			calcNext = calcNext + 1.50;
 		}
 		else if(pc.getResult(uuid, Skills.ARMOR_DEFENSE) == UD.DOWNSIDE) {
-			calcNext = calcNext + 0.5;
+			calcNext = calcNext + 0.50;
 		}
 		else if(pc.getResult(uuid, Skills.ARMOR_DEFENSE) == UD.NEUTRAL){
-			calcNext = calcNext + 1.0;
+			calcNext = calcNext + 1.00;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&8Defense: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();

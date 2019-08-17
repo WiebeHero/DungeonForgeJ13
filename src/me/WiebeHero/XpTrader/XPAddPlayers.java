@@ -45,7 +45,7 @@ public class XPAddPlayers extends SpawnerList implements Listener {
 									int maxxpFinal = (int)(double)(maxxp / 100.00 * 107.00);
 									pc.setSkill(player.getUniqueId(), Skills.LEVEL, level);
 									pc.setSkill(player.getUniqueId(), Skills.MAXXP, maxxpFinal);
-									pc.setSkill(player.getUniqueId(), Skills.LEVEL, xp);
+									pc.setSkill(player.getUniqueId(), Skills.XP, xp);
 									pc.setSkill(player.getUniqueId(), Skills.SKILL_POINTS, pc.getSkill(player.getUniqueId(), Skills.SKILL_POINTS) + 3);
 									player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
 									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have leveled up to level &6" + level + "&a!"));

@@ -214,11 +214,11 @@ public class PlayerClass implements Listener{
 			}
 			outerMapUD.put(uuid, innerMapUD);
 			double baseAD = 2.50;
-			double baseAS = 0.40;
+			double baseAS = 0.60;
 			double baseCC = 0.50;
 			double baseRD = 3.00;
 			double baseHH = 5.00;
-			double baseDF = 2.00;
+			double baseDF = 1.00;
 			double multiplier = 0.00;
 			if(outerMapUD.get(uuid).get(Skills.ATTACK_DAMAGE) == UD.UPSIDE) {
 				multiplier = 1.5;
@@ -288,17 +288,16 @@ public class PlayerClass implements Listener{
 			innerMapCalculatedSkills.put(Skills.ARMOR_DEFENSE_EXTRA, 0.00);
 			outerMapCalculatedSkills.put(uuid, innerMapCalculatedSkills);
 		}
-		
 	}
 	public void resetCalculations(UUID uuid) {
 		HashMap<Skills, Integer> innerMap = outerMapSkills.get(uuid);
 		HashMap<Skills, Double> innerMapCalculatedSkills = outerMapCalculatedSkills.get(uuid);
 		double baseAD = 2.50;
-		double baseAS = 0.40;
+		double baseAS = 0.60;
 		double baseCC = 0.50;
 		double baseRD = 3.00;
 		double baseHH = 5.00;
-		double baseDF = 2.00;
+		double baseDF = 1.00;
 		double multiplier = 0.00;
 		if(outerMapUD.get(uuid).get(Skills.ATTACK_DAMAGE) == UD.UPSIDE) {
 			multiplier = 1.5;
@@ -449,7 +448,7 @@ public class PlayerClass implements Listener{
 	 * @return boolean : Returns a value of true/false. This will indicate if the player has a class or not.
 	 */
 	public boolean hasClass(UUID uuid) {
-		if(classList.get(uuid) != Classes.NONE || classList.containsKey(uuid)) {
+		if(classList.get(uuid) == Classes.NONE || !classList.containsKey(uuid)) {
 			return false;
 		}
 		else {

@@ -85,35 +85,37 @@ public class ClassSloth implements Listener{
 					Arrow arrow = (Arrow) event.getDamager();
 					if(arrow.getShooter() instanceof Player) {
 						Player attacker = (Player) arrow.getShooter();
-						if(arrowList.get(attacker.getUniqueId()).contains(arrow.getUniqueId())) {
-							int level = pc.getSkill(attacker.getUniqueId(), Skills.LEVEL);
-							int amp = 1;
-							int durationAdd = 40 + level * 4;
-							PotionEffectType type = PotionEffectType.POISON;
-							if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() == amp) {
-								int durationNow = victim.getPotionEffect(type).getDuration();
-								victim.removePotionEffect(type);
-								victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
-							}
-							else {
-								victim.removePotionEffect(type);
-								victim.addPotionEffect(new PotionEffect(type, durationAdd, amp));
-							}
-							int ad = pc.getSkill(attacker.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER);
-							double damage = 4 + level * 0.11;
-							if(ad > 0) {
-								damage = damage + ad;
-							}
-							event.setDamage(damage);
-							int hh = pc.getSkill(attacker.getUniqueId(), Skills.MAX_HEALTH_MODIFIER);
-							if(hh > 0) {
-								double maxHealth = attacker.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-								double healMe = maxHealth * (hh / 100);
-								if(attacker.getHealth() + healMe <= maxHealth) {
-									attacker.setHealth(attacker.getHealth() + healMe);
+						if(arrowList.containsKey(attacker.getUniqueId())) {
+							if(arrowList.get(attacker.getUniqueId()).contains(arrow.getUniqueId())) {
+								int level = pc.getSkill(attacker.getUniqueId(), Skills.LEVEL);
+								int amp = 1;
+								int durationAdd = 40 + level * 4;
+								PotionEffectType type = PotionEffectType.POISON;
+								if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() == amp) {
+									int durationNow = victim.getPotionEffect(type).getDuration();
+									victim.removePotionEffect(type);
+									victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
 								}
 								else {
-									attacker.setHealth(maxHealth);
+									victim.removePotionEffect(type);
+									victim.addPotionEffect(new PotionEffect(type, durationAdd, amp));
+								}
+								int ad = pc.getSkill(attacker.getUniqueId(), Skills.ATTACK_DAMAGE_MODIFIER);
+								double damage = 4 + level * 0.11;
+								if(ad > 0) {
+									damage = damage + ad;
+								}
+								event.setDamage(damage);
+								int hh = pc.getSkill(attacker.getUniqueId(), Skills.MAX_HEALTH_MODIFIER);
+								if(hh > 0) {
+									double maxHealth = attacker.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+									double healMe = maxHealth * (hh / 100);
+									if(attacker.getHealth() + healMe <= maxHealth) {
+										attacker.setHealth(attacker.getHealth() + healMe);
+									}
+									else {
+										attacker.setHealth(maxHealth);
+									}
 								}
 							}
 						}
