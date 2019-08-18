@@ -113,6 +113,9 @@ public class LootRewards {
 		rewards1.add(playerXPBottle25());
 		rewards1.add(playerXPBottle50());
 		rewards1.add(playerXPBottle100());
+		rewards1.add(moneyNote250());
+		rewards1.add(moneyNote500());
+		rewards1.add(moneyNote1000());
 		//--------------------------------------------------------------------------------------------------------------------
 		//Tier 2
 		//--------------------------------------------------------------------------------------------------------------------
@@ -212,6 +215,10 @@ public class LootRewards {
 		rewards2.add(playerXPBottle50());
 		rewards2.add(playerXPBottle100());
 		rewards2.add(playerXPBottle250());
+		rewards2.add(moneyNote250());
+		rewards2.add(moneyNote500());
+		rewards2.add(moneyNote1000());
+		rewards2.add(moneyNote2500());
 		//--------------------------------------------------------------------------------------------------------------------
 		//Tier 3
 		//--------------------------------------------------------------------------------------------------------------------
@@ -314,6 +321,11 @@ public class LootRewards {
 		rewards3.add(playerXPBottle100());
 		rewards3.add(playerXPBottle250());
 		rewards3.add(playerXPBottle500());
+		rewards3.add(moneyNote250());
+		rewards3.add(moneyNote500());
+		rewards3.add(moneyNote1000());
+		rewards3.add(moneyNote2500());
+		rewards3.add(moneyNote5000());
 		//--------------------------------------------------------------------------------------------------------------------
 		//Tier 4
 		//--------------------------------------------------------------------------------------------------------------------
@@ -419,6 +431,12 @@ public class LootRewards {
 		rewards4.add(playerXPBottle250());
 		rewards4.add(playerXPBottle500());
 		rewards4.add(playerXPBottle1000());
+		rewards4.add(moneyNote250());
+		rewards4.add(moneyNote500());
+		rewards4.add(moneyNote1000());
+		rewards4.add(moneyNote2500());
+		rewards4.add(moneyNote5000());
+		rewards4.add(moneyNote10000());
 	}
 	public ItemStack steak8() {
 		ItemStack item1 = new ItemStack(Material.COOKED_BEEF, 8);
@@ -554,6 +572,48 @@ public class LootRewards {
 	}
 	public ItemStack eggOcelot1() {
 		ItemStack item1 = new ItemStack(Material.OCELOT_SPAWN_EGG, 1);
+		return item1;
+	}
+	public ItemStack moneyNote250() {
+		ItemStack item1 = new ItemStack(Material.PAPER, 1);
+		ItemMeta meta1 = item1.getItemMeta();	
+		meta1.setDisplayName(new ColorCodeTranslator().colorize("&aMoney Note: $250"));
+		item1.setItemMeta(meta1);
+		return item1;
+	}
+	public ItemStack moneyNote500() {
+		ItemStack item1 = new ItemStack(Material.PAPER, 1);
+		ItemMeta meta1 = item1.getItemMeta();	
+		meta1.setDisplayName(new ColorCodeTranslator().colorize("&aMoney Note: $500"));
+		item1.setItemMeta(meta1);
+		return item1;
+	}
+	public ItemStack moneyNote1000() {
+		ItemStack item1 = new ItemStack(Material.PAPER, 1);
+		ItemMeta meta1 = item1.getItemMeta();	
+		meta1.setDisplayName(new ColorCodeTranslator().colorize("&aMoney Note: $1000"));
+		item1.setItemMeta(meta1);
+		return item1;
+	}
+	public ItemStack moneyNote2500() {
+		ItemStack item1 = new ItemStack(Material.PAPER, 1);
+		ItemMeta meta1 = item1.getItemMeta();	
+		meta1.setDisplayName(new ColorCodeTranslator().colorize("&aMoney Note: $2500"));
+		item1.setItemMeta(meta1);
+		return item1;
+	}
+	public ItemStack moneyNote5000() {
+		ItemStack item1 = new ItemStack(Material.PAPER, 1);
+		ItemMeta meta1 = item1.getItemMeta();	
+		meta1.setDisplayName(new ColorCodeTranslator().colorize("&aMoney Note: $5000"));
+		item1.setItemMeta(meta1);
+		return item1;
+	}
+	public ItemStack moneyNote10000() {
+		ItemStack item1 = new ItemStack(Material.PAPER, 1);
+		ItemMeta meta1 = item1.getItemMeta();	
+		meta1.setDisplayName(new ColorCodeTranslator().colorize("&aMoney Note: $10000"));
+		item1.setItemMeta(meta1);
 		return item1;
 	}
 	public ItemStack commonCrystal() {

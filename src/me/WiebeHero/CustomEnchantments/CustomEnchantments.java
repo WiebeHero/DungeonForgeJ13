@@ -230,6 +230,7 @@ import me.WiebeHero.Factions.FactionsHandler;
 import me.WiebeHero.FishingLoot.ChangeFishDrops;
 import me.WiebeHero.LootChest.ChestList;
 import me.WiebeHero.LootChest.LootRewards;
+import me.WiebeHero.LootChest.MoneyNotes;
 import me.WiebeHero.LootChest.SetChest;
 import me.WiebeHero.Moderation.ModerationGUI;
 import me.WiebeHero.Moderation.ModerationGUICommand;
@@ -431,6 +432,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new NovisInventory(), this);
 		//Loot Chest
 		getServer().getPluginManager().registerEvents(cList, this);
+		getServer().getPluginManager().registerEvents(new MoneyNotes(), this);
 		//Brewing Recipes
 		getServer().getPluginManager().registerEvents(new UnblockBrewing(), this);
 		getServer().getPluginManager().registerEvents(new CallRecipe(), this);

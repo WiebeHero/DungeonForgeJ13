@@ -157,17 +157,19 @@ public class SetSpawner implements Listener,CommandExecutor{
 		entityTypeList.clear();
 		if(yml.getConfigurationSection("Spawners.UUID") != null) {
 			Set<String> set = yml.getConfigurationSection("Spawners.UUID").getKeys(false);
-			for(int i = 1; i <= Integer.parseInt(this.getLast(set)); i++) {
-				if(yml.get("Spawners.UUID." + i) == null) {
-					continue;
-				}
-				else {
-					Location loc = (Location) yml.get("Spawners.UUID." + i + ".Location");
-					int tier = yml.getInt("Spawners.UUID." + i + ".Tier");
-					String type = yml.getString("Spawners.UUID." + i + ".EntityType");
-					locationSpawner.put(i, loc);
-					tieredList.put(i, tier);
-					entityTypeList.put(i, type);
+			if(set.size() != 0) {
+				for(int i = 1; i <= Integer.parseInt(this.getLast(set)); i++) {
+					if(yml.get("Spawners.UUID." + i) == null) {
+						continue;
+					}
+					else {
+						Location loc = (Location) yml.get("Spawners.UUID." + i + ".Location");
+						int tier = yml.getInt("Spawners.UUID." + i + ".Tier");
+						String type = yml.getString("Spawners.UUID." + i + ".EntityType");
+						locationSpawner.put(i, loc);
+						tieredList.put(i, tier);
+						entityTypeList.put(i, type);
+					}
 				}
 			}
 		}

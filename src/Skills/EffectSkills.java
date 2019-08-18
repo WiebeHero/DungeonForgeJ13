@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -24,7 +25,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -253,7 +253,7 @@ public class EffectSkills implements Listener{
 		if(!event.isCancelled()) {
 			if(event.getDamager() instanceof Arrow) {
 				Arrow arrow = (Arrow) event.getDamager();
-				if(arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
+				if(arrow.getShooter() != null && arrow.getShooter() instanceof Player && event.getEntity() instanceof LivingEntity) {
 					Player damager = (Player) arrow.getShooter();
 					if(arrowList.containsKey(arrow.getUniqueId())) {
 						double damage = arrowDamage.get(arrow.getUniqueId());
