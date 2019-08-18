@@ -47,7 +47,9 @@ public class Looting extends SwordSwingProgress implements Listener{
 											if(!(victim instanceof Player)) {
 												List<ItemStack> stacks = event.getDrops();
 												for(int i1 = 0; i1 < stacks.size(); i1++) {
-													stacks.get(i1).setAmount((int)(stacks.get(i1).getAmount() * (2.00 + 0.30 * level)));
+													if(stacks.get(i1).getMaxStackSize() != 1) {
+														stacks.get(i1).setAmount((int)(stacks.get(i1).getAmount() * (2.00 + 0.30 * level)));
+													}
 												}
 											}
 										}

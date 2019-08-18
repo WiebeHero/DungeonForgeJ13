@@ -32,6 +32,7 @@ public class XPEarningMobs implements Listener{
 				int finalXP = 0;
 				if(SpawnerList.getMobList().containsKey(event.getEntity().getUniqueId())) {
 					int tier = SpawnerList.getMobList().get(event.getEntity().getUniqueId());
+					int levelMob = SpawnerList.getLevelMobList().get(event.getEntity().getUniqueId());
 					String lore = "";
 					ItemStack item = player.getInventory().getItemInMainHand();
 					if(item != null) {
@@ -48,7 +49,22 @@ public class XPEarningMobs implements Listener{
 					//-----------------------------------------------------------------------------------------------------------------------------------------
 					//XP Adding
 					//-----------------------------------------------------------------------------------------------------------------------------------------
-					int i1 = new Random().nextInt(50 + 100 * tier) + 100 * tier;
+					int i1 = 0;
+					if(tier == 1) {
+						i1 = new Random().nextInt(50) + 50 + 4 * levelMob;
+					}
+					else if(tier == 2) {
+						i1 = new Random().nextInt(70) + 70 + 5 * levelMob;
+					}
+					else if(tier == 3) {
+						i1 = new Random().nextInt(90) + 90 + 6 * levelMob;
+					}
+					else if(tier == 4) {
+						i1 = new Random().nextInt(110) + 110 + 7 * levelMob;
+					}
+					else if(tier == 5) {
+						i1 = new Random().nextInt(130) + 130 + 8 * levelMob;
+					}
 					if(lore.contains("XP Boost")) {
 						String check = lore.replaceAll("[^\\d.]", "");
 						int eLevel = Integer.parseInt(check);

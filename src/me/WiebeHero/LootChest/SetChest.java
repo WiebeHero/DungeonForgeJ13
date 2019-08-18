@@ -170,7 +170,7 @@ public class SetChest implements Listener,CommandExecutor {
 			e.printStackTrace();
 		}
 		Set<String> set = yml.getConfigurationSection("Loot.Chests").getKeys(false);
-		for(int i = 1; i < set.size() + 1; i++) {
+		for(int i = 1; i < Integer.parseInt(this.getLast(set)); i++) {
 			if(yml.get("Loot.Chests." + i) == null) {
 				continue;
 			}

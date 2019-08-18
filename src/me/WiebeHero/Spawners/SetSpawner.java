@@ -20,6 +20,9 @@ import org.bukkit.event.Listener;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 
 public class SetSpawner implements Listener,CommandExecutor{
+	public String getLast(Set<String> set) {
+        return set.stream().skip(set.stream().count() - 1).findFirst().get();
+	}
 	public String cmdSpawner = "spawner";
 	public static TreeMap<Integer, Location> locationSpawner = new TreeMap<Integer, Location>();
 	public static HashMap<Integer, Integer> tieredList = new HashMap<Integer, Integer>();
@@ -154,7 +157,7 @@ public class SetSpawner implements Listener,CommandExecutor{
 		entityTypeList.clear();
 		if(yml.getConfigurationSection("Spawners.UUID") != null) {
 			Set<String> set = yml.getConfigurationSection("Spawners.UUID").getKeys(false);
-			for(int i = 1; i <= set.size(); i++) {
+			for(int i = 1; i <= Integer.parseInt(this.getLast(set)); i++) {
 				if(yml.get("Spawners.UUID." + i) == null) {
 					continue;
 				}
