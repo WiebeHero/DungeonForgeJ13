@@ -1973,6 +1973,7 @@ public class CraftableWeapons implements Listener{
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.7"));
+				lore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b5.0 Seconds"));
 				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
 				meta.setLore(lore);

@@ -222,10 +222,12 @@ public class NovisRewards {
 			}
 			String enchantmentsString = config.getString("Items.Shields." + listItemsShields.get(i) + ".Enchantments");
 			double damageWeapon = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".BeginToughness");
+			double cooldown = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".BeginCooldown");
 			ArrayList<String> newLore = new ArrayList<String>();
 			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + damageWeapon));
+			newLore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b" + cooldown + " Seconds"));
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 			newLore.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
@@ -239,6 +241,7 @@ public class NovisRewards {
 			item.setItemMeta(meta);
 			NBTItem tempItem = new NBTItem(item);
 			tempItem.setDouble("Toughness", damageWeapon);
+			tempItem.setDouble("Cooldown", cooldown);
 			item = tempItem.getItem();
 			if(check.equals("Common")) {
 				rewards1.add(item);

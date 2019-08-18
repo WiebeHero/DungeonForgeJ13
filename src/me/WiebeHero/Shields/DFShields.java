@@ -206,9 +206,11 @@ public class DFShields extends SpawnerList implements Listener{
 									    				levelWeapon++;
 									    				String enchantmentsString = CustomEnchantments.getInstance().getConfig().getString("Items.Shields." + realName + ".Enchantments");
 									    				double incToughness = CustomEnchantments.getInstance().getConfig().getDouble("Items.Shields." + realName + ".IncToughness");
+									    				double incCooldown = CustomEnchantments.getInstance().getConfig().getDouble("Items.Shields." + realName + ".IncCooldown");
 									    				String rarity = CustomEnchantments.getInstance().getConfig().getString("Items.Shields." + realName + ".Rarity" );
 									    				NBTItem tempItem = new NBTItem(item);
 									    				double temp1 = tempItem.getDouble("Toughness");
+									    				double temp2 = tempItem.getDouble("Cooldown");
 									    				//Config Data
 									    				//Weapon Data
 									    				ItemMeta meta = item.getItemMeta();
@@ -235,8 +237,10 @@ public class DFShields extends SpawnerList implements Listener{
 									    				ArrayList<String> newLore = new ArrayList<String>();
 									    				newLore = enchant.setEnchantments(levelWeapon, enchantmentsString, rarity, newLore);
 									    				double roundOff1 = (double) Math.round((temp1 + incToughness) * 100) / 100;
+									    				double roundOff2 = (double) Math.round((temp2 - incCooldown) * 100) / 100;
 									    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 									    				newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + roundOff1));
+									    				newLore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b" + roundOff2 + " Seconds"));
 									    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 									    				if(levelWeapon < 15) {
 									    					int xp = CustomEnchantments.getInstance().getConfig().getInt("XPValue." + levelWeapon);
@@ -257,6 +261,7 @@ public class DFShields extends SpawnerList implements Listener{
 									    				item.setItemMeta(meta);
 									    				NBTItem newItem = new NBTItem(item);
 									    				newItem.setDouble("Toughness", newItem.getDouble("Toughness") + incToughness);
+									    				newItem.setDouble("Cooldown", newItem.getDouble("Cooldown") - incCooldown);
 									    				item = newItem.getItem();
 									    				damager.getInventory().setItemInOffHand(item);
 									    				//Shield Data

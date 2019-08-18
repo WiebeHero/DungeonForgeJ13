@@ -102,8 +102,10 @@ public class XPAddWeapons implements Listener{
 				    	            	double wandRange = 0.00;
 				    	            	double armorDefense = 0.00;
 				    	            	double armorToughness = 0.00;
+				    	            	double cooldown = 0.00;
 				    	            	double tempAD = 0.00;
 				    	            	double tempAS = 0.00;
+				    	            	double tempCD = 0.00;
 				    	            	double tempWR = 0.00;
 				    	            	double tempDF = 0.00;
 				    	            	double tempT = 0.00;
@@ -155,6 +157,7 @@ public class XPAddWeapons implements Listener{
 						    	            	}
 						    	            	if(type.equals("Shields")) {
 						    	            		armorToughness = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncToughness") + armorToughness;
+						    	            		cooldown = CustomEnchantments.getInstance().getConfig().getDouble("Items." + type + "." + confirm + ".IncCooldown") + armorToughness;
 						    	            	}
 											}
 											else {
@@ -171,6 +174,7 @@ public class XPAddWeapons implements Listener{
 					    				}
 					    				else if(type.equals("Shields")) {
 				    	            		tempAS = tempItem.getDouble("Toughness");
+				    	            		tempCD = tempItem.getDouble("Cooldown");
 					    				}
 					    				else if(type.equals("Bows")) {
 				    	            		tempAD = tempItem.getDouble("Attack Damage");
@@ -227,14 +231,16 @@ public class XPAddWeapons implements Listener{
 						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Range: &6" + roundOff3));
 					    				}
 					    				else if(type.equals("Shields")) {
-						    				double roundOff2 = (double) Math.round((tempT + armorToughness) * 100) / 100;
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + roundOff2));
+						    				double roundOff1 = (double) Math.round((tempT + armorToughness) * 100) / 100;
+						    				double roundOff2 = (double) Math.round((tempCD - cooldown) * 100) / 100;
+					    					newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + roundOff1));
+					    					newLore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b" + roundOff2 + " Seconds"));
 					    				}
 					    				else if(type.equals("Bows")) {
 					    					double roundOff1 = (double) Math.round((tempAD + damageWeapon) * 100) / 100;
 						    				double roundOff2 = (double) Math.round((tempAS + speedWeapon) * 100) / 100;
 					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Draw Speed: &6" + roundOff2));
+					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
 					    				}
 					    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 					    				if(level < 15) {
@@ -414,7 +420,6 @@ public class XPAddWeapons implements Listener{
 						    				newItem.setDouble("Toughness", tempT + armorToughness);
 						    				tempDF = newItem.getDouble("Defense");
 				    	            		tempT = newItem.getDouble("Toughness");
-				    	            		Bukkit.broadcastMessage(tempDF + " " + tempT);
 					    				}
 					    				else if(type.equals("Wands")) {
 					    					newItem.setDouble("Attack Damage", tempAD + damageWeapon);
@@ -423,10 +428,11 @@ public class XPAddWeapons implements Listener{
 					    				}
 					    				else if(type.equals("Shields")) {
 					    					newItem.setDouble("Toughness", tempT + armorToughness);
+					    					newItem.setDouble("Cooldown", tempCD - cooldown);
 					    				}
 					    				else if(type.equals("Bows")) {
 					    					newItem.setDouble("Attack Damage", tempAD + armorToughness);
-					    					newItem.setDouble("Draw Speed", tempAS + speedWeapon);
+					    					newItem.setDouble("Attack Speed", tempAS + speedWeapon);
 					    				}
 					    				item1 = newItem.getItem();
 										event.setCancelled(true);

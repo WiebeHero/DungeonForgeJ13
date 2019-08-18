@@ -156,6 +156,41 @@ public class EffectSkills implements Listener{
 		attackSpeed(player);
 	}
 	@EventHandler
+	public void shieldDisable(EntityDamageByEntityEvent event) {
+		if(event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			if(player.getInventory().getItemInOffHand() != null) {
+				if(player.getInventory().getItemInOffHand().getType() == Material.SHIELD) {
+					if(player.getInventory().getItemInOffHand().hasItemMeta()) {
+						if(player.getInventory().getItemInOffHand().getItemMeta().hasLore()) {
+							if(player.isBlocking()) {
+								String cd = "";
+								for(String s : player.getInventory().getItemInOffHand().getItemMeta().getLore()) {
+									if(s.contains("Cooldown:")) {
+										cd = ChatColor.stripColor(s);
+									}
+								}
+								cd = cd.replaceAll("[^\\d.]", "");
+								double cooldownInSec = Double.parseDouble(cd);
+								int cooldownTime = (int)cooldownInSec * 20;
+								ItemStack item = player.getInventory().getItemInOffHand();
+								player.getInventory().setItemInOffHand(new ItemStack(Material.AIR, 1));
+								player.updateInventory();
+								new BukkitRunnable() {
+									public void run() {
+										player.getInventory().setItemInOffHand(item);
+										player.updateInventory();
+									}
+								}.runTaskLater(CustomEnchantments.getInstance(), 0L);
+								player.setCooldown(Material.SHIELD, cooldownTime);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
 	public void criticalChance(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
 			if(event.getDamager() instanceof Player) {
@@ -214,10 +249,10 @@ public class EffectSkills implements Listener{
 								}
 							}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 							Location loc = player.getLocation();
-							loc.add(0, 1.25, 0);
+							loc.add(0, 1.75, 0);
 							Vector direction = loc.getDirection();
 							direction.add(direction);
-							Arrow arrow = player.getWorld().spawnArrow(loc, direction, s.getAttackStrength(player) * 2.00F, 0.0F);
+							Arrow arrow = player.getWorld().spawnArrow(loc, direction, s.getAttackStrength(player) * 2.10F, 0.0F);
 							arrow.setPickupStatus(PickupStatus.ALLOWED);
 							if(s.getAttackStrength(player) == 1.00) {
 								arrow.setCritical(true);

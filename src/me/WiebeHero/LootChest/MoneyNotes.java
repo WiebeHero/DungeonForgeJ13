@@ -20,7 +20,7 @@ public class MoneyNotes implements Listener{
 				if(player.getInventory().getItemInMainHand().getType() == Material.PAPER) {
 					if(player.getInventory().getItemInMainHand().hasItemMeta()) {
 						if(player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
-							if(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains("Money: ")) {
+							if(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains("Money Note:")) {
 								String name = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
 								name = name.replaceAll("[^\\d.]", "");
 								int money = Integer.parseInt(name);
