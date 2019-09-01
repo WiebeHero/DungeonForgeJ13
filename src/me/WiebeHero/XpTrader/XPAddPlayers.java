@@ -51,7 +51,7 @@ public class XPAddPlayers extends SpawnerList implements Listener {
 									
 								}
 								else if(finalXP > 0){
-									dfPlayer.setExperience(xp);
+									dfPlayer.setExperience(finalXP);
 								}
 							}
 							float barprogress = (float) finalXP / maxxp;

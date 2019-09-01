@@ -26,6 +26,7 @@ public class MoneyNotes implements Listener{
 								int money = Integer.parseInt(name);
 								m.getMoneyList().put(player.getUniqueId(), m.getMoneyList().get(player.getUniqueId()) + money);
 								CustomEnchantments.getInstance().registerNameTag(player);
+								player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 							}
 						}
 					}
