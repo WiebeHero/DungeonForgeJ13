@@ -101,7 +101,7 @@ public class SkillMenuInteract implements Listener{
 				else if(skillName.contains("Health")) {
 					if(dfPlayer.getSkillPoints() > 0) {
 						if(dfPlayer.getHp() < 100) {
-							dfPlayer.addCrt(1);
+							dfPlayer.addHp(1);
 							dfPlayer.removeSkillPoints(1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							dfPlayer.removeSkillPoints(1);
