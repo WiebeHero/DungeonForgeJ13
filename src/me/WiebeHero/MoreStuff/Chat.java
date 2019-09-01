@@ -29,10 +29,10 @@ public class Chat implements Listener{
 			}
 			int level = yml1.getInt("Skills.Players." + player.getUniqueId() + ".Level");
 			if(!fName.equals("")) {
-				event.setFormat("§6" + fName + "§a | §b§l"  + level + "§a | §7" + player.getName() + ": " + event.getMessage());
+				event.setFormat("§6" + fName + " §a| §b§l"  + level + "§a | §7" + player.getName() + ": " + event.getMessage());
 			}
 			else {
-				event.setFormat("§b§l"  + level + "&a | §7" + player.getName() + ": " + event.getMessage());
+				event.setFormat("§b§l" + level + " §a| §7" + player.getName() + ": " + event.getMessage());
 			}
 		}
 		else {
