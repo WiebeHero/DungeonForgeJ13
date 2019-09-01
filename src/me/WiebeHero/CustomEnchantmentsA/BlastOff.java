@@ -1,5 +1,7 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
@@ -14,15 +16,16 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomMethods.PotionM;
 import net.md_5.bungee.api.ChatColor;
 
 public class BlastOff implements Listener{
+	public PotionM p = new PotionM();
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
 	@EventHandler
 	public void CustomEnchantmentsMBlastOff(EntityDamageByEntityEvent event) {
@@ -35,7 +38,8 @@ public class BlastOff implements Listener{
 					DamageCause damageCause = event.getCause();
 					if(damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.PROJECTILE) {
 						if(victim.getInventory().getArmorContents() != null) {
-							ItemStack[] items = victim.getInventory().getArmorContents();
+							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
+							items.add(victim.getInventory().getItemInOffHand());
 							for(ItemStack item : items) {
 								if(item != null) {
 									if(item.getItemMeta().getLore() != null) {
@@ -52,16 +56,8 @@ public class BlastOff implements Listener{
 												animation(victim, damager);
 												int amp = 20;
 												int durationAdd = 60 + 10 * level;
-												PotionEffectType type = PotionEffectType.DAMAGE_RESISTANCE;
-												if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() == amp) {
-													int durationNow = victim.getPotionEffect(type).getDuration();
-													victim.removePotionEffect(type);
-													victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
-												}
-												else {
-													victim.removePotionEffect(type);
-													victim.addPotionEffect(new PotionEffect(type, durationAdd, amp));
-												}
+												ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.DAMAGE_RESISTANCE));
+												p.applyEffect(victim, types, amp, durationAdd);
 												new BukkitRunnable() {
 													@Override
 													public void run() {

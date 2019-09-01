@@ -1,5 +1,8 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,12 +22,12 @@ public class RangedResistance implements Listener{
 		if(event.getDamager() instanceof Arrow){
 			if(event.getEntity() instanceof Player) {
 				if(!event.isCancelled()) {
-					Arrow damager = (Arrow) event.getDamager();
 					Player victim = (Player) event.getEntity();
 					DamageCause damageCause = event.getCause();
 					if(damageCause == DamageCause.PROJECTILE) {
 						if(victim.getInventory().getArmorContents() != null) {
-							ItemStack[] items = victim.getInventory().getArmorContents();
+							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
+							items.add(victim.getInventory().getItemInOffHand());
 							for(ItemStack item : items) {
 								if(item != null) {
 									if(item.getItemMeta().getLore() != null) {

@@ -21,13 +21,12 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import Skills.EffectSkills;
-import Skills.PlayerClass;
-import Skills.SkillEnum.Skills;
 import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
+import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.Skills.EffectSkills;
 import me.WiebeHero.Spawners.SpawnerList;
 
 public class DFWeaponUpgrade implements Listener{
@@ -44,7 +43,6 @@ public class DFWeaponUpgrade implements Listener{
         }
         return coloredMsg;
     }
-	PlayerClass pc = new PlayerClass();
 	EffectSkills sk = new EffectSkills();
 	@EventHandler
 	public void weapons(EntityDeathEvent event) {
@@ -147,7 +145,9 @@ public class DFWeaponUpgrade implements Listener{
 													totalxpearned = 3 + firstInt;
 												}
 												else if(victim.getType() == EntityType.PLAYER) {
-													int levelVictim = pc.getSkill(damager.getUniqueId(), Skills.LEVEL);
+													Player player = (Player) victim;
+													DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+													int levelVictim = dfPlayer.getLevel();
 													if(levelVictim >= 0) {
 														int i6 = new Random().nextInt(50) + 50;
 														totalxpearned = i6 + firstInt;

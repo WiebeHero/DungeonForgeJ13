@@ -20,13 +20,12 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import Skills.EffectSkills;
-import Skills.PlayerClass;
-import Skills.SkillEnum.Skills;
 import de.tr7zw.itemnbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
+import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.Skills.EffectSkills;
 import me.WiebeHero.Spawners.SpawnerList;
 
 public class ArmorLeggings extends SpawnerList implements Listener{
@@ -44,7 +43,6 @@ public class ArmorLeggings extends SpawnerList implements Listener{
         return coloredMsg;
     }
 	EffectSkills sk = new EffectSkills();
-	PlayerClass pc = new PlayerClass();
 	@EventHandler
 	public void armor(EntityDeathEvent event) {
 		LivingEntity victim = (LivingEntity) event.getEntity();
@@ -144,7 +142,9 @@ public class ArmorLeggings extends SpawnerList implements Listener{
 											totalxpearned = 3 + firstInt;
 										}
 										else if(victim.getType().equals(EntityType.PLAYER)) {
-											int levelVictim = pc.getSkill(damager.getUniqueId(), Skills.LEVEL);
+											Player player = (Player) victim;
+											DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+											int levelVictim = dfPlayer.getLevel();
 											if(levelVictim > 1) {
 												int i6 = new Random().nextInt(50) + 50;
 												totalxpearned = i6 + firstInt;
@@ -267,7 +267,8 @@ public class ArmorLeggings extends SpawnerList implements Listener{
 						    				}
 						    			}	
 							    		else {
-							    			int level = pc.getSkill(damager.getUniqueId(), Skills.LEVEL);
+											DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+							    			int level = dfPlayer.getLevel();
 							    			List<String> loreList = damager.getInventory().getLeggings().getItemMeta().getLore();
 							    			String line = "";
 							    			for (int j=0; j<damager.getInventory().getLeggings().getItemMeta().getLore().size(); j++) {

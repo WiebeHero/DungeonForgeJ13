@@ -1,8 +1,6 @@
 package me.WiebeHero.CraftRecipes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -17,8 +15,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.destroystokyo.paper.Namespaced;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;

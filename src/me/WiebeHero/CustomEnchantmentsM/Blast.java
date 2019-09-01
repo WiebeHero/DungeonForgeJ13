@@ -15,8 +15,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.plugin.Plugin;
 
-import NeededStuff.SwordSwingProgress;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.MoreStuff.SwordSwingProgress;
 import net.md_5.bungee.api.ChatColor;
 
 public class Blast extends SwordSwingProgress implements Listener{

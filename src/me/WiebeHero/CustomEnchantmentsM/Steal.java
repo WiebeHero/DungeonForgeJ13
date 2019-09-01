@@ -16,8 +16,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import NeededStuff.SwordSwingProgress;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.MoreStuff.SwordSwingProgress;
 import net.md_5.bungee.api.ChatColor;
 
 public class Steal extends SwordSwingProgress implements Listener {

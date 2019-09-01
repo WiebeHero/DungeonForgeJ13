@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/worldguard-bukkit-7.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/worldedit-bukkit-7.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/ProtocolLib.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

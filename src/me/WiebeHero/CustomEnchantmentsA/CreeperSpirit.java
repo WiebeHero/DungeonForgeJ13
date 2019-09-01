@@ -1,5 +1,8 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +24,8 @@ public class CreeperSpirit implements Listener{
 				DamageCause damageCause = event.getCause();
 				if(damageCause == DamageCause.BLOCK_EXPLOSION || damageCause == DamageCause.ENTITY_EXPLOSION) {
 					if(victim.getInventory().getArmorContents() != null) {
-						ItemStack[] items = victim.getInventory().getArmorContents();
+						ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
+						items.add(victim.getInventory().getItemInOffHand());
 						for(ItemStack item : items) {
 							if(item != null) {
 								if(item.getItemMeta().getLore() != null) {

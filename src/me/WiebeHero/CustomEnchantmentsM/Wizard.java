@@ -13,8 +13,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import NeededStuff.SwordSwingProgress;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.MoreStuff.SwordSwingProgress;
 import net.md_5.bungee.api.ChatColor;
 
 public class Wizard extends SwordSwingProgress implements Listener {

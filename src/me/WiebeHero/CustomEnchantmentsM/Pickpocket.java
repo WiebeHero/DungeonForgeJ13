@@ -19,8 +19,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.plugin.Plugin;
 
-import NeededStuff.SwordSwingProgress;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.MoreStuff.SwordSwingProgress;
 import net.md_5.bungee.api.ChatColor;
 
 public class Pickpocket extends SwordSwingProgress implements Listener {

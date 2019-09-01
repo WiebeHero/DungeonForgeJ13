@@ -17,9 +17,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import NeededStuff.SwordSwingProgress;
-import Skills.SkillJoin;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.MoreStuff.SwordSwingProgress;
+import me.WiebeHero.Skills.SkillJoin;
 import net.md_5.bungee.api.ChatColor;
 
 public class Confusion extends SwordSwingProgress implements Listener{

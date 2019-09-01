@@ -1,6 +1,7 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -48,14 +49,15 @@ public class ExplodingParrot implements Listener{
 		if(aa != null) {
 			Vector min1 = new Vector(bb.minX, bb.minY, bb.minZ);
 			Vector max1 = new Vector(bb.maxX, bb.maxY, bb.maxZ);
-			Vector min2 = new Vector(aa.minX, aa.minY, aa.minZ);
 			Vector max2 = new Vector(aa.maxX, aa.maxY, aa.maxZ);
 			if(min1.getX() <= max2.getX() && max1.getX() >= min1.getX()) {
 				if(min1.getY() <= max2.getY() && max1.getY() >= min1.getY()) {
 					if(min1.getZ() <= max2.getZ() && max1.getZ() >= min1.getZ()) {
 						if(parrot.getOwner() instanceof Player) {
 							Player tamer = (Player) parrot.getOwner();
-							for(ItemStack item : tamer.getInventory().getArmorContents()) {
+							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(tamer.getInventory().getArmorContents()));
+							items.add(tamer.getInventory().getItemInOffHand());
+							for(ItemStack item : items) {
 								if(item != null) {
 									if(item.hasItemMeta()) {
 										if(item.getItemMeta().hasLore()) {

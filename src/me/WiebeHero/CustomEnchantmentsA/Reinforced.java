@@ -11,9 +11,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
-import Skills.EffectSkills;
 import me.WiebeHero.CustomMethods.MethodItemStack;
 import me.WiebeHero.CustomMethods.NewAttribute;
+import me.WiebeHero.Skills.EffectSkills;
 
 public class Reinforced implements Listener{
 	MethodItemStack it = new MethodItemStack(); 

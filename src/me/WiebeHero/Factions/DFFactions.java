@@ -25,9 +25,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import NeededStuff.CombatTag;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.MoreStuff.CombatTag;
 
 public class DFFactions implements Listener,CommandExecutor{
 	Player p1;
@@ -35,7 +35,6 @@ public class DFFactions implements Listener,CommandExecutor{
 	public String faction = "faction";
 	public static HashMap<String, ArrayList<UUID>> factionList = new HashMap<String, ArrayList<UUID>>();
 	public static HashMap<String, ArrayList<Chunk>> chunkList = new HashMap<String, ArrayList<Chunk>>();
-	public static HashMap<String, Integer> chunkTotal = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> fTop = new HashMap<String, Integer>();
 	public static HashMap<String, Location> fHomes = new HashMap<String, Location>();
 	public static HashMap<UUID, Integer> ranked = new HashMap<UUID, Integer>();
@@ -91,7 +90,6 @@ public class DFFactions implements Listener,CommandExecutor{
 									    		factionList.put(facName, new ArrayList<UUID>());
 									    		factionList.get(facName).add(player.getUniqueId());
 									    		chunkList.put(facName, new ArrayList<Chunk>());
-									    		chunkTotal.put(facName, 0);
 									    		fTop.put(facName, 0);
 									    		fHomes.put(facName, null);
 									    		allyList.put(facName, new ArrayList<String>());
@@ -128,7 +126,6 @@ public class DFFactions implements Listener,CommandExecutor{
 										factionList.remove(fName);
 										factionNameList.remove(fName);
 										chunkList.remove(fName);
-										chunkTotal.remove(fName);
 										fTop.remove(fName);
 										fHomes.remove(fName);
 										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have abandoned this faction!"));
@@ -187,7 +184,7 @@ public class DFFactions implements Listener,CommandExecutor{
 			    							}	
 			    						}
 			    					}
-			    					int cClaimed = chunkTotal.get(fName);
+			    					int cClaimed = chunkList.get(fName).size();
 			    					player.sendMessage(new ColorCodeTranslator().colorize("&7------------------&a[&b" + fName + "&a]&7------------------"));
 			    					player.sendMessage(new ColorCodeTranslator().colorize("&7Faction Name: &b" + fName));
 									player.sendMessage(new ColorCodeTranslator().colorize("&7Total Members: &b" + mList.size()));
@@ -225,7 +222,6 @@ public class DFFactions implements Listener,CommandExecutor{
 													if(yap.size() < 12) {
 														yap.add(player.getLocation().getChunk());
 														chunkList.put(fName, yap);
-														chunkTotal.put(fName, chunkTotal.get(fName) + 1);
 														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have claimed this chunk!"));
 													}
 													else {
@@ -274,7 +270,6 @@ public class DFFactions implements Listener,CommandExecutor{
 											if(rank >= 3) {
 												if(chunkList.get(fName).contains(player.getLocation().getChunk())) {
 													chunkList.get(fName).remove(player.getLocation().getChunk());
-													chunkTotal.put(fName, chunkTotal.get(fName) - 1);
 													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have unclaimed this chunk!"));
 												}
 												else {
@@ -888,16 +883,6 @@ public class DFFactions implements Listener,CommandExecutor{
 			}
 		}
 	}
-	public void loadChunkTotalList(YamlConfiguration yml, File f) {
-		String facName = "";
-		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
-		ArrayList<String> facNames = new ArrayList<String>(set);
-		for(int i = 0; i < facNames.size(); i++) {
-			facName = facNames.get(i);
-			int total = yml.getInt("Factions.List." + facName + ".Chunks");
-			chunkTotal.put(facName, total);
-		}
-	}
 	public void loadRankedList(YamlConfiguration yml, File f) {
 		String facName = "";
 		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
@@ -975,9 +960,6 @@ public class DFFactions implements Listener,CommandExecutor{
 	}
 	public HashMap<String, ArrayList<Chunk>> getChunkList() {
 		return DFFactions.chunkList;
-	}
-	public HashMap<String, Integer> getTotalChunkList() {
-		return DFFactions.chunkTotal;
 	}
 	public ArrayList<String> getFactionNameList() {
 		return DFFactions.factionNameList;

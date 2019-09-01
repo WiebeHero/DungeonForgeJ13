@@ -1,5 +1,8 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -19,30 +22,33 @@ public class TitanicOath implements Listener{
 		if(!event.isCancelled()) {
 			Player victim = (Player) event.getPlayer();
 			if(victim.getInventory().getArmorContents() != null) {
-				ItemStack[] items = victim.getInventory().getArmorContents();
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
+				items.add(victim.getInventory().getItemInOffHand());
 				for(ItemStack item : items) {
 					if(item != null) {
-						if(item.getItemMeta().getLore() != null) {
-							String check = "";
-							for(String s1 : item.getItemMeta().getLore()){
-								if(s1.contains(ChatColor.stripColor("Titanic Oath"))) {
-									check = ChatColor.stripColor(s1);
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().getLore() != null) {
+								String check = "";
+								for(String s1 : item.getItemMeta().getLore()){
+									if(s1.contains(ChatColor.stripColor("Titanic Oath"))) {
+										check = ChatColor.stripColor(s1);
+									}
 								}
-							}
-							if(check.contains("Titanic Oath")){
-								if(victim.getLocation().getBlock().getType() == Material.WATER) {
-									check = check.replaceAll("[^\\d.]", "");
-									int level = Integer.parseInt(check);
-									ItemMeta meta = item.getItemMeta();
-									meta.addEnchant(Enchantment.DEPTH_STRIDER, level, true);
-									item.setItemMeta(meta);
-									victim.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, level));
-								}
-								else {
-									ItemMeta meta = item.getItemMeta();
-									meta.removeEnchant(Enchantment.DEPTH_STRIDER);
-									item.setItemMeta(meta);
-									victim.removePotionEffect(PotionEffectType.SPEED);
+								if(check.contains("Titanic Oath")){
+									if(victim.getLocation().getBlock().getType() == Material.WATER) {
+										check = check.replaceAll("[^\\d.]", "");
+										int level = Integer.parseInt(check);
+										ItemMeta meta = item.getItemMeta();
+										meta.addEnchant(Enchantment.DEPTH_STRIDER, level, true);
+										item.setItemMeta(meta);
+										victim.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, level));
+									}
+									else {
+										ItemMeta meta = item.getItemMeta();
+										meta.removeEnchant(Enchantment.DEPTH_STRIDER);
+										item.setItemMeta(meta);
+										victim.removePotionEffect(PotionEffectType.SPEED);
+									}
 								}
 							}
 						}

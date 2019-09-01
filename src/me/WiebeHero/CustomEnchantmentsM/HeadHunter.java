@@ -20,8 +20,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 
-import NeededStuff.SwordSwingProgress;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.MoreStuff.SwordSwingProgress;
 
 public class HeadHunter extends SwordSwingProgress implements Listener{
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);

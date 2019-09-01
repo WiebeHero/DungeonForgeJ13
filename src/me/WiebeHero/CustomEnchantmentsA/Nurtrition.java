@@ -1,5 +1,7 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
@@ -26,7 +28,8 @@ public class Nurtrition implements Listener{
 		float i = ThreadLocalRandom.current().nextFloat() * 100;
 		if(foodAfter > foodBefore) {
 			if(p.getInventory().getArmorContents() != null) {
-				ItemStack[] items = p.getInventory().getArmorContents();
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(p.getInventory().getArmorContents()));
+				items.add(p.getInventory().getItemInOffHand());
 				for(ItemStack item : items) {
 					if(item != null) {
 						if(item.getItemMeta().getLore() != null) {

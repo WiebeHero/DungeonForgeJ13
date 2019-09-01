@@ -1,6 +1,7 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
@@ -34,7 +35,8 @@ public class Invincibility implements Listener{
 					DamageCause damageCause = event.getCause();
 					if(damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.PROJECTILE) {
 						if(victim.getInventory().getArmorContents() != null) {
-							ItemStack[] items = victim.getInventory().getArmorContents();
+							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
+							items.add(victim.getInventory().getItemInOffHand());
 							for(ItemStack item : items) {
 								if(item != null) {
 									if(item.getItemMeta().getLore() != null) {
@@ -74,7 +76,6 @@ public class Invincibility implements Listener{
 	public void CustomEnchantmentsMInvincibilityI(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof LivingEntity){
 			if(event.getEntity() instanceof Player) {
-				LivingEntity damager = (LivingEntity) event.getDamager();
 				Player victim = (Player) event.getEntity();
 				if(invincibleList.contains(victim.getName())) {
 					event.setCancelled(true);

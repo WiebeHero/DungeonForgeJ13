@@ -16,8 +16,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
 
-import NeededStuff.SwordSwingProgress;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.MoreStuff.SwordSwingProgress;
 
 public class SoulBurst extends SwordSwingProgress implements Listener{
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);

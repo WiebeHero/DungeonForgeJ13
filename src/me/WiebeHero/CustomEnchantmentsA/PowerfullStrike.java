@@ -1,6 +1,7 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
@@ -35,7 +36,8 @@ public class PowerfullStrike implements Listener{
 					if(damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.PROJECTILE) {
 						if(damager.getFallDistance() > 0) {
 							if(victim.getInventory().getArmorContents() != null) {
-								ItemStack[] items = victim.getInventory().getArmorContents();
+								ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
+								items.add(victim.getInventory().getItemInOffHand());
 								for(ItemStack item : items) {
 									if(item != null) {
 										if(item.getItemMeta().getLore() != null) {

@@ -1,5 +1,7 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
@@ -34,7 +36,8 @@ public class SelfDestruct implements Listener{
 				DamageCause dc = ede.getCause();
 				if(event.getEntity().getKiller() instanceof Player && dc == DamageCause.ENTITY_ATTACK || dc == DamageCause.PROJECTILE){
 					if(victim.getInventory().getArmorContents() != null) {
-						ItemStack[] items = victim.getInventory().getArmorContents();
+						ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
+						items.add(victim.getInventory().getItemInOffHand());
 						for(ItemStack item : items) {
 							if(item != null) {
 								if(item.getItemMeta().getLore() != null) {

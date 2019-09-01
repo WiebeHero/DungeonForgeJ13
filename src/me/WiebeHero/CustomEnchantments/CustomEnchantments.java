@@ -3,7 +3,12 @@ package me.WiebeHero.CustomEnchantments;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -43,42 +48,6 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 
-import NeededStuff.AFKSystem;
-import NeededStuff.CancelJoinLeaveAdvancementMessages;
-import NeededStuff.CancelLootSteal;
-import NeededStuff.CancelWeaponPlaced;
-import NeededStuff.Chat;
-import NeededStuff.ChatItem;
-import NeededStuff.CombatTag;
-import NeededStuff.Disparitys;
-import NeededStuff.EnderPearlCooldown;
-import NeededStuff.LevelRestrictions;
-import NeededStuff.MOTDSetting;
-import NeededStuff.MoneyCreation;
-import NeededStuff.Portals;
-import NeededStuff.PreventIllegalItems;
-import NeededStuff.RestrictInteractionWithBlocks;
-import NeededStuff.ScoreDungeon;
-import NeededStuff.SetHomeSystem;
-import NeededStuff.SpawnCommand;
-import NeededStuff.SwordSwingProgress;
-import NeededStuff.TNTExplodeCovered;
-import NeededStuff.TPACommand;
-import Skills.ClassEnvy;
-import Skills.ClassGluttony;
-import Skills.ClassGreed;
-import Skills.ClassLust;
-import Skills.ClassMenuSelection;
-import Skills.ClassPride;
-import Skills.ClassSloth;
-import Skills.ClassWrath;
-import Skills.EffectSkills;
-import Skills.PlayerClass;
-import Skills.SkillCommand;
-import Skills.SkillEnum.Skills;
-import Skills.SkillJoin;
-import Skills.SkillMenuInteract;
-import Skills.XPEarningMobs;
 import me.WiebeHero.CraftRecipes.CallRecipe;
 import me.WiebeHero.CraftRecipes.CraftableWeapons;
 import me.WiebeHero.CraftRecipes.UnblockBrewing;
@@ -195,19 +164,6 @@ import me.WiebeHero.CustomEnchantmentsM.Weakness;
 import me.WiebeHero.CustomEnchantmentsM.Wither;
 import me.WiebeHero.CustomEnchantmentsM.Wizard;
 import me.WiebeHero.CustomEnchantmentsM.WolfPack;
-import me.WiebeHero.CustomEnchantmentsS.BlastOffS;
-import me.WiebeHero.CustomEnchantmentsS.CactusS;
-import me.WiebeHero.CustomEnchantmentsS.EncouragedS;
-import me.WiebeHero.CustomEnchantmentsS.EnlightenedS;
-import me.WiebeHero.CustomEnchantmentsS.HardenS;
-import me.WiebeHero.CustomEnchantmentsS.IgniteS;
-import me.WiebeHero.CustomEnchantmentsS.KadabraS;
-import me.WiebeHero.CustomEnchantmentsS.SaturationS;
-import me.WiebeHero.CustomEnchantmentsS.SelfDestructS;
-import me.WiebeHero.CustomEnchantmentsS.SlownessS;
-import me.WiebeHero.CustomEnchantmentsS.SunshineS;
-import me.WiebeHero.CustomEnchantmentsS.TankS;
-import me.WiebeHero.CustomEnchantmentsS.ValorS;
 import me.WiebeHero.CustomHitDelay.HitDelay;
 import me.WiebeHero.CustomItemsFOOD.BunnyPotion;
 import me.WiebeHero.CustomItemsFOOD.ButterscotchPie;
@@ -234,8 +190,45 @@ import me.WiebeHero.LootChest.MoneyNotes;
 import me.WiebeHero.LootChest.SetChest;
 import me.WiebeHero.Moderation.ModerationGUI;
 import me.WiebeHero.Moderation.ModerationGUICommand;
+import me.WiebeHero.MoreStuff.AFKSystem;
+import me.WiebeHero.MoreStuff.CancelJoinLeaveAdvancementMessages;
+import me.WiebeHero.MoreStuff.CancelLootSteal;
+import me.WiebeHero.MoreStuff.CancelWeaponPlaced;
+import me.WiebeHero.MoreStuff.Chat;
+import me.WiebeHero.MoreStuff.ChatItem;
+import me.WiebeHero.MoreStuff.CombatTag;
+import me.WiebeHero.MoreStuff.Disparitys;
+import me.WiebeHero.MoreStuff.EnderPearlCooldown;
+import me.WiebeHero.MoreStuff.LevelRestrictions;
+import me.WiebeHero.MoreStuff.MOTDSetting;
+import me.WiebeHero.MoreStuff.MoneyCreation;
+import me.WiebeHero.MoreStuff.Portals;
+import me.WiebeHero.MoreStuff.PreventIllegalItems;
+import me.WiebeHero.MoreStuff.RestrictInteractionWithBlocks;
+import me.WiebeHero.MoreStuff.ScoreDungeon;
+import me.WiebeHero.MoreStuff.SetHomeSystem;
+import me.WiebeHero.MoreStuff.SpawnCommand;
+import me.WiebeHero.MoreStuff.SwordSwingProgress;
+import me.WiebeHero.MoreStuff.TNTExplodeCovered;
+import me.WiebeHero.MoreStuff.TPACommand;
 import me.WiebeHero.Novis.NovisInventory;
 import me.WiebeHero.Shields.DFShields;
+import me.WiebeHero.Skills.ClassEnvy;
+import me.WiebeHero.Skills.ClassGluttony;
+import me.WiebeHero.Skills.ClassGreed;
+import me.WiebeHero.Skills.ClassLust;
+import me.WiebeHero.Skills.ClassMenuSelection;
+import me.WiebeHero.Skills.ClassPride;
+import me.WiebeHero.Skills.ClassSloth;
+import me.WiebeHero.Skills.ClassWrath;
+import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.Skills.DFPlayerRegister;
+import me.WiebeHero.Skills.EffectSkills;
+import me.WiebeHero.Skills.SkillCommand;
+import me.WiebeHero.Skills.SkillJoin;
+import me.WiebeHero.Skills.SkillMenuInteract;
+import me.WiebeHero.Skills.XPEarningMobs;
+import me.WiebeHero.Spawners.DFSpawner;
 import me.WiebeHero.Spawners.DeathOfMob;
 import me.WiebeHero.Spawners.MobDamage;
 import me.WiebeHero.Spawners.SetSpawner;
@@ -243,8 +236,13 @@ import me.WiebeHero.Spawners.SpawnerList;
 import me.WiebeHero.XpTrader.XPAddPlayers;
 import me.WiebeHero.XpTrader.XPAddWeapons;
 import me.WiebeHero.XpTrader.XPTraderMenu;
+import me.lucko.luckperms.LuckPerms;
+import me.lucko.luckperms.api.LuckPermsApi;
+import me.lucko.luckperms.api.User;
 
 public class CustomEnchantments extends JavaPlugin implements Listener{
+	public HashMap<UUID, DFPlayer> dfPlayerList = new HashMap<UUID, DFPlayer>();
+	public ArrayList<DFSpawner> dfSpawnerList = new ArrayList<DFSpawner>();
 	private static CustomEnchantments instance;
 	private SkillCommand skillCommand = new SkillCommand();
 	private SetSpawner command = new SetSpawner();
@@ -261,8 +259,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ChestList cList = new ChestList();
 	private LootRewards lootR = new LootRewards();
 	private ConfigManager cfgm;
-	private PlayerClass pc = new PlayerClass();
 	private CraftableWeapons cw = new CraftableWeapons();
+	private DFPlayer pl = new DFPlayer();
 	int level;
 	public Scoreboard scoreboard;
 	public static boolean shutdown = false;
@@ -324,7 +322,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new Cyclone(), this);
 		getServer().getPluginManager().registerEvents(new SoulBurst(), this);
 		getServer().getPluginManager().registerEvents(new Brand(), this);
-		//Armor Enchantments
+		//Armor AND Shield Enchantments
 		getServer().getPluginManager().registerEvents(new Saturation(), this);
 		getServer().getPluginManager().registerEvents(new Absorbing(), this);
 		getServer().getPluginManager().registerEvents(new Ghostly(), this);
@@ -371,20 +369,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new MagicResistance(), this);
 		getServer().getPluginManager().registerEvents(new Madeoutofblocks(), this);
 		getServer().getPluginManager().registerEvents(new ToughenedAura(), this);
-		//Shield Enchantments
-		getServer().getPluginManager().registerEvents(new BlastOffS(), this);
-		getServer().getPluginManager().registerEvents(new CactusS(), this);
-		getServer().getPluginManager().registerEvents(new EncouragedS(), this);
-		getServer().getPluginManager().registerEvents(new EnlightenedS(), this);
-		getServer().getPluginManager().registerEvents(new HardenS(), this);
-		getServer().getPluginManager().registerEvents(new IgniteS(), this);
-		getServer().getPluginManager().registerEvents(new KadabraS(), this);
-		getServer().getPluginManager().registerEvents(new SaturationS(), this);
-		getServer().getPluginManager().registerEvents(new SelfDestructS(), this);
-		getServer().getPluginManager().registerEvents(new SlownessS(), this);
-		getServer().getPluginManager().registerEvents(new SunshineS(), this);
-		getServer().getPluginManager().registerEvents(new TankS(), this);
-		getServer().getPluginManager().registerEvents(new ValorS(), this);
 		//Bow Enchantments
 		getServer().getPluginManager().registerEvents(new BlackHeartB(), this);
 		getServer().getPluginManager().registerEvents(new BlastB(), this);
@@ -451,6 +435,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(fac, this);
 		//Stuff
 		getServer().getPluginManager().registerEvents(sethome, this);
+		getServer().getPluginManager().registerEvents(new DFPlayerRegister(), this);
 		//Crafteable Weapons and item recipes ;)
 		getServer().getPluginManager().registerEvents(cw, this);
 		cw.addChainHemlet();
@@ -483,7 +468,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				fac.loadFactionNameList(yml, f1);
 				fac.loadAllyList(yml, f1);
 				fac.loadChunkList(yml, f1);
-				fac.loadChunkTotalList(yml, f1);
 				fac.loadFTop(yml, f1);
 				fac.loadMemberList(yml, f1);
 				fac.loadRankedList(yml, f1);
@@ -531,22 +515,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		if(yml3.getConfigurationSection("List") != null) {
 			if(!yml3.get("List").equals("{}")) {
 				money.loadMoney(yml3, f4);
-			}
-		}
-		File f5 = new File("plugins/CustomEnchantments/playerskillsDF.yml");
-		YamlConfiguration yml4 = YamlConfiguration.loadConfiguration(f5);
-		try{
-			yml4.load(f5);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		if(yml4.getConfigurationSection("Skills.Players") != null) {
-			if(!yml4.get("Skills.Players").equals("{}")) {
-				pc.registerProfiles(yml4, f5);
 			}
 		}
 		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
@@ -649,6 +617,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new ButterscotchPie(), this);
 		getServer().getPluginManager().registerEvents(new Fusgel(), this);
 		getServer().getPluginManager().registerEvents(new ChangeFishDrops(), this);
+		new BukkitRunnable() {
+			public void run() {
+				CustomEnchantments.getInstance().registerPlayersToDatabase();
+			}
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 12000L);
 		lootR.loadRewards();
 		cList.lootChest();
 		new BukkitRunnable() {
@@ -724,7 +697,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		pc.saveProfiles(yml4, f5);
+		pl.savePlayers();
 		for(Team t : scoreboard.getTeams()) {
 			t.unregister();
 		}
@@ -745,7 +718,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		HashMap<UUID, Integer> factionRankedList = new HashMap<UUID, Integer>(fac.getRankedList());
 		HashMap<String, ArrayList<String>> factionAllyList = new HashMap<String, ArrayList<String>>(fac.getAllyList());
 		HashMap<String, ArrayList<Chunk>> chunkList = new HashMap<String, ArrayList<Chunk>>(fac.getChunkList());
-		HashMap<String, Integer> chunkTotalList = new HashMap<String, Integer>(fac.getTotalChunkList());
 		HashMap<String, Integer> fTopList = new HashMap<String, Integer>(fac.getFTop());
 		HashMap<String, Location> fHomeList = new HashMap<String, Location>(fac.getFHomes());
 		for(int i = 0; i < factionNameList.size(); i++) {
@@ -754,7 +726,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				yml.set("Factions.List." + factionNameList.get(i) + ".Members." + factionMemberList.get(factionNameList.get(i)).get(i1) + ".Rank", factionRankedList.get(factionMemberList.get(factionNameList.get(i)).get(i1)));
 				yml.set("Factions.List." + factionNameList.get(i) + ".Members." + factionMemberList.get(factionNameList.get(i)).get(i1) + ".Name", Bukkit.getPlayer(factionMemberList.get(factionNameList.get(i)).get(i1)));
 			}
-			yml.set("Factions.List." + factionNameList.get(i) + ".Chunks", chunkTotalList.get(factionNameList.get(i)));
 			ArrayList<String> list = new ArrayList<String>();
 			for(Entry<String, ArrayList<Chunk>> entry : chunkList.entrySet()) {
 				for(int i1 = 0; i1 < entry.getValue().size(); i1++) {
@@ -850,7 +821,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		money.saveMoney(yml3, f4);
-		
 		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
 		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
 		try{
@@ -968,12 +938,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		World world = player.getWorld();
 		RegionManager regions = container.get(BukkitAdapter.adapt(world));
+		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 		if(!scores.containsKey(player.getUniqueId())) {
-			UUID uuid = player.getUniqueId();
-			int level = 1;
-			if(pc.getSkill(uuid, Skills.LEVEL) != 0) {
-				level = pc.getSkill(uuid, Skills.LEVEL);
-			}
+			int level = dfPlayer.getLevel();
 			double cash = 1500.0;
 			if(money.getMoneyList().get(player.getUniqueId()) != null) {
 				cash = money.getMoneyList().get(player.getUniqueId());
@@ -1017,7 +984,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Team t = board.getTeam(player.getName() + "1");
 			board.getTeam(player.getName() + "1").addPlayer(player);
 			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + pc.getClass(player.getUniqueId())));
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + t.getSuffix()));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 			//Faction Info
@@ -1094,7 +1061,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Wilderniss"));
 				}
 			}
-			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + cash));
+			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + String.format("%.2f", cash)));
 			Score level1 = o.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + level));
 			Score rank = o.getScore(new ColorCodeTranslator().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
 			Score adress = o.getScore(new ColorCodeTranslator().colorize("    &2&lplay.dungeonforge.net"));
@@ -1116,11 +1083,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			scores.put(player.getUniqueId(), b);
 		}
 		else {
-			UUID uuid = player.getUniqueId();
-			int level = 1;
-			if(pc.getSkill(uuid, Skills.LEVEL) != 0) {
-				level = pc.getSkill(uuid, Skills.LEVEL);
-			}
+			int level = dfPlayer.getLevel();
 			double cash = 1500.0;
 			if(money.getMoneyList().get(player.getUniqueId()) != null) {
 				cash = money.getMoneyList().get(player.getUniqueId());
@@ -1163,7 +1126,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Team t = board.getTeam(player.getName() + "1");
 			board.getTeam(player.getName() + "1").addPlayer(player);
 			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + pc.getClass(player.getUniqueId())));
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + t.getSuffix()));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 			
@@ -1241,7 +1204,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Wilderniss"));
 				}
 			}
-			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + cash));
+			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + String.format("%.2f", cash)));
 			Score level1 = o.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + level));
 			Score rank = o.getScore(new ColorCodeTranslator().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
 			Score adress = o.getScore(new ColorCodeTranslator().colorize("    &2&lplay.dungeonforge.net"));
@@ -1286,6 +1249,80 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 
         return localItemStack;
     }
+	public void registerPlayersToDatabase() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dungeonforge","root","");
+            CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new ColorCodeTranslator().colorize("&aConnection established!"));
+            ArrayList<OfflinePlayer> playerList = new ArrayList<OfflinePlayer>(Arrays.asList(Bukkit.getOfflinePlayers()));
+            LuckPermsApi api = LuckPerms.getApi();
+            for(int i = 0; i < playerList.size(); i++) {
+            	String uuidString = playerList.get(i).getUniqueId().toString();
+            	String playerName = playerList.get(i).getName();
+            	User user = api.getUser(playerList.get(i).getUniqueId());
+            	String groupName = "None";
+            	if(user.inheritsGroup(api.getGroup("bronze"))) {
+            		groupName = "bronze";
+            	}
+            	else if(user.inheritsGroup(api.getGroup("silver"))) {
+            		groupName = "silver";
+            	}
+            	else if(user.inheritsGroup(api.getGroup("gold"))) {
+            		groupName = "gold";
+            	}
+            	else if(user.inheritsGroup(api.getGroup("platinum"))) {
+            		groupName = "platinum";
+            	}
+            	else if(user.inheritsGroup(api.getGroup("diamond"))) {
+            		groupName = "diamond";
+            	}
+            	else if(user.inheritsGroup(api.getGroup("emerald"))) {
+            		groupName = "emerald";
+            	}
+            	Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT UUID, PlayerName, Rank FROM ranktable WHERE UUID = '" + uuidString + "' AND PlayerName = '" + playerName + "'");
+                if(rs.isBeforeFirst()) {
+	                while(rs.next()) {
+		                if(rs.getString(1).equals(uuidString) && !rs.getString(2).equals(playerName)) {
+		                	if(!rs.getString(3).equals(groupName)) {
+		                		groupName = rs.getString(3);
+		                		if(groupName.equals("bronze")) {
+		                			user.setPrimaryGroup("bronze");
+		                		}
+		                		else if(groupName.equals("silver")) {
+		                			user.setPrimaryGroup("silver");
+		                		}
+		                		else if(groupName.equals("gold")) {
+		                			user.setPrimaryGroup("gold");
+		                		}
+		                		else if(groupName.equals("platinum")) {
+		                			user.setPrimaryGroup("platinum");
+		                		}
+		                		else if(groupName.equals("diamond")) {
+		                			user.setPrimaryGroup("diamond");
+		                		}
+		                		else if(groupName.equals("emerald")) {
+		                			user.setPrimaryGroup("emerald");
+		                		}
+		                	}
+		                	Statement stmtNew = con.createStatement();
+		                    int rsNew = stmtNew.executeUpdate("INSERT INTO ranktable (UUID, PlayerName, Rank) VALUES ('" + uuidString + "', '" + playerName + "', '" + groupName + "')");
+		                }
+		                break;
+	                }
+                }
+                else {
+                	Statement stmtNew = con.createStatement();
+                    int rsNew = stmtNew.executeUpdate("INSERT INTO ranktable (UUID, PlayerName, Rank) VALUES ('" + uuidString + "', '" + playerName + "', 'None')");
+                }
+            }
+            CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new ColorCodeTranslator().colorize("&aConnection closing down!"));
+            con.close();
+		} catch(Exception e){
+			CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new ColorCodeTranslator().colorize("&aConnection failed!"));
+            System.out.println(e);
+		}
+	}
 	public static CustomEnchantments getInstance() {
 		return instance;
 	}

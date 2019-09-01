@@ -1,5 +1,7 @@
 package me.WiebeHero.CustomEnchantmentsA;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,7 +36,8 @@ public class Curse implements Listener{
 					DamageCause damageCause = event.getCause();
 					if(damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.PROJECTILE) {
 						if(victim.getInventory().getArmorContents() != null) {
-							ItemStack[] items = victim.getInventory().getArmorContents();
+							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
+							items.add(victim.getInventory().getItemInOffHand());
 							for(ItemStack item : items) {
 								if(item != null) {
 									if(item.getItemMeta().getLore() != null) {
@@ -72,7 +75,6 @@ public class Curse implements Listener{
 	@EventHandler
 	public void disableCurse(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player) {
-			Player damager = (Player) event.getDamager();
 			if(event.getEntity() instanceof Player) {
 				Player victim = (Player) event.getEntity();
 				if(cursedList.containsKey(victim)) {
