@@ -218,9 +218,9 @@ public class ClassMenu implements Listener{
 		SkullMeta m = (SkullMeta) i.getItemMeta();
 		int finalLevel = level;
 		double heal = 10 + finalLevel * 0.15;
-		double damage = 1 + finalLevel * 0.04;
+		double damage = 5 + finalLevel * 0.05;
 		double range = 7 + finalLevel * 0.07;
-		double cooldown = 100 - finalLevel * 0.3;
+		double cooldown = 85 - finalLevel * 0.3;
 		m.setDisplayName(new ColorCodeTranslator().colorize("&d&lLust"));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new ColorCodeTranslator().colorize("&7-------------------"));
