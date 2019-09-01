@@ -41,38 +41,40 @@ public class FactionsHandler implements Listener{
 					fName = entry.getKey();
 				}
 			}
-			ArrayList<Chunk> chunkListYou = new ArrayList<Chunk>();
-			ArrayList<Chunk> chunkListThem = new ArrayList<Chunk>();
-			for(Entry<String, ArrayList<Chunk>> entry : f.getChunkList().entrySet()) {
-				if(entry.getKey().equals(fName)) {
-					chunkListYou.addAll(entry.getValue());
-				}
-				else {
-					chunkListThem.addAll(entry.getValue());
-				}
-			}
-			if(chunkListYou.contains(player.getLocation().getChunk())) {
-				if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-					int rank = f.getRankedList().get(player.getUniqueId());
-					if(rank < 2) {
-						event.setCancelled(true);
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to interact in your claimed territory!"));
+			if(!fName.equals("")) {
+				ArrayList<Chunk> chunkListYou = new ArrayList<Chunk>();
+				ArrayList<Chunk> chunkListThem = new ArrayList<Chunk>();
+				for(Entry<String, ArrayList<Chunk>> entry : f.getChunkList().entrySet()) {
+					if(entry.getKey().equals(fName)) {
+						chunkListYou.addAll(entry.getValue());
+					}
+					else {
+						chunkListThem.addAll(entry.getValue());
 					}
 				}
-				
-			}
-			else if(chunkListThem.contains(player.getLocation().getChunk())) {
-				if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-					Block b = event.getClickedBlock();
-					if(!blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
-						event.setCancelled(true);
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+				if(chunkListYou.contains(player.getLocation().getChunk())) {
+					if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+						int rank = f.getRankedList().get(player.getUniqueId());
+						if(rank < 2) {
+							event.setCancelled(true);
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to interact in your claimed territory!"));
+						}
 					}
+					
 				}
-				else if(event.getAction() == Action.PHYSICAL) {
-					if(plates.contains(event.getClickedBlock().getType())) {
-						event.setCancelled(true);
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+				else if(chunkListThem.contains(player.getLocation().getChunk())) {
+					if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+						Block b = event.getClickedBlock();
+						if(!blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
+							event.setCancelled(true);
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+						}
+					}
+					else if(event.getAction() == Action.PHYSICAL) {
+						if(plates.contains(event.getClickedBlock().getType())) {
+							event.setCancelled(true);
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+						}
 					}
 				}
 			}
@@ -89,26 +91,28 @@ public class FactionsHandler implements Listener{
 					fName = entry.getKey();
 				}
 			}
-			ArrayList<Chunk> chunkListYou = new ArrayList<Chunk>();
-			ArrayList<Chunk> chunkListThem = new ArrayList<Chunk>();
-			for(Entry<String, ArrayList<Chunk>> entry : f.getChunkList().entrySet()) {
-				if(entry.getKey().equals(fName)) {
-					chunkListYou.addAll(entry.getValue());
+			if(!fName.equals("")) {
+				ArrayList<Chunk> chunkListYou = new ArrayList<Chunk>();
+				ArrayList<Chunk> chunkListThem = new ArrayList<Chunk>();
+				for(Entry<String, ArrayList<Chunk>> entry : f.getChunkList().entrySet()) {
+					if(entry.getKey().equals(fName)) {
+						chunkListYou.addAll(entry.getValue());
+					}
+					else {
+						chunkListThem.addAll(entry.getValue());
+					}
 				}
-				else {
-					chunkListThem.addAll(entry.getValue());
+				if(chunkListYou.contains(block.getLocation().getChunk())) {
+					int rank = f.getRankedList().get(player.getUniqueId());
+					if(rank < 2) {
+						event.setCancelled(true);
+						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+					}
 				}
-			}
-			if(chunkListYou.contains(block.getLocation().getChunk())) {
-				int rank = f.getRankedList().get(player.getUniqueId());
-				if(rank < 2) {
+				else if(chunkListThem.contains(block.getLocation().getChunk())) {
 					event.setCancelled(true);
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
-			}
-			else if(chunkListThem.contains(block.getLocation().getChunk())) {
-				event.setCancelled(true);
-				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 			}
 		}
 	}
@@ -123,26 +127,28 @@ public class FactionsHandler implements Listener{
 					fName = entry.getKey();
 				}
 			}
-			ArrayList<Chunk> chunkListYou = new ArrayList<Chunk>();
-			ArrayList<Chunk> chunkListThem = new ArrayList<Chunk>();
-			for(Entry<String, ArrayList<Chunk>> entry : f.getChunkList().entrySet()) {
-				if(entry.getKey().equals(fName)) {
-					chunkListYou.addAll(entry.getValue());
+			if(!fName.equals("")) {
+				ArrayList<Chunk> chunkListYou = new ArrayList<Chunk>();
+				ArrayList<Chunk> chunkListThem = new ArrayList<Chunk>();
+				for(Entry<String, ArrayList<Chunk>> entry : f.getChunkList().entrySet()) {
+					if(entry.getKey().equals(fName)) {
+						chunkListYou.addAll(entry.getValue());
+					}
+					else {
+						chunkListThem.addAll(entry.getValue());
+					}
 				}
-				else {
-					chunkListThem.addAll(entry.getValue());
+				if(chunkListYou.contains(block.getLocation().getChunk())) {
+					int rank = f.getRankedList().get(player.getUniqueId());
+					if(rank < 2) {
+						event.setCancelled(true);
+						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+					}
 				}
-			}
-			if(chunkListYou.contains(block.getLocation().getChunk())) {
-				int rank = f.getRankedList().get(player.getUniqueId());
-				if(rank < 2) {
+				else if(chunkListThem.contains(block.getLocation().getChunk())) {
 					event.setCancelled(true);
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
-			}
-			else if(chunkListThem.contains(block.getLocation().getChunk())) {
-				event.setCancelled(true);
-				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 			}
 		}
 	}
@@ -158,9 +164,11 @@ public class FactionsHandler implements Listener{
 						fName = entry.getKey();
 					}
 				}
-				if(f.getFactionMemberList().get(fName).contains(victim.getUniqueId())) {
-					event.setCancelled(true);
-					damager.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+				if(!fName.equals("")) {
+					if(f.getFactionMemberList().get(fName).contains(victim.getUniqueId())) {
+						event.setCancelled(true);
+						damager.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+					}
 				}
 			}
 		}
@@ -176,9 +184,11 @@ public class FactionsHandler implements Listener{
 							fName = entry.getKey();
 						}
 					}
-					if(f.getFactionMemberList().get(fName).contains(victim.getUniqueId())) {
-						event.setCancelled(true);
-						damager.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+					if(!fName.equals("")) {
+						if(f.getFactionMemberList().get(fName).contains(victim.getUniqueId())) {
+							event.setCancelled(true);
+							damager.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+						}
 					}
 				}
 			}

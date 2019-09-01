@@ -135,7 +135,10 @@ public class Disparitys implements Listener{
 					DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
 					int levelD = dfPlayerD.getLevel();
 					int levelV = dfPlayerV.getLevel();
-					int disparity = listPlayers.get(victim.getName());
+					int disparity = 0;
+					if(listPlayers.containsKey(victim.getName())) {
+						disparity = listPlayers.get(victim.getName());
+					}
 					int lowerL = levelV - levelD;
 					int higherL = levelD - levelV;
 					if(Math.abs(lowerL) > disparity) {
@@ -175,7 +178,7 @@ public class Disparitys implements Listener{
 						int levelD = dfPlayerD.getLevel();
 						int levelV = dfPlayerV.getLevel();
 						int disparity = 0;
-						if(listPlayers.get(victim.getName()) != null) {
+						if(listPlayers.containsKey(victim.getName())) {
 							disparity = listPlayers.get(victim.getName());
 						}
 						int lowerL = levelV - levelD;
@@ -216,7 +219,10 @@ public class Disparitys implements Listener{
 						DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
 						int levelD = dfPlayerD.getLevel();
 						int levelV = dfPlayerV.getLevel();
-						int disparity = listPlayers.get(victim.getName());
+						int disparity = 0;
+						if(listPlayers.containsKey(victim.getName())) {
+							disparity = listPlayers.get(victim.getName());
+						}
 						int lowerL = levelV - levelD;
 						int higherL = levelD - levelV;
 						if(Math.abs(lowerL) > disparity) {
