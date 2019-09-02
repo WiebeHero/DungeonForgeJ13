@@ -20,6 +20,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
@@ -202,7 +203,7 @@ public class FactionsHandler implements Listener{
 					Player damager = (Player) event.getDamager();
 					Player victim = (Player) event.getEntity();
 					RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-					RegionManager regions = container.get((com.sk89q.worldedit.world.World) damager.getWorld());
+					RegionManager regions = container.get(BukkitAdapter.adapt(damager.getWorld()));
 					if(damager.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
 						if(regions.hasRegion("spawn") && regions.hasRegion("warzone")) {
 							if(regions.getRegion("spawn").contains(victim.getLocation().getBlockX(), victim.getLocation().getBlockY(), victim.getLocation().getBlockZ())) {
@@ -220,7 +221,7 @@ public class FactionsHandler implements Listener{
 					Player damager = (Player) projectile.getShooter();
 					Player victim = (Player) event.getEntity();
 					RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-					RegionManager regions = container.get((com.sk89q.worldedit.world.World) damager.getWorld());
+					RegionManager regions = container.get(BukkitAdapter.adapt(damager.getWorld()));
 					if(damager.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
 						if(regions.hasRegion("spawn") && regions.hasRegion("warzone")) {
 							if(regions.getRegion("spawn").contains(victim.getLocation().getBlockX(), victim.getLocation().getBlockY(), victim.getLocation().getBlockZ())) {

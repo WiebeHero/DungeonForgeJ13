@@ -27,26 +27,33 @@ public class Nurtrition implements Listener{
 		int foodAfter = event.getFoodLevel();
 		float i = ThreadLocalRandom.current().nextFloat() * 100;
 		if(foodAfter > foodBefore) {
-			if(p.getInventory().getArmorContents() != null) {
+			if(p.getInventory().getArmorContents() != null && p.getInventory().getItemInOffHand() != null) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(p.getInventory().getArmorContents()));
 				items.add(p.getInventory().getItemInOffHand());
 				for(ItemStack item : items) {
 					if(item != null) {
-						if(item.getItemMeta().getLore() != null) {
-							String check = "";
-							for(String s1 : item.getItemMeta().getLore()){
-								if(s1.contains(ChatColor.stripColor("Nurtrition"))) {
-									check = ChatColor.stripColor(s1);
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().hasLore()) {
+								String check = "";
+								for(String s1 : item.getItemMeta().getLore()){
+									if(s1.contains(ChatColor.stripColor("Nurtrition"))) {
+										check = ChatColor.stripColor(s1);
+									}
 								}
-							}
-							if(check.contains("Nurtrition")){
-								check = check.replaceAll("[^\\d.]", "");
-								int level = Integer.parseInt(check) - 1;
-								if(i < 25 + 25 * level) {
-									animation(p);
-									double foodGained = foodAfter - foodBefore;
-									int food = (int)(foodGained * (1.5 + 0.3 * level));
-									p.setFoodLevel(p.getFoodLevel() + food);
+								if(check.contains("Nurtrition")){
+									check = check.replaceAll("[^\\d.]", "");
+									int level = Integer.parseInt(check) - 1;
+									if(i < 25 + 25 * level) {
+										animation(p);
+										double foodGained = foodAfter - foodBefore;
+										int food = (int)(foodGained * (1.5 + 0.3 * level));
+										if(p.getFoodLevel() + food <= 20) {
+											p.setFoodLevel(p.getFoodLevel() + food);
+										}
+										else {
+											p.setFoodLevel(20);
+										}
+									}
 								}
 							}
 						}

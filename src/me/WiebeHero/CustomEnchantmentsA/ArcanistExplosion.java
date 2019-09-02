@@ -33,29 +33,31 @@ public class ArcanistExplosion implements Listener{
 					float i = ThreadLocalRandom.current().nextFloat() * 100;
 					DamageCause damageCause = event.getCause();
 					if(damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.PROJECTILE) {
-						if(victim.getInventory().getArmorContents() != null) {
+						if(victim.getInventory().getArmorContents() != null && victim.getInventory().getItemInOffHand() != null) {
 							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
 							items.add(victim.getInventory().getItemInOffHand());
 							for(ItemStack item : items) {
 								if(item != null) {
-									if(item.getItemMeta().getLore() != null) {
-										String check = "";
-										for(String s1 : item.getItemMeta().getLore()){
-											if(s1.contains(ChatColor.stripColor("Arcanist Explosion"))) {
-												check = ChatColor.stripColor(s1);
+									if(item.hasItemMeta()) {
+										if(item.getItemMeta().hasLore()) {
+											String check = "";
+											for(String s1 : item.getItemMeta().getLore()){
+												if(s1.contains(ChatColor.stripColor("Arcanist Explosion"))) {
+													check = ChatColor.stripColor(s1);
+												}
 											}
-										}
-										if(check.contains("Arcanist Explosion")){
-											check = check.replaceAll("[^\\d.]", "");
-											int level = Integer.parseInt(check) - 1;
-											if(i <= 13 + 2 * level) {
-												double range = 3 + 0.5 * level;
-												animation(victim, damager);
-												for(Entity entity : victim.getNearbyEntities(range, range, range)){
-													if(entity instanceof LivingEntity) {
-														if(entity != victim) {
-															LivingEntity entity1 = (LivingEntity) entity;
-															entity1.damage(1.25 + 0.25 * level);
+											if(check.contains("Arcanist Explosion")){
+												check = check.replaceAll("[^\\d.]", "");
+												int level = Integer.parseInt(check) - 1;
+												if(i <= 13 + 2 * level) {
+													double range = 3 + 0.5 * level;
+													animation(victim, damager);
+													for(Entity entity : victim.getNearbyEntities(range, range, range)){
+														if(entity instanceof LivingEntity) {
+															if(entity != victim) {
+																LivingEntity entity1 = (LivingEntity) entity;
+																entity1.damage(1.25 + 0.25 * level);
+															}
 														}
 													}
 												}

@@ -30,44 +30,46 @@ public class AbsorbingCombo implements Listener{
 					Player victim = (Player) event.getEntity();
 					DamageCause damageCause = event.getCause();
 					if(damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.PROJECTILE) {
-						if(victim.getInventory().getArmorContents() != null) {
+						if(victim.getInventory().getArmorContents() != null && victim.getInventory().getItemInOffHand() != null) {
 							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
 							items.add(victim.getInventory().getItemInOffHand());
 							for(ItemStack item : items) {
 								if(item != null) {
-									if(item.getItemMeta().getLore() != null) {
-										String check = "";
-										for(String s1 : item.getItemMeta().getLore()){
-											if(s1.contains(ChatColor.stripColor("Absorbing Combo"))) {
-												check = ChatColor.stripColor(s1);
-											}
-										}
-										if(check.contains("Absorbing Combo")){
-											check = check.replaceAll("[^\\d.]", "");
-											int level = Integer.parseInt(check) - 1;
-											int count = comboCount.get(victim);
-											if(comboCount.get(victim) == null) {
-												count = 0;
-											}
-											count++;
-											int amp = (int) Math.floor((double)count / (5 - level));
-											int durationAdd = 30 + 10 * level;
-											PotionEffectType type = PotionEffectType.REGENERATION;
-											if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() == amp) {
-												int durationNow = victim.getPotionEffect(type).getDuration();
-												victim.removePotionEffect(type);
-												victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
-											}
-											else {
-												victim.removePotionEffect(type);
-												victim.addPotionEffect(new PotionEffect(type, durationAdd, amp));
-											}
-											new BukkitRunnable() {
-												public void run() {
-													comboCount.put(victim, 0);
-													victim.removePotionEffect(PotionEffectType.REGENERATION);
+									if(item.hasItemMeta()) {
+										if(item.getItemMeta().hasLore()) {
+											String check = "";
+											for(String s1 : item.getItemMeta().getLore()){
+												if(s1.contains(ChatColor.stripColor("Absorbing Combo"))) {
+													check = ChatColor.stripColor(s1);
 												}
-											}.runTaskLater(CustomEnchantments.getInstance(), 30L + 10 * level);
+											}
+											if(check.contains("Absorbing Combo")){
+												check = check.replaceAll("[^\\d.]", "");
+												int level = Integer.parseInt(check) - 1;
+												int count = comboCount.get(victim);
+												if(comboCount.get(victim) == null) {
+													count = 0;
+												}
+												count++;
+												int amp = (int) Math.floor((double)count / (5 - level));
+												int durationAdd = 30 + 10 * level;
+												PotionEffectType type = PotionEffectType.REGENERATION;
+												if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() == amp) {
+													int durationNow = victim.getPotionEffect(type).getDuration();
+													victim.removePotionEffect(type);
+													victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
+												}
+												else {
+													victim.removePotionEffect(type);
+													victim.addPotionEffect(new PotionEffect(type, durationAdd, amp));
+												}
+												new BukkitRunnable() {
+													public void run() {
+														comboCount.put(victim, 0);
+														victim.removePotionEffect(PotionEffectType.REGENERATION);
+													}
+												}.runTaskLater(CustomEnchantments.getInstance(), 30L + 10 * level);
+											}
 										}
 									}
 								}

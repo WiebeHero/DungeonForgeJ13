@@ -32,24 +32,26 @@ public class Ignite implements Listener{
 					float i = ThreadLocalRandom.current().nextFloat() * 100;
 					DamageCause damageCause = event.getCause();
 					if(damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.PROJECTILE) {
-						if(victim.getInventory().getArmorContents() != null) {
+						if(victim.getInventory().getArmorContents() != null && victim.getInventory().getItemInOffHand() != null) {
 							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
 							items.add(victim.getInventory().getItemInOffHand());
 							for(ItemStack item : items) {
 								if(item != null) {
-									if(item.getItemMeta().getLore() != null) {
-										String check = "";
-										for(String s1 : item.getItemMeta().getLore()){
-											if(s1.contains(ChatColor.stripColor("Ignite"))) {
-												check = ChatColor.stripColor(s1);
+									if(item.hasItemMeta()) {
+										if(item.getItemMeta().hasLore()) {
+											String check = "";
+											for(String s1 : item.getItemMeta().getLore()){
+												if(s1.contains(ChatColor.stripColor("Ignite"))) {
+													check = ChatColor.stripColor(s1);
+												}
 											}
-										}
-										if(check.contains("Ignite")){
-											check = check.replaceAll("[^\\d.]", "");
-											int level = Integer.parseInt(check) - 1;
-											if(i <= 10 + level) {
-												animation(victim, damager);
-												damager.setFireTicks(damager.getFireTicks() + (150 + 70 * level));
+											if(check.contains("Ignite")){
+												check = check.replaceAll("[^\\d.]", "");
+												int level = Integer.parseInt(check) - 1;
+												if(i <= 10 + level) {
+													animation(victim, damager);
+													damager.setFireTicks(damager.getFireTicks() + (150 + 70 * level));
+												}
 											}
 										}
 									}

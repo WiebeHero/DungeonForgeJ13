@@ -5,8 +5,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -63,7 +63,7 @@ public class XPAddWeapons implements Listener{
 											configList = config.getConfigurationSection("Items.Weapons").getKeys(false);
 											type = "Weapons";
 										}
-										else if(lore.contains(ChatColor.stripColor("Attack Damage:")) && !lore.contains(ChatColor.stripColor("Attack Speed:")) && !lore.contains(ChatColor.stripColor("Attack Range:"))){
+										else if(lore.contains(ChatColor.stripColor("Attack Damage:")) && lore.contains(ChatColor.stripColor("Attack Speed:")) && item.getType() == Material.BOW){
 											configList = config.getConfigurationSection("Items.Bows").getKeys(false);
 											type = "Bows";
 										}

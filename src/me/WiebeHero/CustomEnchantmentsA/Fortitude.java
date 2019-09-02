@@ -33,44 +33,47 @@ public class Fortitude implements Listener{
 					float i = ThreadLocalRandom.current().nextFloat() * 100;
 					DamageCause damageCause = event.getCause();
 					if(damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.PROJECTILE) {
-						if(victim.getInventory().getArmorContents() != null) {
+						if(victim.getInventory().getArmorContents() != null && victim.getInventory().getItemInOffHand() != null) {
 							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
 							items.add(victim.getInventory().getItemInOffHand());
 							for(ItemStack item : items) {
 								if(item != null) {
-									if(item.getItemMeta().getLore() != null) {
-										String check = "";
-										for(String s1 : item.getItemMeta().getLore()){
-											if(s1.contains(ChatColor.stripColor("Fortitude"))) {
-												check = ChatColor.stripColor(s1);
+									if(item.hasItemMeta()) {
+										if(item.getItemMeta().hasLore()) {
+											String check = "";
+											for(String s1 : item.getItemMeta().getLore()){
+												if(s1.contains(ChatColor.stripColor("Fortitude"))) {
+													check = ChatColor.stripColor(s1);
+												}
 											}
-										}
-										if(check.contains("Fortitude")){
-											check = check.replaceAll("[^\\d.]", "");
-											int level = Integer.parseInt(check) - 1;
-											if(i <= 10 + 2.5 * level) {
-												animation(victim);
-												double maxHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-												double heal = victim.getHealth() + (1 + level);
-												new BukkitRunnable() {
-													int count = 0;
-													int check = 1 + level;
-													public void run() {
-														if(count <= check) {
-															count++;
-															if(heal < maxHealth) {
-																victim.setHealth(victim.getHealth() + heal);
+											if(check.contains("Fortitude")){
+												check = check.replaceAll("[^\\d.]", "");
+												int level = Integer.parseInt(check) - 1;
+												if(i <= 10 + 2.5 * level) {
+													double maxHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+													double heal = 1 + level;
+													new BukkitRunnable() {
+														int count = 0;
+														int check = 2 + level;
+														public void run() {
+															if(count <= check) {
+																count++;
+																if(victim.getHealth() + heal <= maxHealth) {
+																	animation(victim);
+																	victim.setHealth(victim.getHealth() + heal);
+																}
+																else {
+																	animation(victim);
+																	victim.setHealth(maxHealth);
+																}
 															}
 															else {
-																victim.setHealth(maxHealth);
+																cancel();
+																count = 0;
 															}
 														}
-														else {
-															cancel();
-															count = 0;
-														}
-													}
-												}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+													}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+												}
 											}
 										}
 									}

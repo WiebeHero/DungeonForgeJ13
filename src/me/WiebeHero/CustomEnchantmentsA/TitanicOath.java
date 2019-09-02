@@ -21,13 +21,13 @@ public class TitanicOath implements Listener{
 	public void titanicOath(PlayerMoveEvent event) {
 		if(!event.isCancelled()) {
 			Player victim = (Player) event.getPlayer();
-			if(victim.getInventory().getArmorContents() != null) {
+			if(victim.getInventory().getArmorContents() != null && victim.getInventory().getItemInOffHand() != null) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getInventory().getArmorContents()));
 				items.add(victim.getInventory().getItemInOffHand());
 				for(ItemStack item : items) {
 					if(item != null) {
 						if(item.hasItemMeta()) {
-							if(item.getItemMeta().getLore() != null) {
+							if(item.getItemMeta().hasLore()) {
 								String check = "";
 								for(String s1 : item.getItemMeta().getLore()){
 									if(s1.contains(ChatColor.stripColor("Titanic Oath"))) {
