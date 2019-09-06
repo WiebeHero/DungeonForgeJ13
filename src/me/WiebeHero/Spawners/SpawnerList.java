@@ -1,5 +1,7 @@
 package me.WiebeHero.Spawners;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
@@ -23,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
@@ -30,6 +33,7 @@ public class SpawnerList implements Listener{
 	private static HashMap<UUID, Integer> mobList = new HashMap<UUID, Integer>();
 	private HashMap<UUID, Integer> teleportBack = new HashMap<UUID, Integer>();
 	private static HashMap<UUID, Integer> levelList = new HashMap<UUID, Integer>();
+	public HashMap<EntityType, Pair<ArrayList<ItemStack>, ArrayList<String>>> names = new HashMap<EntityType, Pair<ArrayList<ItemStack>, ArrayList<String>>>();
 	public void spawnerJoin() {
 		new BukkitRunnable() {
 			@Override
@@ -346,7 +350,7 @@ public class SpawnerList implements Listener{
 					  					double dub = randomDouble1(tier, levelList.get(mob.getUniqueId()));
 										attribute1.setBaseValue(dub);
 										mob.setHealth(dub);
-										attribute2.setBaseValue((0.20 + 0.01 * tier) + 0.001 * levelList.get(mob.getUniqueId()));
+										attribute2.setBaseValue((0.20 + 0.005 * tier) + 0.0015 * levelList.get(mob.getUniqueId()));
 								  		mobList.put(mob.getUniqueId(), tier);
 								  		teleportBack.put(mob.getUniqueId(), counter);
 						  			}
@@ -359,12 +363,54 @@ public class SpawnerList implements Listener{
 			}
 		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 900L);
 	}
+	public void addNames() {
+		Pair<ArrayList<ItemStack>, ArrayList<String>> pair = new Pair<>(new ArrayList<ItemStack>(Arrays.asList(
+		CustomEnchantments.getInstance().createHead("http://textures.minecraft.net/texture/3a77916e84769b2c9547934dd21aebedb1972758aa5a739b612743653f6ea"),
+		CustomEnchantments.getInstance().createHead("http://textures.minecraft.net/texture/b6b972e32d761b192626e5d6d01edc094940910103cea5e2e2d1f231adb755d5"),
+		CustomEnchantments.getInstance().createHead("http://textures.minecraft.net/texture/b7350fd2df430bc4b9aaecd13c51c951e5bfc9f133bad0cdaefe1922a9e47fa3")
+		)), new ArrayList<String>(Arrays.asList(
+		"Troll",
+		"Goblin",
+		"Undead"
+		)));
+		names.put(EntityType.ZOMBIE, pair);
+		pair = new Pair<>(new ArrayList<ItemStack>(Arrays.asList(
+		CustomEnchantments.getInstance().createHead(""),
+		CustomEnchantments.getInstance().createHead(""),
+		CustomEnchantments.getInstance().createHead("")
+		)), new ArrayList<String>(Arrays.asList(
+		"Troll",
+		"Goblin",
+		"Undead"
+		)));
+		names.put(EntityType.SKELETON, pair);
+		pair = new Pair<>(new ArrayList<ItemStack>(Arrays.asList(
+		CustomEnchantments.getInstance().createHead(""),
+		CustomEnchantments.getInstance().createHead(""),
+		CustomEnchantments.getInstance().createHead("")
+		)), new ArrayList<String>(Arrays.asList(
+		"Troll",
+		"Goblin",
+		"Undead"
+		)));
+		names.put(EntityType.SPIDER, pair);
+		pair = new Pair<>(new ArrayList<ItemStack>(Arrays.asList(
+		CustomEnchantments.getInstance().createHead(""),
+		CustomEnchantments.getInstance().createHead(""),
+		CustomEnchantments.getInstance().createHead("")
+		)), new ArrayList<String>(Arrays.asList(
+		"Troll",
+		"Goblin",
+		"Undead"
+		)));
+		names.put(EntityType.PIG_ZOMBIE, pair);
+	}
 	public double randomDouble() {
 		double i = ThreadLocalRandom.current().nextDouble() * 100;
 		return i;
 	}
 	public double randomDouble1(int tier, int level) {
-		double i = (20.00 + 7.50 * tier) + (0.5 * level);
+		double i = (5.00 + 7.50 * tier) + (0.25 * level);
 		return i;
 	}
 	public int dice() {
