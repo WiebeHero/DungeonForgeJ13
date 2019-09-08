@@ -41,18 +41,23 @@ public class NovisInventory extends NovisRewards implements Listener{
 	//
 	//
 	//--------------------------------------------------------------------------------------------------------------------
-	public void NewInventory1(Player player, ArrayList<ItemStack> finalLootList, String rarity) {
+	public void NewInventory1(Player player, ArrayList<ItemStack> finalLootList) {
 		Inventory i = plugin.getServer().createInventory(null, 27, (new ColorCodeTranslator().colorize("&6Decrypting Crystal...")));
 		player.openInventory(i);
 		check.add(player.getName());
+		ArrayList<ItemStack> lootList = new ArrayList<ItemStack>();
+		for(int i1 = 0; i1 <= 39; i1++) {
+			lootList.add(finalLootList.get(new Random().nextInt(finalLootList.size())));
+		}
+		ItemStack finalReward = lootList.get(35);
 		//--------------------------------------------------------------------------------------------------------------------
 		//Inventory Animation
 		//--------------------------------------------------------------------------------------------------------------------
 		bt1 = new BukkitRunnable() {
 			int counter = 17;
+			int count = 0;
 			@Override
 			public void run() {
-				int finalRewards = new Random().nextInt(finalLootList.size());
 				if(player.getOpenInventory().getTitle().contains(ChatColor.stripColor("Decrypting "))) {
 					i.setItem(0, emptyVoid(player));
 					i.setItem(1, emptyVoid(player));
@@ -63,15 +68,15 @@ public class NovisInventory extends NovisRewards implements Listener{
 					i.setItem(6, emptyVoid(player));
 					i.setItem(7, emptyVoid(player));
 					i.setItem(8, emptyVoid(player));
-					i.setItem(9, emptyVoid(player));
-					i.setItem(10, finalLootList.get(randomNumber(rarity)));
-					i.setItem(11, finalLootList.get(randomNumber(rarity)));
-					i.setItem(12, finalLootList.get(randomNumber(rarity)));
-					i.setItem(13, finalLootList.get(randomNumber(rarity)));
-					i.setItem(14, finalLootList.get(randomNumber(rarity)));
-					i.setItem(15, finalLootList.get(randomNumber(rarity)));
-					i.setItem(16, finalLootList.get(randomNumber(rarity)));
-					i.setItem(17, emptyVoid(player));
+					i.setItem(9, lootList.get(count));
+					i.setItem(10, lootList.get(count + 1));
+					i.setItem(11, lootList.get(count + 2));
+					i.setItem(12, lootList.get(count + 3));
+					i.setItem(13, lootList.get(count + 4));
+					i.setItem(14, lootList.get(count + 5));
+					i.setItem(15, lootList.get(count + 6));
+					i.setItem(16, lootList.get(count + 7));
+					i.setItem(17, lootList.get(count + 8));
 					i.setItem(18, emptyVoid(player));
 					i.setItem(19, emptyVoid(player));
 					i.setItem(20, emptyVoid(player));
@@ -84,6 +89,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.4);
 					}
+					count++;
 					counter--;
 					if(counter == 0) {
 						cancel();
@@ -101,19 +107,20 @@ public class NovisInventory extends NovisRewards implements Listener{
 									i.setItem(6, emptyVoid(player));
 									i.setItem(7, emptyVoid(player));
 									i.setItem(8, emptyVoid(player));
-									i.setItem(9, emptyVoid(player));
-									i.setItem(10, emptyVoid(player));
-									i.setItem(11, finalLootList.get(randomNumber(rarity)));
-									i.setItem(12, finalLootList.get(randomNumber(rarity)));
-									i.setItem(13, finalLootList.get(randomNumber(rarity)));
-									i.setItem(14, finalLootList.get(randomNumber(rarity)));
-									i.setItem(15, finalLootList.get(randomNumber(rarity)));
-									i.setItem(16, emptyVoid(player));
-									i.setItem(17, emptyVoid(player));
+									i.setItem(9, lootList.get(count));
+									i.setItem(10, lootList.get(count + 1));
+									i.setItem(11, lootList.get(count + 2));
+									i.setItem(12, lootList.get(count + 3));
+									i.setItem(13, lootList.get(count + 4));
+									i.setItem(14, lootList.get(count + 5));
+									i.setItem(15, lootList.get(count + 6));
+									i.setItem(16, lootList.get(count + 7));
+									i.setItem(17, lootList.get(count + 8));
 									i.setItem(18, emptyVoid(player));
 									i.setItem(19, emptyVoid(player));
 									i.setItem(20, emptyVoid(player));
 									i.setItem(21, emptyVoid(player));
+									i.setItem(22, emptyVoid(player));
 									i.setItem(23, emptyVoid(player));
 									i.setItem(24, emptyVoid(player));
 									i.setItem(25, emptyVoid(player));
@@ -121,6 +128,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									for(Player victim1 : Bukkit.getOnlinePlayers()) {
 										((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.6);
 									}
+									count++;
 									counter--;
 									if(counter == 0) {
 										cancel();
@@ -138,15 +146,15 @@ public class NovisInventory extends NovisRewards implements Listener{
 													i.setItem(6, emptyVoid(player));
 													i.setItem(7, emptyVoid(player));
 													i.setItem(8, emptyVoid(player));
-													i.setItem(9, emptyVoid(player));
-													i.setItem(10, emptyVoid(player));
-													i.setItem(11, emptyVoid(player));
-													i.setItem(12, finalLootList.get(randomNumber(rarity)));
-													i.setItem(13, finalLootList.get(randomNumber(rarity)));
-													i.setItem(14, finalLootList.get(randomNumber(rarity)));
-													i.setItem(15, emptyVoid(player));
-													i.setItem(16, emptyVoid(player));
-													i.setItem(17, emptyVoid(player));
+													i.setItem(9, lootList.get(count));
+													i.setItem(10, lootList.get(count + 1));
+													i.setItem(11, lootList.get(count + 2));
+													i.setItem(12, lootList.get(count + 3));
+													i.setItem(13, lootList.get(count + 4));
+													i.setItem(14, lootList.get(count + 5));
+													i.setItem(15, lootList.get(count + 6));
+													i.setItem(16, lootList.get(count + 7));
+													i.setItem(17, lootList.get(count + 8));
 													i.setItem(18, emptyVoid(player));
 													i.setItem(19, emptyVoid(player));
 													i.setItem(20, emptyVoid(player));
@@ -159,6 +167,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 													for(Player victim1 : Bukkit.getOnlinePlayers()) {
 														((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.8);
 													}
+													count++;
 													counter--;
 													if(counter == 0) {
 														cancel();
@@ -174,15 +183,15 @@ public class NovisInventory extends NovisRewards implements Listener{
 																i.setItem(6, emptyVoid(player));
 																i.setItem(7, emptyVoid(player));
 																i.setItem(8, emptyVoid(player));
-																i.setItem(9, emptyVoid(player));
-																i.setItem(10, emptyVoid(player));
-																i.setItem(11, emptyVoid(player));
-																i.setItem(12, emptyVoid(player));
-																i.setItem(13, finalLootList.get(randomNumber(rarity)));
-																i.setItem(14, emptyVoid(player));
-																i.setItem(15, emptyVoid(player));
-																i.setItem(16, emptyVoid(player));
-																i.setItem(17, emptyVoid(player));
+																i.setItem(9, lootList.get(count));
+																i.setItem(10, lootList.get(count + 1));
+																i.setItem(11, lootList.get(count + 2));
+																i.setItem(12, lootList.get(count + 3));
+																i.setItem(13, lootList.get(count + 4));
+																i.setItem(14, lootList.get(count + 5));
+																i.setItem(15, lootList.get(count + 6));
+																i.setItem(16, lootList.get(count + 7));
+																i.setItem(17, lootList.get(count + 8));
 																i.setItem(18, emptyVoid(player));
 																i.setItem(19, emptyVoid(player));
 																i.setItem(20, emptyVoid(player));
@@ -196,22 +205,14 @@ public class NovisInventory extends NovisRewards implements Listener{
 																	((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
 																}
 																cancel();
-																player.getInventory().addItem(finalLootList.get(finalRewards));
-																new BukkitRunnable() {
-																	@Override
-																	public void run() {
-																		if(player.getOpenInventory().getTitle().contains(ChatColor.stripColor("Decrypting "))) {
-																			player.closeInventory();
-																		}
-																	}
-																}.runTaskLater(CustomEnchantments.getInstance(), 0L);
+																player.getInventory().addItem(finalReward);
 															}
 														}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 16L);
 													}
 												}
 												else {
 													cancel();
-													player.getInventory().addItem(finalLootList.get(finalRewards));
+													player.getInventory().addItem(finalReward);
 												}
 											}
 										}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 12L);
@@ -219,7 +220,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 								}
 								else {
 									cancel();
-									player.getInventory().addItem(finalLootList.get(finalRewards));
+									player.getInventory().addItem(finalReward);
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 6L);
@@ -227,7 +228,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 				}
 				else {
 					cancel();
-					player.getInventory().addItem(finalLootList.get(finalRewards));
+					player.getInventory().addItem(finalReward);
 				}
 			}
 		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 3L);
@@ -250,7 +251,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Common Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Common"), "Common");
+										novis1.NewInventory1(player, listSelection("Common"));
 										check.add(player.getName());
 										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
@@ -261,7 +262,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Rare Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Rare"), "Rare");
+										novis1.NewInventory1(player, listSelection("Rare"));
 										check.add(player.getName());
 										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
@@ -272,7 +273,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Epic Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Epic"), "Epic");
+										novis1.NewInventory1(player, listSelection("Epic"));
 										check.add(player.getName());
 										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
@@ -283,7 +284,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Legendary Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Legendary"), "Legendary");
+										novis1.NewInventory1(player, listSelection("Legendary"));
 										check.add(player.getName());
 										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
@@ -294,7 +295,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Mythic Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Mythic"), "Mythic");
+										novis1.NewInventory1(player, listSelection("Mythic"));
 										check.add(player.getName());
 										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
@@ -305,7 +306,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Heroic Crystal"))) {
 										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Heroic"), "Heroic");
+										novis1.NewInventory1(player, listSelection("Heroic"));
 										check.add(player.getName());
 										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
 											  public void run() {
@@ -347,31 +348,6 @@ public class NovisInventory extends NovisRewards implements Listener{
 				return;
 			}
 		}
-	}
-	//--------------------------------------------------------------------------------------------------------------------
-	//Random Reward Selection
-	//--------------------------------------------------------------------------------------------------------------------
-	public int randomNumber(String s) {
-		int number = 0;
-		if(s.contains("Common")) {
-			number = new Random().nextInt(NovisRewards.rewards1.size());
-		}
-		if(s.contains("Rare")) {
-			number = new Random().nextInt(NovisRewards.rewards2.size());
-		}
-		if(s.contains("Epic")) {
-			number = new Random().nextInt(NovisRewards.rewards3.size());
-		}
-		if(s.contains("Legendary")) {
-			number = new Random().nextInt(NovisRewards.rewards4.size());
-		}
-		if(s.contains("Mythic")) {
-			number = new Random().nextInt(NovisRewards.rewards5.size());
-		}
-		if(s.contains("Heroic")) {
-			number = new Random().nextInt(NovisRewards.rewards6.size());
-		}
-		return number;
 	}
 	public ArrayList<ItemStack> listSelection(String s) {
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();

@@ -17,6 +17,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 
 public class SetSpawner implements Listener,CommandExecutor{
@@ -111,28 +112,33 @@ public class SetSpawner implements Listener,CommandExecutor{
 									exp.printStackTrace();
 								}
 								if(type != null) {
-									if(locationSpawner.isEmpty()) {
-										locationSpawner.put(1, player.getLocation());
-										tieredList.put(1, tier);
-										entityTypeList.put(1, mobType);
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new spawner with the id of &61 &ahas been created!"));
+									if(SpawnerList.getNameList().containsKey(type)) {
+										if(locationSpawner.isEmpty()) {
+											locationSpawner.put(1, player.getLocation());
+											tieredList.put(1, tier);
+											entityTypeList.put(1, mobType);
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new spawner with the id of &61 &ahas been created!"));
+										}
+										else {
+											int currentId = locationSpawner.size() + 1;
+											for(int i = 1; i <= locationSpawner.lastKey(); i++) {
+												if(locationSpawner.get(i) == null) {
+													currentId = i;
+													break;
+												}
+											}
+											locationSpawner.put(currentId, player.getLocation());
+											tieredList.put(currentId, tier);
+											entityTypeList.put(currentId, mobType);
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new spawner with the id of &6" + currentId + " &ahas been created!"));
+										}
 									}
 									else {
-										int currentId = locationSpawner.size() + 1;
-										for(int i = 1; i <= locationSpawner.lastKey(); i++) {
-											if(locationSpawner.get(i) == null) {
-												currentId = i;
-												break;
-											}
-										}
-										locationSpawner.put(currentId, player.getLocation());
-										tieredList.put(currentId, tier);
-										entityTypeList.put(currentId, mobType);
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new spawner with the id of &6" + currentId + " &ahas been created!"));
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis mob type is NOT in the list."));
 									}
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid mob type."));
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cMob type is invalid."));
 								}
 							}
 							else {

@@ -452,6 +452,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		cw.addAmuletOfPower();
 		cw.addAmuletOfSpeed();
 		cw.addAmuletOfToughness();
+		sp.addNames();
 		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
 		try{

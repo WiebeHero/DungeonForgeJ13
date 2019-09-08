@@ -46,6 +46,12 @@ public class SkillJoin implements Listener{
 					player.getInventory().addItem(divineC());
 					player.getInventory().addItem(divineL());
 					player.getInventory().addItem(divineB());
+					player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 16));
+					player.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 4));
+					player.getInventory().addItem(new ItemStack(Material.TORCH, 16));
+					player.getInventory().addItem(new ItemStack(Material.OAK_LOG, 64));
+					player.getInventory().addItem(new ItemStack(Material.STONE, 64));
+					player.getInventory().addItem(new ItemStack(Material.BUCKET, 2));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 		}
@@ -77,8 +83,8 @@ public class SkillJoin implements Listener{
 		meta1.setDisplayName(new ColorCodeTranslator().colorize("&7Apprentice Helmet &a[&6Lv 1&a]"));
 		ArrayList<String> lore1 = new ArrayList<String>();
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.50"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.20"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &61.5"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.65"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 		lore1.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
@@ -116,8 +122,8 @@ public class SkillJoin implements Listener{
 		nmsStack1.setTag(compound1);
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
 		NBTItem item = new NBTItem(newItem);
-		item.setDouble("Defense", 0.50);
-		item.setDouble("Toughness", 0.20);
+		item.setDouble("Defense", 1.5);
+		item.setDouble("Toughness", 0.65);
 		item1 = item.getItem();
 		return item1;
 	}
@@ -130,8 +136,8 @@ public class SkillJoin implements Listener{
 		meta1.setDisplayName(new ColorCodeTranslator().colorize("&7Apprentice Chestplate &a[&6Lv 1&a]"));
 		ArrayList<String> lore1 = new ArrayList<String>();
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.50"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.20"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &61.5"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.65"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 		lore1.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
@@ -169,8 +175,8 @@ public class SkillJoin implements Listener{
 		nmsStack1.setTag(compound1);
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
 		NBTItem item = new NBTItem(newItem);
-		item.setDouble("Defense", 0.50);
-		item.setDouble("Toughness", 0.20);
+		item.setDouble("Defense", 1.5);
+		item.setDouble("Toughness", 0.65);
 		item1 = item.getItem();
 		return item1;
 	}
@@ -183,8 +189,8 @@ public class SkillJoin implements Listener{
 		meta1.setDisplayName(new ColorCodeTranslator().colorize("&7Apprentice Leggings &a[&6Lv 1&a]"));
 		ArrayList<String> lore1 = new ArrayList<String>();
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.50"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.20"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &61.5"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.65"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 		lore1.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
@@ -222,8 +228,8 @@ public class SkillJoin implements Listener{
 		nmsStack1.setTag(compound1);
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
 		NBTItem item = new NBTItem(newItem);
-		item.setDouble("Defense", 0.50);
-		item.setDouble("Toughness", 0.20);
+		item.setDouble("Defense", 1.5);
+		item.setDouble("Toughness", 0.65);
 		item1 = item.getItem();
 		return item1;
 	}
@@ -236,8 +242,8 @@ public class SkillJoin implements Listener{
 		meta1.setDisplayName(new ColorCodeTranslator().colorize("&7Apprentice Boots &a[&6Lv 1&a]"));
 		ArrayList<String> lore1 = new ArrayList<String>();
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.50"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.20"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Armor Defense: &61.5"));
+		lore1.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.65"));
 		lore1.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 		lore1.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 		lore1.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
@@ -275,8 +281,8 @@ public class SkillJoin implements Listener{
 		nmsStack1.setTag(compound1);
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
 		NBTItem item = new NBTItem(newItem);
-		item.setDouble("Defense", 0.50);
-		item.setDouble("Toughness", 0.20);
+		item.setDouble("Defense", 1.5);
+		item.setDouble("Toughness", 0.65);
 		item1 = item.getItem();
 		return item1;
 	}

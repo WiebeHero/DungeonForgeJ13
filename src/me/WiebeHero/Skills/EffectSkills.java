@@ -299,7 +299,7 @@ public class EffectSkills implements Listener{
 				if(arrow.getShooter() != null && arrow.getShooter() instanceof Player && event.getEntity() instanceof LivingEntity) {
 					Player damager = (Player) arrow.getShooter();
 					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
-					if(arrowList.containsKey(arrow.getUniqueId())) {
+					if(arrowList.containsKey(arrow.getUniqueId()) && arrowDamage.containsKey(arrow.getUniqueId())) {
 						double damage = arrowDamage.get(arrow.getUniqueId());
 						event.setDamage(damage / 100.00 * (dfPlayer.getRndCal() + 100.00) * arrowList.get(arrow.getUniqueId()));
 						arrowList.remove(arrow.getUniqueId());

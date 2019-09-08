@@ -271,8 +271,8 @@ public class NovisRewards {
 			if(item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_LEGGINGS || item.getType() == Material.LEATHER_BOOTS) {
 				LeatherArmorMeta meta1 = (LeatherArmorMeta) item.getItemMeta();
 				int red = config.getInt("Items.Armor." + listItemsArmor.get(i) + ".RGB.Red");
-				int blue = config.getInt("Items.Armor." + listItemsArmor.get(i) + ".RGB.Blue");
 				int green = config.getInt("Items.Armor." + listItemsArmor.get(i) + ".RGB.Green");
+				int blue = config.getInt("Items.Armor." + listItemsArmor.get(i) + ".RGB.Blue");
 				meta1.setColor(Color.fromRGB(red, green, blue));
 				item.setItemMeta(meta1);
 			}

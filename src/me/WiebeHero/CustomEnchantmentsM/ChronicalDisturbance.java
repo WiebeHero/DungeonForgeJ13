@@ -44,7 +44,7 @@ public class ChronicalDisturbance extends SwordSwingProgress implements Listener
 										if(check.contains("Chronical Disturbance")){
 											check = check.replaceAll("[^\\d.]", "");
 											int level = Integer.parseInt(check) - 1;
-											if(i <= 1) {
+											if(i <= 3.5 + 1.5 * level) {
 												new BukkitRunnable() {
 													int count = 0;
 													public void run() {
