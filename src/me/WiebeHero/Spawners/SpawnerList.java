@@ -33,6 +33,7 @@ public class SpawnerList implements Listener{
 	private static HashMap<UUID, Integer> mobList = new HashMap<UUID, Integer>();
 	private HashMap<UUID, Integer> teleportBack = new HashMap<UUID, Integer>();
 	private static HashMap<UUID, Integer> levelList = new HashMap<UUID, Integer>();
+	private HashMap<Integer, Boolean> goList = new HashMap<Integer, Boolean>();
 	public static HashMap<EntityType, Pair<ArrayList<ItemStack>, ArrayList<String>>> names = new HashMap<EntityType, Pair<ArrayList<ItemStack>, ArrayList<String>>>();
 	public void spawnerJoin() {
 		new BukkitRunnable() {
@@ -76,276 +77,295 @@ public class SpawnerList implements Listener{
 			@Override
 			public void run() {
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
-					if(!SetSpawner.getSpawnerLocList().isEmpty()) {
-						for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
-							if(SetSpawner.getSpawnerLocList().get(counter) != null) {
-								boolean check = false;
-			  					Location fixedLoc = SetSpawner.getSpawnerLocList().get(counter);
-			  					int countMobs = 0;
-			  					fixedLoc.setWorld(Bukkit.getWorld(SetSpawner.getSpawnerLocList().get(counter).getWorld().getName()));
-			  					for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 40, 40, 40)) {
-			  						if(e1 instanceof Player) {
-			  							check = true;
-			  							break;
-			  						}
-			  					}
-					  			for(Entity e : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 30, 30, 30)) {
-					  				if(e != null) {
-					  					if(teleportBack.containsKey(e.getUniqueId())) {
-						  					if(teleportBack.get(e.getUniqueId()) == counter) {
-						  						countMobs++;
-						  					}
-					  					}
-					  				}
-					  			}
-					  			if(check == true) {
-						  			int tier = SetSpawner.getTieredList().get(counter);
-						  			int temp = (int) Math.round(tier / 2);
-						  			int tier1 = new Random().nextInt(temp + 1);
-						  			int mobMax = 2 + tier1 - countMobs;
-						  			for(int i = 0; i <= mobMax; i++) {
-						  				Location spawnLoc = new Location(Bukkit.getWorld(SetSpawner.getSpawnerLocList().get(counter).getWorld().getName()), SetSpawner.getSpawnerLocList().get(counter).getX(), SetSpawner.getSpawnerLocList().get(counter).getY(), SetSpawner.getSpawnerLocList().get(counter).getZ());
-						  				double originalY = spawnLoc.getY();
-						  				double x = spawnLoc.getX();
-						  				double z = spawnLoc.getZ();
-					  					spawnLoc.setX(spawnLoc.getX() + randomLocOffSet());
-					  					spawnLoc.setZ(spawnLoc.getZ() + randomLocOffSet());
-						  				for(double y1 = spawnLoc.getY() + 10.00; y1 > 0;) {
-						  					y1--;
-						  					spawnLoc.setY(y1);
-						  					if(spawnLoc.getBlock().getType() != Material.AIR) {
-						  						spawnLoc.setY(y1 + 2.00);
-						  						if(spawnLoc.getBlock().getType() == Material.AIR) {
-						  							break;
-						  						}
-						  						else {
-						  							y1 = originalY + 10.00;
-						  							spawnLoc.setX(spawnLoc.getX() + randomLocOffSet());
-								  					spawnLoc.setZ(spawnLoc.getZ() + randomLocOffSet());
-						  						}
-						  					}
-						  				}
-						  				LivingEntity mob = (LivingEntity) spawnLoc.getWorld().spawnEntity(spawnLoc, EntityType.valueOf(SetSpawner.getTypeList().get(counter)));
-						  				SetSpawner.getSpawnerLocList().get(counter).setX(x);
-						  				SetSpawner.getSpawnerLocList().get(counter).setZ(z);
-						  				Pair<ArrayList<ItemStack>, ArrayList<String>> list = names.get(EntityType.valueOf(SetSpawner.getTypeList().get(counter)));
-						  				int rand = randomHead();
-						  				String name = list.getValue().get(rand);
-						  				ItemStack head = list.getKey().get(rand);
-						  				if(mob instanceof Zombie) {
-						  					Zombie zombie = (Zombie) mob;
-						  					zombie.setBaby(false);
-						  				}
-						  				else if(mob instanceof PigZombie) {
-						  					Zombie zombie = (Zombie) mob;
-						  					zombie.setBaby(false);
-						  				}
-						  				mob.getEquipment().setHelmet(head);
-					  					int level = (new Random().nextInt(20) + 20 * (tier - 1));
-					  					if(level == 0) {
-					  						level++;
-					  					}
-					  					levelList.put(mob.getUniqueId(), level);
-						  				mob.setCustomName(new ColorCodeTranslator().colorize(name + " &b[&6Lv " + levelList.get(mob.getUniqueId()) + "&b]"));
-						  				mob.setCustomNameVisible(true);
-						  				mob.getEquipment().setHelmet(head);
-						  				if(tier == 1) {
-						  					if(randomDouble() <= 10 + 0.3 * level) {
-						  						mob.getEquipment().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
-						  					}
-						  					if(randomDouble() <= 10 + 0.3 * level) {
-						  						mob.getEquipment().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS, 1));
-						  					}
-						  					if(randomDouble() <= 10 + 0.3 * level) {
-						  						mob.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS, 1));
-						  					}
-						  					int dice = dice();
-						  					if(dice == 1) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_SWORD, 1));
-					  						}
-						  					else if(dice == 2) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_AXE, 1));
-					  						}
-						  					else if(dice == 3) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_PICKAXE, 1));
-					  						}
-						  					else if(dice == 4) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_SHOVEL, 1));
-					  						}
-						  					else if(dice == 5) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_HOE, 1));
-					  						}
-						  				}
-						  				else if(tier == 2) {
-						  					if(randomDouble() <= 15 + 0.35 * level) {
-						  						mob.getEquipment().setChestplate(new ItemStack(Material.GOLDEN_CHESTPLATE, 1));
-						  					}
-						  					if(randomDouble() <= 15 + 0.35 * level) {
-						  						mob.getEquipment().setLeggings(new ItemStack(Material.GOLDEN_LEGGINGS, 1));
-						  					}
-						  					if(randomDouble() <= 15 + 0.35 * level) {
-						  						mob.getEquipment().setBoots(new ItemStack(Material.GOLDEN_BOOTS, 1));
-						  					}
-						  					int dice = dice();
-						  					if(dice == 1) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_SWORD, 1));
-					  						}
-						  					else if(dice == 2) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_AXE, 1));
-					  						}
-						  					else if(dice == 3) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_PICKAXE, 1));
-					  						}
-						  					else if(dice == 4) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_SHOVEL, 1));
-					  						}
-						  					else if(dice == 5) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_HOE, 1));
-					  						}
-						  				}
-						  				else if(tier == 3) {
-						  					if(randomDouble() <= 20 + 0.4 * level) {
-						  						mob.getEquipment().setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1));
-						  					}
-						  					if(randomDouble() <= 20 + 0.4 * level) {
-						  						mob.getEquipment().setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1));
-						  					}
-						  					if(randomDouble() <= 20 + 0.4 * level) {
-						  						mob.getEquipment().setBoots(new ItemStack(Material.CHAINMAIL_BOOTS, 1));
-						  					}
-						  					int dice = dice();
-						  					if(dice == 1) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SWORD, 1));
-					  						}
-						  					else if(dice == 2) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_AXE, 1));
-					  						}
-						  					else if(dice == 3) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_PICKAXE, 1));
-					  						}
-						  					else if(dice == 4) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SHOVEL, 1));
-					  						}
-						  					else if(dice == 5) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_HOE, 1));
-					  						}
-						  				}
-						  				else if(tier == 4) {
-						  					if(randomDouble() <= 25 + 0.45 * level) {
-						  						mob.getEquipment().setChestplate(new ItemStack(Material.IRON_CHESTPLATE, 1));
-						  					}
-						  					if(randomDouble() <= 25 + 0.45 * level) {
-						  						mob.getEquipment().setLeggings(new ItemStack(Material.IRON_LEGGINGS, 1));
-						  					}
-						  					if(randomDouble() <= 25 + 0.45 * level) {
-						  						mob.getEquipment().setBoots(new ItemStack(Material.IRON_BOOTS, 1));
-						  					}
-						  					int dice = dice();
-						  					if(dice == 1) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD, 1));
-					  						}
-						  					else if(dice == 2) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_AXE, 1));
-					  						}
-						  					else if(dice == 3) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_PICKAXE, 1));
-					  						}
-						  					else if(dice == 4) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SHOVEL, 1));
-					  						}
-						  					else if(dice == 5) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_HOE, 1));
-					  						}
-						  				}
-						  				else if(tier == 5) {
-						  					if(randomDouble() <= 30 + 0.5 * level) {
-						  						mob.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE, 1));
-						  					}
-						  					if(randomDouble() <= 30 + 0.5 * level) {
-						  						mob.getEquipment().setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
-						  					}
-						  					if(randomDouble() <= 30 + 0.5 * level) {
-						  						mob.getEquipment().setBoots(new ItemStack(Material.DIAMOND_BOOTS, 1));
-						  					}
-						  					int dice = dice();
-						  					if(dice == 1) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_SWORD, 1));
-					  						}
-						  					else if(dice == 2) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_AXE, 1));
-					  						}
-						  					else if(dice == 3) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_PICKAXE, 1));
-					  						}
-						  					else if(dice == 4) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_SHOVEL, 1));
-					  						}
-						  					else if(dice == 5) {
-					  							mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_HOE, 1));
-					  						}
-						  				}
-					  					if(enchantmentChance() < 40 + 10 * tier) {
-						  					if(mob.getEquipment().getHelmet() != null) {
-						  						if(mob.getEquipment().getHelmet().hasItemMeta()) {
-							  						ItemMeta meta = mob.getEquipment().getHelmet().getItemMeta();
-							  						meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, enchantmentLevel(tier), true);
-							  						mob.getEquipment().getHelmet().setItemMeta(meta);
-						  						}
-						  					}
-						  				}
-					  					if(enchantmentChance() < 40 + 10 * tier) {
-						  					if(mob.getEquipment().getChestplate() != null) {
-						  						if(mob.getEquipment().getChestplate().hasItemMeta()) {
-							  						ItemMeta meta = mob.getEquipment().getChestplate().getItemMeta();
-							  						meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, enchantmentLevel(tier), true);
-							  						mob.getEquipment().getChestplate().setItemMeta(meta);
-						  						}
-						  					}
-						  				}
-					  					if(enchantmentChance() < 40 + 10 * tier) {
-						  					if(mob.getEquipment().getLeggings() != null) {
-						  						if(mob.getEquipment().getLeggings().hasItemMeta()) {
-							  						ItemMeta meta = mob.getEquipment().getLeggings().getItemMeta();
-							  						meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, enchantmentLevel(tier), true);
-							  						mob.getEquipment().getLeggings().setItemMeta(meta);
-						  						}
-						  					}
-						  				}
-					  					if(enchantmentChance() < 40 + 10 * tier) {
-						  					if(mob.getEquipment().getBoots() != null) {
-						  						if(mob.getEquipment().getBoots().hasItemMeta()) {
-							  						ItemMeta meta = mob.getEquipment().getBoots().getItemMeta();
-							  						meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, enchantmentLevel(tier), true);
-							  						mob.getEquipment().getBoots().setItemMeta(meta);
-						  						}
-						  					}
-						  				}
-					  					if(enchantmentChance() < 40 + 10 * tier) {
-						  					if(mob.getEquipment().getItemInMainHand() != null) {
-						  						if(mob.getEquipment().getItemInMainHand().hasItemMeta()) {
-							  						ItemMeta meta = mob.getEquipment().getItemInMainHand().getItemMeta();
-							  						meta.addEnchant(Enchantment.DAMAGE_ALL, enchantmentLevel(tier), true);
-							  						mob.getEquipment().getItemInMainHand().setItemMeta(meta);
-						  						}
-						  					}
-						  				}
-					  					AttributeInstance attribute1 = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-					  					AttributeInstance attribute2 = mob.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-					  					double dub = randomDouble1(tier, levelList.get(mob.getUniqueId()));
-										attribute1.setBaseValue(dub);
-										mob.setHealth(dub);
-										attribute2.setBaseValue((0.20 + 0.005 * tier) + 0.001 * levelList.get(mob.getUniqueId()));
-								  		mobList.put(mob.getUniqueId(), tier);
-								  		teleportBack.put(mob.getUniqueId(), counter);
-						  			}
-					  			}
-					  			countMobs = 0;
+					for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
+						boolean check = false;
+						Location fixedLoc = SetSpawner.getSpawnerLocList().get(counter);
+						for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 30, 30, 30)) {
+							if(e1 instanceof Player) {
+								check = true;
+								break;
+							}
+						}
+						if(check == true) {
+							if(goList.containsKey(counter)) {
+								if(goList.get(counter) == true) {
+									goList.put(counter, false);
+									spawnMob(counter);
+								}
 							}
 						}
 					}
 				}
 			}
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 50L);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if(CustomEnchantments.getInstance().getShutdownState() == false) {
+					if(!SetSpawner.getSpawnerLocList().isEmpty()) {
+						for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
+							goList.put(counter, true);
+						}
+					}
+				}
+			}
 		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 900L);
+	}
+	public void spawnMob(int counter) {
+		if(SetSpawner.getSpawnerLocList().get(counter) != null) {
+			Location fixedLoc = SetSpawner.getSpawnerLocList().get(counter);
+			int countMobs = 0;
+			fixedLoc.setWorld(Bukkit.getWorld(SetSpawner.getSpawnerLocList().get(counter).getWorld().getName()));
+  			for(Entity e : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 30, 30, 30)) {
+  				if(e != null) {
+  					if(teleportBack.containsKey(e.getUniqueId())) {
+	  					if(teleportBack.get(e.getUniqueId()) == counter) {
+	  						countMobs++;
+	  					}
+  					}
+  				}
+  			}
+  			int tier = SetSpawner.getTieredList().get(counter);
+  			int temp = (int) Math.round(tier / 2);
+  			int tier1 = new Random().nextInt(temp + 1);
+  			int mobMax = 2 + tier1 - countMobs;
+  			for(int i = 0; i <= mobMax; i++) {
+  				Location spawnLoc = new Location(Bukkit.getWorld(SetSpawner.getSpawnerLocList().get(counter).getWorld().getName()), SetSpawner.getSpawnerLocList().get(counter).getX(), SetSpawner.getSpawnerLocList().get(counter).getY(), SetSpawner.getSpawnerLocList().get(counter).getZ());
+  				double originalY = spawnLoc.getY();
+  				double x = spawnLoc.getX();
+  				double z = spawnLoc.getZ();
+				spawnLoc.setX(spawnLoc.getX() + randomLocOffSet());
+				spawnLoc.setZ(spawnLoc.getZ() + randomLocOffSet());
+  				for(double y1 = spawnLoc.getY() + 10.00; y1 > 0;) {
+  					y1--;
+  					spawnLoc.setY(y1);
+  					if(spawnLoc.getBlock().getType() != Material.AIR) {
+  						spawnLoc.setY(y1 + 2.00);
+  						if(spawnLoc.getBlock().getType() == Material.AIR) {
+  							break;
+  						}
+  						else {
+  							y1 = originalY + 10.00;
+  							spawnLoc.setX(spawnLoc.getX() + randomLocOffSet());
+		  					spawnLoc.setZ(spawnLoc.getZ() + randomLocOffSet());
+  						}
+  					}
+  				}
+  				LivingEntity mob = (LivingEntity) spawnLoc.getWorld().spawnEntity(spawnLoc, EntityType.valueOf(SetSpawner.getTypeList().get(counter)));
+  				SetSpawner.getSpawnerLocList().get(counter).setX(x);
+  				SetSpawner.getSpawnerLocList().get(counter).setZ(z);
+  				Pair<ArrayList<ItemStack>, ArrayList<String>> list = names.get(EntityType.valueOf(SetSpawner.getTypeList().get(counter)));
+  				int rand = randomHead();
+  				String name = list.getValue().get(rand);
+  				ItemStack head = list.getKey().get(rand);
+  				if(mob instanceof Zombie) {
+  					Zombie zombie = (Zombie) mob;
+  					zombie.setBaby(false);
+  				}
+  				else if(mob instanceof PigZombie) {
+  					Zombie zombie = (Zombie) mob;
+  					zombie.setBaby(false);
+  				}
+  				mob.getEquipment().setHelmet(head);
+				int level = (new Random().nextInt(20) + 20 * (tier - 1));
+				if(level == 0) {
+					level++;
+				}
+				levelList.put(mob.getUniqueId(), level);
+  				mob.setCustomName(new ColorCodeTranslator().colorize(name + " &b[&6Lv " + levelList.get(mob.getUniqueId()) + "&b]"));
+  				mob.setCustomNameVisible(true);
+  				mob.getEquipment().setHelmet(head);
+  				if(tier == 1) {
+  					if(randomDouble() <= 10 + 0.3 * level) {
+  						mob.getEquipment().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
+  					}
+  					if(randomDouble() <= 10 + 0.3 * level) {
+  						mob.getEquipment().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS, 1));
+  					}
+  					if(randomDouble() <= 10 + 0.3 * level) {
+  						mob.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS, 1));
+  					}
+  					int dice = dice();
+  					if(dice == 1) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_SWORD, 1));
+					}
+  					else if(dice == 2) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_AXE, 1));
+					}
+  					else if(dice == 3) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_PICKAXE, 1));
+					}
+  					else if(dice == 4) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_SHOVEL, 1));
+					}
+  					else if(dice == 5) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_HOE, 1));
+					}
+  				}
+  				else if(tier == 2) {
+  					if(randomDouble() <= 15 + 0.35 * level) {
+  						mob.getEquipment().setChestplate(new ItemStack(Material.GOLDEN_CHESTPLATE, 1));
+  					}
+  					if(randomDouble() <= 15 + 0.35 * level) {
+  						mob.getEquipment().setLeggings(new ItemStack(Material.GOLDEN_LEGGINGS, 1));
+  					}
+  					if(randomDouble() <= 15 + 0.35 * level) {
+  						mob.getEquipment().setBoots(new ItemStack(Material.GOLDEN_BOOTS, 1));
+  					}
+  					int dice = dice();
+  					if(dice == 1) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_SWORD, 1));
+					}
+  					else if(dice == 2) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_AXE, 1));
+					}
+  					else if(dice == 3) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_PICKAXE, 1));
+					}
+  					else if(dice == 4) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_SHOVEL, 1));
+					}
+  					else if(dice == 5) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_HOE, 1));
+					}
+  				}
+  				else if(tier == 3) {
+  					if(randomDouble() <= 20 + 0.4 * level) {
+  						mob.getEquipment().setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1));
+  					}
+  					if(randomDouble() <= 20 + 0.4 * level) {
+  						mob.getEquipment().setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1));
+  					}
+  					if(randomDouble() <= 20 + 0.4 * level) {
+  						mob.getEquipment().setBoots(new ItemStack(Material.CHAINMAIL_BOOTS, 1));
+  					}
+  					int dice = dice();
+  					if(dice == 1) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SWORD, 1));
+					}
+  					else if(dice == 2) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_AXE, 1));
+					}
+  					else if(dice == 3) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_PICKAXE, 1));
+					}
+  					else if(dice == 4) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SHOVEL, 1));
+					}
+  					else if(dice == 5) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_HOE, 1));
+					}
+  				}
+  				else if(tier == 4) {
+  					if(randomDouble() <= 25 + 0.45 * level) {
+  						mob.getEquipment().setChestplate(new ItemStack(Material.IRON_CHESTPLATE, 1));
+  					}
+  					if(randomDouble() <= 25 + 0.45 * level) {
+  						mob.getEquipment().setLeggings(new ItemStack(Material.IRON_LEGGINGS, 1));
+  					}
+  					if(randomDouble() <= 25 + 0.45 * level) {
+  						mob.getEquipment().setBoots(new ItemStack(Material.IRON_BOOTS, 1));
+  					}
+  					int dice = dice();
+  					if(dice == 1) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD, 1));
+					}
+  					else if(dice == 2) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_AXE, 1));
+					}
+  					else if(dice == 3) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_PICKAXE, 1));
+					}
+  					else if(dice == 4) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SHOVEL, 1));
+					}
+  					else if(dice == 5) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_HOE, 1));
+					}
+  				}
+  				else if(tier == 5) {
+  					if(randomDouble() <= 30 + 0.5 * level) {
+  						mob.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE, 1));
+  					}
+  					if(randomDouble() <= 30 + 0.5 * level) {
+  						mob.getEquipment().setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
+  					}
+  					if(randomDouble() <= 30 + 0.5 * level) {
+  						mob.getEquipment().setBoots(new ItemStack(Material.DIAMOND_BOOTS, 1));
+  					}
+  					int dice = dice();
+  					if(dice == 1) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_SWORD, 1));
+					}
+  					else if(dice == 2) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_AXE, 1));
+					}
+  					else if(dice == 3) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_PICKAXE, 1));
+					}
+  					else if(dice == 4) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_SHOVEL, 1));
+					}
+  					else if(dice == 5) {
+						mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_HOE, 1));
+					}
+  				}
+				if(enchantmentChance() < 40 + 10 * tier) {
+  					if(mob.getEquipment().getHelmet() != null) {
+  						if(mob.getEquipment().getHelmet().hasItemMeta()) {
+	  						ItemMeta meta = mob.getEquipment().getHelmet().getItemMeta();
+	  						meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, enchantmentLevel(tier), true);
+	  						mob.getEquipment().getHelmet().setItemMeta(meta);
+  						}
+  					}
+  				}
+				if(enchantmentChance() < 40 + 10 * tier) {
+  					if(mob.getEquipment().getChestplate() != null) {
+  						if(mob.getEquipment().getChestplate().hasItemMeta()) {
+	  						ItemMeta meta = mob.getEquipment().getChestplate().getItemMeta();
+	  						meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, enchantmentLevel(tier), true);
+	  						mob.getEquipment().getChestplate().setItemMeta(meta);
+  						}
+  					}
+  				}
+				if(enchantmentChance() < 40 + 10 * tier) {
+  					if(mob.getEquipment().getLeggings() != null) {
+  						if(mob.getEquipment().getLeggings().hasItemMeta()) {
+	  						ItemMeta meta = mob.getEquipment().getLeggings().getItemMeta();
+	  						meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, enchantmentLevel(tier), true);
+	  						mob.getEquipment().getLeggings().setItemMeta(meta);
+  						}
+  					}
+  				}
+				if(enchantmentChance() < 40 + 10 * tier) {
+  					if(mob.getEquipment().getBoots() != null) {
+  						if(mob.getEquipment().getBoots().hasItemMeta()) {
+	  						ItemMeta meta = mob.getEquipment().getBoots().getItemMeta();
+	  						meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, enchantmentLevel(tier), true);
+	  						mob.getEquipment().getBoots().setItemMeta(meta);
+  						}
+  					}
+  				}
+				if(enchantmentChance() < 40 + 10 * tier) {
+  					if(mob.getEquipment().getItemInMainHand() != null) {
+  						if(mob.getEquipment().getItemInMainHand().hasItemMeta()) {
+	  						ItemMeta meta = mob.getEquipment().getItemInMainHand().getItemMeta();
+	  						meta.addEnchant(Enchantment.DAMAGE_ALL, enchantmentLevel(tier), true);
+	  						mob.getEquipment().getItemInMainHand().setItemMeta(meta);
+  						}
+  					}
+  				}
+				AttributeInstance attribute1 = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+				AttributeInstance attribute2 = mob.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+				double dub = randomDouble1(tier, levelList.get(mob.getUniqueId()));
+				attribute1.setBaseValue(dub);
+				mob.setHealth(dub);
+				attribute2.setBaseValue((0.20 + 0.005 * tier) + 0.001 * levelList.get(mob.getUniqueId()));
+		  		mobList.put(mob.getUniqueId(), tier);
+		  		teleportBack.put(mob.getUniqueId(), counter);
+  			}
+  			countMobs = 0;
+		}
 	}
 	public void addNames() {
 		Pair<ArrayList<ItemStack>, ArrayList<String>> pair = new Pair<>(new ArrayList<ItemStack>(Arrays.asList(

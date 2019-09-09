@@ -618,11 +618,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new ButterscotchPie(), this);
 		getServer().getPluginManager().registerEvents(new Fusgel(), this);
 		getServer().getPluginManager().registerEvents(new ChangeFishDrops(), this);
-		new BukkitRunnable() {
-			public void run() {
-				CustomEnchantments.getInstance().registerPlayersToDatabase();
-			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 12000L);
 		lootR.loadRewards();
 		cList.lootChest();
 		new BukkitRunnable() {
