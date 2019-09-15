@@ -280,6 +280,9 @@ public class EffectSkills implements Listener{
 							double temp = dfPlayer.getCrtCal() - 100;
 							critDmg = critDmg + (temp / 100);
 						}
+						else if(dfPlayer.getCrtCal() < 0) {
+							critDmg = critDmg - (dfPlayer.getCrt() / 100);
+						}
 						event.setDamage(event.getFinalDamage() * critDmg);
 					}
 				}
@@ -503,17 +506,23 @@ public class EffectSkills implements Listener{
 		if(!event.isCancelled()) {
 			if(event.getEntity() instanceof LivingEntity) {
 				LivingEntity player = (LivingEntity) event.getEntity();
-				double armor = player.getAttribute(Attribute.GENERIC_ARMOR).getValue();
-				double toughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
-				double total = 0;
-				if(armor > 30) {
-					total = total + (armor - 30);
+				DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+				if(dfPlayer.getDfCal() > 0) {
+					double armor = player.getAttribute(Attribute.GENERIC_ARMOR).getValue();
+					double toughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
+					double total = 0;
+					if(armor > 30) {
+						total = total + (armor - 30);
+					}
+					if(toughness > 20) {
+						total = total + (toughness - 20);
+					}
+					total = total * 1.5;
+					event.setDamage(event.getDamage() / 100.00 * (100.00 - total));
 				}
-				if(toughness > 20) {
-					total = total + (toughness - 20);
+				else if(dfPlayer.getDfCal() < 0) {
+					event.setDamage(event.getDamage() / 100.00 * (100.00 + Math.abs(dfPlayer.getDfCal())));
 				}
-				total = total * 1.5;
-				event.setDamage(event.getDamage() / 100.00 * (100.00 - total));
 			}
 		}
 	}
