@@ -56,6 +56,7 @@ import me.WiebeHero.CustomArmor.Common.ArmorChestplate;
 import me.WiebeHero.CustomArmor.Common.ArmorHelmet;
 import me.WiebeHero.CustomArmor.Common.ArmorLeggings;
 import me.WiebeHero.CustomBows.Bows;
+import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantmentsA.Absorbing;
 import me.WiebeHero.CustomEnchantmentsA.AbsorbingCombo;
 import me.WiebeHero.CustomEnchantmentsA.AbsorbingComeback;
@@ -230,7 +231,6 @@ import me.WiebeHero.Skills.SkillMenuInteract;
 import me.WiebeHero.Skills.XPEarningMobs;
 import me.WiebeHero.Spawners.DFSpawner;
 import me.WiebeHero.Spawners.DeathOfMob;
-import me.WiebeHero.Spawners.MobDamage;
 import me.WiebeHero.Spawners.SetSpawner;
 import me.WiebeHero.Spawners.SpawnerList;
 import me.WiebeHero.XpTrader.XPAddPlayers;
@@ -261,6 +261,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ConfigManager cfgm;
 	private CraftableWeapons cw = new CraftableWeapons();
 	private DFPlayer pl = new DFPlayer();
+	private Methods m = new Methods();
 	int level;
 	public Scoreboard scoreboard;
 	public static boolean shutdown = false;
@@ -411,7 +412,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Spawners
 		
 		getServer().getPluginManager().registerEvents(new DeathOfMob(), this);
-		getServer().getPluginManager().registerEvents(new MobDamage(), this);
 		//Novis
 		getServer().getPluginManager().registerEvents(new NovisInventory(), this);
 		//Loot Chest

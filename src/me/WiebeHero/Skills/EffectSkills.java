@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Arrow.PickupStatus;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,14 +41,15 @@ public class EffectSkills implements Listener{
 	public static HashMap<UUID, Float> arrowList = new HashMap<UUID, Float>();
 	public static HashMap<UUID, Double> arrowDamage = new HashMap<UUID, Double>();
 	public static ArrayList<UUID> disableBow = new ArrayList<UUID>();
+	public ArrayList<UUID> disableShieldM = new ArrayList<UUID>();
 	public SwordSwingProgress s = new SwordSwingProgress();
 	@EventHandler
 	public void attackDamage(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof Player) {
-			Player damager = (Player) event.getDamager();
+		if(event.getDamager() instanceof LivingEntity) {
+			LivingEntity damager = (LivingEntity) event.getDamager();
 			DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
-			if(damager.getInventory().getItemInMainHand() != null) {
-				if(damager.getInventory().getItemInMainHand().getType() != Material.BOW) {
+			if(damager.getEquipment().getItemInMainHand() != null) {
+				if(damager.getEquipment().getItemInMainHand().getType() != Material.BOW) {
 					if(event.getEntity() instanceof LivingEntity) {
 						event.setDamage(event.getFinalDamage() / 100.00 * (dfPlayer.getAtkCal() + 100.00));
 					}
@@ -57,11 +60,14 @@ public class EffectSkills implements Listener{
 			}
 		}
 	}
-	public void attackSpeed(Player p) {
+	public void attackSpeed(LivingEntity p) {
 		new BukkitRunnable() {
 			public void run() {
+				//-------------------------------------------------------
+				//Player Attack Speed Handler
+				//-------------------------------------------------------]
 				DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
-				ItemStack item = p.getInventory().getItemInMainHand();
+				ItemStack item = p.getEquipment().getItemInMainHand();
 				if(item != null) {
 					if(item.hasItemMeta()) {
 						if(item.getItemMeta().hasLore()) {
@@ -82,7 +88,9 @@ public class EffectSkills implements Listener{
 									check2 = check2.replaceAll("[^\\d.]", "");
 									double attackDamage = Double.parseDouble(check2);
 									p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(attackDamage);
-									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
+									if(p instanceof Player) {
+										p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
+									}
 								}
 								else {
 									String check1 = "";
@@ -94,31 +102,44 @@ public class EffectSkills implements Listener{
 									check1 = check1.replaceAll("[^\\d.]", "");
 									double attackSpeed = Double.parseDouble(check1);
 									p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
-									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
+									if(p instanceof Player) {
+										p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
+									}
 								}
 							}
 							else {
 								p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
-								p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+								if(p instanceof Player) {
+									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+								}
 							}
 						}
 						else {
 							p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
-							p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+							if(p instanceof Player) {
+								p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+							}
 						}
 					}
 					else {
 						p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
-						p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+						if(p instanceof Player) {
+							p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+						}
 					}
 				}
 				else {
 					p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
-					p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+					if(p instanceof Player) {
+						p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+					}
 				}
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 	}
+	//-------------------------------------------------------
+	//Player Attack Speed Event Handler
+	//-------------------------------------------------------
 	@EventHandler
 	public void attackSpeedItemChange(PlayerItemHeldEvent event) {
 		Player player = event.getPlayer();
@@ -155,8 +176,11 @@ public class EffectSkills implements Listener{
 		Player player = event.getPlayer();
 		attackSpeed(player);
 	}
+	//-------------------------------------------------------
+	//Player Shield Handler
+	//-------------------------------------------------------
 	@EventHandler
-	public void shieldDisable(EntityDamageByEntityEvent event) {
+	public void shieldDisablePlayer(EntityDamageByEntityEvent event) {
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
 			if(player.getInventory().getItemInOffHand() != null) {
@@ -164,6 +188,7 @@ public class EffectSkills implements Listener{
 					if(player.getInventory().getItemInOffHand().hasItemMeta()) {
 						if(player.getInventory().getItemInOffHand().getItemMeta().hasLore()) {
 							if(player.isBlocking()) {
+								DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 								String cd = "";
 								for(String s : player.getInventory().getItemInOffHand().getItemMeta().getLore()) {
 									if(s.contains("Cooldown:")) {
@@ -173,16 +198,67 @@ public class EffectSkills implements Listener{
 								cd = cd.replaceAll("[^\\d.]", "");
 								double cooldownInSec = Double.parseDouble(cd);
 								int cooldownTime = (int)cooldownInSec * 20;
-								ItemStack item = player.getInventory().getItemInOffHand();
-								player.getInventory().setItemInOffHand(new ItemStack(Material.AIR, 1));
-								player.updateInventory();
+								cooldownTime = (int) (cooldownTime - (cooldownTime / 100 * dfPlayer.getSpdCal()));
+								player.setCooldown(Material.SHIELD, cooldownTime);
+							}
+						}
+					}
+				}
+			}
+			else if(player.getInventory().getItemInMainHand() != null) {
+				if(player.getInventory().getItemInMainHand().getType() == Material.SHIELD) {
+					if(player.getInventory().getItemInMainHand().hasItemMeta()) {
+						if(player.getInventory().getItemInMainHand().getItemMeta().hasLore()) {
+							if(player.isBlocking()) {
+								String cd = "";
+								DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+								for(String s : player.getInventory().getItemInMainHand().getItemMeta().getLore()) {
+									if(s.contains("Cooldown:")) {
+										cd = ChatColor.stripColor(s);
+									}
+								}
+								cd = cd.replaceAll("[^\\d.]", "");
+								double cooldownInSec = Double.parseDouble(cd);
+								int cooldownTime = (int)cooldownInSec * 20;
+								cooldownTime = (int) (cooldownTime - (cooldownTime / 100 * dfPlayer.getSpdCal()));
+								player.setCooldown(Material.SHIELD, cooldownTime);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	//-------------------------------------------------------
+	//Entity Shield Handler
+	//-------------------------------------------------------
+	@EventHandler
+	public void shieldDisableEntity(EntityDamageByEntityEvent event) {
+		if(event.getEntity() instanceof Player) {
+			LivingEntity ent = (LivingEntity) event.getEntity();
+			if(ent.getEquipment().getItemInOffHand() != null) {
+				if(ent.getEquipment().getItemInOffHand().getType() == Material.SHIELD) {
+					if(ent.getEquipment().getItemInOffHand().hasItemMeta()) {
+						if(ent.getEquipment().getItemInOffHand().getItemMeta().hasLore()) {
+							if(!disableShieldM.contains(ent.getUniqueId())) {
+								DFPlayer dfPlayer = new DFPlayer().getPlayer(ent);
+								event.setDamage(0.00);
+								String cd = "";
+								for(String s : ent.getEquipment().getItemInOffHand().getItemMeta().getLore()) {
+									if(s.contains("Cooldown:")) {
+										cd = ChatColor.stripColor(s);
+									}
+								}
+								cd = cd.replaceAll("[^\\d.]", "");
+								double cooldownInSec = Double.parseDouble(cd);
+								int cooldownTime = (int)cooldownInSec * 20;
+								cooldownTime = (int) (cooldownTime - (cooldownTime / 100 * dfPlayer.getSpdCal()));
+								disableShieldM.add(ent.getUniqueId());
 								new BukkitRunnable() {
 									public void run() {
-										player.getInventory().setItemInOffHand(item);
-										player.updateInventory();
+										disableShieldM.remove(ent.getUniqueId());
 									}
-								}.runTaskLater(CustomEnchantments.getInstance(), 0L);
-								player.setCooldown(Material.SHIELD, cooldownTime);
+								}.runTaskLater(CustomEnchantments.getInstance(), (long)cooldownTime);
 							}
 						}
 					}
@@ -193,8 +269,8 @@ public class EffectSkills implements Listener{
 	@EventHandler
 	public void criticalChance(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
-			if(event.getDamager() instanceof Player) {
-				Player damager = (Player) event.getDamager();
+			if(event.getDamager() instanceof LivingEntity) {
+				LivingEntity damager = (LivingEntity) event.getDamager();
 				DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
 				if(event.getEntity() instanceof LivingEntity) {
 					float i = ThreadLocalRandom.current().nextFloat() * 100;
@@ -213,7 +289,7 @@ public class EffectSkills implements Listener{
 	@EventHandler
 	public void bowShootCustom(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if(disableBow.contains(player.getUniqueId())) {
+		if(!disableBow.contains(player.getUniqueId())) {
 			if(player.getInventory().getItemInMainHand() != null) {
 				if(player.getInventory().getItemInMainHand().getType() == Material.BOW) {
 					if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -254,11 +330,13 @@ public class EffectSkills implements Listener{
 										player.getInventory().setHeldItemSlot(i);
 										player.updateInventory();
 									}
-								}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+								}.runTaskLater(CustomEnchantments.getInstance(), 2L);
 								Location loc = player.getLocation();
-								loc.add(0, 1.75, 0);
+								loc.add(0, 1.57, 0);
 								Vector direction = loc.getDirection();
 								direction.add(direction);
+								direction.setY(direction.getY() + 0.15);
+								direction.normalize();
 								Arrow arrow = player.getWorld().spawnArrow(loc, direction, s.getAttackStrength(player) * 2.10F, 0.0F);
 								arrow.setPickupStatus(PickupStatus.ALLOWED);
 								if(s.getAttackStrength(player) == 1.00) {
@@ -292,43 +370,81 @@ public class EffectSkills implements Listener{
 		}
 	}
 	@EventHandler
+	public void shootBowMob(EntityShootBowEvent event) {
+		if(event.getEntity() instanceof Monster) {
+			Monster ent = (Monster) event.getEntity();
+			arrowList.put(ent.getUniqueId(), event.getForce());
+			ItemStack item = ent.getEquipment().getItemInMainHand();
+			if(item != null) {
+				if(item.hasItemMeta()) {
+					ItemMeta meta = item.getItemMeta();
+					if(meta.hasLore()) {
+						ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+						if(lore.toString().contains("Attack Damage:")) {
+							String check1 = "";
+							for(String s : item.getItemMeta().getLore()) {
+								if(s.contains("Attack Damage:")) {
+									check1 = ChatColor.stripColor(s);
+								}
+							}
+							check1 = check1.replaceAll("[^\\d.]", "");
+							double attackDamage = Double.parseDouble(check1);
+							arrowDamage.put(event.getProjectile().getUniqueId(), attackDamage);
+						}
+					}
+					else {
+						arrowDamage.put(event.getProjectile().getUniqueId(), 4.0);
+					}
+				}
+				else {
+					arrowDamage.put(event.getProjectile().getUniqueId(), 4.0);
+				}
+			}
+			else {
+				arrowDamage.put(event.getProjectile().getUniqueId(), 4.0);
+			}
+		}
+	}
+	@EventHandler
 	public void rangedDamage(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
 			if(event.getDamager() instanceof Arrow) {
 				Arrow arrow = (Arrow) event.getDamager();
-				if(arrow.getShooter() != null && arrow.getShooter() instanceof Player && event.getEntity() instanceof LivingEntity) {
-					Player damager = (Player) arrow.getShooter();
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
-					if(arrowList.containsKey(arrow.getUniqueId()) && arrowDamage.containsKey(arrow.getUniqueId())) {
-						double damage = arrowDamage.get(arrow.getUniqueId());
-						event.setDamage(damage / 100.00 * (dfPlayer.getRndCal() + 100.00) * arrowList.get(arrow.getUniqueId()));
-						arrowList.remove(arrow.getUniqueId());
+				if(arrow.getShooter() != null && arrow.getShooter() instanceof LivingEntity && event.getEntity() instanceof LivingEntity) {
+					LivingEntity damager = (LivingEntity) arrow.getShooter();
+					DFPlayer df = new DFPlayer();
+					if(df.containsPlayer(damager)) {
+						DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+						if(arrowList.containsKey(arrow.getUniqueId()) && arrowDamage.containsKey(arrow.getUniqueId())) {
+							double damage = arrowDamage.get(arrow.getUniqueId());
+							event.setDamage(damage / 100.00 * (dfPlayer.getRndCal() + 100.00) * arrowList.get(arrow.getUniqueId()));
+							arrowList.remove(arrow.getUniqueId());
+						}
 					}
 				}
 			}
 		}
 	}
-	@EventHandler
-	public void arrowShoot(EntityShootBowEvent event) {
-		if(!event.isCancelled()) {
-			if(event.getEntity() instanceof Player) {
-				arrowList.put(event.getProjectile().getUniqueId(), event.getForce());
-			}
-		}
-	}
-	public void changeHealth(Player p) {
+	public void changeHealth(LivingEntity p) {
 		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
-		double newHealth = 20.00 / 100.00 * (dfPlayer.getHpCal() + 100.00);
+		double baseHealth = 20.00;
+		if(p instanceof Player) {
+			baseHealth = 20.00;
+		}
+		else {
+			baseHealth = 25.00;
+		}
+		double newHealth = baseHealth / 100.00 * (dfPlayer.getHpCal() + 100.00);
 		double roundOff1 = (double) Math.round(newHealth * 100.00) / 100.00;
 		p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
 	}
-	public void runDefense(Player p) {
+	public void runDefense(LivingEntity p) {
 		new BukkitRunnable() {
 			public void run() {
 				DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
 				double armorD = 0.0;
 				double armorT = 0.0;
-				for(ItemStack item : p.getInventory().getArmorContents()) {
+				for(ItemStack item : p.getEquipment().getArmorContents()) {
 					if(item != null) {
 						if(item.hasItemMeta()) {
 							if(item.getItemMeta().hasLore()) {
@@ -349,13 +465,12 @@ public class EffectSkills implements Listener{
 									double armorTT = Double.parseDouble(check2);
 									armorD = armorD + armorDT / 100.00 * (dfPlayer.getDfCal() + 100.00);
 									armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
-									
 								}
 							}
 						}
 					}
 				}
-				ItemStack item = p.getInventory().getItemInOffHand();
+				ItemStack item = p.getEquipment().getItemInOffHand();
 				if(item != null) {
 					if(item.hasItemMeta()) {
 						if(item.getItemMeta().hasLore()) {
@@ -386,8 +501,8 @@ public class EffectSkills implements Listener{
 	@EventHandler
 	public void extraDefense(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
-			if(event.getEntity() instanceof Player) {
-				Player player = (Player) event.getEntity();
+			if(event.getEntity() instanceof LivingEntity) {
+				LivingEntity player = (LivingEntity) event.getEntity();
 				double armor = player.getAttribute(Attribute.GENERIC_ARMOR).getValue();
 				double toughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
 				double total = 0;
@@ -398,7 +513,7 @@ public class EffectSkills implements Listener{
 					total = total + (toughness - 20);
 				}
 				total = total * 1.5;
-				event.setDamage(event.getDamage() / 100 * (100 - total));
+				event.setDamage(event.getDamage() / 100.00 * (100.00 - total));
 			}
 		}
 	}

@@ -225,6 +225,9 @@ public class ArmorLeggings extends SpawnerList implements Listener{
 							    				else if(rarity.equals("Legendary")) {
 							    					translator = "&c";
 							    				}
+							    				else if(rarity.equals("Elite")) {
+							    					translator = "&d";
+							    				}
 							    				else if(rarity.equals("Mythic")) {
 							    					translator = "&5";
 							    				}

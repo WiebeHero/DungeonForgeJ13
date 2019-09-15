@@ -227,6 +227,9 @@ public class DFShields extends SpawnerList implements Listener{
 									    				else if(rarity.equals("Legendary")) {
 									    					translator = "&c";
 									    				}
+									    				else if(rarity.equals("Elite")) {
+									    					translator = "&d";
+									    				}
 									    				else if(rarity.equals("Mythic")) {
 									    					translator = "&5";
 									    				}
@@ -271,7 +274,7 @@ public class DFShields extends SpawnerList implements Listener{
 									    		else {
 													DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
 									    			int level = dfPlayer.getLevel();
-									    			List<String> loreList = damager.getInventory().getBoots().getItemMeta().getLore();
+									    			List<String> loreList = damager.getInventory().getItemInOffHand().getItemMeta().getLore();
 									    			String line = "";
 									    			for (int j=0; j<damager.getInventory().getItemInOffHand().getItemMeta().getLore().size(); j++) {
 														if(loreList.get(j).contains(ChatColor.stripColor("Level Required:"))) {

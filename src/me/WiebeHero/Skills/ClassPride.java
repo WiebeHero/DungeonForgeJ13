@@ -6,6 +6,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -75,10 +76,10 @@ public class ClassPride implements Listener{
 	@EventHandler
 	public void terminator(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
-			if(event.getEntity() instanceof Player) {
+			if(event.getEntity() instanceof LivingEntity) {
 				if(event.getDamager() instanceof Arrow || event.getDamager() instanceof Player) {
 					Player player = null;
-					Player victim = (Player) event.getEntity();
+					LivingEntity victim = (LivingEntity) event.getEntity();
 					if(event.getDamager() instanceof Player) {
 						player = (Player)event.getDamager();
 					}
@@ -107,9 +108,9 @@ public class ClassPride implements Listener{
 	@EventHandler
 	public void deflection(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
-			if(event.getEntity() instanceof Player) {
+			if(event.getEntity() instanceof LivingEntity) {
 				if(event.getDamager() instanceof Arrow) {
-					Player victim = (Player) event.getEntity();
+					LivingEntity victim = (LivingEntity) event.getEntity();
 					Arrow arrow = (Arrow) event.getDamager();
 					if(arrow.getShooter() instanceof Player) {
 						Player player = (Player) arrow.getShooter();

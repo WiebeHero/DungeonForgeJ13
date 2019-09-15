@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -58,9 +59,9 @@ public class ClassGreed implements Listener{
 	@EventHandler
 	public void shootGreedArrow(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
-			if(event.getEntity() instanceof Player) {
+			if(event.getEntity() instanceof LivingEntity) {
 				if(event.getDamager() instanceof Arrow) {
-					Player p = (Player) event.getEntity();
+					LivingEntity p = (LivingEntity) event.getEntity();
 					Arrow arrow = (Arrow) event.getDamager();
 					if(arrow.getShooter() instanceof Player) {
 						Player shooter = (Player) arrow.getShooter();

@@ -98,42 +98,37 @@ public class ClassEnvy implements Listener{
 										}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
 									}
 								}.runTaskLater(CustomEnchantments.getInstance(), 1L);
-								if(event.getEntity() instanceof LivingEntity) {
-									
+								LivingEntity p = (LivingEntity) event.getEntity();
+								DFPlayer dfPlay = new DFPlayer().getPlayer(p);
+								if(dfPlayer.getAtkMod() > 0) {
+									int cLevel = dfPlayer.getAtkMod();
+									double weak = cLevel * 5;
+									double dur = cLevel * 3;
+									dfPlay.removeAtkCal(weak, (long)dur * 20);
 								}
-								else if(event.getEntity() instanceof Player) {
-									Player p = (Player) event.getEntity();
-									DFPlayer dfPlay = new DFPlayer().getPlayer(p);
-									if(dfPlayer.getAtkMod() > 0) {
-										int cLevel = dfPlayer.getAtkMod();
-										double weak = cLevel * 5;
-										double dur = cLevel * 3;
-										dfPlay.removeAtkCal(weak, (long)dur * 20);
-									}
-									if(dfPlayer.getRndMod() > 0) {
-										int cLevel = dfPlayer.getRndMod();
-										double weak = cLevel * 2.5;
-										double dur = cLevel * 3;
-										dfPlay.removeCrtCal(weak, (long)dur * 20);
-										dfPlay.removeRndCal(weak, (long)dur * 20);
-									}
-									if(dfPlayer.getDfMod() > 0) {
-										int cLevel = dfPlayer.getDfMod();
-										double break1 = cLevel * 10;
-										double dur = cLevel * 3;
-										dfPlay.removeDfCal(break1, (long)dur * 20);
-									}
-									if(dfPlayer.getHpMod() > 0) {
-										int cLevel = dfPlayer.getHpMod();
-										double dis = cLevel * 7;
-										double dur = cLevel * 3;
-										healthReduction.put(p.getUniqueId(), dur);
-										new BukkitRunnable() {
-											public void run() {
-												healthReduction.remove(p.getUniqueId(), dis);
-											}
-										}.runTaskLater(CustomEnchantments.getInstance(), (long)(dur * 20));
-									}
+								if(dfPlayer.getRndMod() > 0) {
+									int cLevel = dfPlayer.getRndMod();
+									double weak = cLevel * 2.5;
+									double dur = cLevel * 3;
+									dfPlay.removeCrtCal(weak, (long)dur * 20);
+									dfPlay.removeRndCal(weak, (long)dur * 20);
+								}
+								if(dfPlayer.getDfMod() > 0) {
+									int cLevel = dfPlayer.getDfMod();
+									double break1 = cLevel * 10;
+									double dur = cLevel * 3;
+									dfPlay.removeDfCal(break1, (long)dur * 20);
+								}
+								if(dfPlayer.getHpMod() > 0) {
+									int cLevel = dfPlayer.getHpMod();
+									double dis = cLevel * 7;
+									double dur = cLevel * 3;
+									healthReduction.put(p.getUniqueId(), dur);
+									new BukkitRunnable() {
+										public void run() {
+											healthReduction.remove(p.getUniqueId(), dis);
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), (long)(dur * 20));
 								}
 							}
 						}

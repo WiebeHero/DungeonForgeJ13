@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -76,9 +77,9 @@ public class ClassGluttony implements Listener{
 	}
 	@EventHandler
 	public void hitBySmth(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
+		if(event.getDamager() instanceof Player && event.getEntity() instanceof LivingEntity) {
 			Player attacker = (Player) event.getDamager();
-			Player player = (Player) event.getEntity();
+			LivingEntity player = (LivingEntity) event.getEntity();
 			DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 			DFPlayer aDFPlayer = new DFPlayer().getPlayer(attacker);
 			if(dfPlayer.getPlayerClass() == Classes.GLUTTONY) {

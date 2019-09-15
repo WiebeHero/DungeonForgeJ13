@@ -200,6 +200,9 @@ public class XPAddWeapons implements Listener{
 					    				else if(rarity.contains("Legendary")) {
 					    					translator = "&c";
 					    				}
+					    				else if(rarity.equals("Elite")) {
+					    					translator = "&d";
+					    				}
 					    				else if(rarity.contains("Mythic")) {
 					    					translator = "&5";
 					    				}

@@ -102,7 +102,7 @@ public class SetSpawner implements Listener,CommandExecutor{
 							catch(NumberFormatException e){
 								e.printStackTrace();
 							}
-							if(tier >= 1 && tier <= 5) {
+							if(tier >= 1 && tier <= 10) {
 								String mobType = args[2].toUpperCase();
 								EntityType type = null;
 								try {

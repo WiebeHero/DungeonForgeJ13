@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
 import me.WiebeHero.DFShops.MoneyCreate;
-import net.md_5.bungee.api.ChatColor;
 
 public class SkillMenuInteract implements Listener{
 	SkillMenu menu = new SkillMenu();
@@ -28,7 +27,7 @@ public class SkillMenuInteract implements Listener{
 				return;
 			}
 			else {
-				String skillName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+				String skillName = item.getItemMeta().getDisplayName();
 				if(skillName.contains("Attack Damage")) {
 					if(dfPlayer.getSkillPoints() > 0) {
 						if(dfPlayer.getAtk() < 100) {
@@ -133,12 +132,12 @@ public class SkillMenuInteract implements Listener{
 						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
 					}
 				}
-				else if(skillName.contains("Attack Modifier")) {
+				else if(skillName.contains(new ColorCodeTranslator().colorize("&4"))) {
 					if(dfPlayer.getAtkMod() < 5) {
 						if(dfPlayer.getAtk() >= 20 + (20 * dfPlayer.getAtkMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getAtkMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * dfPlayer.getAtkMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * dfPlayer.getAtkMod()));
+								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getAtkMod())) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getAtkMod()));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
 									dfPlayer.addAtkMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -160,12 +159,12 @@ public class SkillMenuInteract implements Listener{
 						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains("Speed Modifier")) {
+				else if(skillName.contains(new ColorCodeTranslator().colorize("&9"))) {
 					if(dfPlayer.getSpdMod() < 5) {
 						if(dfPlayer.getSpd() >= 20 + (20 * dfPlayer.getSpdMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getSpdMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * dfPlayer.getSpdMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * dfPlayer.getSpdMod()));
+								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getSpdMod())) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getSpdMod()));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
 									dfPlayer.addSpdMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -187,12 +186,12 @@ public class SkillMenuInteract implements Listener{
 						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains("Critical Modifier")) {
+				else if(skillName.contains(new ColorCodeTranslator().colorize("&5"))) {
 					if(dfPlayer.getCrtMod() < 5) {
 						if(dfPlayer.getCrt() >= 20 + (20 * dfPlayer.getCrtMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getCrtMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * dfPlayer.getCrtMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * dfPlayer.getCrtMod()));
+								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getCrtMod())) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getCrtMod()));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
 									dfPlayer.addCrtMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -214,12 +213,12 @@ public class SkillMenuInteract implements Listener{
 						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains("Ranged Modifier")) {
+				else if(skillName.contains(new ColorCodeTranslator().colorize("&d"))) {
 					if(dfPlayer.getRndMod() < 5) {
 						if(dfPlayer.getRnd() >= 20 + (20 * dfPlayer.getRndMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getRndMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * dfPlayer.getRndMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * dfPlayer.getRndMod()));
+								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getRndMod())) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getRndMod()));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
 									dfPlayer.addRndMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -241,12 +240,12 @@ public class SkillMenuInteract implements Listener{
 						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains("Health Modifier")) {
+				else if(skillName.contains(new ColorCodeTranslator().colorize("&c"))) {
 					if(dfPlayer.getHpMod() < 5) {
 						if(dfPlayer.getHp() >= 20 + (20 * dfPlayer.getHpMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getHpMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * dfPlayer.getHpMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * dfPlayer.getHpMod()));
+								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getHpMod())) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getHpMod()));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
 									dfPlayer.addHpMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
@@ -268,12 +267,12 @@ public class SkillMenuInteract implements Listener{
 						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains("Defense Modifier")) {
+				else if(skillName.contains(new ColorCodeTranslator().colorize("&8"))) {
 					if(dfPlayer.getDfMod() < 5) {
 						if(dfPlayer.getDf() >= 20 + (20 * dfPlayer.getDfMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getDfMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 10000.00 + (10000.00 * dfPlayer.getDfMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (10000.00 + (10000.00 * dfPlayer.getDfMod()));
+								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getDfMod())) {
+									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getDfMod()));
 									money.getMoneyList().put(player.getUniqueId(), moneyNow);
 									dfPlayer.addDfMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);

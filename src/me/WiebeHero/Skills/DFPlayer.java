@@ -7,21 +7,24 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.EnumSkills.SkillState;
 import me.WiebeHero.Skills.Enums.Classes;
 import me.WiebeHero.Skills.State.States;
 
 public class DFPlayer {
+	Methods met = new Methods();
 	EffectSkills sk = new EffectSkills();
 	public UUID id;
-	public Player player = null;
+	public LivingEntity player = null;
 	public Classes cClass;
 	public int xp;
 	public int maxxp;
@@ -51,7 +54,7 @@ public class DFPlayer {
 	public boolean active;
 	public boolean use;
 	
-	public DFPlayer(Player _player) {
+	public DFPlayer(LivingEntity _player) {
 		if(this.player == null) {
 			this.player = _player;
 			this.id = _player.getUniqueId();
@@ -81,15 +84,15 @@ public class DFPlayer {
 	public DFPlayer() {
 		//Placeholder to execute other methods
 	}
-	public void addPlayer(Player p) {
+	public void addPlayer(LivingEntity p) {
 		if(!CustomEnchantments.getInstance().dfPlayerList.containsKey(p.getUniqueId())) {
 			CustomEnchantments.getInstance().dfPlayerList.put(p.getUniqueId(), new DFPlayer(p));
 		}
 	}
-	public DFPlayer getPlayer(Player p){
+	public DFPlayer getPlayer(LivingEntity p){
 		return CustomEnchantments.getInstance().dfPlayerList.get(p.getUniqueId());
 	}
-	public boolean containsPlayer(Player p){
+	public boolean containsPlayer(LivingEntity p){
 		if(CustomEnchantments.getInstance().dfPlayerList.containsKey(p.getUniqueId())) {
 			return true;
 		}
@@ -97,7 +100,7 @@ public class DFPlayer {
 			return false;
 		}
 	}
-	public Player returnPlayer() {
+	public LivingEntity returnPlayer() {
 		return player;
 	}
 	//---------------------------------------------------------
@@ -165,24 +168,27 @@ public class DFPlayer {
 		}
 		if(!CustomEnchantments.getInstance().dfPlayerList.isEmpty()) {
 			for(Entry<UUID, DFPlayer> entry : CustomEnchantments.getInstance().dfPlayerList.entrySet()) {
-				DFPlayer player = entry.getValue();
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Class", player.getPlayerClass().toString());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Level", player.getLevel());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".XP", player.getExperience());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".MXP", player.getMaxExperience());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Skill Points", player.getSkillPoints());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Attack Damage", player.getAtk());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Attack Speed", player.getSpd());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Critical Chance", player.getCrt());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Ranged Damage", player.getRnd());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Health", player.getHp());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Defense", player.getDf());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Attack Modifier", player.getAtkMod());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Speed Modifier", player.getSpdMod());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Critical Modifier", player.getCrtMod());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Ranged Modifier", player.getRndMod());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Health Modifier", player.getHpMod());
-				yml.set("Skills.Players." + entry.getKey().toString() + ".Defense Modifier", player.getDfMod());
+				if(Bukkit.getOfflinePlayer(entry.getKey()).getName() != null) {
+					Bukkit.broadcastMessage(Bukkit.getOfflinePlayer(entry.getKey()).getName());
+					DFPlayer player = entry.getValue();
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Class", player.getPlayerClass().toString());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Level", player.getLevel());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".XP", player.getExperience());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".MXP", player.getMaxExperience());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Skill Points", player.getSkillPoints());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Attack Damage", player.getAtk());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Attack Speed", player.getSpd());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Critical Chance", player.getCrt());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Ranged Damage", player.getRnd());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Health", player.getHp());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Defense", player.getDf());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Attack Modifier", player.getAtkMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Speed Modifier", player.getSpdMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Critical Modifier", player.getCrtMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Ranged Modifier", player.getRndMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Health Modifier", player.getHpMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Defense Modifier", player.getDfMod());
+				}
 			}
 		}
 		try{

@@ -163,7 +163,7 @@ public class NovisEnchantmentGetting {
 				newLore.add(new ColorCodeTranslator().colorize("&9" + test[1]) + " 3");
 			}
 		}
-		if(rarity.equals("Legendary")) {
+		if(rarity.equals("Legendary") || rarity.equals("Elite")) {
 			if(level == 1) {
 				newLore.add(new ColorCodeTranslator().colorize("&9" + test[0]) + " 1");
 			}

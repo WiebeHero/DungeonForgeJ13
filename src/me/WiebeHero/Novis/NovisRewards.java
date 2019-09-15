@@ -68,7 +68,7 @@ public class NovisRewards {
 			newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + damageWeapon));
 			newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + speedWeapon));
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-			newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l1000&a]"));
+			newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
 			newLore.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 			newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
 			newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + check));

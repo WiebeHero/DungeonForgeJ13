@@ -119,10 +119,10 @@ public class ClassLust implements Listener{
 	@EventHandler
 	public void criticalDown(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
-			if(event.getEntity() instanceof Player) {
+			if(event.getEntity() instanceof LivingEntity) {
 				if(event.getDamager() instanceof Arrow || event.getDamager() instanceof Player) {
 					Player player = null;
-					Player victim = (Player) event.getEntity();
+					LivingEntity victim = (LivingEntity) event.getEntity();
 					if(event.getDamager() instanceof Player) {
 						player = (Player)event.getDamager();
 					}

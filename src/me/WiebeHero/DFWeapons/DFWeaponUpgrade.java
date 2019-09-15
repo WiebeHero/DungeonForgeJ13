@@ -200,7 +200,6 @@ public class DFWeaponUpgrade implements Listener{
 								    				String levelStringFinal = levelString[1];
 								    				int levelWeapon = Integer.parseInt(levelStringFinal);
 								    				if(levelWeapon != 15) {
-								    					Bukkit.broadcastMessage("Yes");
 														ItemStack item = item1;
 														damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, (float)2, (float)1);
 									    	            //Config Data
@@ -227,6 +226,9 @@ public class DFWeaponUpgrade implements Listener{
 									    				}
 									    				else if(rarity.equals("Legendary")) {
 									    					translator = "&c";
+									    				}
+									    				else if(rarity.equals("Elite")) {
+									    					translator = "&d";
 									    				}
 									    				else if(rarity.equals("Mythic")) {
 									    					translator = "&5";

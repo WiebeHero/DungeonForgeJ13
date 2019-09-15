@@ -82,10 +82,8 @@ public class DeathOfMob implements Listener {
 				lore5.add(new ColorCodeTranslator().colorize("&7Rarity: &5Mythic"));
 				itemmeta5.setLore(lore5);
 				item4.setItemMeta(itemmeta5);
-				
 				if(SpawnerList.getMobList().containsKey(victim.getUniqueId())) {
 					int tier = SpawnerList.getMobList().get(victim.getUniqueId());
-					event.getDrops().clear();
 					if(tier >= 1) {
 						if(random() < 0.50 + tier * 0.50) {
 							event.getDrops().add(item1);
