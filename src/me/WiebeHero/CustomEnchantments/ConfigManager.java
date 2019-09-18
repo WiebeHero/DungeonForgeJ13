@@ -38,6 +38,9 @@ public class ConfigManager {
 	public FileConfiguration mod;
 	public File modConfig;
 	
+	public FileConfiguration dungeon;
+	public File dungeonConfig;
+	
 	public void setUp() {
 		if(!plugin.getDataFolder().exists()) {
 			plugin.getDataFolder().mkdir();
@@ -77,6 +80,10 @@ public class ConfigManager {
 		modConfig = new File(plugin.getDataFolder(), "modConfig.yml");
 		mod = YamlConfiguration.loadConfiguration(modConfig);
 		mod.options().copyDefaults(true);
+		
+		dungeonConfig = new File(plugin.getDataFolder(), "dungeonConfig.yml");
+		dungeon = YamlConfiguration.loadConfiguration(dungeonConfig);
+		dungeon.options().copyDefaults(true);
 		if(!playerskills.exists()) {
 			try {
 				playerskills.createNewFile();
@@ -256,6 +263,26 @@ public class ConfigManager {
 				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Mod Config has been created!");
 			}catch(IOException e) {
 				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "Mod Config could not be created!");
+			}
+		}
+		else {
+			Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "else");
+		}
+		if(!dungeonConfig.exists()) {
+			try {
+				dungeonConfig.createNewFile();
+				dungeon.addDefault("Dungeons.Instances", "");
+				dungeon.options().copyDefaults(true);
+				try{
+					dungeon.save(dungeonConfig);
+		        }
+		        catch(IOException e){
+		            e.printStackTrace();
+		        }
+				
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Dungeon Config has been created!");
+			}catch(IOException e) {
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "Dungeon Config could not be created!");
 			}
 		}
 		else {

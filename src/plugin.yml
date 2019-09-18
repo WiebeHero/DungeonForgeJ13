@@ -87,3 +87,7 @@ commands:
   unwarn:
     ussage: /<command>
     description: 'Command for unwarn'
+  party:
+    ussage: /<command>
+    aliases: [p]
+    description: 'Command for party'

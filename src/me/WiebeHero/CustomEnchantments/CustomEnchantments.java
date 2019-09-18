@@ -56,7 +56,6 @@ import me.WiebeHero.CustomArmor.Common.ArmorChestplate;
 import me.WiebeHero.CustomArmor.Common.ArmorHelmet;
 import me.WiebeHero.CustomArmor.Common.ArmorLeggings;
 import me.WiebeHero.CustomBows.Bows;
-import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantmentsA.Absorbing;
 import me.WiebeHero.CustomEnchantmentsA.AbsorbingCombo;
 import me.WiebeHero.CustomEnchantmentsA.AbsorbingComeback;
@@ -182,6 +181,9 @@ import me.WiebeHero.DFShops.DFShop;
 import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.DFShops.PayCommand;
 import me.WiebeHero.DFWeapons.DFWeaponUpgrade;
+import me.WiebeHero.DungeonInstances.DungeonMaxima;
+import me.WiebeHero.DungeonInstances.DungeonParty;
+import me.WiebeHero.DungeonInstances.DungeonPartyCommand;
 import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Factions.FactionsHandler;
 import me.WiebeHero.FishingLoot.ChangeFishDrops;
@@ -243,10 +245,13 @@ import me.lucko.luckperms.api.User;
 public class CustomEnchantments extends JavaPlugin implements Listener{
 	public HashMap<UUID, DFPlayer> dfPlayerList = new HashMap<UUID, DFPlayer>();
 	public ArrayList<DFSpawner> dfSpawnerList = new ArrayList<DFSpawner>();
+	public HashMap<UUID, DungeonParty> dfDungeonParty = new HashMap<UUID, DungeonParty>();
+	public ArrayList<DungeonMaxima> dfDungeonList = new ArrayList<DungeonMaxima>();
 	private static CustomEnchantments instance;
 	private SkillCommand skillCommand = new SkillCommand();
 	private SetSpawner command = new SetSpawner();
 	private SpawnerList sp = new SpawnerList();
+	private DungeonPartyCommand party = new DungeonPartyCommand();
 	private DFFactions fac = new DFFactions();
 	private Portals p = new Portals();
 	private PayCommand pay = new PayCommand();
@@ -261,7 +266,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ConfigManager cfgm;
 	private CraftableWeapons cw = new CraftableWeapons();
 	private DFPlayer pl = new DFPlayer();
-	private Methods m = new Methods();
 	int level;
 	public Scoreboard scoreboard;
 	public static boolean shutdown = false;
@@ -410,7 +414,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new ClassEnvy(), this);
 		getServer().getPluginManager().registerEvents(new ClassPride(), this);
 		//Spawners
-		
 		getServer().getPluginManager().registerEvents(new DeathOfMob(), this);
 		//Novis
 		getServer().getPluginManager().registerEvents(new NovisInventory(), this);
@@ -597,6 +600,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(mod.warn).setExecutor(mod);
 		getCommand(mod.unwarn).setExecutor(mod);
 		getCommand(mod.staffmode).setExecutor(mod);
+		//Dungeon Parties
+		getCommand(party.comParty).setExecutor(party);
 		getServer().getPluginManager().registerEvents(mod, this);
 		getServer().getPluginManager().registerEvents(new ModerationGUI(), this);
 		//Glowing Drops
