@@ -198,7 +198,10 @@ public class EffectSkills implements Listener{
 								double cooldownInSec = Double.parseDouble(cd);
 								int cooldownTime = (int)cooldownInSec * 20;
 								cooldownTime = (int) (cooldownTime - (cooldownTime / 100 * dfPlayer.getSpdCal()));
+								ItemStack item = player.getEquipment().getItemInOffHand();
+								player.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
 								player.setCooldown(Material.SHIELD, cooldownTime);
+								player.getEquipment().setItemInOffHand(item);
 							}
 						}
 					}
@@ -220,7 +223,10 @@ public class EffectSkills implements Listener{
 								double cooldownInSec = Double.parseDouble(cd);
 								int cooldownTime = (int)cooldownInSec * 20;
 								cooldownTime = (int) (cooldownTime - (cooldownTime / 100 * dfPlayer.getSpdCal()));
+								ItemStack item = player.getEquipment().getItemInMainHand();
+								player.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
 								player.setCooldown(Material.SHIELD, cooldownTime);
+								player.getEquipment().setItemInMainHand(item);
 							}
 						}
 					}

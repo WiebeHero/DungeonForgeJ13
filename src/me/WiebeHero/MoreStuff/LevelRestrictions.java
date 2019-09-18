@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.Skills.DFPlayer;
 
 public class LevelRestrictions implements Listener{
 	File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
@@ -42,16 +43,16 @@ public class LevelRestrictions implements Listener{
 						List<String> loreList = player.getInventory().getItemInMainHand().getItemMeta().getLore();
 						for (int i=0; i<player.getInventory().getItemInMainHand().getItemMeta().getLore().size(); i++) {
 							if(loreList.get(i).contains(ChatColor.stripColor("Level Required:"))) {
-								int level = yml.getInt("Skills.Players." + player.getUniqueId() + ".Level");
+								DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+								int level = dfPlayer.getLevel();
 								String line = ChatColor.stripColor(loreList.get(i));
-								Matcher matcher = Pattern.compile("Level Required: (\\d+)").matcher(ChatColor.stripColor(line));
-								while(matcher.find()) {
-								    int firstInt = Integer.parseInt(matcher.group(1));
-				  					if(!(level >= firstInt)) {
-				  						player.sendMessage(new ColorCodeTranslator().colorize("&cYou can't use this, you are to low level."));
-				  						event.setCancelled(true);
-				  					}
+								line = line.replaceAll("[^\\d.]", "");
+								int reqLevel = Integer.parseInt(line);
+			  					if(level < reqLevel) {
+			  						player.sendMessage(new ColorCodeTranslator().colorize("&cYou can't use this, you are to low level."));
+			  						event.setCancelled(true);
 				  				}
+			  					break;
 							}
 						}
 					}
@@ -64,16 +65,16 @@ public class LevelRestrictions implements Listener{
 							List<String> loreList = player.getInventory().getItemInOffHand().getItemMeta().getLore();
 							for (int i=0; i<player.getInventory().getItemInOffHand().getItemMeta().getLore().size(); i++) {
 								if(loreList.get(i).contains(ChatColor.stripColor("Level Required:"))) {
-									int level = yml.getInt("Skills.Players." + player.getUniqueId() + ".Level");
+									DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+									int level = dfPlayer.getLevel();
 									String line = ChatColor.stripColor(loreList.get(i));
-									Matcher matcher = Pattern.compile("Level Required: (\\d+)").matcher(ChatColor.stripColor(line));
-									while(matcher.find()) {
-									    int firstInt = Integer.parseInt(matcher.group(1));
-					  					if(!(level >= firstInt)) {
-					  						player.sendMessage(new ColorCodeTranslator().colorize("&cYou can't use this, you are to low level."));
-					  						event.setCancelled(true);
-					  					}
-					  				}
+									line = line.replaceAll("[^\\d.]", "");
+									int reqLevel = Integer.parseInt(line);
+				  					if(level < reqLevel) {
+				  						player.sendMessage(new ColorCodeTranslator().colorize("&cYou can't use this, you are to low level."));
+				  						event.setCancelled(true);
+				  					}
+				  					break;
 								}
 							}
 						}
@@ -100,24 +101,19 @@ public class LevelRestrictions implements Listener{
 			if(item != null) {
 				if(item.hasItemMeta()) {
 					if(item.getItemMeta().hasLore()) {
-						String check = "";
 						for(String lore : item.getItemMeta().getLore()) {
 							if(lore.contains(ChatColor.stripColor("Level Required:"))) {
-								check = ChatColor.stripColor(lore);
+								String check = lore;
+								DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+								int level = dfPlayer.getLevel();
+								check = check.replaceAll("[^\\d.]", "");
+								int reqLevel = Integer.parseInt(check);
+			  					if(level < reqLevel) {
+			  						player.sendMessage(new ColorCodeTranslator().colorize("&cYou can't use this, you are to low level."));
+			  						event.setCancelled(true);
+			  					}
+			  					break;
 							}
-						}
-						if(check.contains("Level Required:")) {
-							event.setCancelled(true);
-							int level = yml.getInt("Skills.Players." + player.getUniqueId() + ".Level");
-							Matcher matcher = Pattern.compile("Level Required: (\\d+)").matcher(ChatColor.stripColor(check));
-							int rLevel = 0;
-							while(matcher.find()) {
-							    rLevel = Integer.parseInt(matcher.group(1));
-							}
-		  					if(!(level >= rLevel)) {
-		  						player.sendMessage(new ColorCodeTranslator().colorize("&cYou can't use this, you are to low level."));
-		  						event.setCancelled(true);
-		  					}
 						}
 					}
 				}

@@ -1036,8 +1036,8 @@ public class SkillMenu {
 		ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getDf();
-		double calcNow = dfPlayer.getAtkCal();
-		double calcNext = dfPlayer.getAtkCal();
+		double calcNow = dfPlayer.getDfCal();
+		double calcNext = dfPlayer.getDfCal();
 		if(dfPlayer.getSkillState(SkillState.DF) == States.UP) {
 			calcNext = calcNext + 1.50;
 		}

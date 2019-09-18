@@ -99,7 +99,6 @@ import me.WiebeHero.CustomEnchantmentsA.SnareA;
 import me.WiebeHero.CustomEnchantmentsA.SurvivalistInstinct;
 import me.WiebeHero.CustomEnchantmentsA.Tank;
 import me.WiebeHero.CustomEnchantmentsA.TitanicOath;
-import me.WiebeHero.CustomEnchantmentsA.ToughenedAura;
 import me.WiebeHero.CustomEnchantmentsA.Valor;
 import me.WiebeHero.CustomEnchantmentsA.Withering;
 import me.WiebeHero.CustomEnchantmentsB.BlackHeartB;
@@ -373,7 +372,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new SurvivalistInstinct(), this);
 		getServer().getPluginManager().registerEvents(new MagicResistance(), this);
 		getServer().getPluginManager().registerEvents(new Madeoutofblocks(), this);
-		getServer().getPluginManager().registerEvents(new ToughenedAura(), this);
 		//Bow Enchantments
 		getServer().getPluginManager().registerEvents(new BlackHeartB(), this);
 		getServer().getPluginManager().registerEvents(new BlastB(), this);
