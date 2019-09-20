@@ -239,7 +239,7 @@ public class EffectSkills implements Listener{
 	//-------------------------------------------------------
 	@EventHandler
 	public void shieldDisableEntity(EntityDamageByEntityEvent event) {
-		if(event.getEntity() instanceof Player) {
+		if(event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player)) {
 			LivingEntity ent = (LivingEntity) event.getEntity();
 			if(ent.getEquipment().getItemInOffHand() != null) {
 				if(ent.getEquipment().getItemInOffHand().getType() == Material.SHIELD) {
@@ -522,7 +522,6 @@ public class EffectSkills implements Listener{
 					if(toughness > 20) {
 						total = total + (toughness - 20);
 					}
-					total = total * 1.5;
 					event.setDamage(event.getDamage() / 100.00 * (100.00 - total));
 				}
 				else if(dfPlayer.getDfCal() < 0) {

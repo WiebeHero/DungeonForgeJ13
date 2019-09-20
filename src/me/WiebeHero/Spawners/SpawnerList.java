@@ -733,7 +733,7 @@ public class SpawnerList implements Listener{
 					method.addPlayer(mob);
 					DFPlayer dfPlayer = method.getPlayer(mob);
 					dfPlayer.setLevel(level);
-					int skills = level * 7;
+					int skills = level * 10;
 					int cl = new Random().nextInt(7) + 1;
 					switch(cl) {
 					case 1:
@@ -784,7 +784,7 @@ public class SpawnerList implements Listener{
 							break;
 						}
 					}
-					dfPlayer.setMove(0.2 + 0.005 * tier + 0.001 * level);
+					dfPlayer.setMove(0.2 + 0.01 * tier + 0.0025 * level);
 					dfPlayer.resetCalculations();
 					sk.attackSpeed(mob);
 					sk.changeHealth(mob);
@@ -794,11 +794,12 @@ public class SpawnerList implements Listener{
 						}
 					}.runTaskLater(CustomEnchantments.getInstance(), 10L);
 					sk.runDefense(mob);
-					mob.getEquipment().setHelmetDropChance((float) 0.06);
-					mob.getEquipment().setChestplateDropChance((float) 0.06);
-					mob.getEquipment().setLeggingsDropChance((float) 0.06);
-					mob.getEquipment().setBootsDropChance((float) 0.06);
-					mob.getEquipment().setItemInMainHandDropChance((float) 0.06);
+					mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(12.50);
+					mob.getEquipment().setHelmetDropChance(0.17F - 0.02F * level);
+					mob.getEquipment().setChestplateDropChance(0.17F - 0.02F * level);
+					mob.getEquipment().setLeggingsDropChance(0.17F - 0.02F * level);
+					mob.getEquipment().setBootsDropChance(0.17F - 0.02F * level);
+					mob.getEquipment().setItemInMainHandDropChance(0.17F - 0.02F * level);
 			  		mobList.put(mob.getUniqueId(), tier);
 			  		teleportBack.put(mob.getUniqueId(), counter);
 	  			}
@@ -869,22 +870,22 @@ public class SpawnerList implements Listener{
 						DFPlayer dfPlayer = method.getPlayer(mob);
 						dfPlayer.setLevel(level);
 						dfPlayer.setPlayerClass(Classes.WRATH);
-						dfPlayer.setAtk(35);
-						dfPlayer.setSpd(5);
-						dfPlayer.setCrt(35);
+						dfPlayer.setAtk(60);
+						dfPlayer.setSpd(10);
+						dfPlayer.setCrt(60);
 						dfPlayer.setRnd(0);
-						dfPlayer.setHp(15);
-						dfPlayer.setDf(15);
+						dfPlayer.setHp(25);
+						dfPlayer.setDf(25);
 						sk.attackSpeed(mob);
 						sk.changeHealth(mob);
 						sk.runDefense(mob);
-						dfPlayer.setMove(0.3);
+						dfPlayer.setMove(0.35);
 						dfPlayer.resetCalculations();
-						mob.getEquipment().setHelmetDropChance((float) 0.01);
-						mob.getEquipment().setChestplateDropChance((float) 0.01);
-						mob.getEquipment().setLeggingsDropChance((float) 0.01);
-						mob.getEquipment().setBootsDropChance((float) 0.01);
-						mob.getEquipment().setItemInMainHandDropChance((float) 0.01);
+						mob.getEquipment().setHelmetDropChance(0.05F);
+						mob.getEquipment().setChestplateDropChance(0.05F);
+						mob.getEquipment().setLeggingsDropChance(0.05F);
+						mob.getEquipment().setBootsDropChance(0.05F);
+						mob.getEquipment().setItemInMainHandDropChance(0.05F);
 	  				}
 			  		mobList.put(mob.getUniqueId(), tier);
 			  		teleportBack.put(mob.getUniqueId(), counter);

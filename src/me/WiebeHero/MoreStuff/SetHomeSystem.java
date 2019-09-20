@@ -100,7 +100,7 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 							@Override
 							public void run() {
 								if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
-									player.sendMessage(new ColorCodeTranslator().colorize("&aSending you to spawn in " + count + "..."));
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
 									count--;
 									if(count == 0) {
 										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aTeleported!"));
@@ -131,7 +131,7 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 							@Override
 							public void run() {
 								if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
-									player.sendMessage(new ColorCodeTranslator().colorize("&aSending you to spawn in " + count + "..."));
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
 									count--;
 									if(count == 0) {
 										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aTeleported!"));

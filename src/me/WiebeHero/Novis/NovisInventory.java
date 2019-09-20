@@ -49,7 +49,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 		for(int i1 = 0; i1 <= 39; i1++) {
 			lootList.add(finalLootList.get(new Random().nextInt(finalLootList.size())));
 		}
-		ItemStack finalReward = lootList.get(35);
+		ItemStack finalReward = lootList.get(32);
 		//--------------------------------------------------------------------------------------------------------------------
 		//Inventory Animation
 		//--------------------------------------------------------------------------------------------------------------------
@@ -89,7 +89,9 @@ public class NovisInventory extends NovisRewards implements Listener{
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.4);
 					}
-					count++;
+					if(!(counter <= 1)) {
+						count++;
+					}
 					counter--;
 					if(counter == 0) {
 						cancel();
@@ -128,7 +130,9 @@ public class NovisInventory extends NovisRewards implements Listener{
 									for(Player victim1 : Bukkit.getOnlinePlayers()) {
 										((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.6);
 									}
-									count++;
+									if(!(counter <= 1)) {
+										count++;
+									}
 									counter--;
 									if(counter == 0) {
 										cancel();
@@ -167,7 +171,9 @@ public class NovisInventory extends NovisRewards implements Listener{
 													for(Player victim1 : Bukkit.getOnlinePlayers()) {
 														((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.8);
 													}
-													count++;
+													if(!(counter <= 1)) {
+														count++;
+													}
 													counter--;
 													if(counter == 0) {
 														cancel();

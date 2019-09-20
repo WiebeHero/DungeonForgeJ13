@@ -59,7 +59,7 @@ public class XPAddWeapons implements Listener{
 										String lore = item.getItemMeta().getLore().toString();
 										Set<String> configList = null;
 										String type = "";
-										if(lore.contains(ChatColor.stripColor("Attack Damage:")) && lore.contains(ChatColor.stripColor("Attack Speed:")) && !lore.contains(ChatColor.stripColor("Attack Range:"))){
+										if(lore.contains(ChatColor.stripColor("Attack Damage:")) && lore.contains(ChatColor.stripColor("Attack Speed:"))  && item.getType() != Material.BOW){
 											configList = config.getConfigurationSection("Items.Weapons").getKeys(false);
 											type = "Weapons";
 										}

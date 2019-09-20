@@ -1,12 +1,10 @@
 package me.WiebeHero.MoreStuff;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.regex.Matcher;
+import java.util.UUID;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -16,6 +14,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.Factions.DFFactions;
+import me.WiebeHero.Skills.DFPlayer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -25,6 +25,7 @@ import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.PacketPlayOutChat;
 
 public class ChatItem implements Listener{
+	DFFactions fac = new DFFactions();
 	@EventHandler
 	public void chatItemEvent(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
@@ -34,10 +35,7 @@ public class ChatItem implements Listener{
 			if(item1 != null) {
 				if(item1.hasItemMeta()) {
 					if(item1.getItemMeta().hasLore()) {
-						File f =  new File("plugins/CustomEnchantments/factionsConfig.yml");
-						YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-						File f1 =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-						YamlConfiguration yml1 = YamlConfiguration.loadConfiguration(f1);
+						DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 						event.setCancelled(true);
 						String split[] = message.split(Pattern.quote("[i]"));
 						String textBefore = null;
@@ -48,33 +46,12 @@ public class ChatItem implements Listener{
 						if(split.length > 1) {
 							textAfter = split[1];
 						}
-						Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
-						ArrayList<String> facCheck = new ArrayList<String>();
-						facCheck.addAll(set);
-						String get = "";
+						int level = dfPlayer.getLevel();
 						String facN = "";
-						boolean check = false;
-						int level = 0;
-						String id = player.getUniqueId().toString();
-						ArrayList<String> chec = new ArrayList<String>();
-						for(int i = 0; i < facCheck.size(); i++) {
-							get = facCheck.get(i);
-							if(get == null) {
-								continue;
+						for(Entry<String, ArrayList<UUID>> entry : fac.getFactionMemberList().entrySet()) {
+							if(entry.getValue().contains(player.getUniqueId())) {
+								facN = entry.getKey();
 							}
-							Set<String> check1 = yml.getConfigurationSection("Factions.List." + get + ".Members").getKeys(false);
-							if(!(check1.contains(id))) {
-								chec.addAll(yml.getStringList("Factions.List." + get + ".Chunk List"));	
-							}
-							else {
-								facN = get;
-								check = true;
-							}
-						}
-						String levels = yml1.getString("Skills.Players." + player.getUniqueId() + ".Level");
-						Matcher matcher = Pattern.compile("(\\d+)").matcher(ChatColor.stripColor(levels));
-						while(matcher.find()) {
-						    level = Integer.parseInt(matcher.group(1));
 						}
 						ItemStack item = player.getInventory().getItemInMainHand();
 						net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item);
@@ -90,7 +67,7 @@ public class ChatItem implements Listener{
 				        
 				        TextComponent componentBefore = new TextComponent();
 				        TextComponent componentAfter = new TextComponent();
-				        if(check == true) {
+				        if(!facN.equals("")) {
 							if(textBefore != null) {
 								componentBefore.setText(new ColorCodeTranslator().colorize("&6" + facN + "&a | &b&l"  + level + "&a | &7" + player.getName() + ": " + textBefore));
 						        componentBefore.setColor(ChatColor.GRAY);

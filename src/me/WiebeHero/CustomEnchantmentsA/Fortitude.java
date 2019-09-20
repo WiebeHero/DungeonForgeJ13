@@ -51,7 +51,7 @@ public class Fortitude implements Listener{
 												int level = Integer.parseInt(check) - 1;
 												if(i <= 10 + 2.5 * level) {
 													double maxHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-													double heal = 1 + level;
+													double heal = 0.25 + 0.35 * level;
 													new BukkitRunnable() {
 														int count = 0;
 														int check = 2 + level;

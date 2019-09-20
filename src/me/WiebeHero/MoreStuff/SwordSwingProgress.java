@@ -3,9 +3,10 @@ package me.WiebeHero.MoreStuff;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -17,12 +18,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import net.minecraft.server.v1_13_R2.EntityPlayer;
 
 public class SwordSwingProgress implements Listener{
 	public static ArrayList<String> names = new ArrayList<String>();
 	public static HashMap<String, Float> swordSwingProgress = new HashMap<String, Float>();
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void swingProgressDamage(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player){
 			Player player = (Player) event.getDamager();
@@ -148,8 +148,8 @@ public class SwordSwingProgress implements Listener{
 			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 		}
 	}
-	public final float getSwingProgress(Player player) {
-	    return player.getCooledAttackStrength(0);
+	public static float getSwingProgress(Player player) {
+	    return player.getCooledAttackStrength(0.0F);
 	}
 	public float getAttackStrength(Player p) {
 		float i = swordSwingProgress.get(p.getName());

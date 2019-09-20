@@ -82,7 +82,7 @@ public class DFFactions implements Listener,CommandExecutor{
 								Pattern p = Pattern.compile( "[0-9]" );
 							    Matcher m = p.matcher(facName);
 							    if(m.find() == false && facName.indexOf("_-=+[]{}:;''<>/?!@#$%^&*()") == -1) {
-							    	if(facName.length() > 8) {
+							    	if(facName.length() >= 4 || facName.length() <= 20) {
 							    		if(fName.equals("")) {
 							    			if(!factionNameList.contains(facName)) {
 									    		player.sendMessage(new ColorCodeTranslator().colorize("&aYou have created your faction &6" + facName));
