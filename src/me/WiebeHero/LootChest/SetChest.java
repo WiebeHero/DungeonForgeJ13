@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.Moderation.ModerationGUICommand;
 
 public class SetChest implements Listener,CommandExecutor {
 	public String getLast(Set<String> set) {
@@ -33,115 +34,130 @@ public class SetChest implements Listener,CommandExecutor {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
 			if(player.isOp()) {
-				if(args.length == 1) {
-					if(args[0].equalsIgnoreCase(ChatColor.stripColor("delete"))) {
-						int id = 0;
-						boolean deleted = false;
-						for(Entry<Integer, Location> entry : chestLocations.entrySet()) {
-							if(entry.getValue().distance(player.getLocation()) <= 1.5) {
-								id = entry.getKey();
-								deleted = true;
-							}
-						}
-						if(deleted == true) {
-							chestLocations.remove(id);
-							chestTier.remove(id);
-							chestRadius.remove(id);
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have the deleted the chest with ID: &6" + id));
-						}
-						else if(deleted == false){
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNo chests could be deleted! Get closer to the chest!"));
-						}
-						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cSomething went wrong when deleting the chest..."));
-						}
-					}
-					else if(args[0].equalsIgnoreCase("see")) {
-						for(Entry<Integer, Location> entry : chestLocations.entrySet()) {
-							if(entry.getValue().distance(player.getLocation()) <= 30) {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aChest ID: &6" + entry.getKey() + " &aChest Coords: &6" + entry.getValue().getBlockX() + " " + entry.getValue().getBlockY() + " " + entry.getValue().getBlockZ()));
-								player.sendBlockChange(entry.getValue(), Material.ORANGE_STAINED_GLASS.createBlockData());
-							}
-						}
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aChest will only be shown to you as orange stained glass!"));
-					}
-					else if(args[0].equalsIgnoreCase("deleteall")) {
-						chestLocations.clear();
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted all the chests!"));
-					}
-				}
-				else if(args.length == 2) {
-					if(args[0].equalsIgnoreCase("delete")) {
-						int id = -1;
-						try {
-							id = Integer.parseInt(args[1]);
-						}
-						catch(NumberFormatException ex){
-							ex.printStackTrace();
-						}
-						if(chestLocations.containsKey(id)) {
-							chestLocations.remove(id);
-							chestTier.remove(id);
-							chestRadius.remove(id);
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted the chest with id &6" + id));
-						}
-						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis chest doesn't exist!"));
-						}
-					}
-				}
-				else if(args.length == 3) {
-					if(args[0].equalsIgnoreCase(ChatColor.stripColor("create"))) {
-						int tier = -1;
-						int radius = 0;
-						try {
-							tier = Integer.parseInt(args[1]);
-						}
-						catch(NumberFormatException ex){
-							ex.printStackTrace();
-						}
-						try {
-							radius = Integer.parseInt(args[2]);
-						}
-						catch(NumberFormatException ex){
-							ex.printStackTrace();
-						}
-						if(tier >= 1 && tier <= 4) {
-							if(radius >= 1) {
-								if(chestLocations.isEmpty()) {
-									chestLocations.put(1, player.getLocation());
-									chestTier.put(1, tier);
-									chestRadius.put(1, radius);
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new loot chest with the id of &61 &ahas been created!"));
-								}
-								else {
-									int currentId = chestLocations.size() + 1;
-									for(int i = 1; i <= chestLocations.lastKey(); i++) {
-										if(chestLocations.get(i) == null) {
-											currentId = i;
-											break;
+				if(ModerationGUICommand.getStaffModeList().containsKey(player.getUniqueId())) {
+					if(ModerationGUICommand.getStaffModeList().get(player.getUniqueId()) == true) {
+						if(ModerationGUICommand.getStaffRankList().get(player.getUniqueId()) >= 6) {
+							if(args.length == 1) {
+								if(args[0].equalsIgnoreCase(ChatColor.stripColor("delete"))) {
+									int id = 0;
+									boolean deleted = false;
+									for(Entry<Integer, Location> entry : chestLocations.entrySet()) {
+										if(entry.getValue().distance(player.getLocation()) <= 1.5) {
+											id = entry.getKey();
+											deleted = true;
 										}
 									}
-									chestLocations.put(currentId, player.getLocation());
-									chestTier.put(currentId, tier);
-									chestRadius.put(currentId, radius);
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new loot chest with the id of &6" + currentId + " &ahas been created!"));
+									if(deleted == true) {
+										chestLocations.remove(id);
+										chestTier.remove(id);
+										chestRadius.remove(id);
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have the deleted the chest with ID: &6" + id));
+									}
+									else if(deleted == false){
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNo chests could be deleted! Get closer to the chest!"));
+									}
+									else {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cSomething went wrong when deleting the chest..."));
+									}
+								}
+								else if(args[0].equalsIgnoreCase("see")) {
+									for(Entry<Integer, Location> entry : chestLocations.entrySet()) {
+										if(entry.getValue().distance(player.getLocation()) <= 30) {
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aChest ID: &6" + entry.getKey() + " &aChest Coords: &6" + entry.getValue().getBlockX() + " " + entry.getValue().getBlockY() + " " + entry.getValue().getBlockZ()));
+											player.sendBlockChange(entry.getValue(), Material.ORANGE_STAINED_GLASS.createBlockData());
+										}
+									}
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aChest will only be shown to you as orange stained glass!"));
+								}
+								else if(args[0].equalsIgnoreCase("deleteall")) {
+									chestLocations.clear();
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted all the chests!"));
+								}
+							}
+							else if(args.length == 2) {
+								if(args[0].equalsIgnoreCase("delete")) {
+									int id = -1;
+									try {
+										id = Integer.parseInt(args[1]);
+									}
+									catch(NumberFormatException ex){
+										ex.printStackTrace();
+									}
+									if(chestLocations.containsKey(id)) {
+										chestLocations.remove(id);
+										chestTier.remove(id);
+										chestRadius.remove(id);
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted the chest with id &6" + id));
+									}
+									else {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis chest doesn't exist!"));
+									}
+								}
+							}
+							else if(args.length == 3) {
+								if(args[0].equalsIgnoreCase(ChatColor.stripColor("create"))) {
+									int tier = -1;
+									int radius = 0;
+									try {
+										tier = Integer.parseInt(args[1]);
+									}
+									catch(NumberFormatException ex){
+										ex.printStackTrace();
+									}
+									try {
+										radius = Integer.parseInt(args[2]);
+									}
+									catch(NumberFormatException ex){
+										ex.printStackTrace();
+									}
+									if(tier >= 1 && tier <= 4) {
+										if(radius >= 1) {
+											if(chestLocations.isEmpty()) {
+												chestLocations.put(1, player.getLocation());
+												chestTier.put(1, tier);
+												chestRadius.put(1, radius);
+												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new loot chest with the id of &61 &ahas been created!"));
+											}
+											else {
+												int currentId = chestLocations.size() + 1;
+												for(int i = 1; i <= chestLocations.lastKey(); i++) {
+													if(chestLocations.get(i) == null) {
+														currentId = i;
+														break;
+													}
+												}
+												chestLocations.put(currentId, player.getLocation());
+												chestTier.put(currentId, tier);
+												chestRadius.put(currentId, radius);
+												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new loot chest with the id of &6" + currentId + " &ahas been created!"));
+											}
+										}
+										else {
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid radius"));
+										}
+									}
+									else {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid tier"));
+									}
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid command"));
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid radius"));
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cTo many/few arguments"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid tier"));
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to execute this command!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid command"));
+						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cTurn on your staffmode first!"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cTo many/few arguments"));
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou are not staff!"));
 				}
 			}
 			else {
@@ -171,7 +187,7 @@ public class SetChest implements Listener,CommandExecutor {
 		}
 		Set<String> set = yml.getConfigurationSection("Loot.Chests").getKeys(false);
 		if(set.size() != 0) {
-			for(int i = 1; i < Integer.parseInt(this.getLast(set)); i++) {
+			for(int i = 1; i <= Integer.parseInt(this.getLast(set)); i++) {
 				if(yml.get("Loot.Chests." + i) == null) {
 					continue;
 				}

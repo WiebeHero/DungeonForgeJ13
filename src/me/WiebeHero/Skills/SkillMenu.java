@@ -894,13 +894,13 @@ public class SkillMenu {
 		double calcNow = dfPlayer.getAtkCal();
 		double calcNext = dfPlayer.getAtkCal();
 		if(dfPlayer.getSkillState(SkillState.ATK) == States.UP) {
-			calcNext = calcNext + 3.75;
+			calcNext = calcNext + 2.25;
 		}
 		else if(dfPlayer.getSkillState(SkillState.ATK) == States.DW) {
-			calcNext = calcNext + 1.25;
+			calcNext = calcNext + 0.75;
 		}
 		else if(dfPlayer.getSkillState(SkillState.ATK) == States.NM){
-			calcNext = calcNext + 2.5;
+			calcNext = calcNext + 1.5;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&4Attack Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
@@ -981,13 +981,13 @@ public class SkillMenu {
 		double calcNow = dfPlayer.getRndCal();
 		double calcNext = dfPlayer.getRndCal();
 		if(dfPlayer.getSkillState(SkillState.RND) == States.UP) {
-			calcNext = calcNext + 4.5;
+			calcNext = calcNext + 3.0;
 		}
 		else if(dfPlayer.getSkillState(SkillState.RND) == States.DW) {
-			calcNext = calcNext + 1.5;
+			calcNext = calcNext + 1.0;
 		}
 		else if(dfPlayer.getSkillState(SkillState.RND) == States.NM){
-			calcNext = calcNext + 3.0;
+			calcNext = calcNext + 2.0;
 		}
 		meta.setDisplayName(new ColorCodeTranslator().colorize("&dRanged Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();

@@ -12,6 +12,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomClasses.Methods;
@@ -214,7 +215,7 @@ public class DFPlayer {
 				multiplier = 0.5;
 			}
 			if(state.getKey() == SkillState.ATK) {
-				this.atk_c = this.atk * (2.50 * multiplier);
+				this.atk_c = this.atk * (1.50 * multiplier);
 			}
 			else if(state.getKey() == SkillState.SPD) {
 				this.spd_c = this.spd * (0.50 * multiplier);
@@ -223,7 +224,7 @@ public class DFPlayer {
 				this.crt_c = this.crt * (0.50 * multiplier);
 			}
 			else if(state.getKey() == SkillState.RND) {
-				this.rnd_c = this.rnd * (3.0 * multiplier);
+				this.rnd_c = this.rnd * (2.0 * multiplier);
 			}
 			else if(state.getKey() == SkillState.HP) {
 				this.hp_c = this.hp * (5.00 * multiplier);
@@ -622,81 +623,138 @@ public class DFPlayer {
 	//Attack Damage Calculated Handler
 	//---------------------------------------------------------
 	public double getAtkCal() {
-		return this.atk_c;
+		double temp = 0.00;
+		if(this.player.hasMetadata("Attack")) {
+			temp = this.player.getMetadata("Attack").get(0).asDouble();
+		}
+		return this.atk_c + temp;
 	}
 	
 	public void setAtkCal(double amount) {
-		this.atk_c = amount;
+		this.player.setMetadata("Attack", new FixedMetadataValue(CustomEnchantments.getInstance(), amount));
 	}
 	
 	public void addAtkCal(double amount, long time) {
 		if(time != 0) {
-			this.atk_c = this.atk_c + amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Attack")) {
+				temp = this.player.getMetadata("Attack").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Attack", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.atk_c = p.atk_c - amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Attack")) {
+						now = p.player.getMetadata("Attack").get(0).asDouble();
+					}
+					p.player.setMetadata("Attack", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.atk_c = this.atk_c + amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Attack")) {
+				temp = this.player.getMetadata("Attack").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Attack", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 		}
 	}
 	
 	public void removeAtkCal(double amount, long time) {
 		if(time != 0) {
-			this.atk_c = this.atk_c - amount;
 			DFPlayer p = this;
+			double now = this.player.getMetadata("Attack").get(0).asDouble();
+			p.player.setMetadata("Attack", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.atk_c = p.atk_c + amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Attack")) {
+						now = p.player.getMetadata("Attack").get(0).asDouble();
+					}
+					p.player.setMetadata("Attack", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.atk_c = this.atk_c - amount;
+			double now = this.player.getMetadata("Attack").get(0).asDouble();
+			this.player.setMetadata("Attack", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 		}
 	}
 	//---------------------------------------------------------
 	//Attack Speed Calculated Handler
 	//---------------------------------------------------------
 	public double getSpdCal() {
-		return this.spd_c;
+		double temp = 0.00;
+		if(this.player.hasMetadata("Speed")) {
+			temp = this.player.getMetadata("Speed").get(0).asDouble();
+		}
+		return this.spd_c + temp;
 	}
 	
 	public void setSpdCal(double amount) {
-		this.spd_c = amount;
+		this.player.setMetadata("Speed", new FixedMetadataValue(CustomEnchantments.getInstance(), amount));
+		sk.attackSpeed(this.player);
 	}
 	
 	public void addSpdCal(double amount, long time) {
 		if(time != 0) {
-			this.spd_c = this.spd_c + amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Speed")) {
+				temp = this.player.getMetadata("Speed").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Speed", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.spd_c = p.spd_c - amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Speed")) {
+						now = p.player.getMetadata("Speed").get(0).asDouble();
+					}
+					p.player.setMetadata("Speed", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.spd_c = this.spd_c + amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Speed")) {
+				temp = this.player.getMetadata("Speed").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Speed", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 		}
 		sk.attackSpeed(this.player);
 	}
 	
 	public void removeSpdCal(double amount, long time) {
 		if(time != 0) {
-			this.spd_c = this.spd_c - amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Speed")) {
+				temp = this.player.getMetadata("Speed").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Speed", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.spd_c = p.spd_c + amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Speed")) {
+						now = p.player.getMetadata("Speed").get(0).asDouble();
+					}
+					p.player.setMetadata("Speed", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.spd_c = this.spd_c - amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Speed")) {
+				temp = this.player.getMetadata("Speed").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Speed", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 		}
 		sk.attackSpeed(this.player);
 	}
@@ -704,123 +762,220 @@ public class DFPlayer {
 	//Critical Chance Calculated Handler
 	//---------------------------------------------------------
 	public double getCrtCal() {
-		return this.crt_c;
+		double temp = 0.00;
+		if(this.player.hasMetadata("Critical")) {
+			temp = this.player.getMetadata("Critical").get(0).asDouble();
+		}
+		return this.crt_c + temp;
 	}
 	
 	public void setCrtCal(double amount) {
-		this.crt_c = amount;
+		this.player.setMetadata("Critical", new FixedMetadataValue(CustomEnchantments.getInstance(), amount));
 	}
 	
 	public void addCrtCal(double amount, long time) {
 		if(time != 0) {
-			this.crt_c = this.crt_c + amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Critical")) {
+				temp = this.player.getMetadata("Critical").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Critical", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.crt_c = p.crt_c - amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Critical")) {
+						now = p.player.getMetadata("Critical").get(0).asDouble();
+					}
+					p.player.setMetadata("Critical", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.crt_c = this.crt_c + amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Critical")) {
+				temp = this.player.getMetadata("Critical").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Critical", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 		}
 	}
 	
 	public void removeCrtCal(double amount, long time) {
 		if(time != 0) {
-			this.crt_c = this.crt_c - amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Critical")) {
+				temp = this.player.getMetadata("Critical").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Critical", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.crt_c = p.crt_c + amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Critical")) {
+						now = p.player.getMetadata("Critical").get(0).asDouble();
+					}
+					p.player.setMetadata("Critical", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.crt_c = this.crt_c - amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Critical")) {
+				temp = this.player.getMetadata("Critical").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Critical", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 		}
 	}
 	//---------------------------------------------------------
 	//Ranged Damage Calculated Handler
 	//---------------------------------------------------------
 	public double getRndCal() {
-		return this.rnd_c;
+		double temp = 0.00;
+		if(this.player.hasMetadata("Ranged")) {
+			temp = this.player.getMetadata("Ranged").get(0).asDouble();
+		}
+		return this.rnd_c + temp;
 	}
 	
 	public void setRndCal(double amount) {
-		this.rnd_c = amount;
+		this.player.setMetadata("Ranged", new FixedMetadataValue(CustomEnchantments.getInstance(), amount));
 	}
 	
 	public void addRndCal(double amount, long time) {
 		if(time != 0) {
-			this.rnd_c = this.rnd_c + amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Ranged")) {
+				temp = this.player.getMetadata("Ranged").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Ranged", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.rnd_c = p.rnd_c - amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Ranged")) {
+						now = p.player.getMetadata("Ranged").get(0).asDouble();
+					}
+					p.player.setMetadata("Ranged", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.rnd_c = this.rnd_c + amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Ranged")) {
+				temp = this.player.getMetadata("Ranged").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Ranged", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 		}
 	}
 	
 	public void removeRndCal(double amount, long time) {
 		if(time != 0) {
-			this.rnd_c = this.rnd_c - amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Ranged")) {
+				temp = this.player.getMetadata("Ranged").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Ranged", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.rnd_c = p.rnd_c + amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Ranged")) {
+						now = p.player.getMetadata("Ranged").get(0).asDouble();
+					}
+					p.player.setMetadata("Ranged", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.rnd_c = this.rnd_c - amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Ranged")) {
+				temp = this.player.getMetadata("Ranged").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Ranged", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 		}
 	}
 	//---------------------------------------------------------
 	//Max Health Calculated Handler
 	//---------------------------------------------------------
 	public double getHpCal() {
-		return this.hp_c;
+		double temp = 0.00;
+		if(this.player.hasMetadata("Health")) {
+			temp = this.player.getMetadata("Health").get(0).asDouble();
+		}
+		return this.hp_c + temp;
 	}
 	
 	public void setHpCal(double amount) {
-		this.hp_c = amount;
+		this.player.setMetadata("Health", new FixedMetadataValue(CustomEnchantments.getInstance(), amount));
+		sk.changeHealth(this.player);
 	}
 	
 	public void addHpCal(double amount, long time) {
 		if(time != 0) {
-			this.hp_c = this.hp_c + amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Health")) {
+				temp = this.player.getMetadata("Health").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Health", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.hp_c = p.hp_c - amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Health")) {
+						now = p.player.getMetadata("Health").get(0).asDouble();
+					}
+					p.player.setMetadata("Health", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.hp_c = this.hp_c + amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Health")) {
+				temp = this.player.getMetadata("Health").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Health", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 		}
 		sk.changeHealth(this.player);
 	}
 	
 	public void removeHpCal(double amount, long time) {
 		if(time != 0) {
-			this.hp_c = this.hp_c - amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Health")) {
+				temp = this.player.getMetadata("Health").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Health", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.hp_c = p.hp_c + amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Health")) {
+						now = p.player.getMetadata("Health").get(0).asDouble();
+					}
+					p.player.setMetadata("Health", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.hp_c = this.hp_c - amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Health")) {
+				temp = this.player.getMetadata("Health").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Health", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 		}
-		sk.changeHealth(player);
+		sk.changeHealth(this.player);
 	}
 	public double getHP() {
 		return this.player.getHealth();
@@ -832,41 +987,74 @@ public class DFPlayer {
 	//Armor Defene Calculated Handler
 	//---------------------------------------------------------
 	public double getDfCal() {
-		return this.df_c;
+		double temp = 0.00;
+		if(this.player.hasMetadata("Defense")) {
+			temp = this.player.getMetadata("Defense").get(0).asDouble();
+		}
+		return this.df_c + temp;
 	}
 	
 	public void setDfCal(double amount) {
-		this.df_c = amount;
+		this.player.setMetadata("Defense", new FixedMetadataValue(CustomEnchantments.getInstance(), amount));
+		sk.runDefense(this.player);
 	}
 	
 	public void addDfCal(double amount, long time) {
 		if(time != 0) {
-			this.df_c = this.df_c + amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Defense")) {
+				temp = this.player.getMetadata("Defense").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Defense", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.df_c = p.df_c - amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Defense")) {
+						now = p.player.getMetadata("Defense").get(0).asDouble();
+					}
+					p.player.setMetadata("Defense", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.df_c = this.df_c + amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Defense")) {
+				temp = this.player.getMetadata("Defense").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Defense", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 		}
 		sk.runDefense(this.player);
 	}
 	
 	public void removeDfCal(double amount, long time) {
 		if(time != 0) {
-			this.df_c = this.df_c - amount;
 			DFPlayer p = this;
+			double temp = 0.00;
+			if(p.player.hasMetadata("Defense")) {
+				temp = this.player.getMetadata("Defense").get(0).asDouble();
+			}
+			double now = temp;
+			p.player.setMetadata("Defense", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 			new BukkitRunnable() {
 				public void run() {
-					p.df_c = p.df_c + amount;
+					double now = 0.00;
+					if(p.player.hasMetadata("Defense")) {
+						now = p.player.getMetadata("Defense").get(0).asDouble();
+					}
+					p.player.setMetadata("Defense", new FixedMetadataValue(CustomEnchantments.getInstance(), now + amount));
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.df_c = this.df_c - amount;
+			double temp = 0.00;
+			if(this.player.hasMetadata("Defense")) {
+				temp = this.player.getMetadata("Defense").get(0).asDouble();
+			}
+			double now = temp;
+			this.player.setMetadata("Defense", new FixedMetadataValue(CustomEnchantments.getInstance(), now - amount));
 		}
 		sk.runDefense(this.player);
 	}

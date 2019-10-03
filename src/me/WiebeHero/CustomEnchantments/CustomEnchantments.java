@@ -82,21 +82,18 @@ import me.WiebeHero.CustomEnchantmentsA.Invincibility;
 import me.WiebeHero.CustomEnchantmentsA.JellyFish;
 import me.WiebeHero.CustomEnchantmentsA.Kadabra;
 import me.WiebeHero.CustomEnchantmentsA.LastStand;
-import me.WiebeHero.CustomEnchantmentsA.Madeoutofblocks;
-import me.WiebeHero.CustomEnchantmentsA.MagicResistance;
-import me.WiebeHero.CustomEnchantmentsA.MeleeResistance;
 import me.WiebeHero.CustomEnchantmentsA.Nurtrition;
 import me.WiebeHero.CustomEnchantmentsA.PowerfullStrike;
+import me.WiebeHero.CustomEnchantmentsA.Protection;
 import me.WiebeHero.CustomEnchantmentsA.Rage;
-import me.WiebeHero.CustomEnchantmentsA.RangedResistance;
 import me.WiebeHero.CustomEnchantmentsA.Regenerator;
+import me.WiebeHero.CustomEnchantmentsA.Reinforced;
 import me.WiebeHero.CustomEnchantmentsA.Saturation;
 import me.WiebeHero.CustomEnchantmentsA.SelfDestruct;
 import me.WiebeHero.CustomEnchantmentsA.Slowness1;
 import me.WiebeHero.CustomEnchantmentsA.Slowness2;
 import me.WiebeHero.CustomEnchantmentsA.SmokeScreen;
 import me.WiebeHero.CustomEnchantmentsA.SnareA;
-import me.WiebeHero.CustomEnchantmentsA.SurvivalistInstinct;
 import me.WiebeHero.CustomEnchantmentsA.Tank;
 import me.WiebeHero.CustomEnchantmentsA.TitanicOath;
 import me.WiebeHero.CustomEnchantmentsA.Valor;
@@ -183,6 +180,7 @@ import me.WiebeHero.DFWeapons.DFWeaponUpgrade;
 import me.WiebeHero.DungeonInstances.DungeonMaxima;
 import me.WiebeHero.DungeonInstances.DungeonParty;
 import me.WiebeHero.DungeonInstances.DungeonPartyCommand;
+import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Factions.FactionsHandler;
 import me.WiebeHero.FishingLoot.ChangeFishDrops;
@@ -246,6 +244,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	public ArrayList<DFSpawner> dfSpawnerList = new ArrayList<DFSpawner>();
 	public HashMap<UUID, DungeonParty> dfDungeonParty = new HashMap<UUID, DungeonParty>();
 	public ArrayList<DungeonMaxima> dfDungeonList = new ArrayList<DungeonMaxima>();
+	public ArrayList<DFFaction> factionList = new ArrayList<DFFaction>();
 	private static CustomEnchantments instance;
 	private SkillCommand skillCommand = new SkillCommand();
 	private SetSpawner command = new SetSpawner();
@@ -364,14 +363,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new Fortitude(), this);
 		getServer().getPluginManager().registerEvents(new Curse(), this);
 		getServer().getPluginManager().registerEvents(new TitanicOath(), this);
-		getServer().getPluginManager().registerEvents(new RangedResistance(), this);
-		getServer().getPluginManager().registerEvents(new MeleeResistance(), this);
+		getServer().getPluginManager().registerEvents(new Protection(), this);
 		getServer().getPluginManager().registerEvents(new CreeperSpirit(), this);
 		getServer().getPluginManager().registerEvents(new DragonsSkin(), this);
 		getServer().getPluginManager().registerEvents(new DodgeRoll(), this);
-		getServer().getPluginManager().registerEvents(new SurvivalistInstinct(), this);
-		getServer().getPluginManager().registerEvents(new MagicResistance(), this);
-		getServer().getPluginManager().registerEvents(new Madeoutofblocks(), this);
+		getServer().getPluginManager().registerEvents(new Reinforced(), this);
 		//Bow Enchantments
 		getServer().getPluginManager().registerEvents(new BlackHeartB(), this);
 		getServer().getPluginManager().registerEvents(new BlastB(), this);
@@ -603,7 +599,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(mod, this);
 		getServer().getPluginManager().registerEvents(new ModerationGUI(), this);
 		//Glowing Drops
-	    registerHealthBar();
 	    Bukkit.getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new GlowingItemDrops(), this);
 		loadConfig();
@@ -867,12 +862,12 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 		scores.remove(player.getUniqueId());
 	}
-	public void registerHealthBar() {
-		if(scoreboard.getObjective("myHealth") != null) {
-			scoreboard.getObjective("myHealth").unregister();
+	public void registerHealthBar(Scoreboard board) {
+		if(board.getObjective("health") != null) {
+			board.getObjective("health").unregister();
 		}
-		Objective o = scoreboard.registerNewObjective("myHealth", "health", "display");
-		o.setDisplayName(ChatColor.RED + "");
+		Objective o = board.registerNewObjective("health", "health", "display");
+		o.setDisplayName(new ColorCodeTranslator().colorize("&c❤"));
 		o.setDisplaySlot(DisplaySlot.BELOW_NAME);
 	}
 	public static HashMap<UUID, String> ranks = new HashMap<UUID, String>();
@@ -947,6 +942,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
 			Scoreboard board = manager.getNewScoreboard();
 			org.bukkit.scoreboard.Scoreboard b = board;
+			registerHealthBar(b);
 			Objective o = null;
 			if(b.getObjective(player.getName()) == null) {
 				o = b.registerNewObjective(player.getName(), "Scoreboard", "myScoreboard");
@@ -981,10 +977,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			board.registerNewTeam(player.getName() + "1");
 			Team t = board.getTeam(player.getName() + "1");
-			board.getTeam(player.getName() + "1").addPlayer(player);
+			board.getTeam(player.getName() + "1").addEntry(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + t.getSuffix()));
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 			//Faction Info
 			Score blank1 = o.getScore("");
@@ -1089,6 +1085,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			Scoreboard board = scores.get(player.getUniqueId());
 			org.bukkit.scoreboard.Scoreboard b = board;
+			registerHealthBar(b);
 			Objective o = null;
 			if(b.getObjective(player.getName()) == null) {
 				o = b.registerNewObjective(player.getName(), "Scoreboard", "myScoreboard");
@@ -1123,10 +1120,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			board.registerNewTeam(player.getName() + "1");
 			Team t = board.getTeam(player.getName() + "1");
-			board.getTeam(player.getName() + "1").addPlayer(player);
-			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
+			board.getTeam(player.getName() + "1").addEntry(player.getName());
+			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6] "));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + t.getSuffix()));
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 			
 			//Faction Info

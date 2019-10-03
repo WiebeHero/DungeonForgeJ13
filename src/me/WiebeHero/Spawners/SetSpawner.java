@@ -19,6 +19,7 @@ import org.bukkit.event.Listener;
 
 import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.Moderation.ModerationGUICommand;
 
 public class SetSpawner implements Listener,CommandExecutor{
 	public String getLast(Set<String> set) {
@@ -34,126 +35,141 @@ public class SetSpawner implements Listener,CommandExecutor{
 			Player player = (Player) sender;
 			if(player.isOp()) {
 				if(cmd.getName().equalsIgnoreCase(cmdSpawner)) {
-					if(args.length == 1) {
-						if(args[0].equalsIgnoreCase("delete")) {
-							boolean deleted = false;
-							int id = 0;
-							for(Entry<Integer, Location> entry : locationSpawner.entrySet()) {
-								if(entry.getValue().distance(player.getLocation()) <= 1.5) {
-									id = entry.getKey();
-									deleted = true;
-								}
-							}
-							if(deleted == true) {
-								locationSpawner.remove(id);
-								tieredList.remove(id);
-								entityTypeList.remove(id);
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have the deleted the spawner with ID: &6" + id));
-							}
-							else if(deleted == false){
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNo spawners could be deleted! Get closer to the spawner!"));
-							}
-							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cSomething went wrong when deleting the spawner..."));
-							}
-						}
-						else if(args[0].equalsIgnoreCase("see")) {
-							for(Entry<Integer, Location> entry : locationSpawner.entrySet()) {
-								if(entry.getValue().distance(player.getLocation()) <= 30) {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSpawner ID: &6" + entry.getKey() + " &aSpawner Coords: &6" + entry.getValue().getBlockX() + " " + entry.getValue().getBlockY() + " " + entry.getValue().getBlockZ()));
-									player.sendBlockChange(entry.getValue(), Material.YELLOW_STAINED_GLASS.createBlockData());
-								}
-							}
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSpawners will only be shown to you as yellow stained glass!"));
-						}
-						else if(args[0].equalsIgnoreCase("deleteall")) {
-							locationSpawner.clear();
-							tieredList.clear();
-							entityTypeList.clear();
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted all the spawners!"));
-						}
-					}
-					else if(args.length == 2) {
-						if(args[0].equalsIgnoreCase("delete")) {
-							int id = -1;
-							try {
-								id = Integer.parseInt(args[1]);
-							}
-							catch(NumberFormatException ex){
-								ex.printStackTrace();
-							}
-							if(locationSpawner.containsKey(id)) {
-								locationSpawner.remove(id);
-								tieredList.remove(id);
-								entityTypeList.remove(id);
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted the spawner with id &6" + id));
-							}
-							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis spawner doesn't exist!"));
-							}
-						}
-					}
-					else if(args.length == 3) {
-						if(args[0].equalsIgnoreCase("create")) {
-							int tier = 0;
-							try{
-								tier = Integer.parseInt(args[1]);
-							}
-							catch(NumberFormatException e){
-								e.printStackTrace();
-							}
-							if(tier >= 1 && tier <= 10) {
-								String mobType = args[2].toUpperCase();
-								EntityType type = null;
-								try {
-									type = EntityType.valueOf(mobType);
-								}
-								catch(IllegalArgumentException exp){
-									exp.printStackTrace();
-								}
-								if(type != null) {
-									if(SpawnerList.getNameList().containsKey(type)) {
-										if(locationSpawner.isEmpty()) {
-											locationSpawner.put(1, player.getLocation());
-											tieredList.put(1, tier);
-											entityTypeList.put(1, mobType);
-											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new spawner with the id of &61 &ahas been created!"));
+					if(ModerationGUICommand.getStaffModeList().containsKey(player.getUniqueId())) {
+						if(ModerationGUICommand.getStaffModeList().get(player.getUniqueId()) == true) {
+							if(ModerationGUICommand.getStaffRankList().get(player.getUniqueId()) >= 6) {
+								if(args.length == 1) {
+									if(args[0].equalsIgnoreCase("delete")) {
+										boolean deleted = false;
+										int id = 0;
+										for(Entry<Integer, Location> entry : locationSpawner.entrySet()) {
+											if(entry.getValue().distance(player.getLocation()) <= 1.5) {
+												id = entry.getKey();
+												deleted = true;
+											}
+										}
+										if(deleted == true) {
+											locationSpawner.remove(id);
+											tieredList.remove(id);
+											entityTypeList.remove(id);
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have the deleted the spawner with ID: &6" + id));
+										}
+										else if(deleted == false){
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNo spawners could be deleted! Get closer to the spawner!"));
 										}
 										else {
-											int currentId = locationSpawner.size() + 1;
-											for(int i = 1; i <= locationSpawner.lastKey(); i++) {
-												if(locationSpawner.get(i) == null) {
-													currentId = i;
-													break;
-												}
-											}
-											locationSpawner.put(currentId, player.getLocation());
-											tieredList.put(currentId, tier);
-											entityTypeList.put(currentId, mobType);
-											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new spawner with the id of &6" + currentId + " &ahas been created!"));
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cSomething went wrong when deleting the spawner..."));
 										}
 									}
-									else {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis mob type is NOT in the list."));
+									else if(args[0].equalsIgnoreCase("see")) {
+										for(Entry<Integer, Location> entry : locationSpawner.entrySet()) {
+											if(entry.getValue().distance(player.getLocation()) <= 30) {
+												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSpawner ID: &6" + entry.getKey() + " &aSpawner Coords: &6" + entry.getValue().getBlockX() + " " + entry.getValue().getBlockY() + " " + entry.getValue().getBlockZ()));
+												player.sendBlockChange(entry.getValue(), Material.YELLOW_STAINED_GLASS.createBlockData());
+											}
+										}
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSpawners will only be shown to you as yellow stained glass!"));
+									}
+									else if(args[0].equalsIgnoreCase("deleteall")) {
+										locationSpawner.clear();
+										tieredList.clear();
+										entityTypeList.clear();
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted all the spawners!"));
 									}
 								}
+								else if(args.length == 2) {
+									if(args[0].equalsIgnoreCase("delete")) {
+										int id = -1;
+										try {
+											id = Integer.parseInt(args[1]);
+										}
+										catch(NumberFormatException ex){
+											ex.printStackTrace();
+										}
+										if(locationSpawner.containsKey(id)) {
+											locationSpawner.remove(id);
+											tieredList.remove(id);
+											entityTypeList.remove(id);
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have deleted the spawner with id &6" + id));
+										}
+										else {
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis spawner doesn't exist!"));
+										}
+									}
+								}
+								else if(args.length == 3) {
+									if(args[0].equalsIgnoreCase("create")) {
+										int tier = 0;
+										try{
+											tier = Integer.parseInt(args[1]);
+										}
+										catch(NumberFormatException e){
+											e.printStackTrace();
+										}
+										if(tier >= 1 && tier <= 10) {
+											String mobType = args[2].toUpperCase();
+											EntityType type = null;
+											try {
+												type = EntityType.valueOf(mobType);
+											}
+											catch(IllegalArgumentException exp){
+												exp.printStackTrace();
+											}
+											if(type != null) {
+												if(SpawnerList.getNameList().containsKey(type)) {
+													if(locationSpawner.isEmpty()) {
+														locationSpawner.put(1, player.getLocation());
+														tieredList.put(1, tier);
+														entityTypeList.put(1, mobType);
+														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new spawner with the id of &61 &ahas been created!"));
+													}
+													else {
+														int currentId = locationSpawner.size() + 1;
+														for(int i = 1; i <= locationSpawner.lastKey(); i++) {
+															if(locationSpawner.get(i) == null) {
+																currentId = i;
+																break;
+															}
+														}
+														locationSpawner.put(currentId, player.getLocation());
+														tieredList.put(currentId, tier);
+														entityTypeList.put(currentId, mobType);
+														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aA new spawner with the id of &6" + currentId + " &ahas been created!"));
+													}
+												}
+												else {
+													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis mob type is NOT in the list."));
+												}
+											}
+											else {
+												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cMob type is invalid."));
+											}
+										}
+										else {
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid tier, choose a number from 1 to 5"));
+										}
+									}	
+								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cMob type is invalid."));
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a/spawner create (Tier of mob, can be a number from 1 to 5) (Type of mob, for example: zombie)"));
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid tier, choose a number from 1 to 5"));
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to execute this command!"));
 							}
-						}	
+						}
+						else {
+							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cTurn on your staffmode first!"));
+						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a/spawner create (Tier of mob, can be a number from 1 to 5) (Type of mob, for example: zombie)"));
+						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou are not staff!"));
 					}
 				}
-			}
-			else {
-				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou are not OP, you can't use this."));
-			}
+				else {
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou are not OP, you can't use this."));
+				}
+			}	
 		}
 		return false;
 	}

@@ -38,8 +38,8 @@ import me.lucko.luckperms.api.LuckPermsApi;
 import me.lucko.luckperms.api.User;
 
 public class ModerationGUICommand implements CommandExecutor,Listener{
-	public HashMap<UUID, Boolean> staffModeList = new HashMap<UUID, Boolean>();
-	public HashMap<UUID, Integer> staffRankList = new HashMap<UUID, Integer>();
+	public static HashMap<UUID, Boolean> staffModeList = new HashMap<UUID, Boolean>();
+	public static HashMap<UUID, Integer> staffRankList = new HashMap<UUID, Integer>();
 	public HashMap<UUID, Boolean> vanishMode = new HashMap<UUID, Boolean>();
 	public ArrayList<UUID> staffChat = new ArrayList<UUID>();
 	public HashMap<UUID, ItemStack[]> saveInv = new HashMap<UUID, ItemStack[]>();
@@ -104,7 +104,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 							Player offender = Bukkit.getPlayer(p);
 							if(offender != null) {
 								if(staffRankList.containsKey(offender.getUniqueId())) {
-									if(staffRankList.get(player.getUniqueId()) > staffRankList.get(offender.getUniqueId())) {
+									if(staffRankList.get(player.getUniqueId()) >= staffRankList.get(offender.getUniqueId())) {
 										String timeS = args[1];
 										String reason = "";
 										for(int i = 2; i < args.length; i++) {
@@ -756,37 +756,34 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 		Player player = event.getPlayer();
 		LuckPermsApi api = LuckPerms.getApi();
 		User user = api.getUser(player.getUniqueId());
-		if(user.getPrimaryGroup().equalsIgnoreCase("owner") || user.getPrimaryGroup().equalsIgnoreCase("manager") || user.getPrimaryGroup().equalsIgnoreCase("headadmin") || user.getPrimaryGroup().equalsIgnoreCase("teamadmin") || user.getPrimaryGroup().equalsIgnoreCase("admin") || user.getPrimaryGroup().equalsIgnoreCase("headmod") || user.getPrimaryGroup().equalsIgnoreCase("mod") || user.getPrimaryGroup().equalsIgnoreCase("helper+") || user.getPrimaryGroup().equalsIgnoreCase("helper")) {
+		if(user.inheritsGroup(api.getGroup("owner")) || user.inheritsGroup(api.getGroup("manager")) || user.inheritsGroup(api.getGroup("headadmin")) || user.inheritsGroup(api.getGroup("admin")) || user.inheritsGroup(api.getGroup("headmod")) || user.inheritsGroup(api.getGroup("moderator")) || user.inheritsGroup(api.getGroup("helper+")) || user.inheritsGroup(api.getGroup("helper"))) {
 			if(!staffModeList.containsKey(player.getUniqueId()) && !staffRankList.containsKey(player.getUniqueId())) {
 				staffModeList.put(player.getUniqueId(), false);
-				if(user.getPrimaryGroup().equalsIgnoreCase("owner")) {
+				if(user.inheritsGroup(api.getGroup("owner"))) {
 					staffRankList.put(player.getUniqueId(), 8);
 				}
-				if(user.getPrimaryGroup().equalsIgnoreCase("manager")) {
+				else if(user.inheritsGroup(api.getGroup("manager"))) {
 					staffRankList.put(player.getUniqueId(), 7);
 				}
-				if(user.getPrimaryGroup().equalsIgnoreCase("teamadmin")) {
+				else if(user.inheritsGroup(api.getGroup("headadmin"))) {
 					staffRankList.put(player.getUniqueId(), 6);
 				}
-				if(user.getPrimaryGroup().equalsIgnoreCase("headadmin")) {
-					staffRankList.put(player.getUniqueId(), 6);
-				}
-				if(user.getPrimaryGroup().equalsIgnoreCase("admin")) {
+				else if(user.inheritsGroup(api.getGroup("admin"))) {
 					staffRankList.put(player.getUniqueId(), 5);
 				}
-				if(user.getPrimaryGroup().equalsIgnoreCase("headmod")) {
+				else if(user.inheritsGroup(api.getGroup("headmod"))) {
 					staffRankList.put(player.getUniqueId(), 4);
 				}
-				if(user.getPrimaryGroup().equalsIgnoreCase("mod")) {
+				else if(user.inheritsGroup(api.getGroup("moderator"))) {
 					staffRankList.put(player.getUniqueId(), 3);
 				}
-				if(user.getPrimaryGroup().equalsIgnoreCase("helper+")) {
+				else if(user.inheritsGroup(api.getGroup("helper+"))) {
 					staffRankList.put(player.getUniqueId(), 2);
 				}
-				if(user.getPrimaryGroup().equalsIgnoreCase("helper")) {
+				else if(user.inheritsGroup(api.getGroup("helper"))) {
 					staffRankList.put(player.getUniqueId(), 1);
 				}
-				
+				Bukkit.broadcastMessage(staffRankList.get(player.getUniqueId()) + "");
 			}
 		}
 	}
@@ -1055,5 +1052,11 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 	}
 	public HashMap<UUID, ArrayList<String>> getWarnReasonList(){
 		return this.warnReasonList;
+	}
+	public static HashMap<UUID, Integer> getStaffRankList(){
+		return ModerationGUICommand.staffRankList;
+	}
+	public static HashMap<UUID, Boolean> getStaffModeList(){
+		return ModerationGUICommand.staffModeList;
 	}
 }

@@ -17,6 +17,7 @@ public class DFPlayerRegister implements Listener{
 			DFPlayer dfPlayer = new DFPlayer().getPlayer(event.getPlayer());
 			dfPlayer.loadPlayer();
 		}
+		
 	}
 	@EventHandler
 	public void dfPlayerEntitySpawn(CreatureSpawnEvent event) {

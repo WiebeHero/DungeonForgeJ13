@@ -12,9 +12,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -733,7 +731,7 @@ public class SpawnerList implements Listener{
 					method.addPlayer(mob);
 					DFPlayer dfPlayer = method.getPlayer(mob);
 					dfPlayer.setLevel(level);
-					int skills = level * 10;
+					int skills = level * 8;
 					int cl = new Random().nextInt(7) + 1;
 					switch(cl) {
 					case 1:
@@ -780,11 +778,16 @@ public class SpawnerList implements Listener{
 							dfPlayer.addHp(1);
 							break;
 						case 6:
-							dfPlayer.addDf(1);
+							if(dfPlayer.getDf() < 135) {
+								dfPlayer.addDf(1);
+							}
+							else {
+								m--;
+							}
 							break;
 						}
 					}
-					dfPlayer.setMove(0.2 + 0.01 * tier + 0.0025 * level);
+					dfPlayer.setMove(0.2 + 0.02 * tier + 0.005 * level);
 					dfPlayer.resetCalculations();
 					sk.attackSpeed(mob);
 					sk.changeHealth(mob);
@@ -795,11 +798,11 @@ public class SpawnerList implements Listener{
 					}.runTaskLater(CustomEnchantments.getInstance(), 10L);
 					sk.runDefense(mob);
 					mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(12.50);
-					mob.getEquipment().setHelmetDropChance(0.17F - 0.02F * level);
-					mob.getEquipment().setChestplateDropChance(0.17F - 0.02F * level);
-					mob.getEquipment().setLeggingsDropChance(0.17F - 0.02F * level);
-					mob.getEquipment().setBootsDropChance(0.17F - 0.02F * level);
-					mob.getEquipment().setItemInMainHandDropChance(0.17F - 0.02F * level);
+					mob.getEquipment().setHelmetDropChance(0.22F - 0.02F * level);
+					mob.getEquipment().setChestplateDropChance(0.22F - 0.02F * level);
+					mob.getEquipment().setLeggingsDropChance(0.22F - 0.02F * level);
+					mob.getEquipment().setBootsDropChance(0.22F - 0.02F * level);
+					mob.getEquipment().setItemInMainHandDropChance(0.22F - 0.02F * level);
 			  		mobList.put(mob.getUniqueId(), tier);
 			  		teleportBack.put(mob.getUniqueId(), counter);
 	  			}
@@ -850,8 +853,9 @@ public class SpawnerList implements Listener{
 	  					zombie.setBaby(false);
 	  				}
 	  				else if(mob instanceof PigZombie) {
-	  					Zombie zombie = (Zombie) mob;
+	  					PigZombie zombie = (PigZombie) mob;
 	  					zombie.setBaby(false);
+	  					
 	  				}
 					int level = (new Random().nextInt(20) + 20 * (tier - 1));
 					if(level == 0) {
@@ -866,26 +870,35 @@ public class SpawnerList implements Listener{
   						mob.getEquipment().setLeggings(this.mobArmor(Material.LEATHER_LEGGINGS, "&dMonkey Kings Leggings &b[&6Lv 1&b]", "&9Reinforced 1", 2.2, 0.3, true));
   						mob.getEquipment().setBoots(this.mobArmor(Material.LEATHER_BOOTS, "&dMonkey Kings Boots &b[&6Lv 1&b]", "&9Escape 1", 2.2, 0.3, true));
 						mob.getEquipment().setItemInMainHand(this.mobWeapon(Material.STICK, "&dMonkey Kings Staff &b[&6Lv 1&b]", "&9Featherweight 1", 3.0, 1.8, false));
+						LeatherArmorMeta meta = (LeatherArmorMeta) mob.getEquipment().getChestplate().getItemMeta();
+						meta.setColor(Color.RED);
+						mob.getEquipment().getChestplate().setItemMeta(meta);
+						meta = (LeatherArmorMeta) mob.getEquipment().getLeggings().getItemMeta();
+						meta.setColor(Color.RED);
+						mob.getEquipment().getLeggings().setItemMeta(meta);
+						meta = (LeatherArmorMeta) mob.getEquipment().getBoots().getItemMeta();
+						meta.setColor(Color.RED);
+						mob.getEquipment().getBoots().setItemMeta(meta);
 						method.addPlayer(mob);
 						DFPlayer dfPlayer = method.getPlayer(mob);
 						dfPlayer.setLevel(level);
 						dfPlayer.setPlayerClass(Classes.WRATH);
-						dfPlayer.setAtk(60);
+						dfPlayer.setAtk(80);
 						dfPlayer.setSpd(10);
-						dfPlayer.setCrt(60);
+						dfPlayer.setCrt(130);
 						dfPlayer.setRnd(0);
-						dfPlayer.setHp(25);
-						dfPlayer.setDf(25);
+						dfPlayer.setHp(80);
+						dfPlayer.setDf(80);
 						sk.attackSpeed(mob);
 						sk.changeHealth(mob);
 						sk.runDefense(mob);
-						dfPlayer.setMove(0.35);
+						dfPlayer.setMove(0.45);
 						dfPlayer.resetCalculations();
-						mob.getEquipment().setHelmetDropChance(0.05F);
-						mob.getEquipment().setChestplateDropChance(0.05F);
-						mob.getEquipment().setLeggingsDropChance(0.05F);
-						mob.getEquipment().setBootsDropChance(0.05F);
-						mob.getEquipment().setItemInMainHandDropChance(0.05F);
+						mob.getEquipment().setHelmetDropChance(0.075F);
+						mob.getEquipment().setChestplateDropChance(0.075F);
+						mob.getEquipment().setLeggingsDropChance(0.075F);
+						mob.getEquipment().setBootsDropChance(0.075F);
+						mob.getEquipment().setItemInMainHandDropChance(0.075F);
 	  				}
 			  		mobList.put(mob.getUniqueId(), tier);
 			  		teleportBack.put(mob.getUniqueId(), counter);
