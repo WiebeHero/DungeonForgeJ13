@@ -894,7 +894,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			*/
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
-			Scoreboard board = manager.getNewScoreboard();
+			Scoreboard board = manager.getMainScoreboard();
 			org.bukkit.scoreboard.Scoreboard b = board;
 			/*
 			registerHealthBar(b);
