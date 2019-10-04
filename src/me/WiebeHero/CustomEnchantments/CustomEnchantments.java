@@ -1026,6 +1026,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			adress.setScore(1);
 			
 			player.setScoreboard(b);
+			player.setScoreboard(mainBoard);
 			scores.put(player.getUniqueId(), b);
 		}
 		else {
@@ -1167,6 +1168,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			level1.setScore(3);
 			blank3.setScore(2);
 			adress.setScore(1);
+			player.setScoreboard(mainBoard);
 			player.setScoreboard(b);
 		}
 	}
