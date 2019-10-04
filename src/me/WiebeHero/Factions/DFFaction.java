@@ -35,6 +35,7 @@ public class DFFaction {
 		this.memberList.put(p.getUniqueId(), 4);
 		this.chunkList = new ArrayList<Chunk>();
 		this.allyList = new ArrayList<String>();
+		this.invitedAllyList = new ArrayList<String>();
 		this.invitedList = new ArrayList<UUID>();
 		this.facName = facName;
 		this.facP = 0;
@@ -44,6 +45,7 @@ public class DFFaction {
 		this.memberList = new HashMap<UUID, Integer>();
 		this.chunkList = new ArrayList<Chunk>();
 		this.allyList = new ArrayList<String>();
+		this.invitedAllyList = new ArrayList<String>();
 		this.invitedList = new ArrayList<UUID>();
 		this.facName = facName;
 		this.facP = 0;
@@ -56,13 +58,19 @@ public class DFFaction {
 		new BukkitRunnable() {
 			public void run() {
 				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
+					int count = 0;
 					for(UUID uuid : fac.getMemberList().keySet()) {
 						Player player = Bukkit.getPlayer(uuid);
 						if(player != null) {
-							if(fac.getEnergy() + 0.01 <= 30.00) {
-								fac.addEnergy(0.01);
-							}
+							count++;
 						}
+					}
+					if(count > 5) {
+						count = 5;
+					}
+					if(fac.getEnergy() + 0.01 * count <= 30.00) {
+						fac.addEnergy(0.01 * count);
+						count = 0;
 					}
 				}
 			}
@@ -370,9 +378,13 @@ public class DFFaction {
 		this.energy = energy;
 	}
 	public void addEnergy(double energy) {
-		this.energy += energy;
+		if(this.energy + energy <= 30.00) {
+			this.energy += energy;
+		}
 	}
 	public void removeEnergy(double energy) {
-		this.energy -= energy;
+		if(this.energy - energy >= 0.00) {
+			this.energy -= energy;
+		}
 	}
 }

@@ -930,7 +930,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			t.addEntry(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 			//Faction Info
 			Score blank1 = o.getScore("");
@@ -1072,7 +1071,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			board.getTeam(player.getName() + "1").addEntry(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6] "));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
 			
 			//Faction Info
