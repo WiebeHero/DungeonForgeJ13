@@ -927,10 +927,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				b.getTeam(player.getName() + "1").unregister();
 			}
 			Team t = b.registerNewTeam(player.getName() + "1");
-			t.addEntry(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
+			t.addEntry(player.getName());
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
@@ -1063,15 +1064,15 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(board.getTeam(player.getName() + "1") != null) {
-				board.getTeam(player.getName() + "1").unregister();
+			if(b.getTeam(player.getName() + "1") != null) {
+				b.getTeam(player.getName() + "1").unregister();
 			}
-			board.registerNewTeam(player.getName() + "1");
-			Team t = board.getTeam(player.getName() + "1");
-			board.getTeam(player.getName() + "1").addEntry(player.getName());
-			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6] "));
+			Team t = b.registerNewTeam(player.getName() + "1");
+			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
+			t.addEntry(player.getName());
 			
 			//Faction Info
 			Score blank1 = o.getScore("");
