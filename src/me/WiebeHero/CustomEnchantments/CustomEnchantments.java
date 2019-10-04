@@ -937,8 +937,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			for(Player p : Bukkit.getOnlinePlayers()) {
 				Scoreboard scoreboard = p.getScoreboard();
 				for(Team tTemp : teamList.values()) {
-					if(scoreboard.getEntryTeam(tTemp.getName()) == null) {
-						scoreboard.registerNewTeam(tTemp.getName());
+					if(scoreboard.getEntryTeam(tTemp.getName() + teamList.size()) == null) {
+						scoreboard.registerNewTeam(tTemp.getName() + teamList.size());
 						tTemp.setPrefix(new ColorCodeTranslator().colorize(tTemp.getPrefix()));
 						tTemp.setSuffix(new ColorCodeTranslator().colorize(tTemp.getSuffix()));
 						tTemp.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
