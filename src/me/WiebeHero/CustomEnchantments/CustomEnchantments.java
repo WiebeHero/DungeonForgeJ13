@@ -555,7 +555,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new EnderPearlCooldown(), this);
 		getServer().getPluginManager().registerEvents(new MOTDSetting(), this);
 		getServer().getPluginManager().registerEvents(new ChatItem(), this);
-		getServer().getPluginManager().registerEvents(new DisablePreProcess(), this);
 		getServer().getPluginManager().registerEvents(new CancelJoinLeaveAdvancementMessages(), this);
 		//Shop
 		getServer().getPluginManager().registerEvents(new DFShop(), this);
@@ -892,7 +891,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				cash = money.getMoneyList().get(player.getUniqueId());
 			}
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
-			Scoreboard board = manager.getMainScoreboard();
+			Scoreboard board = manager.getNewScoreboard();
+			Scoreboard mainBoard = manager.getMainScoreboard();
 			org.bukkit.scoreboard.Scoreboard b = board;
 			registerHealthBar(b);
 			Objective o = null;
@@ -924,10 +924,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(o.getScoreboard().getTeam(player.getName()) != null) {
-				o.getScoreboard().getTeam(player.getName()).unregister();
+			if(mainBoard.getTeam(player.getName()) != null) {
+				mainBoard.getTeam(player.getName()).unregister();
 			}
-			Team t = b.registerNewTeam(player.getName());
+			Team t = mainBoard.registerNewTeam(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
@@ -1024,6 +1024,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			level1.setScore(3);
 			blank3.setScore(2);
 			adress.setScore(1);
+			
 			player.setScoreboard(b);
 			scores.put(player.getUniqueId(), b);
 		}
@@ -1033,8 +1034,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			if(money.getMoneyList().get(player.getUniqueId()) != null) {
 				cash = money.getMoneyList().get(player.getUniqueId());
 			}
+			Scoreboard mainBoard = Bukkit.getScoreboardManager().getMainScoreboard();
 			Scoreboard board = scores.get(player.getUniqueId());
-			
 			org.bukkit.scoreboard.Scoreboard b = board;
 			registerHealthBar(b);
 			Objective o = null;
@@ -1066,10 +1067,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(b.getTeam(player.getName()) != null) {
-				b.getTeam(player.getName()).unregister();
+			if(mainBoard.getTeam(player.getName()) != null) {
+				mainBoard.getTeam(player.getName()).unregister();
 			}
-			Team t = b.registerNewTeam(player.getName());
+			Team t = mainBoard.registerNewTeam(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));

@@ -7,6 +7,5 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class DisablePreProcess implements Listener{
 	@EventHandler
 	public void disbaleProcess(PlayerCommandPreprocessEvent event) {
-		event.setMessage("");
 	}
 }
