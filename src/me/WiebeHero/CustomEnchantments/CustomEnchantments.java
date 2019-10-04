@@ -927,7 +927,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				b.getTeam(player.getName() + "1").unregister();
 			}
 			Team t = b.registerNewTeam(player.getName() + "1");
-			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
+			t.setPrefix(ChatColor.RED + "");
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.addEntry(player.getName());
@@ -1067,8 +1067,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				b.getTeam(player.getName() + "1").unregister();
 			}
 			Team t = b.registerNewTeam(player.getName() + "1");
-			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
+			t.setPrefix(ChatColor.RED + "");
+			t.setSuffix("");
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.addEntry(player.getName());
 			
