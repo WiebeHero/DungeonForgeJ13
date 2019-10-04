@@ -886,17 +886,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		RegionManager regions = container.get(BukkitAdapter.adapt(world));
 		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 		if(!scores.containsKey(player.getUniqueId())) {
-			/*
 			int level = dfPlayer.getLevel();
 			double cash = 1500.0;
 			if(money.getMoneyList().get(player.getUniqueId()) != null) {
 				cash = money.getMoneyList().get(player.getUniqueId());
 			}
-			*/
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
 			Scoreboard board = manager.getMainScoreboard();
 			org.bukkit.scoreboard.Scoreboard b = board;
-			/*
 			registerHealthBar(b);
 			Objective o = null;
 			if(b.getObjective(player.getName()) == null) {
@@ -929,14 +926,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
 			if(o.getScoreboard().getTeam(player.getName()) != null) {
 				o.getScoreboard().getTeam(player.getName()).unregister();
-			}*/
+			}
 			Team t = b.registerNewTeam(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
-			/*
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
@@ -1028,22 +1024,18 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			level1.setScore(3);
 			blank3.setScore(2);
 			adress.setScore(1);
-			*/
 			player.setScoreboard(b);
 			scores.put(player.getUniqueId(), b);
 		}
 		else {
-			/*
 			int level = dfPlayer.getLevel();
 			double cash = 1500.0;
 			if(money.getMoneyList().get(player.getUniqueId()) != null) {
 				cash = money.getMoneyList().get(player.getUniqueId());
 			}
-			*/
 			Scoreboard board = scores.get(player.getUniqueId());
 			
 			org.bukkit.scoreboard.Scoreboard b = board;
-			/*
 			registerHealthBar(b);
 			Objective o = null;
 			if(b.getObjective(player.getName()) == null) {
@@ -1074,7 +1066,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			*/
 			if(b.getTeam(player.getName()) != null) {
 				b.getTeam(player.getName()).unregister();
 			}
@@ -1084,7 +1075,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
-			/*
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
@@ -1176,7 +1166,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			level1.setScore(3);
 			blank3.setScore(2);
 			adress.setScore(1);
-			*/
 			player.setScoreboard(b);
 		}
 	}
