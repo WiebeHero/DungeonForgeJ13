@@ -11,14 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -40,6 +37,8 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.Team.Option;
+import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -923,13 +922,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(b.getTeam(player.getName() + "1") != null) {
-				b.getTeam(player.getName() + "1").unregister();
+			if(b.getTeam(player.getName()) != null) {
+				b.getTeam(player.getName()).unregister();
 			}
-			Team t = b.registerNewTeam(player.getName() + "1");
-			t.setPrefix(ChatColor.RED + "");
+			Team t = b.registerNewTeam(player.getName());
+			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
+			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
 			//Faction Info
 			Score blank1 = o.getScore("");
@@ -1063,13 +1063,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(b.getTeam(player.getName() + "1") != null) {
-				b.getTeam(player.getName() + "1").unregister();
+			if(b.getTeam(player.getName()) != null) {
+				b.getTeam(player.getName()).unregister();
 			}
-			Team t = b.registerNewTeam(player.getName() + "1");
-			t.setPrefix(ChatColor.RED + "");
-			t.setSuffix("");
+			Team t = b.registerNewTeam(player.getName());
+			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
+			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
 			
 			//Faction Info
