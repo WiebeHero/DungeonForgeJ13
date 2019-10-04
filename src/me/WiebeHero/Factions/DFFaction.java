@@ -135,7 +135,7 @@ public class DFFaction {
 			yml.createSection("Factions.List." + fac.getName());
 			for(Entry<UUID, Integer> entry : fac.getMemberList().entrySet()) {
 				yml.set("Factions.List." + fac.getName() + ".Members." + entry.getKey() + ".Rank", entry.getValue());
-				yml.set("Factions.List." + fac.getName() + ".Members." + entry.getKey() + ".Name", Bukkit.getPlayer(entry.getKey()).getName());
+				yml.set("Factions.List." + fac.getName() + ".Members." + entry.getKey() + ".Name", Bukkit.getOfflinePlayer(entry.getKey()).getName());
 			}
 			ArrayList<Long> list = new ArrayList<Long>();
 			for(Chunk c : fac.getChunkList()) {
