@@ -924,10 +924,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(manager.getMainScoreboard().getTeam(player.getName()) != null) {
-				manager.getMainScoreboard().getTeam(player.getName()).unregister();
+			if(o.getScoreboard().getTeam(player.getName()) != null) {
+				o.getScoreboard().getTeam(player.getName()).unregister();
 			}
-			Team t = manager.getMainScoreboard().registerNewTeam(player.getName());
+			Team t = o.getScoreboard().registerNewTeam(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
@@ -1024,9 +1024,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			level1.setScore(3);
 			blank3.setScore(2);
 			adress.setScore(1);
-			player.setScoreboard(manager.getMainScoreboard());
-			player.setScoreboard(b);
-			scores.put(player.getUniqueId(), b);
+			player.setScoreboard(o.getScoreboard());
+			scores.put(player.getUniqueId(), o.getScoreboard());
 		}
 		else {
 			int level = dfPlayer.getLevel();
@@ -1034,7 +1033,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			if(money.getMoneyList().get(player.getUniqueId()) != null) {
 				cash = money.getMoneyList().get(player.getUniqueId());
 			}
-			ScoreboardManager manager = Bukkit.getScoreboardManager();
 			Scoreboard board = scores.get(player.getUniqueId());
 			org.bukkit.scoreboard.Scoreboard b = board;
 			registerHealthBar(b);
@@ -1067,10 +1065,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(manager.getMainScoreboard().getTeam(player.getName()) != null) {
-				manager.getMainScoreboard().getTeam(player.getName()).unregister();
+			if(o.getScoreboard().getTeam(player.getName()) != null) {
+				o.getScoreboard().getTeam(player.getName()).unregister();
 			}
-			Team t = manager.getMainScoreboard().registerNewTeam(player.getName());
+			Team t = o.getScoreboard().registerNewTeam(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
@@ -1168,7 +1166,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			level1.setScore(3);
 			blank3.setScore(2);
 			adress.setScore(1);
-			player.setScoreboard(manager.getMainScoreboard());
 			player.setScoreboard(b);
 		}
 	}
