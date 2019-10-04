@@ -798,7 +798,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		if(shutdown != true) {
 			Player player = event.getPlayer();
 			registerRank(player);
-			registerNameTag(player);
+			registerNameTag(player, true);
 		}
 		else {
 			event.getPlayer().kickPlayer(new ColorCodeTranslator().colorize("&cThe server is going into shutdown, try to join back in 5 minutes."));
@@ -807,8 +807,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if(scoreboard.getTeam(player.getName() + "1") != null) {
-			Team t = scoreboard.getTeam(player.getName() + "1");
+		if(scoreboard.getTeam(player.getName()) != null) {
+			Team t = scoreboard.getTeam(player.getName());
 			t.unregister();
 		}
 		scores.remove(player.getUniqueId());
@@ -879,7 +879,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 	}
 	public static HashMap<UUID, Scoreboard> scores = new HashMap<UUID, Scoreboard>();
-	public void registerNameTag(Player player) {
+	public static HashMap<UUID, Team> teamList = new HashMap<UUID, Team>();
+	public void registerNameTag(Player player, boolean displayName) {
 		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		World world = player.getWorld();
 		RegionManager regions = container.get(BukkitAdapter.adapt(world));
@@ -891,7 +892,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				cash = money.getMoneyList().get(player.getUniqueId());
 			}
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
-			Scoreboard board = manager.getMainScoreboard();
+			Scoreboard board = manager.getNewScoreboard();
 			org.bukkit.scoreboard.Scoreboard b = board;
 			registerHealthBar(b);
 			Objective o = null;
@@ -932,6 +933,21 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
+			teamList.put(player.getUniqueId(), t);
+			for(Player p : Bukkit.getOnlinePlayers()) {
+				Scoreboard scoreboard = p.getScoreboard();
+				for(Team tTemp : teamList.values()) {
+					if(scoreboard.getEntryTeam(tTemp.getName()) == null) {
+						scoreboard.registerNewTeam(tTemp.getName());
+						tTemp.setPrefix(new ColorCodeTranslator().colorize(tTemp.getPrefix()));
+						tTemp.setSuffix(new ColorCodeTranslator().colorize(tTemp.getSuffix()));
+						tTemp.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
+						for(String s : tTemp.getEntries()) {
+							tTemp.addEntry(s);
+						}
+					}
+				}
+			}
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
@@ -1065,15 +1081,22 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(board.getTeam(player.getName()) != null) {
-				board.getTeam(player.getName()).unregister();
+			if(displayName == true) {
+				for(Player p : Bukkit.getOnlinePlayers()) {
+					Scoreboard scoreboard = p.getScoreboard();
+					for(Team tTemp : teamList.values()) {
+						if(scoreboard.getEntryTeam(tTemp.getName()) == null) {
+							scoreboard.registerNewTeam(tTemp.getName());
+							tTemp.setPrefix(new ColorCodeTranslator().colorize(tTemp.getPrefix()));
+							tTemp.setSuffix(new ColorCodeTranslator().colorize(tTemp.getSuffix()));
+							tTemp.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
+							for(String s : tTemp.getEntries()) {
+								tTemp.addEntry(s);
+							}
+						}
+					}
+				}
 			}
-			Team t = board.registerNewTeam(player.getName());
-			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
-			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
-			t.addEntry(player.getName());
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");

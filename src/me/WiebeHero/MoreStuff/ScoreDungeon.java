@@ -21,7 +21,7 @@ public class ScoreDungeon implements Listener{
 		UUID uuid = player.getUniqueId();
 		if(list.containsKey(player.getUniqueId())) {
 			if(!list.get(uuid).equals(player.getChunk())) {
-				CustomEnchantments.getInstance().registerNameTag(player);
+				CustomEnchantments.getInstance().registerNameTag(player, false);
 				list.put(uuid, player.getChunk());
 			}
 		}

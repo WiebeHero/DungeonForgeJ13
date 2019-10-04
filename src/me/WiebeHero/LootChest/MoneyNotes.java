@@ -25,7 +25,7 @@ public class MoneyNotes implements Listener{
 								name = name.replaceAll("[^\\d.]", "");
 								int money = Integer.parseInt(name);
 								m.getMoneyList().put(player.getUniqueId(), m.getMoneyList().get(player.getUniqueId()) + money);
-								CustomEnchantments.getInstance().registerNameTag(player);
+								CustomEnchantments.getInstance().registerNameTag(player, false);
 								player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 							}
 						}

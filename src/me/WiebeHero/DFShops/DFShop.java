@@ -315,7 +315,7 @@ public class DFShop implements Listener{
 				  					player.getInventory().addItem(new ItemStack(item.getType(), amount));
 				  					money = money - cost;
 				  					m.getMoneyList().put(player.getUniqueId(), money);
-				  					CustomEnchantments.getInstance().registerNameTag(player);
+				  					CustomEnchantments.getInstance().registerNameTag(player, false);
 			  					}
 			  					else {
 			  						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a foraa " + cost + "$!"));
@@ -326,7 +326,7 @@ public class DFShop implements Listener{
 			  						player.getInventory().addItem(item1);
 				  					money = money - cost;
 				  					m.getMoneyList().put(player.getUniqueId(), money);
-				  					CustomEnchantments.getInstance().registerNameTag(player);
+				  					CustomEnchantments.getInstance().registerNameTag(player, false);
 			  					}
 			  				}
 			  				else {
@@ -361,7 +361,7 @@ public class DFShop implements Listener{
 			  					player.getInventory().removeItem(new ItemStack(item.getType(), amount));
 			  					money = money + sell;
 			  					m.getMoneyList().put(player.getUniqueId(), money);
-			  					CustomEnchantments.getInstance().registerNameTag(player);
+			  					CustomEnchantments.getInstance().registerNameTag(player, false);
 		  					}
 		  					else {
 		  						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough items!"));

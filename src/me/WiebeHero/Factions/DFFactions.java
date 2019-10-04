@@ -187,7 +187,7 @@ public class DFFactions implements Listener,CommandExecutor{
 															if(faction.getEnergy() > faction.getChunkList().size() + 1) {
 																faction.addChunk(player.getChunk());
 																player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have claimed this chunk!"));
-																CustomEnchantments.getInstance().registerNameTag(player);
+																CustomEnchantments.getInstance().registerNameTag(player, false);
 															}
 															else {
 																player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou do not have enough energy to claim more chunks!"));
@@ -216,7 +216,7 @@ public class DFFactions implements Listener,CommandExecutor{
 																if(faction.getEnergy() > faction.getChunkList().size() + 1) {
 																	faction.addChunk(player.getChunk());
 																	player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have claimed this chunk!"));
-																	CustomEnchantments.getInstance().registerNameTag(player);
+																	CustomEnchantments.getInstance().registerNameTag(player, false);
 																}
 																else {
 																	player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou do not have enough energy to claim more chunks!"));
