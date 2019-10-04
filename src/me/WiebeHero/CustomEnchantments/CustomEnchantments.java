@@ -264,6 +264,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ConfigManager cfgm;
 	private CraftableWeapons cw = new CraftableWeapons();
 	private DFPlayer pl = new DFPlayer();
+	private DFFaction method = new DFFaction();
 	int level;
 	public Scoreboard scoreboard;
 	public static boolean shutdown = false;
@@ -461,17 +462,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		if(yml.getConfigurationSection("Factions.List") != null) {
-			if(!yml.get("Factions.List").equals("{}")) {
-				fac.loadFactionNameList(yml, f1);
-				fac.loadAllyList(yml, f1);
-				fac.loadChunkList(yml, f1);
-				fac.loadFTop(yml, f1);
-				fac.loadMemberList(yml, f1);
-				fac.loadRankedList(yml, f1);
-				fac.loadPlayersAlliedList(yml, f1);
-			}
-		}
+		method.loadFactions();
+		method.activeEnergyTimer();
 		File f2 =  new File("plugins/CustomEnchantments/modConfig.yml");
 		YamlConfiguration yml1 = YamlConfiguration.loadConfiguration(f2);
 		try{
@@ -695,48 +687,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		for(Team t : scoreboard.getTeams()) {
 			t.unregister();
 		}
-		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
-		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
-		try{
-			yml.load(f1);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		yml.set("Factions.List", null);
-		ArrayList<String> factionNameList = new ArrayList<String>(fac.getFactionNameList());
-		HashMap<String, ArrayList<UUID>> factionMemberList = new HashMap<String, ArrayList<UUID>>(fac.getFactionMemberList());
-		HashMap<UUID, Integer> factionRankedList = new HashMap<UUID, Integer>(fac.getRankedList());
-		HashMap<String, ArrayList<String>> factionAllyList = new HashMap<String, ArrayList<String>>(fac.getAllyList());
-		HashMap<String, ArrayList<Chunk>> chunkList = new HashMap<String, ArrayList<Chunk>>(fac.getChunkList());
-		HashMap<String, Integer> fTopList = new HashMap<String, Integer>(fac.getFTop());
-		HashMap<String, Location> fHomeList = new HashMap<String, Location>(fac.getFHomes());
-		for(int i = 0; i < factionNameList.size(); i++) {
-			yml.createSection("Factions.List." + factionNameList.get(i));
-			for(int i1 = 0; i1 < factionMemberList.get(factionNameList.get(i)).size(); i1++) {
-				yml.set("Factions.List." + factionNameList.get(i) + ".Members." + factionMemberList.get(factionNameList.get(i)).get(i1) + ".Rank", factionRankedList.get(factionMemberList.get(factionNameList.get(i)).get(i1)));
-				yml.set("Factions.List." + factionNameList.get(i) + ".Members." + factionMemberList.get(factionNameList.get(i)).get(i1) + ".Name", Bukkit.getPlayer(factionMemberList.get(factionNameList.get(i)).get(i1)));
-			}
-			ArrayList<String> list = new ArrayList<String>();
-			for(Entry<String, ArrayList<Chunk>> entry : chunkList.entrySet()) {
-				for(int i1 = 0; i1 < entry.getValue().size(); i1++) {
-					list.add(entry.getValue().get(i1).toString());
-				}
-			}
-			yml.set("Factions.List." + factionNameList.get(i) + ".Faction Home", fHomeList.get(factionNameList.get(i)));
-			yml.set("Factions.List." + factionNameList.get(i) + ".Chunks List", list);
-			yml.set("Factions.List." + factionNameList.get(i) + ".Faction Points", fTopList.get(factionNameList.get(i)));
-			yml.set("Factions.List." + factionNameList.get(i) + ".Allies", factionAllyList.get(factionNameList.get(i)));
-		}
-		try{
-			yml.save(f1);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
+		method.saveFactions();
 		File f2 =  new File("plugins/CustomEnchantments/modConfig.yml");
 		YamlConfiguration yml1 = YamlConfiguration.loadConfiguration(f2);
 		try{
@@ -950,34 +901,33 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			else {
 				o = b.getObjective(player.getName());
 			}
-			if(board.getTeam("GRAY") == null) {
-				board.registerNewTeam("GRAY");
-				board.getTeam("GRAY").setPrefix(ChatColor.GRAY + "");
-				board.getTeam("GRAY").setColor(ChatColor.GRAY);
-				board.registerNewTeam("GREEN");
-				board.getTeam("GREEN").setPrefix(ChatColor.GREEN + "");
-				board.getTeam("GREEN").setColor(ChatColor.GREEN);
-				board.registerNewTeam("AQUA");
-				board.getTeam("AQUA").setPrefix(ChatColor.AQUA + "");
-				board.getTeam("AQUA").setColor(ChatColor.AQUA);
-				board.registerNewTeam("RED");
-				board.getTeam("RED").setPrefix(ChatColor.RED + "");
-				board.getTeam("RED").setColor(ChatColor.RED);
-				board.registerNewTeam("PURPLE");
-				board.getTeam("PURPLE").setPrefix(ChatColor.DARK_PURPLE + "");
-				board.getTeam("PURPLE").setColor(ChatColor.DARK_PURPLE);
-				board.registerNewTeam("YELLOW");
-				board.getTeam("YELLOW").setPrefix(ChatColor.YELLOW + "");
-				board.getTeam("YELLOW").setColor(ChatColor.YELLOW);
+			if(b.getTeam("GRAY") == null) {
+				b.registerNewTeam("GRAY");
+				b.getTeam("GRAY").setPrefix(ChatColor.GRAY + "");
+				b.getTeam("GRAY").setColor(ChatColor.GRAY);
+				b.registerNewTeam("GREEN");
+				b.getTeam("GREEN").setPrefix(ChatColor.GREEN + "");
+				b.getTeam("GREEN").setColor(ChatColor.GREEN);
+				b.registerNewTeam("AQUA");
+				b.getTeam("AQUA").setPrefix(ChatColor.AQUA + "");
+				b.getTeam("AQUA").setColor(ChatColor.AQUA);
+				b.registerNewTeam("RED");
+				b.getTeam("RED").setPrefix(ChatColor.RED + "");
+				b.getTeam("RED").setColor(ChatColor.RED);
+				b.registerNewTeam("PURPLE");
+				b.getTeam("PURPLE").setPrefix(ChatColor.DARK_PURPLE + "");
+				b.getTeam("PURPLE").setColor(ChatColor.DARK_PURPLE);
+				b.registerNewTeam("YELLOW");
+				b.getTeam("YELLOW").setPrefix(ChatColor.YELLOW + "");
+				b.getTeam("YELLOW").setColor(ChatColor.YELLOW);
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(board.getTeam(player.getName() + "1") != null) {
-				board.getTeam(player.getName() + "1").unregister();
+			if(b.getTeam(player.getName() + "1") != null) {
+				b.getTeam(player.getName() + "1").unregister();
 			}
-			board.registerNewTeam(player.getName() + "1");
-			Team t = board.getTeam(player.getName() + "1");
-			board.getTeam(player.getName() + "1").addEntry(player.getName());
+			Team t = b.registerNewTeam(player.getName() + "1");
+			t.addEntry(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&7[&b" + level + "&7] "));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
@@ -989,10 +939,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Score facName = null;
 			Score facTeritory = null;
 			String facN = "";
-			for(Entry<String, ArrayList<UUID>> entry : fac.getFactionMemberList().entrySet()) {
-				if(entry.getValue().contains(player.getUniqueId())) {
-					facN = entry.getKey();
-				}
+			DFFaction faction = method.getFaction(player.getUniqueId());
+			if(faction != null) {
+				facN = faction.getName();
 			}
 			if(!facN.equals("")) {
 				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6" + facN));
@@ -1023,14 +972,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			else if(!facN.equals("")) {
 				String tempName = "";
-				for(Entry<String, ArrayList<Chunk>> entry : fac.getChunkList().entrySet()) {
-					if(!entry.getKey().equals(facN)) {
-						if(entry.getValue().contains(player.getLocation().getChunk())) {
-							tempName = entry.getKey();
+				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
+					if(!faction.equals(fac)) {
+						if(fac.getChunkList().contains(player.getLocation().getChunk())) {
+							tempName = fac.getName();
 						}
 					}
 				}
-				if(fac.getChunkList().get(facN).contains(player.getLocation().getChunk())) {
+				if(faction.isInChunk(player)) {
 					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&l" + facN));
 				}
 				else if(!tempName.equals("")) {
@@ -1042,10 +991,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			else {
 				String tempName = "";
-				for(Entry<String, ArrayList<Chunk>> entry : fac.getChunkList().entrySet()) {
-					if(!entry.getKey().equals(facN)) {
-						if(entry.getValue().contains(player.getLocation().getChunk())) {
-							tempName = entry.getKey();
+				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
+					if(!faction.equals(fac)) {
+						if(fac.getChunkList().contains(player.getLocation().getChunk())) {
+							tempName = fac.getName();
 						}
 					}
 				}
@@ -1133,10 +1082,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Score facName = null;
 			Score facTeritory = null;
 			String facN = "";
-			for(Entry<String, ArrayList<UUID>> entry : fac.getFactionMemberList().entrySet()) {
-				if(entry.getValue().contains(player.getUniqueId())) {
-					facN = entry.getKey();
-				}
+			DFFaction faction = method.getFaction(player.getUniqueId());
+			if(faction != null) {
+				facN = faction.getName();
 			}
 			if(!facN.equals("")) {
 				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6" + facN));
@@ -1167,14 +1115,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			else if(!facN.equals("")) {
 				String tempName = "";
-				for(Entry<String, ArrayList<Chunk>> entry : fac.getChunkList().entrySet()) {
-					if(!entry.getKey().equals(facN)) {
-						if(entry.getValue().contains(player.getLocation().getChunk())) {
-							tempName = entry.getKey();
+				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
+					if(!faction.equals(fac)) {
+						if(fac.getChunkList().contains(player.getLocation().getChunk())) {
+							tempName = fac.getName();
 						}
 					}
 				}
-				if(fac.getChunkList().get(facN).contains(player.getLocation().getChunk())) {
+				if(faction.isInChunk(player)) {
 					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&l" + facN));
 				}
 				else if(!tempName.equals("")) {
@@ -1186,10 +1134,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			else {
 				String tempName = "";
-				for(Entry<String, ArrayList<Chunk>> entry : fac.getChunkList().entrySet()) {
-					if(!entry.getKey().equals(facN)) {
-						if(entry.getValue().contains(player.getLocation().getChunk())) {
-							tempName = entry.getKey();
+				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
+					if(!faction.equals(fac)) {
+						if(fac.getChunkList().contains(player.getLocation().getChunk())) {
+							tempName = fac.getName();
 						}
 					}
 				}

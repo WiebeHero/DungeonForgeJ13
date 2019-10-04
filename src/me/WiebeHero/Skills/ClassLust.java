@@ -48,16 +48,14 @@ public class ClassLust implements Listener{
 					for(Entity e : ents) {
 						if(e != null) {
 							if(e instanceof LivingEntity) {
-								if(!fac.isTeammate(player.getUniqueId(), e.getUniqueId())) {
-									LivingEntity victim = (LivingEntity) e;
-									double dealtDamage = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * (damage / 100);
-									victim.damage(dealtDamage);
-									Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.8D, victim.getLocation().getZ() + 0D);
-									victim.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, locCF, 60, 0.15, 0.15, 0.15, 0.1); 
-									victim.getWorld().playSound(victim.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1.5);
-									healMe = healMe + dealtDamage;
-									healAllies = healAllies + dealtDamage;
-								}
+								LivingEntity victim = (LivingEntity) e;
+								double dealtDamage = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * (damage / 100);
+								victim.damage(dealtDamage);
+								Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.8D, victim.getLocation().getZ() + 0D);
+								victim.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, locCF, 60, 0.15, 0.15, 0.15, 0.1); 
+								victim.getWorld().playSound(victim.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1.5);
+								healMe = healMe + dealtDamage;
+								healAllies = healAllies + dealtDamage;
 							}
 						}
 						else {
@@ -85,10 +83,8 @@ public class ClassLust implements Listener{
 					for(Entity e : player.getNearbyEntities(range, range, range)) {
 						if(e != null && e != player) {
 							if(e instanceof Player) {
-								if(fac.isTeammate(player.getUniqueId(), e.getUniqueId())) {
-									Player p = (Player) e;
-									others.add(p);
-								}
+								Player p = (Player) e;
+								others.add(p);
 							}
 						}
 					}

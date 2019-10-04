@@ -1,14 +1,6 @@
 package me.WiebeHero.Factions;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +12,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,34 +21,16 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.MoreStuff.CombatTag;
 
 public class DFFactions implements Listener,CommandExecutor{
-	Player p1;
 	String idNew = "";
 	public String faction = "faction";
-	public static HashMap<String, ArrayList<UUID>> factionList = new HashMap<String, ArrayList<UUID>>();
-	public static HashMap<String, ArrayList<Chunk>> chunkList = new HashMap<String, ArrayList<Chunk>>();
-	public static HashMap<String, Integer> fTop = new HashMap<String, Integer>();
-	public static HashMap<String, Location> fHomes = new HashMap<String, Location>();
-	public static HashMap<UUID, Integer> ranked = new HashMap<UUID, Integer>();
-	public static HashMap<String, ArrayList<UUID>> inviteList = new HashMap<String, ArrayList<UUID>>();
-	public static HashMap<String, ArrayList<String>> allyList = new HashMap<String, ArrayList<String>>();
-	public static HashMap<String, ArrayList<UUID>> playerAlliedList = new HashMap<String, ArrayList<UUID>>();
-	public static HashMap<String, ArrayList<String>> invitedAllyList = new HashMap<String, ArrayList<String>>();
-	public static ArrayList<String> factionNameList = new ArrayList<String>();
+	public DFFaction method = new DFFaction();
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
 			if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
-				File f =  new File("plugins/CustomEnchantments/factionsConfig.yml");
-				YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
 				if(!(cmd.getName().equalsIgnoreCase(label)) || cmd.getName().equalsIgnoreCase(faction)) {
 					if(player.getWorld().getName().equals("DFWarzone-1") || player.getWorld().getName().equals("FactionWorld-1")) {
-						String temp = "";
-						for(Entry<String, ArrayList<UUID>> entry : factionList.entrySet()) {
-							if(entry.getValue().contains(player.getUniqueId())) {
-								temp = entry.getKey();
-							}
-						}
-						final String fName = temp;
+						DFFaction faction = method.getFaction(player.getUniqueId());
 						if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
 							player.sendMessage(new ColorCodeTranslator().colorize("&6)------------------=[&bHelp&6]=------------------("));
 							player.sendMessage(new ColorCodeTranslator().colorize("&b/f create | Create a faction."));
@@ -83,20 +56,13 @@ public class DFFactions implements Listener,CommandExecutor{
 							    Matcher m = p.matcher(facName);
 							    if(m.find() == false && facName.indexOf("_-=+[]{}:;''<>/?!@#$%^&*()") == -1) {
 							    	if(facName.length() >= 4 || facName.length() <= 20) {
-							    		if(fName.equals("")) {
-							    			if(!factionNameList.contains(facName)) {
+							    		if(faction == null) {
+							    			if(method.isNameAvailable(facName)) {
 									    		player.sendMessage(new ColorCodeTranslator().colorize("&aYou have created your faction &6" + facName));
-									    		factionNameList.add(facName);
-									    		factionList.put(facName, new ArrayList<UUID>());
-									    		factionList.get(facName).add(player.getUniqueId());
-									    		chunkList.put(facName, new ArrayList<Chunk>());
-									    		fTop.put(facName, 0);
-									    		fHomes.put(facName, null);
-									    		allyList.put(facName, new ArrayList<String>());
-									    		ranked.put(player.getUniqueId(), 4);
+									    		CustomEnchantments.getInstance().factionList.add(new DFFaction(facName, player));
 						    				}
 							    			else {
-								    			player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction already exists!"));
+								    			player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction name is already taken!"));
 								    		}
 								        }
 							    		else {
@@ -104,7 +70,7 @@ public class DFFactions implements Listener,CommandExecutor{
 							    		}
 						    		}
 							    	else {
-							    		player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYour faction name MUST be more then 8 characters!"));
+							    		player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYour faction name MUST be more then 4 characters!"));
 							    	}
 						    	}
 							    else{
@@ -117,18 +83,17 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("abandon")) {
 							if(args.length == 1) {
-								if(!fName.equals("")) {
-									int rank = ranked.get(player.getUniqueId());
+								if(faction != null) {
+									int rank = faction.getRank(player.getUniqueId());
 									if(rank == 4) {
-										for(UUID id : factionList.get(fName)) {
-											ranked.remove(id);
+										for(UUID uuid : faction.getMemberList().keySet()) {
+											Player p = Bukkit.getPlayer(uuid);
+											if(p != null && p != player) {
+												p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " has abandoned the faction!"));
+											}
 										}
-										factionList.remove(fName);
-										factionNameList.remove(fName);
-										chunkList.remove(fName);
-										fTop.remove(fName);
-										fHomes.remove(fName);
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have abandoned this faction!"));
+										method.deleteFaction(faction.getName());
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have abandoned your faction!"));
 									}
 									else {
 										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou dont have permission to abandon this faction!"));
@@ -144,15 +109,15 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("list")) {
 							if(args.length > 0) {
-								if(!fName.equals("")) {
+								if(faction != null) {
 			    					ArrayList<UUID> mList = new ArrayList<UUID>();
-			    					mList.addAll(factionList.get(fName));
+			    					mList.addAll(faction.getMemberList().keySet());
 			    					ArrayList<String> listOnline = new ArrayList<String>();
 			    					ArrayList<String> listOffline = new ArrayList<String>();
 			    					for(OfflinePlayer p : Bukkit.getOfflinePlayers()) {
 		    							for(int i2 = 0; i2 < mList.size(); i2++) {
 		    								if(mList.get(i2).equals(p.getUniqueId())) {
-		    									int finalNumber = ranked.get(p.getUniqueId());
+		    									int finalNumber = faction.getRank(p.getUniqueId());
 					    						if(p.isOnline()) {
 					    							if(finalNumber == 4) {
 					    								listOnline.add(p.getName() + " &4&l(LEADER)&b");
@@ -184,20 +149,20 @@ public class DFFactions implements Listener,CommandExecutor{
 			    							}	
 			    						}
 			    					}
-			    					int cClaimed = chunkList.get(fName).size();
-			    					player.sendMessage(new ColorCodeTranslator().colorize("&7------------------&a[&b" + fName + "&a]&7------------------"));
-			    					player.sendMessage(new ColorCodeTranslator().colorize("&7Faction Name: &b" + fName));
+			    					int cClaimed = faction.getChunkList().size();
+			    					player.sendMessage(new ColorCodeTranslator().colorize("&7------------------&a[&b" + faction.getName() + "&a]&7------------------"));
+			    					player.sendMessage(new ColorCodeTranslator().colorize("&7Faction Name: &b" + faction.getName()));
 									player.sendMessage(new ColorCodeTranslator().colorize("&7Total Members: &b" + mList.size()));
 									player.sendMessage(new ColorCodeTranslator().colorize("&7Chunks Claimed: &b" + cClaimed));
 									player.sendMessage(new ColorCodeTranslator().colorize("&7Members Online: &b" + listOnline));
 									player.sendMessage(new ColorCodeTranslator().colorize("&7Members Offline: &b" + listOffline));
-									if(fHomes.get(fName) != null) {
-										player.sendMessage(new ColorCodeTranslator().colorize("&7Faction Home: &bSet at " + "&6X: " + fHomes.get(fName).getX() + " Y: " + fHomes.get(fName).getY() + " Z: " + fHomes.get(fName).getZ()));
+									if(faction.getFactionHome() != null) {
+										player.sendMessage(new ColorCodeTranslator().colorize("&7Faction Home: &bSet at " + "&6X: " + faction.getFactionHome().getX() + " Y: " + faction.getFactionHome().getY() + " Z: " + faction.getFactionHome().getZ()));
 									}
 									else {
 										player.sendMessage(new ColorCodeTranslator().colorize("&7Faction Home: &cNot Set"));
 									}
-									player.sendMessage(new ColorCodeTranslator().colorize("&7------------------&a[&b" + fName + "&a]&7------------------"));
+									player.sendMessage(new ColorCodeTranslator().colorize("&7------------------&a[&b" + faction.getName() + "&a]&7------------------"));
 			    				}
 			    				else {
 									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));
@@ -207,46 +172,75 @@ public class DFFactions implements Listener,CommandExecutor{
 						else if(args[0].equalsIgnoreCase("claim")) {
 							if(args.length == 1) {
 								if(player.getWorld().getName().equals("FactionWorld-1")) {
-									if(!fName.equals("")) {
-										if(!chunkList.get(fName).contains(player.getLocation().getChunk())) {
-											int rank = ranked.get(player.getUniqueId());
-											ArrayList<Chunk> yap = chunkList.get(fName);
-											int count = 0;
-											for(UUID uuid : factionList.get(fName)) {
-												if(factionList.get(fName).contains(uuid)) {
-													count++;
-												}
-											}
-											if(rank >= 3) {
-												if(yap.size() < count + 3) {
-													if(yap.size() < 12) {
-														yap.add(player.getLocation().getChunk());
-														chunkList.put(fName, yap);
-														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have claimed this chunk!"));
+									if(faction != null) {
+										if(!faction.isInAChunk(player)) {
+											if(!faction.isInChunk(player)) {
+												int rank = faction.getRank(player.getUniqueId());
+												if(rank >= 3) {
+													int chunkTotal = faction.getChunkList().size();
+													int maxChunks = faction.getMemberList().size() + 3;
+													if(maxChunks > 16) {
+														maxChunks = 16;
+													}
+													if(chunkTotal == 0) {
+														if(faction.getChunkList().size() < maxChunks) {
+															if(faction.getEnergy() > faction.getChunkList().size() + 1) {
+																faction.addChunk(player.getChunk());
+																player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have claimed this chunk!"));
+																CustomEnchantments.getInstance().registerNameTag(player);
+															}
+															else {
+																player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou do not have enough energy to claim more chunks!"));
+															}
+														}
+														else {
+															player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have claimed the maximum amount of chunks! Get more faction members to claim more!"));
+														}
 													}
 													else {
-														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have claimed the maximum amount of chunks!"));
+														Location loc = player.getLocation();
+														Location tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
+														tempLoc.add(16.00, 0.00, 0.00);
+														Chunk chunk1 = player.getWorld().getChunkAt(tempLoc);
+														tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
+														tempLoc.add(0.00, 0.00, 16.00);
+														Chunk chunk2 = player.getWorld().getChunkAt(tempLoc);
+														tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
+														tempLoc.add(-16.00, 0.00, 0.00);
+														Chunk chunk3 = player.getWorld().getChunkAt(tempLoc);
+														tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
+														tempLoc.add(0.00, 0.00, -16.00);
+														Chunk chunk4 = player.getWorld().getChunkAt(tempLoc);
+														if(faction.getChunkList().contains(chunk1) || faction.getChunkList().contains(chunk2) || faction.getChunkList().contains(chunk3) || faction.getChunkList().contains(chunk4)) {
+															if(faction.getChunkList().size() < maxChunks) {
+																if(faction.getEnergy() > faction.getChunkList().size() + 1) {
+																	faction.addChunk(player.getChunk());
+																	player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have claimed this chunk!"));
+																	CustomEnchantments.getInstance().registerNameTag(player);
+																}
+																else {
+																	player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou do not have enough energy to claim more chunks!"));
+																}
+															}
+															else {
+																player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have claimed the maximum amount of chunks! Get more faction members to claim more!"));
+															}
+														}
+														else {
+															player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cClaim a chunk that is near your area!"));
+														}
 													}
 												}
 												else {
-													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have claimed the maximum amount of chunks! Get more faction members to claim more!"));
+													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou dont have permission to claim chunks!"));
 												}
 											}
 											else {
-												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou dont have permission to claim chunks!"));
+						    					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis chunk is already claimed by your faction!"));
 											}
 				    					}
-										else if(chunkList.get(fName).contains(player.getLocation().getChunk())) {
-					    					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou already claimed this chunk!"));
-										}
 										else {
-											for(Entry<String, ArrayList<Chunk>> entry : chunkList.entrySet()) {
-												if(!entry.getKey().equals(fName)) {
-													if(entry.getValue().contains(player.getLocation().getChunk())) {
-														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + entry.getKey() + " &cAlready claimed this chunk!"));
-													}
-												}
-											}
+					    					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis chunk is already claimed by another faction!"));
 										}
 					    			}
 				    				else {
@@ -265,31 +259,41 @@ public class DFFactions implements Listener,CommandExecutor{
 							if(args.length == 1) {
 								if(args.length == 1) {
 									if(player.getWorld().getName().equals("FactionWorld-1")) {
-										if(!fName.equals("")) {
-											int rank = ranked.get(player.getUniqueId());
+										if(faction != null) {
+											int rank = faction.getRank(player.getUniqueId());
 											if(rank >= 3) {
-												if(chunkList.get(fName).contains(player.getLocation().getChunk())) {
-													chunkList.get(fName).remove(player.getLocation().getChunk());
+												if(faction.isInChunk(player)) {
+													faction.removeChunk(player.getChunk());
 													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have unclaimed this chunk!"));
 												}
-												else {
-													boolean check = false;
-													String fNameOther = "";
-													for(Entry<String, ArrayList<Chunk>> entry : chunkList.entrySet()) {
-														if(!entry.getKey().equals(fName)) {
-															if(entry.getValue().contains(player.getLocation().getChunk())) {
-																check = true;
-																fNameOther = entry.getKey();
-																break;
-															}
+												else if(faction.isInAChunk(player)){
+													DFFaction fac = null;
+													for(DFFaction f : CustomEnchantments.getInstance().factionList) {
+														if(f.getChunkList().contains(player.getChunk())) {
+															fac = f;
 														}
 													}
-													if(check == true) {
-														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + fNameOther + " &cAlready claimed this chunk!"));
+													if(fac != null) {
+														if(fac.getEnergy() < fac.getChunkList().size()) {
+															fac.removeChunk(player.getChunk());
+															for(UUID id : fac.getMemberList().keySet()) {
+																Player p = Bukkit.getPlayer(id);
+																if(p != null) {
+																	p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cunclaimed 1 of your chunks!"));
+																}
+															}
+															player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unclaimed 1 chunk of the faction &6" + fac.getName()));
+														}
+														else {
+															player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't unclaim this chunk of &6" + fac.getName() + " &cbecause they still have enough energy to keep this chunk!"));
+														}
 													}
 													else {
-														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis chunk is claimed by no one!"));
+														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction doesn't exis... wait a minute somethin's not right here."));
 													}
+												}
+												else {
+													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis chunk is not claimed!"));
 												}
 											}
 											else {
@@ -309,14 +313,27 @@ public class DFFactions implements Listener,CommandExecutor{
 								}
 							}
 						}
+						else if(args[0].equalsIgnoreCase("power")) {
+							if(args.length == 1) {
+								if(faction != null) {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYour faction has &6" + faction.getEnergy() + " &aenergy"));
+								}
+								else {
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));
+								}
+							}
+							else {
+								player.sendMessage(new ColorCodeTranslator().colorize("&cInvalid Arguments! Use /f or /f help to see the faction commands!"));
+							}
+						}
 						else if(args[0].equalsIgnoreCase("sethome")) {
 							if(args.length == 1) {
 								if(player.getWorld().getName().equals("FactionWorld-1")) {
-									if(!fName.equals("")) {
-										int rank = ranked.get(player.getUniqueId());
+									if(faction != null) {
+										int rank = faction.getRank(player.getUniqueId());
 										if(rank >= 3) {
-											if(chunkList.get(fName).contains(player.getLocation().getChunk())) {
-												fHomes.put(fName, player.getLocation());
+											if(faction.isInChunk(player)) {
+												faction.setFactionHome(player.getLocation());
 												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have set your faction home!"));
 											}
 											else {
@@ -344,8 +361,8 @@ public class DFFactions implements Listener,CommandExecutor{
 								Location loc = player.getLocation();
 								double locX = loc.getX();
 								double locZ = loc.getZ();
-								if(!fName.equals("")) {
-									int rank = ranked.get(player.getUniqueId());
+								if(faction != null) {
+									int rank = faction.getRank(player.getUniqueId());
 									if(rank >= 2) {
 										new BukkitRunnable() {
 											int count = 10;
@@ -355,7 +372,7 @@ public class DFFactions implements Listener,CommandExecutor{
 													player.sendMessage(new ColorCodeTranslator().colorize("&aTeleporting to faction home in &b" + count + "..."));
 													count--;
 													if(count == 0) {
-														player.teleport(fHomes.get(fName));
+														player.teleport(faction.getFactionHome());
 														cancel();
 													}
 												}
@@ -380,38 +397,38 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("invite")) {
 							if(args.length == 2) {
-								if(!fName.equals("")) {
-									int rank = ranked.get(player.getUniqueId());
+								if(faction != null) {
+									int rank = faction.getRank(player.getUniqueId());
 									if(rank >= 3) {
 										Player p = Bukkit.getPlayer(args[1]);
 										if(p != null) {
 											if(p.isOnline()) {
 												if(p != player) {
-													boolean check = false;
-													for(ArrayList<UUID> uuids : factionList.values()) {
-														if(uuids.contains(p.getUniqueId())) {
-															check = true;
+													if(faction.isAMember(p.getUniqueId())) {
+														if(faction.isMember(p.getUniqueId())) {
+															faction.addInvite(p.getUniqueId());
+															player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have invited &6" + p.getName() + " &ato your faction"));
+															player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aThey have &b60 seconds &ato accept!"));
+															p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ainvited you to &6" + faction.getName() + "&a!"));
+															p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have 60 seconds to accept!"));
+															p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aType /f accept/join &6" + player.getName() + " to join &6" + faction.getName() +"&a, type /f decline/refuse " + player.getName() + " to decline the invitation!"));
+															p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aType /f accept/join &6" + faction.getName() + " to join &6" + faction.getName() +"&a, type /f decline/refuse " + faction.getName() + " to decline the invitation!"));
+															new BukkitRunnable() {
+																public void run() {
+																	if(faction.getInvitedList().contains(p.getUniqueId())) {
+																		faction.removeInvite(p.getUniqueId());
+																		p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cDue to you not responding, the invitation from &6" + player.getName() + " &chas expired!"));
+																		player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cDue to &6" + p.getName() + " &cnot responding, your invitation has expired!"));
+																	}
+																}
+															}.runTaskLater(CustomEnchantments.getInstance(), 1200L);
+														}
+														else {
+															player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player is already in your faction!"));
 														}
 													}
-													if(check == true) {
-														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player is already in a faction!"));
-													}
 													else {
-														inviteList.get(fName).add(p.getUniqueId());
-														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have invited &6" + p.getName() + " &ato your faction"));
-														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aThey have &660 &aseconds to accept!"));
-														String name = fName;
-														p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ainvited you to &6" + fName + "&a!"));
-														p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have 60 seconds to accept!"));
-														p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aType /f accept/join to join &6" + fName +"&a, type /f decline/refuse to decline the invitation!"));
-														new BukkitRunnable() {
-															public void run() {
-																if(inviteList.get(name).contains(p.getUniqueId())) {
-																	p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cDue to you not responding, your invitation to &6" + name + " &chas expired!"));
-																	player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cDue to &6" + p.getName() + " &cnot responding, your invitation has expired!"));
-																}
-															}
-														}.runTaskLater(CustomEnchantments.getInstance(), 1200L);
+														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player is already in a faction!"));
 													}
 												}
 												else {
@@ -440,11 +457,16 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("leave")) {
 							if(args.length == 1) {
-								if(!fName.equals("")) {
-									if(ranked.get(player.getUniqueId()) != 4) {
-										factionList.get(fName).remove(player.getUniqueId());
-										ranked.remove(player.getUniqueId());
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have left &6" + fName));
+								if(faction != null) {
+									if(faction.getRank(player.getUniqueId()) != 4) {
+										faction.removeMember(player);
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have left &6" + faction.getName()));
+										for(UUID id : faction.getMemberList().keySet()) {
+											Player p = Bukkit.getPlayer(id);
+											if(player != null) {
+												p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas left the faction!"));
+											}
+										}
 									}
 									else {
 										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't leave your faction as your faction leader! Use /f abandon instead."));
@@ -460,20 +482,19 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("kick")) {
 							if(args.length == 2) {
-								if(!fName.equals("")) {
-									int rank = ranked.get(player.getUniqueId());
+								if(faction != null) {
+									int rank = faction.getRank(player.getUniqueId());
 									if(rank >= 3) {
 										Player p = Bukkit.getPlayer(args[1]);
 										if(p != null) {
 											if(p != player) {
-												if(factionList.get(fName).contains(p.getUniqueId())) {
-													int rankOther = ranked.get(p.getUniqueId());
+												if(faction.isMember(p.getUniqueId())) {
+													int rankOther = faction.getRank(p.getUniqueId());
 													if(rank > rankOther) {
-														factionList.get(fName).remove(player.getUniqueId());
-														ranked.remove(p.getUniqueId());
-														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + p.getName() + " &afrom your faction!"));
+														faction.removeMember(p);
+														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + p.getName() + " &afrom the faction!"));
 														if(p.isOnline()) {
-															p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ckicked you from their faction!"));
+															p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ckicked you from the faction!"));
 														}
 													}
 													else {
@@ -484,7 +505,7 @@ public class DFFactions implements Listener,CommandExecutor{
 													player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player is not in your faction!"));
 												}
 											}
-											else if(ranked.get(player.getUniqueId()) == 4){
+											else if(faction.getRank(player.getUniqueId()) == 4){
 												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't remove yourself! Use /f abandon to abandon your faction!"));
 											}
 											else {
@@ -509,45 +530,54 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("accept") || args[0].equalsIgnoreCase("join")) {
 							if(args.length == 2) {
-								ArrayList<UUID> invited = new ArrayList<UUID>();
-								ArrayList<UUID> members = new ArrayList<UUID>();
-								for(ArrayList<UUID> uuid : inviteList.values()) {
-									invited.addAll(uuid);
-								}
-								for(ArrayList<UUID> uuid : factionList.values()) {
-									members.addAll(uuid);
-								}
-								String facName = args[1];
-								if(factionNameList.contains(facName)) {
-									if(invited.contains(player.getUniqueId())) {
-										if(!members.contains(player.getUniqueId())) {
-											boolean check = false;
-											for(Entry<String, ArrayList<UUID>> entry : factionList.entrySet()) {
-												if(entry.getValue().contains(player.getUniqueId())) {
-													check = true;
-													break;
+								String string = args[1];
+								Player p = Bukkit.getPlayer(string);
+								if(p != null) {
+									if(method.getFaction(p.getUniqueId()) != null) {
+										DFFaction fac = method.getFaction(p.getUniqueId());
+										if(fac.isInvited(player.getUniqueId())) {
+											p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas joined the faction!"));
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have joined " + fac.getName()));
+											for(UUID id : fac.getMemberList().keySet()) {
+												Player pl = Bukkit.getPlayer(id);
+												if(pl != null && pl != p) {
+													pl.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas joined the faction!"));
 												}
 											}
-											if(check != true) {
-												factionList.get(facName).add(player.getUniqueId());
-												ranked.put(player.getUniqueId(), 1);
-												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have joined &6" + facName));
-											}
-											else {
-												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cSomething went wrong, please console staff."));
-											}
+											fac.removeInvite(player.getUniqueId());
+											fac.addMember(player);
 										}
 										else {
-											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou are already in a faction!"));
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou haven't recieved an invite from " + p.getName() + "&a!"));
 										}
 									}
 									else {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou haven't been invited to a faction!"));
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cIsn't part of a faction!"));
 									}
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction doesn't exist!"));
+									DFFaction fac = method.getFaction(string);
+									if(fac != null) {
+										if(fac.isInvited(player.getUniqueId())) {
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have joined &6" + fac.getName() + "&a!"));
+											for(UUID id : fac.getMemberList().keySet()) {
+												Player pl = Bukkit.getPlayer(id);
+												if(pl != null) {
+													pl.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas joined the faction!"));
+												}
+											}
+											fac.removeInvite(player.getUniqueId());
+											fac.addMember(player);
+										}
+										else {
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou haven't been invited to this faction!"));
+										}
+									}
+									else {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction doesn't exist!"));
+									}
 								}
+								
 							}
 							else {
 								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
@@ -555,18 +585,40 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("decline") || args[0].equalsIgnoreCase("refuse")) {
 							if(args.length == 2) {
-								String facName = args[1];
-								if(factionNameList.contains(facName)) {
-									if(inviteList.get(facName).contains(player.getUniqueId())) {
-										inviteList.get(facName).remove(player.getUniqueId());
+								String string = args[1];
+								Player p = Bukkit.getPlayer(string);
+								if(p != null) {
+									if(method.getFaction(p.getUniqueId()) != null) {
+										DFFaction fac = method.getFaction(p.getUniqueId());
+										if(fac.isInvited(player.getUniqueId())) {
+											fac.removeInvite(player.getUniqueId());
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have denied the request to join &6" + p.getName() + "'s &afaction!"));
+											p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas denied your request to join your faction!"));
+										}
+										else {
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou haven't recieved an invite from &6" + p.getName() + "&a!"));
+										}
 									}
 									else {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou haven't recieved an invite from &6" + facName + "&a!"));
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction doesn't exist!"));
 									}
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction doesn't exist!"));
+									DFFaction fac = method.getFaction(string);
+									if(fac != null) {
+										if(fac.isInvited(player.getUniqueId())) {
+											fac.removeInvite(player.getUniqueId());
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have denied the request to join the faction &6" + fac.getName() + "&a!"));
+										}
+										else {
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou haven't been invited to this faction!"));
+										}
+									}
+									else {
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction doesn't exist!"));
+									}
 								}
+								
 							}
 							else {
 								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
@@ -574,20 +626,20 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("promote")) {
 							if(args.length == 2) {
-								if(!fName.equals("")) {
+								if(faction != null) {
 									Player p = Bukkit.getPlayer(args[1]);
 									if(p != null) {
 										if(p != player) {
-											if(factionList.get(fName).contains(p.getUniqueId())) {
-												int rankMe = ranked.get(player.getUniqueId());
-												int rankOther = ranked.get(player.getUniqueId());
+											if(faction.isMember(p.getUniqueId())) {
+												int rankMe = faction.getRank(player.getUniqueId());
+												int rankOther = faction.getRank(p.getUniqueId());
 												if(rankMe > rankOther) {
-													ranked.put(p.getUniqueId(), ranked.get(p.getUniqueId()) + 1);
-													if(ranked.get(p.getUniqueId()) == 2) {
+													faction.promoteMember(p.getUniqueId());
+													if(faction.getRank(p.getUniqueId()) == 2) {
 														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " &ato Member!"));
 														p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &aHas promoted you to a Member!"));
 													}
-													if(ranked.get(p.getUniqueId()) == 3) {
+													if(faction.getRank(p.getUniqueId()) == 3) {
 														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " &ato Officer!"));
 														p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &aHas promoted you to a Officer!"));
 													}
@@ -618,20 +670,20 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("demote")) {
 							if(args.length == 2) {
-								if(!fName.equals("")) {
+								if(faction != null) {
 									Player p = Bukkit.getPlayer(args[1]);
 									if(p != null) {
 										if(p != player) {
-											if(factionList.get(fName).contains(p.getUniqueId())) {
-												int rankMe = ranked.get(player.getUniqueId());
-												int rankOther = ranked.get(p.getUniqueId());
+											if(faction.isMember(p.getUniqueId())) {
+												int rankMe = faction.getRank(player.getUniqueId());
+												int rankOther = faction.getRank(p.getUniqueId());
 												if(rankMe > rankOther) {
-													ranked.put(p.getUniqueId(), ranked.get(p.getUniqueId()) - 1);
-													if(ranked.get(p.getUniqueId()) == 2) {
+													faction.demoteMember(p.getUniqueId());
+													if(faction.getRank(p.getUniqueId()) == 2) {
 														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " &cto Member!"));
 														p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cHas demoted you to a Member!"));
 													}
-													if(ranked.get(p.getUniqueId()) == 1) {
+													if(faction.getRank(p.getUniqueId()) == 1) {
 														player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " &cto Recruit!"));
 														p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cHas demoted you to a Recruit!"));
 													}
@@ -660,76 +712,54 @@ public class DFFactions implements Listener,CommandExecutor{
 								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
 							}
 						}
-						else if(args[0].equalsIgnoreCase("top")) {
-							if(args.length == 1) {
-								player.sendMessage(new ColorCodeTranslator().colorize("&7---------------------&a[&bF TOP&a]&7---------------------"));
-								int count = 0;
-								for (Map.Entry<String, Integer> pair: fTop.entrySet()) {
-									count++;
-									if(count < 10) {
-										player.sendMessage(new ColorCodeTranslator().colorize("&a&l" + count + ". &bFaction: &6" + pair.getKey() + " &a&l| " + "&bFaction Points: &6" + pair.getValue()));
-									}
-								}
-								count = 0;
-								player.sendMessage(new ColorCodeTranslator().colorize("&7---------------------&a[&bF TOP&a]&7--------------------- "));
-				    		}
-							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
-							}
-						}
 						else if(args[0].equalsIgnoreCase("ally")) {
 							if(args.length == 2) {
-								if(!fName.equals("")) {
+								if(faction != null) {
 									String allyName = args[1];
-									if(!allyList.get(fName).contains(allyName)) {
-										if(!invitedAllyList.get(fName).contains(allyName)) {
-											boolean check = false;
-											for(String s : factionNameList) {
-												if(s.equals(allyName)) {
-													check = true;
-												}
-											}
-											if(check == true) {
-												if(!allyName.equals(fName)) {
-													int rank = ranked.get(player.getUniqueId());
+									DFFaction fac = method.getFaction(allyName);
+									if(fac != null) {
+										if(!faction.isInvitedAlly(fac.getName())) {
+											if(faction.isAlly(fac.getName())) {
+												if(!faction.getName().equals(fac.getName())) {
+													int rank = faction.getRank(player.getUniqueId());
 													if(rank >= 3) {
-														invitedAllyList.get(fName).add(allyName);
-														if(invitedAllyList.get(fName).contains(allyName) && invitedAllyList.get(allyName).contains(fName)) {
-															invitedAllyList.get(fName).remove(allyName);
-															invitedAllyList.get(allyName).remove(fName);
-															allyList.get(fName).add(allyName);
-															allyList.get(allyName).add(fName);
-															for(UUID uuid : factionList.get(fName)) {
+														fac.addInvitedAlly(fac.getName());
+														if(faction.isInvitedAlly(fac.getName()) && fac.isInvitedAlly(faction.getName())) {
+															faction.removeInvitedAlly(fac.getName());
+															fac.removeInvitedAlly(faction.getName());
+															faction.addAlly(fac.getName());
+															fac.addAlly(faction.getName());
+															for(UUID uuid : faction.getMemberList().keySet()) {
 																Player p = Bukkit.getPlayer(uuid);
 																if(p.isOnline()) {
-																	p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYour faction is now allies with &6" + fName));
+																	p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYour faction is now allies with &6" + fac.getName()));
 																	
 																}
 															}
-															for(UUID uuid : factionList.get(allyName)) {
+															for(UUID uuid : fac.getMemberList().keySet()) {
 																Player p = Bukkit.getPlayer(uuid);
 																if(p.isOnline()) {
-																	p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYour faction is now allies with &6" + allyName));
+																	p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYour faction is now allies with &6" + faction.getName()));
 																}
 															}
 														}
 														else {
 															player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have requested to ally with &6" + allyName + "&a!"));
 															player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aTheir leader/officers have 60 seconds to accept!"));
-															for(UUID uuid : factionList.get(fName)) {
+															for(UUID uuid : faction.getMemberList().keySet()) {
 																Player p = Bukkit.getPlayer(uuid);
 																if(p.isOnline()) {
-																	if(ranked.get(p.getUniqueId()) >= 3) {
+																	if(faction.getRank(p.getUniqueId()) >= 3) {
 																		p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &arequested to be allies with &6" + allyName));
 																	}
 																}
 															}
-															for(UUID uuid : factionList.get(allyName)) {
+															for(UUID uuid : fac.getMemberList().keySet()) {
 																Player p = Bukkit.getPlayer(uuid);
 																if(p.isOnline()) {
-																	if(ranked.get(p.getUniqueId()) >= 3) {
-																		p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &arequested to be allies with your faction!"));
-																		p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aDo /f ally &6" + fName + " &ato ally them, if you don't want to be allies then just don't do /f ally &6" + fName));
+																	if(fac.getRank(p.getUniqueId()) >= 3) {
+																		p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + faction.getName() + " &arequested to be allies with your faction!"));
+																		p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aDo /f ally &6" + faction.getName() + " &ato ally them, if you don't want to be allies then just don't do /f ally &6" + faction.getName()));
 																		p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have 60 seconds to accept!"));
 																	}
 																}
@@ -745,15 +775,15 @@ public class DFFactions implements Listener,CommandExecutor{
 												}
 											}
 											else {
-												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction doesn't exist!"));
+												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou already invited this faction to be allies!"));
 											}
 										}
 										else {
-											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou already invited this faction to be allies!"));
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou are already allies with this faction!"));
 										}
 									}
 									else {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou are already allies with this faction!"));
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction doesn't exist!"));
 									}
 								}
 								else {
@@ -766,33 +796,39 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("unally")) {
 							if(args.length == 2) {
-								if(!fName.equals("")) {
+								if(faction != null) {
 									String allyName = args[1];
-									if(allyList.get(fName).contains(allyName)) {
-										int rank = ranked.get(player.getUniqueId());
-										if(rank >= 3) {
-											allyList.get(fName).remove(allyName);
-											allyList.get(allyName).remove(fName);
-											for(UUID uuid : factionList.get(fName)) {
-												Player p = Bukkit.getPlayer(uuid);
-												if(p.isOnline()) {
-													p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYour faction has unallied with &6" + fName));
-													
+									DFFaction fac = method.getFaction(allyName);
+									if(fac != null) {
+										if(faction.isAlly(fac.getName())) {
+											int rank = faction.getRank(player.getUniqueId());
+											if(rank >= 3) {
+												faction.removeAlly(fac.getName());
+												fac.removeAlly(faction.getName());
+												for(UUID uuid : faction.getMemberList().keySet()) {
+													Player p = Bukkit.getPlayer(uuid);
+													if(p.isOnline()) {
+														p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYour faction has unallied with &6" + fac.getName()));
+														
+													}
+												}
+												for(UUID uuid : fac.getMemberList().keySet()) {
+													Player p = Bukkit.getPlayer(uuid);
+													if(p.isOnline()) {
+														p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYour faction has unallied with &6" + faction.getName()));
+													}
 												}
 											}
-											for(UUID uuid : factionList.get(allyName)) {
-												Player p = Bukkit.getPlayer(uuid);
-												if(p.isOnline()) {
-													p.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYour faction has unallied with &6" + allyName));
-												}
+											else {
+												player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have permission to unally this faction!"));
 											}
 										}
 										else {
-											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have permission to unally this faction!"));
+											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou are not allies with this faction!"));
 										}
 									}
 									else {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou are not allies with this faction!"));
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis faction does not exist!"));
 									}
 								}
 								else {
@@ -806,12 +842,6 @@ public class DFFactions implements Listener,CommandExecutor{
 						else {
 							player.sendMessage(new ColorCodeTranslator().colorize("&cInvalid Arguments! Use /f or /f help to see the faction commands!"));
 						}
-						try{
-							yml.save(f);
-				        }
-				        catch(IOException e){
-				            e.printStackTrace();
-				        }
 					}
 				}
 			}
@@ -820,170 +850,6 @@ public class DFFactions implements Listener,CommandExecutor{
 			}
 		}
 		return false;
-	}
-	public void loadFactionNameList(YamlConfiguration yml, File f) {
-		factionNameList.addAll(yml.getConfigurationSection("Factions.List").getKeys(false));
-	}
-	public void loadMemberList(YamlConfiguration yml, File f) {
-		factionList.clear();
-		String facName = "";
-		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
-		ArrayList<String> facNames = new ArrayList<String>(set);
-		for(int i = 0; i < facNames.size(); i++) {
-			facName = facNames.get(i);
-			Set<String> chec = yml.getConfigurationSection("Factions.List." + facName + ".Members").getKeys(false);
-			ArrayList<String> facMembers = new ArrayList<String>(chec);
-			for(int i1 = 0; i1 < facMembers.size(); i1++) {
-				UUID uuid = UUID.fromString(facMembers.get(i1));
-				if(factionList.get(facName) == null) {
-					factionList.put(facName, new ArrayList<UUID>());
-					factionList.get(facName).add(uuid);
-				}
-				else {
-					factionList.get(facName).add(uuid);
-				}
-			}
-		}
-	}
-	public void loadFactionHomesList(YamlConfiguration yml, File f) {
-		fHomes.clear();
-		String facName = "";
-		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
-		ArrayList<String> facNames = new ArrayList<String>(set);
-		for(int i = 0; i < facNames.size(); i++) {
-			facName = facNames.get(i);
-			Location loc = (Location) yml.get("Factions.List." + facName + ".Faction Home");
-			fHomes.put(facName, loc);
-		}
-	}
-	public void loadChunkList(YamlConfiguration yml, File f) {
-		chunkList.clear();
-		String facName = "";
-		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
-		ArrayList<String> facNames = new ArrayList<String>(set);
-		for(int i = 0; i < facNames.size(); i++) {
-			facName = facNames.get(i);
-			ArrayList<String> chec = new ArrayList<String>(yml.getStringList("Factions.List." + facName + ".Chunks List"));
-			chunkList.put(facName, new ArrayList<Chunk>());
-			for(int i1 = 0; i1 < chec.size(); i1++) {
-				String string = chec.get(i1);
-				String split[] = string.split("z");
-				String x1 = split[0].replaceAll("[^\\d-.]", "");
-				String z1 = split[1].replaceAll("[^\\d-.]", "");
-				int x = Integer.parseInt(x1);
-				int z = Integer.parseInt(z1);
-				Chunk chunk = Bukkit.getWorld("FactionWorld-1").getChunkAt(x, z);
-				if(chunkList.get(facName) == null) {
-					chunkList.put(facName, new ArrayList<Chunk>());
-					chunkList.get(facName).add(chunk);
-				}
-				else {
-					chunkList.get(facName).add(chunk);
-				}
-			}
-		}
-	}
-	public void loadRankedList(YamlConfiguration yml, File f) {
-		String facName = "";
-		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
-		ArrayList<String> facNames = new ArrayList<String>(set);
-		for(int i = 0; i < facNames.size(); i++) {
-			facName = facNames.get(i);
-			Set<String> check = yml.getConfigurationSection("Factions.List." + facName + ".Members").getKeys(false);
-			ArrayList<String> player = new ArrayList<String>(check);
-			for(int i1 = 0; i1 < player.size(); i1++) {
-				int rank = yml.getInt("Factions.List." + facName + ".Members." + player.get(i1) + ".Rank");
-				ranked.put(UUID.fromString(player.get(i1)), rank);
-			}
-		}
-	}
-	public void loadAllyList(YamlConfiguration yml, File f) {
-		String facName = "";
-		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
-		ArrayList<String> facNames = new ArrayList<String>(set);
-		for(int i = 0; i < facNames.size(); i++) {
-			facName = facNames.get(i);
-			ArrayList<String> fAllyList = new ArrayList<String>(yml.getStringList("Factions.List." + facName + ".Allies"));
-			for(int i1 = 0; i1 < fAllyList.size(); i1++) {
-				if(allyList.get(facName) == null) {
-					allyList.put(facName, new ArrayList<String>());
-					allyList.get(facName).add(fAllyList.get(i1));
-				}
-				else {
-					allyList.get(facName).add(fAllyList.get(i1));
-				}
-			}
-		}
-	}
-	public void loadPlayersAlliedList(YamlConfiguration yml, File f) {
-		String facName = "";
-		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
-		ArrayList<String> facNames = new ArrayList<String>(set);
-		for(int i = 0; i < facNames.size(); i++) {
-			facName = facNames.get(i);
-			ArrayList<String> fAllyList = new ArrayList<String>(yml.getStringList("Factions.List." + facName + ".Allies"));
-			for(int i1 = 0; i1 < fAllyList.size(); i1++) {
-				if(playerAlliedList.get(facName) == null) {
-					playerAlliedList.put(facName, new ArrayList<UUID>());
-					playerAlliedList.get(facName).addAll(factionList.get(facName));
-				}
-				else {
-					playerAlliedList.get(facName).addAll(factionList.get(facName));
-				}
-			}
-		}
-	}
-	public void loadFTop(YamlConfiguration yml, File f) {
-		fTop.clear();
-		String facName = "";
-		Set<String> set = yml.getConfigurationSection("Factions.List").getKeys(false);
-		ArrayList<String> facNames = new ArrayList<String>(set);
-		for(int i = 0; i < facNames.size(); i++) {
-			facName = facNames.get(i);
-			int fPoints = yml.getInt("Factions.List." + facName + ".Faction Points");
-			fTop.put(facName, fPoints);
-		}
-		Object[] a = fTop.entrySet().toArray();
-		Arrays.sort(a, new Comparator<Object>() {
-		    public int compare(Object o1, Object o2) {
-		        return ((Map.Entry<String, Integer>) o2).getValue()
-		                   .compareTo(((Map.Entry<String, Integer>) o1).getValue());
-		    }
-		});
-		
-	}
-	public HashMap<String, Integer> getFTop() {
-		return DFFactions.fTop;
-	}
-	public HashMap<String, Location> getFHomes() {
-		return DFFactions.fHomes;
-	}
-	public HashMap<String, ArrayList<Chunk>> getChunkList() {
-		return DFFactions.chunkList;
-	}
-	public ArrayList<String> getFactionNameList() {
-		return DFFactions.factionNameList;
-	}
-	public HashMap<String, ArrayList<UUID>> getFactionMemberList() {
-		return DFFactions.factionList;
-	}
-	public HashMap<UUID, Integer> getRankedList() {
-		return DFFactions.ranked;
-	}
-	public HashMap<String, ArrayList<String>> getAllyList() {
-		return DFFactions.allyList;
-	}
-	public HashMap<String, ArrayList<UUID>> getPlayerAllyList() {
-		return DFFactions.playerAlliedList;
-	}
-	public boolean isTeammate(UUID uuid1, UUID uuid2) {
-		boolean isTeammate = false;
-		for(Entry<String, ArrayList<UUID>> entry : DFFactions.factionList.entrySet()) {
-			if(entry.getValue().contains(uuid1) && entry.getValue().contains(uuid2)) {
-				isTeammate = true;
-			}
-		}
-		return isTeammate;
 	}
 }
 				

@@ -1,8 +1,5 @@
 package me.WiebeHero.MoreStuff;
 
-import java.util.ArrayList;
-import java.util.UUID;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
@@ -14,7 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
-import me.WiebeHero.Factions.DFFactions;
+import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Skills.DFPlayer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -25,7 +22,7 @@ import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.PacketPlayOutChat;
 
 public class ChatItem implements Listener{
-	DFFactions fac = new DFFactions();
+	DFFaction method = new DFFaction();
 	@EventHandler
 	public void chatItemEvent(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
@@ -48,10 +45,9 @@ public class ChatItem implements Listener{
 						}
 						int level = dfPlayer.getLevel();
 						String facN = "";
-						for(Entry<String, ArrayList<UUID>> entry : fac.getFactionMemberList().entrySet()) {
-							if(entry.getValue().contains(player.getUniqueId())) {
-								facN = entry.getKey();
-							}
+						DFFaction faction = method.getFaction(player.getUniqueId());
+						if(faction != null) {
+							facN = faction.getName();
 						}
 						ItemStack item = player.getInventory().getItemInMainHand();
 						net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item);
