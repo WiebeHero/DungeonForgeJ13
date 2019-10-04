@@ -196,6 +196,7 @@ import me.WiebeHero.MoreStuff.CancelWeaponPlaced;
 import me.WiebeHero.MoreStuff.Chat;
 import me.WiebeHero.MoreStuff.ChatItem;
 import me.WiebeHero.MoreStuff.CombatTag;
+import me.WiebeHero.MoreStuff.DisablePreProcess;
 import me.WiebeHero.MoreStuff.Disparitys;
 import me.WiebeHero.MoreStuff.EnderPearlCooldown;
 import me.WiebeHero.MoreStuff.LevelRestrictions;
@@ -554,6 +555,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new EnderPearlCooldown(), this);
 		getServer().getPluginManager().registerEvents(new MOTDSetting(), this);
 		getServer().getPluginManager().registerEvents(new ChatItem(), this);
+		getServer().getPluginManager().registerEvents(new DisablePreProcess(), this);
 		getServer().getPluginManager().registerEvents(new CancelJoinLeaveAdvancementMessages(), this);
 		//Shop
 		getServer().getPluginManager().registerEvents(new DFShop(), this);
@@ -930,7 +932,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
-			t.addEntry(player.getName());
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
@@ -1023,6 +1024,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			blank3.setScore(2);
 			adress.setScore(1);
 			player.setScoreboard(b);
+			t = player.getScoreboard().getTeam(player.getName());
+			t.addEntry(player.getName());
 			scores.put(player.getUniqueId(), b);
 		}
 		else {
@@ -1069,9 +1072,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Team t = b.registerNewTeam(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
-			t.addEntry(player.getName());
+			
 			
 			//Faction Info
 			Score blank1 = o.getScore("");
@@ -1165,6 +1168,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			blank3.setScore(2);
 			adress.setScore(1);
 			player.setScoreboard(b);
+			t = player.getScoreboard().getTeam(player.getName());
+			t.addEntry(player.getName());
 		}
 	}
 	public ItemStack createHead(String paramString)
