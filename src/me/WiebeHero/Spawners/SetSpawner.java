@@ -171,7 +171,7 @@ public class SetSpawner implements Listener,CommandExecutor{
 				}
 			}	
 		}
-		return false;
+		return true;
 	}
 	public void loadSpawners(YamlConfiguration yml, File f) {
 		locationSpawner.clear();

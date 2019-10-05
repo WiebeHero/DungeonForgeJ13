@@ -196,7 +196,6 @@ import me.WiebeHero.MoreStuff.CancelWeaponPlaced;
 import me.WiebeHero.MoreStuff.Chat;
 import me.WiebeHero.MoreStuff.ChatItem;
 import me.WiebeHero.MoreStuff.CombatTag;
-import me.WiebeHero.MoreStuff.DisablePreProcess;
 import me.WiebeHero.MoreStuff.Disparitys;
 import me.WiebeHero.MoreStuff.EnderPearlCooldown;
 import me.WiebeHero.MoreStuff.LevelRestrictions;
@@ -892,6 +891,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				cash = money.getMoneyList().get(player.getUniqueId());
 			}
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
+			Scoreboard mainBoard = manager.getMainScoreboard();
 			Scoreboard board = manager.getNewScoreboard();
 			org.bukkit.scoreboard.Scoreboard b = board;
 			registerHealthBar(b);
@@ -924,30 +924,15 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(b.getTeam(player.getName()) != null) {
-				b.getTeam(player.getName()).unregister();
+			if(mainBoard.getTeam(player.getName()) != null) {
+				mainBoard.getTeam(player.getName()).unregister();
 			}
-			Team t = b.registerNewTeam(player.getName());
+			Team t = mainBoard.registerNewTeam(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
-			teamList.put(player.getUniqueId(), t);
-			for(Player p : Bukkit.getOnlinePlayers()) {
-				Scoreboard scoreboard = p.getScoreboard();
-				for(Team tTemp : teamList.values()) {
-					if(scoreboard.getEntryTeam(tTemp.getName() + teamList.size()) == null) {
-						scoreboard.registerNewTeam(tTemp.getName() + teamList.size());
-						tTemp.setPrefix(new ColorCodeTranslator().colorize(tTemp.getPrefix()));
-						tTemp.setSuffix(new ColorCodeTranslator().colorize(tTemp.getSuffix()));
-						tTemp.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
-						for(String s : tTemp.getEntries()) {
-							tTemp.addEntry(s);
-						}
-					}
-				}
-			}
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
@@ -966,16 +951,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &7None"));
 			}
 			if(player.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
-				if(regions.hasRegion("spawn")) {
+				if(regions.hasRegion("spawn") || regions.hasRegion("warzone")) {
 					if(regions.getRegion("spawn").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
 						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&lSpawn"));
 					}
-					else {
-						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
-					}
-				}
-				else if(regions.hasRegion("warzone")) {
-					if(regions.getRegion("warzone").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
+					else if(regions.getRegion("warzone").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
 						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&lWarzone"));
 					}
 					else {
@@ -1039,8 +1019,12 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			level1.setScore(3);
 			blank3.setScore(2);
 			adress.setScore(1);
-			
-			player.setScoreboard(b);
+			if(player.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
+				player.setScoreboard(mainBoard);
+			}
+			else if(player.getWorld().getName().equalsIgnoreCase("FactionWorld-1")) {
+				player.setScoreboard(b);
+			}
 			scores.put(player.getUniqueId(), b);
 		}
 		else {
@@ -1049,6 +1033,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			if(money.getMoneyList().get(player.getUniqueId()) != null) {
 				cash = money.getMoneyList().get(player.getUniqueId());
 			}
+			Scoreboard mainBoard = Bukkit.getScoreboardManager().getMainScoreboard();
 			Scoreboard board = scores.get(player.getUniqueId());
 			org.bukkit.scoreboard.Scoreboard b = board;
 			registerHealthBar(b);
@@ -1081,22 +1066,15 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(displayName == true) {
-				for(Player p : Bukkit.getOnlinePlayers()) {
-					Scoreboard scoreboard = p.getScoreboard();
-					for(Team tTemp : teamList.values()) {
-						if(scoreboard.getEntryTeam(tTemp.getName()) == null) {
-							scoreboard.registerNewTeam(tTemp.getName());
-							tTemp.setPrefix(new ColorCodeTranslator().colorize(tTemp.getPrefix()));
-							tTemp.setSuffix(new ColorCodeTranslator().colorize(tTemp.getSuffix()));
-							tTemp.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
-							for(String s : tTemp.getEntries()) {
-								tTemp.addEntry(s);
-							}
-						}
-					}
-				}
+			if(mainBoard.getTeam(player.getName()) != null) {
+				mainBoard.getTeam(player.getName()).unregister();
 			}
+			Team t = mainBoard.registerNewTeam(player.getName());
+			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
+			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
+			t.addEntry(player.getName());
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
@@ -1115,16 +1093,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &7None"));
 			}
 			if(player.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
-				if(regions.hasRegion("spawn")) {
+				if(regions.hasRegion("spawn") || regions.hasRegion("warzone")) {
 					if(regions.getRegion("spawn").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
 						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&lSpawn"));
 					}
-					else {
-						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
-					}
-				}
-				else if(regions.hasRegion("warzone")) {
-					if(regions.getRegion("warzone").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
+					else if(regions.getRegion("warzone").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
 						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&lWarzone"));
 					}
 					else {
@@ -1188,7 +1161,12 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			level1.setScore(3);
 			blank3.setScore(2);
 			adress.setScore(1);
-			player.setScoreboard(b);
+			if(player.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
+				player.setScoreboard(mainBoard);
+			}
+			else if(player.getWorld().getName().equalsIgnoreCase("FactionWorld-1")) {
+				player.setScoreboard(b);
+			}
 		}
 	}
 	public ItemStack createHead(String paramString)

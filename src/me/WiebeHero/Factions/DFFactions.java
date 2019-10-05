@@ -316,7 +316,7 @@ public class DFFactions implements Listener,CommandExecutor{
 						else if(args[0].equalsIgnoreCase("power")) {
 							if(args.length == 1) {
 								if(faction != null) {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYour faction has &6" + faction.getEnergy() + " &aenergy"));
+									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYour faction has &6" + String.format("%.2f", faction.getEnergy()) + " &aenergy"));
 								}
 								else {
 									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));

@@ -97,6 +97,6 @@ public class PayCommand implements Listener,CommandExecutor{
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 }

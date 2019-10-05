@@ -93,24 +93,29 @@ public class SpawnerList implements Listener{
 			public void run() {
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
 					for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
-						boolean check = false;
-						Location fixedLoc = SetSpawner.getSpawnerLocList().get(counter);
-						for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 30, 30, 30)) {
-							if(e1 instanceof Player) {
-								check = true;
-								break;
-							}
+						if(SetSpawner.getSpawnerLocList().get(counter) == null) {
+							continue;
 						}
-						if(check == true) {
-							if(goList.containsKey(counter)) {
-								if(goList.get(counter) == true) {
-									if(bossList.get(counter) == true) {
-										goList.put(counter, false);
-										spawnMob(counter, true);
-									}
-									else if(bossList.get(counter) == false) {
-										goList.put(counter, false);
-										spawnMob(counter, false);
+						else {
+							boolean check = false;
+							Location fixedLoc = SetSpawner.getSpawnerLocList().get(counter);
+							for(Entity e1 : fixedLoc.getWorld().getNearbyEntities(fixedLoc, 30, 30, 30)) {
+								if(e1 instanceof Player) {
+									check = true;
+									break;
+								}
+							}
+							if(check == true) {
+								if(goList.containsKey(counter)) {
+									if(goList.get(counter) == true) {
+										if(bossList.get(counter) == true) {
+											goList.put(counter, false);
+											spawnMob(counter, true);
+										}
+										else if(bossList.get(counter) == false) {
+											goList.put(counter, false);
+											spawnMob(counter, false);
+										}
 									}
 								}
 							}
@@ -125,9 +130,14 @@ public class SpawnerList implements Listener{
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
 					if(!SetSpawner.getSpawnerLocList().isEmpty()) {
 						for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
-							if(SetSpawner.getTieredList().get(counter) <= 5) {
-								goList.put(counter, true);
-								bossList.put(counter, false);
+							if(SetSpawner.getTieredList().get(counter) == null) {
+								continue;
+							}
+							else {
+								if(SetSpawner.getTieredList().get(counter) <= 5) {
+									goList.put(counter, true);
+									bossList.put(counter, false);
+								}
 							}
 						}
 					}
@@ -140,9 +150,14 @@ public class SpawnerList implements Listener{
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
 					if(!SetSpawner.getSpawnerLocList().isEmpty()) {
 						for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
-							if(SetSpawner.getTieredList().get(counter) == 6) {
-								goList.put(counter, true);
-								bossList.put(counter, true);
+							if(SetSpawner.getTieredList().get(counter) == null) {
+								continue;
+							}
+							else {
+								if(SetSpawner.getTieredList().get(counter) == 6) {
+									goList.put(counter, true);
+									bossList.put(counter, true);
+								}
 							}
 						}
 					}
@@ -155,8 +170,14 @@ public class SpawnerList implements Listener{
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
 					if(!SetSpawner.getSpawnerLocList().isEmpty()) {
 						for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
-							if(SetSpawner.getTieredList().get(counter) == 7) {
-								goList.put(counter, true);
+							if(SetSpawner.getTieredList().get(counter) == null) {
+								continue;
+							}
+							else {
+								if(SetSpawner.getTieredList().get(counter) == 7) {
+									goList.put(counter, true);
+									bossList.put(counter, true);
+								}
 							}
 						}
 					}
@@ -169,8 +190,14 @@ public class SpawnerList implements Listener{
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
 					if(!SetSpawner.getSpawnerLocList().isEmpty()) {
 						for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
-							if(SetSpawner.getTieredList().get(counter) == 8) {
-								goList.put(counter, true);
+							if(SetSpawner.getTieredList().get(counter) == null) {
+								continue;
+							}
+							else {
+								if(SetSpawner.getTieredList().get(counter) == 8) {
+									goList.put(counter, true);
+									bossList.put(counter, true);
+								}
 							}
 						}
 					}
@@ -183,8 +210,14 @@ public class SpawnerList implements Listener{
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
 					if(!SetSpawner.getSpawnerLocList().isEmpty()) {
 						for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
-							if(SetSpawner.getTieredList().get(counter) == 9) {
-								goList.put(counter, true);
+							if(SetSpawner.getTieredList().get(counter) == null) {
+								continue;
+							}
+							else {
+								if(SetSpawner.getTieredList().get(counter) == 9) {
+									goList.put(counter, true);
+									bossList.put(counter, true);
+								}
 							}
 						}
 					}
@@ -197,8 +230,14 @@ public class SpawnerList implements Listener{
 				if(CustomEnchantments.getInstance().getShutdownState() == false) {
 					if(!SetSpawner.getSpawnerLocList().isEmpty()) {
 						for(int counter = 1; counter <= SetSpawner.getSpawnerLocList().size(); counter++) {
-							if(SetSpawner.getTieredList().get(counter) == 10) {
-								goList.put(counter, true);
+							if(SetSpawner.getTieredList().get(counter) == null) {
+								continue;
+							}
+							else {
+								if(SetSpawner.getTieredList().get(counter) == 10) {
+									goList.put(counter, true);
+									bossList.put(counter, true);
+								}
 							}
 						}
 					}
