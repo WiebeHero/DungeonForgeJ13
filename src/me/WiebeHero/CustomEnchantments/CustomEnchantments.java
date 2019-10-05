@@ -928,9 +928,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				mainBoard.getTeam(player.getName()).unregister();
 			}
 			Team t = mainBoard.registerNewTeam(player.getName());
-			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
+			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
 			//Faction Info
@@ -1070,11 +1070,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				mainBoard.getTeam(player.getName()).unregister();
 			}
 			Team t = mainBoard.registerNewTeam(player.getName());
-			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7"));
+			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
 			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + " " + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
+			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
