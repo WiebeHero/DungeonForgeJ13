@@ -780,11 +780,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		File f7 =  new File("plugins/CustomEnchantments/lootConfig.yml");
 		YamlConfiguration yml6 = YamlConfiguration.loadConfiguration(f7);
 		loot.saveLootChests(yml6, f7);
-		for(OfflinePlayer p : Bukkit.getOfflinePlayers()) {
-			if(p.getName() != null) {
-				Bukkit.getScoreboardManager().getMainScoreboard().resetScores(p.getName());
-			}
-		}
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {
@@ -940,6 +935,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
+			mainBoard.resetScores(player.getName());
 			//Faction Info
 			Score blank1 = o.getScore("");
 			Score blank2 = o.getScore(" ");
