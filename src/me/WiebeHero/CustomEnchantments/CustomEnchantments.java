@@ -780,6 +780,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		File f7 =  new File("plugins/CustomEnchantments/lootConfig.yml");
 		YamlConfiguration yml6 = YamlConfiguration.loadConfiguration(f7);
 		loot.saveLootChests(yml6, f7);
+		for(OfflinePlayer p : Bukkit.getOfflinePlayers()) {
+			if(p.getName() != null) {
+				Bukkit.getScoreboardManager().getMainScoreboard().resetScores(p.getName());
+			}
+		}
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {
@@ -929,7 +934,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			Team t = mainBoard.registerNewTeam(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
+			String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
+			String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + now));
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
@@ -1071,7 +1078,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 			Team t = mainBoard.registerNewTeam(player.getName());
 			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + dfPlayer.getPlayerClass()));
+			String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
+			String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
+			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + now));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(player.getName());
 			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));

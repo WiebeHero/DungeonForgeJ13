@@ -718,8 +718,8 @@ public class DFFactions implements Listener,CommandExecutor{
 									String allyName = args[1];
 									DFFaction fac = method.getFaction(allyName);
 									if(fac != null) {
-										if(!faction.isInvitedAlly(fac.getName())) {
-											if(faction.isAlly(fac.getName())) {
+										if(!faction.isAlly(fac.getName())) {
+											if(!faction.isInvitedAlly(fac.getName())) {
 												if(!faction.getName().equals(fac.getName())) {
 													int rank = faction.getRank(player.getUniqueId());
 													if(rank >= 3) {
