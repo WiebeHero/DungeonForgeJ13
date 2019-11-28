@@ -64,7 +64,7 @@ public class LevelRestrictions implements Listener{
 				if(event.getNewItem().getItemMeta().hasLore()) {
 					for(String lore : event.getNewItem().getItemMeta().getLore()) {
 						if(lore.contains(ChatColor.stripColor("Level Required:"))) {
-							String check = lore;
+							String check = ChatColor.stripColor(lore);
 							DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 							int level = dfPlayer.getLevel();
 							check = check.replaceAll("[^\\d.]", "");
