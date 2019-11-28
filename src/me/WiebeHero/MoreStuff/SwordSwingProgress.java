@@ -3,7 +3,7 @@ package me.WiebeHero.MoreStuff;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import net.minecraft.server.v1_13_R2.EntityHuman;
 
 public class SwordSwingProgress implements Listener{
 	public static ArrayList<String> names = new ArrayList<String>();

@@ -400,7 +400,8 @@ public class SpawnerList implements Listener{
 		}
 		else if(item1.getMaxItemUseDuration() != 0){
 			int dur = item1.getMaxItemUseDuration();
-			int rand = new Random().nextInt(dur)+ dur / 100 * 30;
+			int temp = new Random().nextInt(30) + 40;
+			int rand = dur / temp * 100;
 			if(rand <= dur) {
 				Damageable met = (Damageable) meta1;
 				met.setDamage(rand);
@@ -519,7 +520,7 @@ public class SpawnerList implements Listener{
 		}
 		else if(item1.getMaxItemUseDuration() != 0){
 			int dur = item1.getMaxItemUseDuration();
-			int rand = new Random().nextInt(dur)+ dur / 100 * 30;
+			int rand = new Random().nextInt(dur) + dur / 100 * 30;
 			if(rand <= dur) {
 				Damageable met = (Damageable) meta1;
 				met.setDamage(rand);
@@ -837,11 +838,11 @@ public class SpawnerList implements Listener{
 					}.runTaskLater(CustomEnchantments.getInstance(), 10L);
 					sk.runDefense(mob);
 					mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(12.50);
-					mob.getEquipment().setHelmetDropChance(0.22F - 0.02F * level);
-					mob.getEquipment().setChestplateDropChance(0.22F - 0.02F * level);
-					mob.getEquipment().setLeggingsDropChance(0.22F - 0.02F * level);
-					mob.getEquipment().setBootsDropChance(0.22F - 0.02F * level);
-					mob.getEquipment().setItemInMainHandDropChance(0.22F - 0.02F * level);
+					mob.getEquipment().setHelmetDropChance(0.00F);
+					mob.getEquipment().setChestplateDropChance(0.00F);
+					mob.getEquipment().setLeggingsDropChance(0.00F);
+					mob.getEquipment().setBootsDropChance(0.00F);
+					mob.getEquipment().setItemInMainHandDropChance(0.00F);
 			  		mobList.put(mob.getUniqueId(), tier);
 			  		teleportBack.put(mob.getUniqueId(), counter);
 	  			}

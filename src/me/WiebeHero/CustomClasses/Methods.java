@@ -17,7 +17,7 @@ import net.minecraft.server.v1_13_R2.MinecraftServer;
 import net.minecraft.server.v1_13_R2.PlayerInteractManager;
 
 public class Methods {
-	public Player getOfflinePlayer(String name) {
+	public Player convertOfflinePlayer(String name) {
 		UUID uuid = null;
 		for(OfflinePlayer p : Bukkit.getOfflinePlayers()) {
 			if(p.getName().equals(name)) {
@@ -43,7 +43,7 @@ public class Methods {
 			return null;
 		}
 	}
-	public Player getOfflinePlayer(UUID uuid) {
+	public Player convertOfflinePlayer(UUID uuid) {
 		OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
 		if(p != null) {
 			Location location = new Location(Bukkit.getWorld("DFWarzone-1"), 0, 0, 0, 0, 0);

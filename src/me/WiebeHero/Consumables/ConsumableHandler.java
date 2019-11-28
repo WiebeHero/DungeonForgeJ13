@@ -1,0 +1,145 @@
+package me.WiebeHero.Consumables;
+
+import java.util.ArrayList;
+
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
+
+import javafx.util.Pair;
+import me.WiebeHero.Consumables.ConsumableCondition.Condition;
+import me.WiebeHero.Consumables.Unlock.UnlockCraftCondition;
+import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomEvents.DFPlayerLevelUpEvent;
+import me.WiebeHero.Skills.DFPlayer;
+
+public class ConsumableHandler implements Listener{
+	Consumable con = CustomEnchantments.getInstance().con;
+	DFPlayer df = new DFPlayer();
+	@EventHandler
+	public void consumeHandler(PlayerItemConsumeEvent event) {
+		Player p = event.getPlayer();
+		if(event.getItem() != null) {
+			ItemStack item = event.getItem();
+			if(item.hasItemMeta()) {
+				if(item.getItemMeta().hasDisplayName()) {
+					String contain = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+					contain = contain.replace(' ', '_');
+					if(con.getConsumables().containsKey(contain)) {
+						if(con.getConsumables().get(contain).getKey() == Condition.CONSUME) {
+							con.getConsumables().get(contain).getValue().activateConsumable(p);
+							con.getConsumables().get(contain).getValue().activateConsumable(p, event);
+						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void clickHandler(PlayerInteractEvent event) {
+		Player p = event.getPlayer();
+		if(event.getItem() != null) {
+			ItemStack item = event.getItem();
+			if(item.hasItemMeta()) {
+				if(item.getItemMeta().hasDisplayName()) {
+					String contain = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+					contain = contain.replace(' ', '_');
+					if(con.getConsumables().containsKey(contain)) {
+						if(con.getConsumables().get(contain).getKey() == Condition.LEFT_CLICK || con.getConsumables().get(contain).getKey() == Condition.RIGHT_CLICK) {
+							con.getConsumables().get(contain).getValue().activateConsumable(p);
+							con.getConsumables().get(contain).getValue().activateConsumable(p, event);
+						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void discoverRecipePickup(PlayerAttemptPickupItemEvent event) {
+		if(!event.isCancelled()) {
+			ArrayList<Pair<ArrayList<UnlockCraftCondition>, Recipe>> list = con.getCustomRecipeList();
+			Player player = event.getPlayer();
+			Item item = event.getItem();
+			if(item != null) {
+				for(int i = 0; i < list.size(); i++) {
+					if(list.get(i).getKey().contains(UnlockCraftCondition.PLAYER_PICKUP_ITEM)) {
+						Recipe rec = list.get(i).getValue();
+						if(rec instanceof ShapedRecipe) {
+							ShapedRecipe recipe = (ShapedRecipe) rec;
+							ArrayList<ItemStack> s = new ArrayList<>(recipe.getIngredientMap().values());
+							for(int i1 = 0; i1 < s.size(); i1++) {
+								if(s.get(i1) != null) {
+									if(item.getItemStack().isSimilar(s.get(i1))) {
+										player.discoverRecipe(recipe.getKey());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void discoverRecipeClick(InventoryClickEvent event) {
+		if(!event.isCancelled()) {
+			if(event.getWhoClicked() instanceof Player) {
+				ArrayList<Pair<ArrayList<UnlockCraftCondition>, Recipe>> list = con.getCustomRecipeList();
+				Player player = (Player) event.getWhoClicked();
+				ItemStack item = event.getCurrentItem();
+				if(item != null) {
+					for(int i = 0; i < list.size(); i++) {
+						if(list.get(i).getKey().contains(UnlockCraftCondition.PLAYER_CLICK_INVENTORY)) {
+							Recipe rec = list.get(i).getValue();
+							if(rec instanceof ShapedRecipe) {
+								ShapedRecipe recipe = (ShapedRecipe) rec;
+								ArrayList<ItemStack> s = new ArrayList<>(recipe.getIngredientMap().values());
+								for(int i1 = 0; i1 < s.size(); i1++) {
+									if(s.get(i1) != null) {
+										if(item.isSimilar(s.get(i1))) {
+											player.discoverRecipe(recipe.getKey());
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void discoverRecipeLevel(DFPlayerLevelUpEvent event) {
+		Player player = event.getPlayer();
+		if(df.containsPlayer(player)) {
+			DFPlayer dfPlayer = df.getPlayer(player);
+			int level = dfPlayer.getLevel();
+		}
+	}
+	@EventHandler
+	public void joinUnlock(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		ArrayList<Recipe> recipeList = con.getInstantUnlocks();
+		for(int i = 0; i < recipeList.size(); i++) {
+			if(recipeList.get(i) instanceof ShapedRecipe) {
+				ShapedRecipe recipe = (ShapedRecipe) recipeList.get(i);
+				player.discoverRecipe(recipe.getKey());
+			}
+			if(recipeList.get(i) instanceof ShapelessRecipe) {
+				ShapelessRecipe recipe = (ShapelessRecipe) recipeList.get(i);
+				player.discoverRecipe(recipe.getKey());
+			}
+		}
+	}
+}

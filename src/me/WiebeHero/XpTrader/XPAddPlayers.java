@@ -1,5 +1,6 @@
 package me.WiebeHero.XpTrader;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -11,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEvents.DFPlayerLevelUpEvent;
 import me.WiebeHero.Skills.DFPlayer;
 import me.WiebeHero.Spawners.SpawnerList;
 
@@ -48,7 +50,8 @@ public class XPAddPlayers extends SpawnerList implements Listener {
 									dfPlayer.addSkillPoints(3);
 									player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
 									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have leveled up to level &6" + level + "&a!"));
-									
+									DFPlayerLevelUpEvent ev = new DFPlayerLevelUpEvent(player);
+									Bukkit.getServer().getPluginManager().callEvent(ev);
 								}
 								else if(finalXP > 0){
 									dfPlayer.setExperience(finalXP);

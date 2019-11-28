@@ -11,44 +11,35 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
-import org.bukkit.scoreboard.Team.Option;
-import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
 
+import javafx.util.Pair;
+import me.WiebeHero.Consumables.Consumable;
+import me.WiebeHero.Consumables.ConsumableHandler;
 import me.WiebeHero.CraftRecipes.CallRecipe;
-import me.WiebeHero.CraftRecipes.CraftableWeapons;
 import me.WiebeHero.CraftRecipes.UnblockBrewing;
 import me.WiebeHero.CustomArmor.Common.ArmorBoots;
 import me.WiebeHero.CustomArmor.Common.ArmorChestplate;
@@ -66,7 +57,6 @@ import me.WiebeHero.CustomEnchantmentsA.CreeperSpirit;
 import me.WiebeHero.CustomEnchantmentsA.Curse;
 import me.WiebeHero.CustomEnchantmentsA.DamageReturn;
 import me.WiebeHero.CustomEnchantmentsA.DodgeRoll;
-import me.WiebeHero.CustomEnchantmentsA.DragonsSkin;
 import me.WiebeHero.CustomEnchantmentsA.Dummy;
 import me.WiebeHero.CustomEnchantmentsA.Enlightened;
 import me.WiebeHero.CustomEnchantmentsA.Escape;
@@ -120,7 +110,6 @@ import me.WiebeHero.CustomEnchantmentsM.Blizzard;
 import me.WiebeHero.CustomEnchantmentsM.Brand;
 import me.WiebeHero.CustomEnchantmentsM.Charge;
 import me.WiebeHero.CustomEnchantmentsM.ChronicalDisturbance;
-import me.WiebeHero.CustomEnchantmentsM.Confusion;
 import me.WiebeHero.CustomEnchantmentsM.Cyclone;
 import me.WiebeHero.CustomEnchantmentsM.DefensivePosition;
 import me.WiebeHero.CustomEnchantmentsM.Disarmor;
@@ -179,6 +168,10 @@ import me.WiebeHero.DFWeapons.DFWeaponUpgrade;
 import me.WiebeHero.DungeonInstances.DungeonMaxima;
 import me.WiebeHero.DungeonInstances.DungeonParty;
 import me.WiebeHero.DungeonInstances.DungeonPartyCommand;
+import me.WiebeHero.EnchantmentAPI.CommandFile;
+import me.WiebeHero.EnchantmentAPI.Enchantment;
+import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
+import me.WiebeHero.EnchantmentAPI.EnchantmentHandler;
 import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Factions.FactionsHandler;
@@ -204,13 +197,13 @@ import me.WiebeHero.MoreStuff.MoneyCreation;
 import me.WiebeHero.MoreStuff.Portals;
 import me.WiebeHero.MoreStuff.PreventIllegalItems;
 import me.WiebeHero.MoreStuff.RestrictInteractionWithBlocks;
-import me.WiebeHero.MoreStuff.ScoreDungeon;
 import me.WiebeHero.MoreStuff.SetHomeSystem;
 import me.WiebeHero.MoreStuff.SpawnCommand;
 import me.WiebeHero.MoreStuff.SwordSwingProgress;
 import me.WiebeHero.MoreStuff.TNTExplodeCovered;
 import me.WiebeHero.MoreStuff.TPACommand;
 import me.WiebeHero.Novis.NovisInventory;
+import me.WiebeHero.Scoreboard.DFScoreboard;
 import me.WiebeHero.Shields.DFShields;
 import me.WiebeHero.Skills.ClassEnvy;
 import me.WiebeHero.Skills.ClassGluttony;
@@ -261,9 +254,12 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ChestList cList = new ChestList();
 	private LootRewards lootR = new LootRewards();
 	private ConfigManager cfgm;
-	private CraftableWeapons cw = new CraftableWeapons();
+//	private CraftableWeapons cw = new CraftableWeapons();
 	private DFPlayer pl = new DFPlayer();
 	private DFFaction method = new DFFaction();
+	public Enchantment enchant = new Enchantment();
+	public Consumable con = new Consumable();
+	public DFScoreboard score = new DFScoreboard();
 	int level;
 	public Scoreboard scoreboard;
 	public static boolean shutdown = false;
@@ -276,7 +272,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Config Manager
 		loadConfigManager();
 		//Melee Enchantments
-		getServer().getPluginManager().registerEvents(new Confusion(), this);
 		getServer().getPluginManager().registerEvents(new Wither(), this);
 		getServer().getPluginManager().registerEvents(new HeavyHand(), this);
 		getServer().getPluginManager().registerEvents(new WolfPack(), this);
@@ -365,7 +360,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new TitanicOath(), this);
 		getServer().getPluginManager().registerEvents(new Protection(), this);
 		getServer().getPluginManager().registerEvents(new CreeperSpirit(), this);
-		getServer().getPluginManager().registerEvents(new DragonsSkin(), this);
 		getServer().getPluginManager().registerEvents(new DodgeRoll(), this);
 		getServer().getPluginManager().registerEvents(new Reinforced(), this);
 		//Bow Enchantments
@@ -420,7 +414,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//AFKSystem
 		getServer().getPluginManager().registerEvents(new AFKSystem(), this);
 		//Scoreboard
-		getServer().getPluginManager().registerEvents(new ScoreDungeon(), this);
+		getServer().getPluginManager().registerEvents(score, this);
 		//XP Trader
 		getServer().getPluginManager().registerEvents(new XPTraderMenu(), this);
 		getServer().getPluginManager().registerEvents(new XPAddWeapons(), this);
@@ -433,22 +427,23 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Stuff
 		getServer().getPluginManager().registerEvents(sethome, this);
 		getServer().getPluginManager().registerEvents(new DFPlayerRegister(), this);
+		getServer().getPluginManager().registerEvents(new ConsumableHandler(), this);
 		//Crafteable Weapons and item recipes ;)
-		getServer().getPluginManager().registerEvents(cw, this);
-		cw.addChainHemlet();
-		cw.addChainChestplate();
-		cw.addChainLeggings();
-		cw.addChainBoots();
-		cw.addLongBow();
-		cw.addBow();
-		cw.addShortBow();
-		cw.addAmuletOfHealth();
-		cw.addAmuletOfDefense();
-		cw.addAmuletOfCharge();
-		cw.addAmuletOffResistance();
-		cw.addAmuletOfPower();
-		cw.addAmuletOfSpeed();
-		cw.addAmuletOfToughness();
+//		getServer().getPluginManager().registerEvents(cw, this);
+//		cw.addChainHemlet();
+//		cw.addChainChestplate();
+//		cw.addChainLeggings();
+//		cw.addChainBoots();
+//		cw.addLongBow();
+//		cw.addBow();
+//		cw.addShortBow();
+//		cw.addAmuletOfHealth();
+//		cw.addAmuletOfDefense();
+//		cw.addAmuletOfCharge();
+//		cw.addAmuletOffResistance();
+//		cw.addAmuletOfPower();
+//		cw.addAmuletOfSpeed();
+//		cw.addAmuletOfToughness();
 		sp.addNames();
 		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
@@ -540,6 +535,19 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
+		getServer().getPluginManager().registerEvents(new EnchantmentHandler(), this);
+		enchant.loadMeleeEnchantments();
+		enchant.loadBowEnchantments();
+		enchant.loadArmorEnchantments();
+		enchant.loadShieldEnchantments();
+		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getMeleeEnchantments().entrySet()) {
+			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
+		}
+		con.loadConsumables();
+		con.registerRecipes();
+		for(Entry<String, Pair<me.WiebeHero.Consumables.ConsumableCondition.Condition, me.WiebeHero.Consumables.CommandFile>> entry : con.getConsumables().entrySet()) {
+			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
+		}
 		//NeededStuff
 		getServer().getPluginManager().registerEvents(new MoneyCreation(), this);
 		getServer().getPluginManager().registerEvents(new CombatTag(), this);
@@ -609,6 +617,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new ChangeFishDrops(), this);
 		lootR.loadRewards();
 		cList.lootChest();
+		for(Entity e : Bukkit.getWorld("FactionWorld-1").getEntities()) {
+			if(e instanceof LivingEntity) {
+				this.dfPlayerList.put(e.getUniqueId(), new DFPlayer());
+			}
+		}
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -792,26 +805,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 	}
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		if(shutdown != true) {
-			Player player = event.getPlayer();
-			registerRank(player);
-			registerNameTag(player, true);
-		}
-		else {
-			event.getPlayer().kickPlayer(new ColorCodeTranslator().colorize("&cThe server is going into shutdown, try to join back in 5 minutes."));
-		}
-	}
-	@EventHandler
-	public void onPlayerLeave(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		if(scoreboard.getTeam(player.getName()) != null) {
-			Team t = scoreboard.getTeam(player.getName());
-			t.unregister();
-		}
-		scores.remove(player.getUniqueId());
-	}
 	public void registerHealthBar(Scoreboard board) {
 		if(board.getObjective("health") != null) {
 			board.getObjective("health").unregister();
@@ -875,303 +868,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 		else {
 			ranks.put(player.getUniqueId(), "&7User");
-		}
-	}
-	public static HashMap<UUID, Scoreboard> scores = new HashMap<UUID, Scoreboard>();
-	public static HashMap<UUID, Team> teamList = new HashMap<UUID, Team>();
-	public void registerNameTag(Player player, boolean displayName) {
-		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-		World world = player.getWorld();
-		RegionManager regions = container.get(BukkitAdapter.adapt(world));
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-		if(!scores.containsKey(player.getUniqueId())) {
-			int level = dfPlayer.getLevel();
-			double cash = 1500.0;
-			if(money.getMoneyList().get(player.getUniqueId()) != null) {
-				cash = money.getMoneyList().get(player.getUniqueId());
-			}
-			ScoreboardManager manager = Bukkit.getScoreboardManager();
-			Scoreboard mainBoard = manager.getMainScoreboard();
-			Scoreboard board = manager.getNewScoreboard();
-			org.bukkit.scoreboard.Scoreboard b = board;
-			registerHealthBar(b);
-			Objective o = null;
-			if(b.getObjective(player.getName()) == null) {
-				o = b.registerNewObjective(player.getName(), "Scoreboard", "myScoreboard");
-			}
-			else {
-				o = b.getObjective(player.getName());
-			}
-			if(b.getTeam("GRAY") == null) {
-				b.registerNewTeam("GRAY");
-				b.getTeam("GRAY").setPrefix(ChatColor.GRAY + "");
-				b.getTeam("GRAY").setColor(ChatColor.GRAY);
-				b.registerNewTeam("GREEN");
-				b.getTeam("GREEN").setPrefix(ChatColor.GREEN + "");
-				b.getTeam("GREEN").setColor(ChatColor.GREEN);
-				b.registerNewTeam("AQUA");
-				b.getTeam("AQUA").setPrefix(ChatColor.AQUA + "");
-				b.getTeam("AQUA").setColor(ChatColor.AQUA);
-				b.registerNewTeam("RED");
-				b.getTeam("RED").setPrefix(ChatColor.RED + "");
-				b.getTeam("RED").setColor(ChatColor.RED);
-				b.registerNewTeam("PURPLE");
-				b.getTeam("PURPLE").setPrefix(ChatColor.DARK_PURPLE + "");
-				b.getTeam("PURPLE").setColor(ChatColor.DARK_PURPLE);
-				b.registerNewTeam("YELLOW");
-				b.getTeam("YELLOW").setPrefix(ChatColor.YELLOW + "");
-				b.getTeam("YELLOW").setColor(ChatColor.YELLOW);
-			}
-			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
-			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(mainBoard.getTeam(player.getName()) != null) {
-				mainBoard.getTeam(player.getName()).unregister();
-			}
-			Team t = mainBoard.registerNewTeam(player.getName());
-			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-			String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
-			String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + now));
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
-			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
-			t.addEntry(player.getName());
-			mainBoard.resetScores(player.getName());
-			//Faction Info
-			Score blank1 = o.getScore("");
-			Score blank2 = o.getScore(" ");
-			Score blank3 = o.getScore("  ");
-			Score facName = null;
-			Score facTeritory = null;
-			String facN = "";
-			DFFaction faction = method.getFaction(player.getUniqueId());
-			if(faction != null) {
-				facN = faction.getName();
-			}
-			if(!facN.equals("")) {
-				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6" + facN));
-			}
-			else {
-				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &7None"));
-			}
-			if(player.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
-				if(regions.hasRegion("spawn") || regions.hasRegion("warzone")) {
-					if(regions.getRegion("spawn").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
-						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&lSpawn"));
-					}
-					else if(regions.getRegion("warzone").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
-						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&lWarzone"));
-					}
-					else {
-						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
-					}
-				}
-				else {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
-				}
-			}
-			else if(!facN.equals("")) {
-				String tempName = "";
-				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-					if(!faction.equals(fac)) {
-						if(fac.getChunkList().contains(player.getLocation().getChunk())) {
-							tempName = fac.getName();
-						}
-					}
-				}
-				if(faction.isInChunk(player)) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&l" + facN));
-				}
-				else if(!tempName.equals("")) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&l" + tempName));
-				}
-				else {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
-				}
-			}
-			else {
-				String tempName = "";
-				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-					if(!faction.equals(fac)) {
-						if(fac.getChunkList().contains(player.getLocation().getChunk())) {
-							tempName = fac.getName();
-						}
-					}
-				}
-				if(!tempName.equals("")) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&l" + tempName));
-				}
-				else {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Wilderniss"));
-				}
-			}
-			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + String.format("%.2f", cash)));
-			Score level1 = o.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + level));
-			Score rank = o.getScore(new ColorCodeTranslator().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
-			Score adress = o.getScore(new ColorCodeTranslator().colorize("    &2&lplay.dungeonforge.net"));
-			Set<String> entries;
-	        entries = b.getEntries();
-	        for(String entry : entries){
-	            b.resetScores(entry);
-	        }
-	        blank1.setScore(9);
-			facName.setScore(8);
-			facTeritory.setScore(7);
-			money.setScore(6);
-			blank2.setScore(5);
-			rank.setScore(4);
-			level1.setScore(3);
-			blank3.setScore(2);
-			adress.setScore(1);
-			if(player.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
-				player.setScoreboard(mainBoard);
-			}
-			else if(player.getWorld().getName().equalsIgnoreCase("FactionWorld-1")) {
-				player.setScoreboard(b);
-			}
-			scores.put(player.getUniqueId(), b);
-		}
-		else {
-			int level = dfPlayer.getLevel();
-			double cash = 1500.0;
-			if(money.getMoneyList().get(player.getUniqueId()) != null) {
-				cash = money.getMoneyList().get(player.getUniqueId());
-			}
-			Scoreboard mainBoard = Bukkit.getScoreboardManager().getMainScoreboard();
-			Scoreboard board = scores.get(player.getUniqueId());
-			org.bukkit.scoreboard.Scoreboard b = board;
-			registerHealthBar(b);
-			Objective o = null;
-			if(b.getObjective(player.getName()) == null) {
-				o = b.registerNewObjective(player.getName(), "Scoreboard", "myScoreboard");
-			}
-			else {
-				o = b.getObjective(player.getName());
-			}
-			if(board.getTeam("GRAY") == null) {
-				board.registerNewTeam("GRAY");
-				board.getTeam("GRAY").setPrefix(ChatColor.GRAY + "");
-				board.getTeam("GRAY").setColor(ChatColor.GRAY);
-				board.registerNewTeam("GREEN");
-				board.getTeam("GREEN").setPrefix(ChatColor.GREEN + "");
-				board.getTeam("GREEN").setColor(ChatColor.GREEN);
-				board.registerNewTeam("AQUA");
-				board.getTeam("AQUA").setPrefix(ChatColor.AQUA + "");
-				board.getTeam("AQUA").setColor(ChatColor.AQUA);
-				board.registerNewTeam("RED");
-				board.getTeam("RED").setPrefix(ChatColor.RED + "");
-				board.getTeam("RED").setColor(ChatColor.RED);
-				board.registerNewTeam("PURPLE");
-				board.getTeam("PURPLE").setPrefix(ChatColor.DARK_PURPLE + "");
-				board.getTeam("PURPLE").setColor(ChatColor.DARK_PURPLE);
-				board.registerNewTeam("YELLOW");
-				board.getTeam("YELLOW").setPrefix(ChatColor.YELLOW + "");
-				board.getTeam("YELLOW").setColor(ChatColor.YELLOW);
-			}
-			o.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
-			o.setDisplaySlot(DisplaySlot.SIDEBAR);
-			if(mainBoard.getTeam(player.getName()) != null) {
-				mainBoard.getTeam(player.getName()).unregister();
-			}
-			Team t = mainBoard.registerNewTeam(player.getName());
-			t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + level + "&6]&7 "));
-			String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
-			String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
-			t.setSuffix(new ColorCodeTranslator().colorize(" &6" + now));
-			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
-			t.addEntry(player.getName());
-			player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
-			//Faction Info
-			Score blank1 = o.getScore("");
-			Score blank2 = o.getScore(" ");
-			Score blank3 = o.getScore("  ");
-			Score facName = null;
-			Score facTeritory = null;
-			String facN = "";
-			DFFaction faction = method.getFaction(player.getUniqueId());
-			if(faction != null) {
-				facN = faction.getName();
-			}
-			if(!facN.equals("")) {
-				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &6" + facN));
-			}
-			else {
-				facName = o.getScore(new ColorCodeTranslator().colorize("&7Faction: &7None"));
-			}
-			if(player.getWorld().getName().equals(Bukkit.getWorld("DFWarzone-1").getName())) {
-				if(regions.hasRegion("spawn") || regions.hasRegion("warzone")) {
-					if(regions.getRegion("spawn").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
-						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&lSpawn"));
-					}
-					else if(regions.getRegion("warzone").contains(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ())) {
-						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&lWarzone"));
-					}
-					else {
-						facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
-					}
-				}
-				else {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
-				}
-			}
-			else if(!facN.equals("")) {
-				String tempName = "";
-				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-					if(!faction.equals(fac)) {
-						if(fac.getChunkList().contains(player.getLocation().getChunk())) {
-							tempName = fac.getName();
-						}
-					}
-				}
-				if(faction.isInChunk(player)) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &a&l" + facN));
-				}
-				else if(!tempName.equals("")) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&l" + tempName));
-				}
-				else {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &6Wilderniss"));
-				}
-			}
-			else {
-				String tempName = "";
-				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-					if(!faction.equals(fac)) {
-						if(fac.getChunkList().contains(player.getLocation().getChunk())) {
-							tempName = fac.getName();
-						}
-					}
-				}
-				if(!tempName.equals("")) {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: &c&l" + tempName));
-				}
-				else {
-					facTeritory = o.getScore(new ColorCodeTranslator().colorize("&7Faction Teritory: Wilderniss"));
-				}
-			}
-			Score money = o.getScore(new ColorCodeTranslator().colorize("&7Money: &a" + String.format("%.2f", cash)));
-			Score level1 = o.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + level));
-			Score rank = o.getScore(new ColorCodeTranslator().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
-			Score adress = o.getScore(new ColorCodeTranslator().colorize("    &2&lplay.dungeonforge.net"));
-			Set<String> entries;
-	        entries = b.getEntries();
-	        for(String entry : entries){
-	            b.resetScores(entry);
-	        }
-	        blank1.setScore(9);
-			facName.setScore(8);
-			facTeritory.setScore(7);
-			money.setScore(6);
-			blank2.setScore(5);
-			rank.setScore(4);
-			level1.setScore(3);
-			blank3.setScore(2);
-			adress.setScore(1);
-			if(player.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
-				player.setScoreboard(mainBoard);
-			}
-			else if(player.getWorld().getName().equalsIgnoreCase("FactionWorld-1")) {
-				player.setScoreboard(b);
-			}
 		}
 	}
 	public ItemStack createHead(String paramString)

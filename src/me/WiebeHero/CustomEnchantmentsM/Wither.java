@@ -44,23 +44,7 @@ public class Wither extends SwordSwingProgress implements Listener {
 											}
 										}
 										if(check.contains("Wither")){
-											check = check.replaceAll("[^\\d.]", "");
-											int level = Integer.parseInt(check) - 1;
-											if(i <= 4 + level) {
-												animation(victim, damager);
-												int amp = 0 + level;
-												int durationAdd = 140 + 50;
-												PotionEffectType type = PotionEffectType.WITHER;
-												if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() == amp) {
-													int durationNow = victim.getPotionEffect(type).getDuration();
-													victim.removePotionEffect(type);
-													victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
-												}
-												else {
-													victim.removePotionEffect(type);
-													victim.addPotionEffect(new PotionEffect(type, durationAdd, amp));
-												}
-											}
+											
 										}
 									}
 								}

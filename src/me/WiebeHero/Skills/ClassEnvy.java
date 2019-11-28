@@ -21,44 +21,47 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.Enums.Classes;
 
 public class ClassEnvy implements Listener{
+	DFPlayer method = new DFPlayer();
 	SkillJoin join = new SkillJoin();
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-		if(dfPlayer.getPlayerClass() == Classes.ENVY) {
-			if(dfPlayer.getUseable() == true) {
-				dfPlayer.setActivation(true);
-				dfPlayer.setUseable(false);
-				int level = dfPlayer.getLevel();
-				double duration = 5 + level * 0.05;
-				double cooldown = 75 - level * 0.25;
-				double damage = 50 + level * 0.50;
-				dfPlayer.addAtkCal(damage, 0);
-				Location loc = player.getLocation();
-				loc.setY(loc.getY() + 2.5);
-				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 2.0F, 1.0F);
-				player.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 80, 0.15, 0.15, 0.15, 0); 
-				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Special Attack!"));
-				event.setCancelled(true);
-				new BukkitRunnable() {
-					public void run() {
-						if(dfPlayer.getActivation() == true) {
-							dfPlayer.setActivation(false);
-							dfPlayer.removeAtkCal(damage, 0);
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have failed to use &6Special Attack!"));
-							new BukkitRunnable() {
-								public void run() {
-									dfPlayer.setUseable(true);
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
-								}
-							}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
+		if(method.containsPlayer(player)) {
+			DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+			if(dfPlayer.getPlayerClass() == Classes.ENVY) {
+				if(dfPlayer.getUseable() == true) {
+					dfPlayer.setActivation(true);
+					dfPlayer.setUseable(false);
+					int level = dfPlayer.getLevel();
+					double duration = 5 + level * 0.05;
+					double cooldown = 75 - level * 0.25;
+					double damage = 50 + level * 0.50;
+					dfPlayer.addAtkCal(damage, 0);
+					Location loc = player.getLocation();
+					loc.setY(loc.getY() + 2.5);
+					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 2.0F, 1.0F);
+					player.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 80, 0.15, 0.15, 0.15, 0); 
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Special Attack!"));
+					event.setCancelled(true);
+					new BukkitRunnable() {
+						public void run() {
+							if(dfPlayer.getActivation() == true) {
+								dfPlayer.setActivation(false);
+								dfPlayer.removeAtkCal(damage, 0);
+								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have failed to use &6Special Attack!"));
+								new BukkitRunnable() {
+									public void run() {
+										dfPlayer.setUseable(true);
+										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
+									}
+								}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
+							}
 						}
-					}
-				}.runTaskLater(CustomEnchantments.getInstance(), (long)(duration * 20));
-			}
-			else {
-				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+					}.runTaskLater(CustomEnchantments.getInstance(), (long)(duration * 20));
+				}
+				else {
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+				}
 			}
 		}
 	}
@@ -79,56 +82,58 @@ public class ClassEnvy implements Listener{
 						}
 					}
 					if(player != null) {
-						DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-						if(dfPlayer.getPlayerClass() == Classes.ENVY) {
-							if(dfPlayer.getActivation() == true) {
-								dfPlayer.setActivation(false);
-								int level = dfPlayer.getLevel();
-								double cooldown = 75 - level * 0.25;
-								double damage = 50 + level * 0.50;
-								final Player pp = player;
-								new BukkitRunnable() {
-									public void run() {
-										dfPlayer.removeAtkCal(damage, 0);
-										new BukkitRunnable() {
-											public void run() {
-												dfPlayer.setUseable(true);
-												pp.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
-											}
-										}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
-									}
-								}.runTaskLater(CustomEnchantments.getInstance(), 1L);
-								LivingEntity p = (LivingEntity) event.getEntity();
-								DFPlayer dfPlay = new DFPlayer().getPlayer(p);
-								if(dfPlayer.getAtkMod() > 0) {
-									int cLevel = dfPlayer.getAtkMod();
-									double weak = cLevel * 5;
-									double dur = cLevel * 3;
-									dfPlay.removeAtkCal(weak, (long)dur * 20);
-								}
-								if(dfPlayer.getRndMod() > 0) {
-									int cLevel = dfPlayer.getRndMod();
-									double weak = cLevel * 2.5;
-									double dur = cLevel * 3;
-									dfPlay.removeCrtCal(weak, (long)dur * 20);
-									dfPlay.removeRndCal(weak, (long)dur * 20);
-								}
-								if(dfPlayer.getDfMod() > 0) {
-									int cLevel = dfPlayer.getDfMod();
-									double break1 = cLevel * 10;
-									double dur = cLevel * 3;
-									dfPlay.removeDfCal(break1, (long)dur * 20);
-								}
-								if(dfPlayer.getHpMod() > 0) {
-									int cLevel = dfPlayer.getHpMod();
-									double dis = cLevel * 7;
-									double dur = cLevel * 3;
-									healthReduction.put(p.getUniqueId(), dur);
+						if(method.containsPlayer(player)) {
+							DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+							if(dfPlayer.getPlayerClass() == Classes.ENVY) {
+								if(dfPlayer.getActivation() == true) {
+									dfPlayer.setActivation(false);
+									int level = dfPlayer.getLevel();
+									double cooldown = 75 - level * 0.25;
+									double damage = 50 + level * 0.50;
+									final Player pp = player;
 									new BukkitRunnable() {
 										public void run() {
-											healthReduction.remove(p.getUniqueId(), dis);
+											dfPlayer.removeAtkCal(damage, 0);
+											new BukkitRunnable() {
+												public void run() {
+													dfPlayer.setUseable(true);
+													pp.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
+												}
+											}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
 										}
-									}.runTaskLater(CustomEnchantments.getInstance(), (long)(dur * 20));
+									}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+									LivingEntity p = (LivingEntity) event.getEntity();
+									DFPlayer dfPlay = new DFPlayer().getPlayer(p);
+									if(dfPlayer.getAtkMod() > 0) {
+										int cLevel = dfPlayer.getAtkMod();
+										double weak = cLevel * 5;
+										double dur = cLevel * 3;
+										dfPlay.removeAtkCal(weak, (long)dur * 20);
+									}
+									if(dfPlayer.getRndMod() > 0) {
+										int cLevel = dfPlayer.getRndMod();
+										double weak = cLevel * 2.5;
+										double dur = cLevel * 3;
+										dfPlay.removeCrtCal(weak, (long)dur * 20);
+										dfPlay.removeRndCal(weak, (long)dur * 20);
+									}
+									if(dfPlayer.getDfMod() > 0) {
+										int cLevel = dfPlayer.getDfMod();
+										double break1 = cLevel * 10;
+										double dur = cLevel * 3;
+										dfPlay.removeDfCal(break1, (long)dur * 20);
+									}
+									if(dfPlayer.getHpMod() > 0) {
+										int cLevel = dfPlayer.getHpMod();
+										double dis = cLevel * 7;
+										double dur = cLevel * 3;
+										healthReduction.put(p.getUniqueId(), dur);
+										new BukkitRunnable() {
+											public void run() {
+												healthReduction.remove(p.getUniqueId(), dis);
+											}
+										}.runTaskLater(CustomEnchantments.getInstance(), (long)(dur * 20));
+									}
 								}
 							}
 						}

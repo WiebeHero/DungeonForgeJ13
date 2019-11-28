@@ -207,7 +207,7 @@ public class DFFaction {
 	}
 	public Player getMember(UUID uuid) {
 		if(this.getMemberList().containsKey(uuid)) {
-			Player p = method.getOfflinePlayer(uuid);
+			Player p = method.convertOfflinePlayer(uuid);
 			if(p.getName() != null) {
 				return p;
 			}

@@ -23,48 +23,51 @@ public class ClassSloth implements Listener{
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-		if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
-			if(dfPlayer.getUseable()) {
-				dfPlayer.setUseable(false);
-				dfPlayer.setActivation(true);
-				Location loc = player.getEyeLocation();
-				Vector vec = loc.getDirection();
-				vec.setY(0.00);
-				loc.add(vec.getX() - (vec.getX()* 2.0),0,vec.getZ() - (vec.getZ() * 2.0));
-				int level = dfPlayer.getLevel();
-				double arrowA = 10 + level * 0.25;
-				long duration = 100 + level * 1;
-				long cooldown = 1500 - level * 4;
-				double damage = 3 + level * 0.05;
-				double defense = 30 + level * 0.20;
-				dfPlayer.addDfCal(defense, duration);
-				if(dfPlayer.getAtkMod() > 0) {
-					int cLevel = dfPlayer.getLevel();
-					double inc = cLevel * 0.4;
-					dfPlayer.addAtkCal(inc, duration);
-				}
-				event.setCancelled(true);
-				for(int i = 0; i <= (int)arrowA; i++) {
-					Arrow arrow = player.getWorld().spawnArrow(loc, rotateVectorAroundY(vec, 180), (float)(1.50 * 0.20), 26);
-					arrow.setShooter(player);
-					arrow.setCritical(true);
-					EffectSkills.arrowList.put(arrow.getUniqueId(), 1.0F);
-					EffectSkills.arrowDamage.put(arrow.getUniqueId(), damage);
-				}
-				new BukkitRunnable() {
-					public void run() {
-						dfPlayer.setActivation(false);
-						new BukkitRunnable() {
-							public void run() {
-								dfPlayer.setUseable(true);
-							}
-						}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
+		DFPlayer method = new DFPlayer();
+		if(method.containsPlayer(player)) {
+			DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+			if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
+				if(dfPlayer.getUseable()) {
+					dfPlayer.setUseable(false);
+					dfPlayer.setActivation(true);
+					Location loc = player.getEyeLocation();
+					Vector vec = loc.getDirection();
+					vec.setY(0.00);
+					loc.add(vec.getX() - (vec.getX()* 2.0),0,vec.getZ() - (vec.getZ() * 2.0));
+					int level = dfPlayer.getLevel();
+					double arrowA = 10 + level * 0.25;
+					long duration = 100 + level * 1;
+					long cooldown = 1500 - level * 4;
+					double damage = 3 + level * 0.05;
+					double defense = 30 + level * 0.20;
+					dfPlayer.addDfCal(defense, duration);
+					if(dfPlayer.getAtkMod() > 0) {
+						int cLevel = dfPlayer.getLevel();
+						double inc = cLevel * 0.4;
+						dfPlayer.addAtkCal(inc, duration);
 					}
-				}.runTaskLater(CustomEnchantments.getInstance(), duration);
-			}
-			else {
-				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+					event.setCancelled(true);
+					for(int i = 0; i <= (int)arrowA; i++) {
+						Arrow arrow = player.getWorld().spawnArrow(loc, rotateVectorAroundY(vec, 180), (float)(1.50 * 0.20), 26);
+						arrow.setShooter(player);
+						arrow.setCritical(true);
+						EffectSkills.arrowList.put(arrow.getUniqueId(), 1.0F);
+						EffectSkills.arrowDamage.put(arrow.getUniqueId(), damage);
+					}
+					new BukkitRunnable() {
+						public void run() {
+							dfPlayer.setActivation(false);
+							new BukkitRunnable() {
+								public void run() {
+									dfPlayer.setUseable(true);
+								}
+							}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), duration);
+				}
+				else {
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+				}
 			}
 		}
 	}
@@ -75,16 +78,19 @@ public class ClassSloth implements Listener{
 				Arrow arrow = (Arrow) event.getDamager();
 				if(arrow.getShooter() instanceof Player) {
 					Player player = (Player) arrow.getShooter();
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-					if(arrowList.contains(arrow.getUniqueId())) {
-						if(dfPlayer.getHp() > 0) {
-							int cLevel = dfPlayer.getHp();
-							double inc = cLevel * 0.5;
-							if(dfPlayer.getHP() + inc <= dfPlayer.getMaxHp()) {
-								dfPlayer.returnPlayer().setHealth(dfPlayer.getHP() + inc);
-							}
-							else {
-								dfPlayer.returnPlayer().setHealth(dfPlayer.getMaxHp());
+					DFPlayer method = new DFPlayer();
+					if(method.containsPlayer(player)) {
+						if(arrowList.contains(arrow.getUniqueId())) {
+							DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+							if(dfPlayer.getHp() > 0) {
+								int cLevel = dfPlayer.getHp();
+								double inc = cLevel * 0.5;
+								if(dfPlayer.getHP() + inc <= dfPlayer.getMaxHp()) {
+									dfPlayer.returnPlayer().setHealth(dfPlayer.getHP() + inc);
+								}
+								else {
+									dfPlayer.returnPlayer().setHealth(dfPlayer.getMaxHp());
+								}
 							}
 						}
 					}
@@ -97,11 +103,14 @@ public class ClassSloth implements Listener{
 		if(!event.isCancelled()) {
 			if(event.getDamager() instanceof Player) {
 				Player player = (Player) event.getDamager();
-				DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-				if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
-					if(dfPlayer.getCrtMod() > 0) {
-						if(dfPlayer.getHP() >= dfPlayer.getMaxHp() * 0.50) {
-							dfPlayer.addCrtCal(25, 1);
+				DFPlayer method = new DFPlayer();
+				if(method.containsPlayer(player)) {
+					DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+					if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
+						if(dfPlayer.getCrtMod() > 0) {
+							if(dfPlayer.getHP() >= dfPlayer.getMaxHp() * 0.50) {
+								dfPlayer.addCrtCal(25, 1);
+							}
 						}
 					}
 				}
@@ -113,11 +122,14 @@ public class ClassSloth implements Listener{
 		if(!event.isCancelled()) {
 			if(event.getEntity() instanceof Player) {
 				Player player = (Player) event.getEntity();
-				DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-				if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
-					if(dfPlayer.getCrtMod() > 0) {
-						if(dfPlayer.getHP() <= dfPlayer.getMaxHp() * 0.50) {
-							dfPlayer.addDfCal(25, 1);
+				DFPlayer method = new DFPlayer();
+				if(method.containsPlayer(player)) {
+					DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+					if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
+						if(dfPlayer.getCrtMod() > 0) {
+							if(dfPlayer.getHP() <= dfPlayer.getMaxHp() * 0.50) {
+								dfPlayer.addDfCal(25, 1);
+							}
 						}
 					}
 				}

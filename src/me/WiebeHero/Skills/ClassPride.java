@@ -25,51 +25,54 @@ public class ClassPride implements Listener{
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
 		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-		if(dfPlayer.getPlayerClass() == Classes.PRIDE) {
-			if(dfPlayer.getUseable()) {
-				dfPlayer.setUseable(false);
-				dfPlayer.setActivation(true);
-				int level = dfPlayer.getLevel();
-				long duration = 200 + level * 1;
-				long cooldown = 1800 - level * 6;
-				double attackS = 20 + level * 0.30;
-				double defense = 30 + level * 0.50;
-				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPIDER_DEATH, 2.0F, 2.0F);
-				Location loc = player.getLocation();
-				loc.setY(loc.getY() - 1.5);
-				BlockData bd = Material.COBWEB.createBlockData();
-				player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
-				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Quick Attack!"));
-				if(dfPlayer.getSpdMod() > 0) {
-					int cLevel = dfPlayer.getSpdMod();
-					double inc = cLevel * 10;
-					dfPlayer.addSpdCal(attackS + inc, duration);
-				}
-				else {
-					dfPlayer.addSpdCal(attackS, duration);
-				}
-				if(dfPlayer.getDfMod() > 0) {
-					int cLevel = dfPlayer.getDfMod();
-					double inc = cLevel * 10;
-					dfPlayer.addDfCal(defense + inc, duration);
-				}
-				else {
-					dfPlayer.addDfCal(defense, duration);
-				}
-				event.setCancelled(true);
-				new BukkitRunnable() {
-					public void run() {
-						dfPlayer.setActivation(false);
-						new BukkitRunnable() {
-							public void run() {
-								dfPlayer.setUseable(true);
-							}
-						}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
+		DFPlayer method = new DFPlayer();
+		if(method.containsPlayer(player)) {
+			if(dfPlayer.getPlayerClass() == Classes.PRIDE) {
+				if(dfPlayer.getUseable()) {
+					dfPlayer.setUseable(false);
+					dfPlayer.setActivation(true);
+					int level = dfPlayer.getLevel();
+					long duration = 200 + level * 1;
+					long cooldown = 1800 - level * 6;
+					double attackS = 20 + level * 0.30;
+					double defense = 30 + level * 0.50;
+					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPIDER_DEATH, 2.0F, 2.0F);
+					Location loc = player.getLocation();
+					loc.setY(loc.getY() - 1.5);
+					BlockData bd = Material.COBWEB.createBlockData();
+					player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Quick Attack!"));
+					if(dfPlayer.getSpdMod() > 0) {
+						int cLevel = dfPlayer.getSpdMod();
+						double inc = cLevel * 10;
+						dfPlayer.addSpdCal(attackS + inc, duration);
 					}
-				}.runTaskLater(CustomEnchantments.getInstance(), duration);
-			}
-			else {
-				player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+					else {
+						dfPlayer.addSpdCal(attackS, duration);
+					}
+					if(dfPlayer.getDfMod() > 0) {
+						int cLevel = dfPlayer.getDfMod();
+						double inc = cLevel * 10;
+						dfPlayer.addDfCal(defense + inc, duration);
+					}
+					else {
+						dfPlayer.addDfCal(defense, duration);
+					}
+					event.setCancelled(true);
+					new BukkitRunnable() {
+						public void run() {
+							dfPlayer.setActivation(false);
+							new BukkitRunnable() {
+								public void run() {
+									dfPlayer.setUseable(true);
+								}
+							}.runTaskLater(CustomEnchantments.getInstance(), cooldown);
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), duration);
+				}
+				else {
+					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+				}
 			}
 		}
 	}
@@ -90,14 +93,19 @@ public class ClassPride implements Listener{
 						}
 					}
 					if(player != null) {
-						DFPlayer dfPlayer = new DFPlayer().getPlayer(victim);
-						if(dfPlayer.getPlayerClass() == Classes.PRIDE) {
-							int level = dfPlayer.getLevel();
-							long duration = 200 + level * 1;
-							if(dfPlayer.getAtkMod() > 0) {
-								int cLevel = dfPlayer.getAtkMod();
-								double inc = cLevel * 1.5;
-								dfPlayer.addAtkCal(inc, duration);
+						DFPlayer method = new DFPlayer();
+						if(method.containsPlayer(player)) {
+							DFPlayer dfPlayer = new DFPlayer().getPlayer(victim);
+							if(dfPlayer != null) {
+								if(dfPlayer.getPlayerClass() == Classes.PRIDE) {
+									int level = dfPlayer.getLevel();
+									long duration = 200 + level * 1;
+									if(dfPlayer.getAtkMod() > 0) {
+										int cLevel = dfPlayer.getAtkMod();
+										double inc = cLevel * 1.5;
+										dfPlayer.addAtkCal(inc, duration);
+									}
+								}
 							}
 						}
 					}
@@ -116,11 +124,13 @@ public class ClassPride implements Listener{
 						Player player = (Player) arrow.getShooter();
 						DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 						DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
-						if(dfVictim.getPlayerClass() == Classes.PRIDE) {
-							if(dfVictim.getRndMod() > 0) {
-								int cLevel = dfVictim.getRndMod();
-								double inc = cLevel * 10;
-								dfPlayer.removeRndCal(inc, 1);
+						if(dfVictim.getPlayerClass() != null) {
+							if(dfVictim.getPlayerClass() == Classes.PRIDE) {
+								if(dfVictim.getRndMod() > 0) {
+									int cLevel = dfVictim.getRndMod();
+									double inc = cLevel * 10;
+									dfPlayer.removeRndCal(inc, 1);
+								}
 							}
 						}
 					}

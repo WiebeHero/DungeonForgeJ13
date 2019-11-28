@@ -41,6 +41,9 @@ public class ConfigManager {
 	public FileConfiguration dungeon;
 	public File dungeonConfig;
 	
+	public FileConfiguration blowable;
+	public File blowableConfig;
+	
 	public void setUp() {
 		if(!plugin.getDataFolder().exists()) {
 			plugin.getDataFolder().mkdir();
@@ -84,6 +87,10 @@ public class ConfigManager {
 		dungeonConfig = new File(plugin.getDataFolder(), "dungeonConfig.yml");
 		dungeon = YamlConfiguration.loadConfiguration(dungeonConfig);
 		dungeon.options().copyDefaults(true);
+		
+		blowableConfig = new File(plugin.getDataFolder(), "Blowable.yml");
+		blowable = YamlConfiguration.loadConfiguration(dungeonConfig);
+		blowable.options().copyDefaults(true);
 		if(!playerskills.exists()) {
 			try {
 				playerskills.createNewFile();
@@ -275,6 +282,26 @@ public class ConfigManager {
 				dungeon.options().copyDefaults(true);
 				try{
 					dungeon.save(dungeonConfig);
+		        }
+		        catch(IOException e){
+		            e.printStackTrace();
+		        }
+				
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Dungeon Config has been created!");
+			}catch(IOException e) {
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "Dungeon Config could not be created!");
+			}
+		}
+		else {
+			Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "else");
+		}
+		if(!blowableConfig.exists()) {
+			try {
+				blowableConfig.createNewFile();
+				blowable.addDefault("Blowable.List", "");
+				blowable.options().copyDefaults(true);
+				try{
+					blowable.save(blowableConfig);
 		        }
 		        catch(IOException e){
 		            e.printStackTrace();

@@ -16,7 +16,7 @@ public class TNTExplodeCovered implements Listener{
 			boolean checkIt = false;
 			TNTPrimed tnt = (TNTPrimed) event.getEntity();
 			Block tntGetBlock = (Block) tnt.getLocation().getBlock();
-			int radius = 0;
+			int radius = 1;
 			for (int x = -(radius); x <= radius; x ++){
 				for (int y = -(radius); y <= radius; y ++){
 					for (int z = -(radius); z <= radius; z ++){
