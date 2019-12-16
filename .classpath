@@ -3,11 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/Paper-1.13.2-b624.jar"/>
-	<classpathentry kind="lib" path="lib/item-nbt-api-plugin-1.8.3-SNAPSHOT (1).jar"/>
 	<classpathentry kind="lib" path="lib/LuckPerms-Bukkit-4.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/worldguard-bukkit-7.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/worldedit-bukkit-7.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/ProtocolLib.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.17.jar"/>
+	<classpathentry kind="lib" path="lib/item-nbt-api-plugin-2.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

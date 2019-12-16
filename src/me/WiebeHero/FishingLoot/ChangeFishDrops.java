@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 
 public class ChangeFishDrops implements Listener{
 	@EventHandler
@@ -86,11 +86,11 @@ public class ChangeFishDrops implements Listener{
 	public ItemStack commonCrystal() {
 		ItemStack i = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta m = i.getItemMeta();
-		m.setDisplayName(new ColorCodeTranslator().colorize("&7Common Crystal"));
+		m.setDisplayName(new CCT().colorize("&7Common Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: Common"));
 		m.setLore(lore1);
 		i.setItemMeta(m);
 		return i;
@@ -98,11 +98,11 @@ public class ChangeFishDrops implements Listener{
 	public ItemStack rareCrystal() {
 		ItemStack i = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta m = i.getItemMeta();
-		m.setDisplayName(new ColorCodeTranslator().colorize("&aRare Crystal"));
+		m.setDisplayName(new CCT().colorize("&aRare Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: Common"));
 		m.setLore(lore1);
 		i.setItemMeta(m);
 		return i;
@@ -110,11 +110,11 @@ public class ChangeFishDrops implements Listener{
 	public ItemStack epicCrystal() {
 		ItemStack i = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta m = i.getItemMeta();
-		m.setDisplayName(new ColorCodeTranslator().colorize("&bEpic Crystal"));
+		m.setDisplayName(new CCT().colorize("&bEpic Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: Common"));
 		m.setLore(lore1);
 		i.setItemMeta(m);
 		return i;
@@ -122,11 +122,11 @@ public class ChangeFishDrops implements Listener{
 	public ItemStack legendaryCrystal() {
 		ItemStack i = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta m = i.getItemMeta();
-		m.setDisplayName(new ColorCodeTranslator().colorize("&cLegendary Crystal"));
+		m.setDisplayName(new CCT().colorize("&cLegendary Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: Common"));
 		m.setLore(lore1);
 		i.setItemMeta(m);
 		return i;
@@ -134,11 +134,11 @@ public class ChangeFishDrops implements Listener{
 	public ItemStack mythicalCrystal() {
 		ItemStack i = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta m = i.getItemMeta();
-		m.setDisplayName(new ColorCodeTranslator().colorize("&5Mythical Crystal"));
+		m.setDisplayName(new CCT().colorize("&5Mythical Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: Common"));
 		m.setLore(lore1);
 		i.setItemMeta(m);
 		return i;

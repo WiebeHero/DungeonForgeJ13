@@ -16,7 +16,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.Enums.Classes;
 
@@ -41,18 +41,18 @@ public class ClassEnvy implements Listener{
 					loc.setY(loc.getY() + 2.5);
 					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 2.0F, 1.0F);
 					player.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 80, 0.15, 0.15, 0.15, 0); 
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Special Attack!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have used &6Special Attack!"));
 					event.setCancelled(true);
 					new BukkitRunnable() {
 						public void run() {
 							if(dfPlayer.getActivation() == true) {
 								dfPlayer.setActivation(false);
 								dfPlayer.removeAtkCal(damage, 0);
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have failed to use &6Special Attack!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have failed to use &6Special Attack!"));
 								new BukkitRunnable() {
 									public void run() {
 										dfPlayer.setUseable(true);
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
 									}
 								}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
 							}
@@ -60,7 +60,7 @@ public class ClassEnvy implements Listener{
 					}.runTaskLater(CustomEnchantments.getInstance(), (long)(duration * 20));
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
 				}
 			}
 		}
@@ -97,7 +97,7 @@ public class ClassEnvy implements Listener{
 											new BukkitRunnable() {
 												public void run() {
 													dfPlayer.setUseable(true);
-													pp.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
+													pp.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou can use &6Special Attack &aagain!"));
 												}
 											}.runTaskLater(CustomEnchantments.getInstance(), (long)(cooldown * 20));
 										}

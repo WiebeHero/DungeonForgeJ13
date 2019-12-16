@@ -14,7 +14,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.Enums.Classes;
 
@@ -41,7 +41,7 @@ public class ClassPride implements Listener{
 					loc.setY(loc.getY() - 1.5);
 					BlockData bd = Material.COBWEB.createBlockData();
 					player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Quick Attack!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have used &6Quick Attack!"));
 					if(dfPlayer.getSpdMod() > 0) {
 						int cLevel = dfPlayer.getSpdMod();
 						double inc = cLevel * 10;
@@ -71,7 +71,7 @@ public class ClassPride implements Listener{
 					}.runTaskLater(CustomEnchantments.getInstance(), duration);
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
 				}
 			}
 		}
@@ -122,14 +122,16 @@ public class ClassPride implements Listener{
 					Arrow arrow = (Arrow) event.getDamager();
 					if(arrow.getShooter() instanceof Player) {
 						Player player = (Player) arrow.getShooter();
-						DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-						DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
-						if(dfVictim.getPlayerClass() != null) {
-							if(dfVictim.getPlayerClass() == Classes.PRIDE) {
-								if(dfVictim.getRndMod() > 0) {
-									int cLevel = dfVictim.getRndMod();
-									double inc = cLevel * 10;
-									dfPlayer.removeRndCal(inc, 1);
+						if(new DFPlayer().containsPlayer(victim) && new DFPlayer().containsPlayer(player)) {
+							DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+							DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
+							if(dfVictim.getPlayerClass() != null) {
+								if(dfVictim.getPlayerClass() == Classes.PRIDE) {
+									if(dfVictim.getRndMod() > 0) {
+										int cLevel = dfVictim.getRndMod();
+										double inc = cLevel * 10;
+										dfPlayer.removeRndCal(inc, 1);
+									}
 								}
 							}
 						}

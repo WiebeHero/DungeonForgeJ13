@@ -13,7 +13,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.Enums.Classes;
 import net.md_5.bungee.api.ChatColor;
@@ -54,7 +54,7 @@ public class ClassMenuSelection implements Listener{
 					Classes currentClass = Enum.valueOf(Classes.class, temp);
 					dfPlayer.setPlayerClass(currentClass);
 					activated.remove(player.getUniqueId());
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have chosen the class " + className[1]));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have chosen the class " + className[1]));
 					player.closeInventory();
 					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
 				}

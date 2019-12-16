@@ -5,14 +5,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.SmallFireball;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -23,16 +31,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import javafx.util.Pair;
 import me.WiebeHero.Consumables.ConsumableCondition.Condition;
 import me.WiebeHero.Consumables.Unlock.UnlockCraftCondition;
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.NewAttribute;
+import me.WiebeHero.CustomMethods.PotionM;
+import me.WiebeHero.Factions.DFFaction;
 
 public class Consumable {
-	
+	PotionM p = new PotionM();
+	DFFaction fac = new DFFaction();
 	public Consumable() {
 		
 	}
@@ -45,33 +57,744 @@ public class Consumable {
 	public void loadConsumables() {
 		this.listRecipes = new ArrayList<Pair<ArrayList<UnlockCraftCondition>, Recipe>>();
 		this.listConsumables = new HashMap<String, Pair<Condition, CommandFile>>();
-		this.listConsumables.put("Trickster_Fish", new Pair<>(Condition.CONSUME, new CommandFile() {
+		this.listConsumables.put("Smooth_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten) {
-				if(eaten.getHealth() + 3 <= eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-					eaten.setHealth(eaten.getHealth() + 3);
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					if(eaten.getHealth() + 2.5 <= eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+						eaten.setHealth(eaten.getHealth() + 2.5);
+					}
+					else {
+						eaten.setHealth(eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+					}
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 2);
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 60L);
 				}
-				else {
-					eaten.setHealth(eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-				}
-				eaten.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 200, 0));
 			}
+			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
-				ItemStack fat = new ItemStack(Material.COD, 4);
-				ItemMeta meta = fat.getItemMeta();
-				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Trickster Fish"));
-				ArrayList<String> lore = new ArrayList<String>();
-				lore.add(new ColorCodeTranslator().colorize("&7When eaten:"));
-				lore.add(new ColorCodeTranslator().colorize("  &7Heal: &c3 HP"));
-				lore.add(new ColorCodeTranslator().colorize("  &7Invisibility: &b10 Seconds"));
-				meta.setLore(lore);
-				fat.setItemMeta(meta);
-				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Trickster_Fish");
-				ShapedRecipe recipe = new ShapedRecipe(key, fat);
-				recipe.shape(" X ", "XYX", " X ");
-				recipe.setIngredient('X', Material.COD);
-				recipe.setIngredient('Y', Material.TROPICAL_FISH);
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Smooth_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, item);
+				recipe.shape(" Y ", "YXY", " Y ");
+				recipe.setIngredient('X', Material.WHITE_WOOL);
+				recipe.setIngredient('Y', Material.DIORITE);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Shadow_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_GHAST_SHOOT, 2.0F, 0.5F);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					DFFaction faction = fac.getFaction(eaten.getUniqueId());
+					p.applyEffect(eaten, PotionEffectType.SPEED, 0, 150);
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 2);
+					}
+					for(Entity e : eaten.getNearbyEntities(5.0, 5.0, 5.0)) {
+						if(e != eaten) {
+							if(e instanceof LivingEntity) {
+								LivingEntity ent = (LivingEntity) e;
+								if(faction != null) {
+									if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
+										p.applyEffect(ent, PotionEffectType.BLINDNESS, 0, 150);
+									}
+								}
+								else {
+									p.applyEffect(ent, PotionEffectType.BLINDNESS, 0, 150);
+								}
+							}
+						}
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 150L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Shadow Fluzgla", 
+						Material.BLACK_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Speed I (To you): &b7.5 Seconds//"
+						+ "  &7Blindness I (To nearby enemies): &b7.5 Seconds//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Range: &65.0 Blocks//"
+						+ "  &7Cooldown: &b7.5 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Shadow_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.BLACK_CONCRETE);
+				recipe.setIngredient('Z', Material.INK_SAC);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Hastened_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					p.applyEffect(eaten, PotionEffectType.FAST_DIGGING, 0, 200);
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 1);
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 200L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Hastened Fluzgla", 
+						Material.YELLOW_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Haste I (To you): &b10.0 Seconds//"
+						+ "  &7Food Gain: &c1//"
+						+ "  &7Cooldown: &b10.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Hastened_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.YELLOW_CONCRETE);
+				recipe.setIngredient('Z', Material.COOKIE);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Bursting_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 1);
+					}
+					for(int i = 0; i < 5; i++) {
+						eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 2.0F, 1.0F);
+						float yaw = eaten.getLocation().getYaw();
+		                double D = 0.5;
+		                double x = -D*Math.sin(yaw*Math.PI/180);
+		                double z = D*Math.cos(yaw*Math.PI/180);
+						eaten.getWorld().spawn(eaten.getLocation().add(x, 1.5, z), SmallFireball.class);
+					}
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 200L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Bursting Fluzgla", 
+						Material.RED_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Shoot Fireballs//"
+						+ "  &7Amount: &65//"
+						+ "  &7Food Gain: &c1//"
+						+ "  &7Cooldown: &b10.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Bursting_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.RED_CONCRETE);
+				recipe.setIngredient('Z', Material.BLAZE_ROD);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Healing_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
+					eaten.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.0, 0), 20, 0.2, 0.2, 0.2);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					DFFaction faction = fac.getFaction(eaten.getUniqueId());
+					p.applyEffect(eaten, PotionEffectType.REGENERATION, 0, 180);
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 1);
+					}
+					if(eaten.getHealth() + 2.5 <= eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+						eaten.setHealth(eaten.getHealth() + 2.5);
+					}
+					else {
+						eaten.setHealth(eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+					}
+					for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
+						if(e != eaten) {
+							if(e instanceof LivingEntity) {
+								LivingEntity ent = (LivingEntity) e;
+								if(faction != null) {
+									if(faction.isMember(ent.getUniqueId())) {
+										ent.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
+										ent.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.2, 0), 20, 0.2, 0.2, 0.2);
+										p.applyEffect(eaten, PotionEffectType.REGENERATION, 1, 90);
+										if(ent.getHealth() + 5.0 <= ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+											ent.setHealth(ent.getHealth() + 5.0);
+										}
+										else {
+											ent.setHealth(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+										}
+									}
+									else if(faction.isAlly(ent.getUniqueId())) {
+										ent.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
+										ent.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.2, 0), 20, 0.2, 0.2, 0.2);
+										p.applyEffect(eaten, PotionEffectType.REGENERATION, 0, 180);
+										if(ent.getHealth() + 2.5 <= ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+											ent.setHealth(ent.getHealth() + 2.5);
+										}
+										else {
+											ent.setHealth(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+										}
+									}
+								}
+							}
+						}
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 300L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Healing Fluzgla", 
+						Material.PINK_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal (To you and allies): &c2.5 HP//"
+						+ "  &7Regen I (To you and allies): &b9.0 Seconds//"
+						+ "  &7Heal (To members): &c5.0 HP//"
+						+ "  &7Regen II (To members): &b4.5 Seconds//"
+						+ "  &7Food Gain (To you): &c1//"
+						+ "  &7Range: &67.5 Blocks//"
+						+ "  &7Cooldown: &b15.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Healing_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.PINK_CONCRETE);
+				recipe.setIngredient('Z', Material.GLISTERING_MELON_SLICE);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Godlike_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(
+					PotionEffectType.REGENERATION,
+					PotionEffectType.FAST_DIGGING,
+					PotionEffectType.DAMAGE_RESISTANCE,
+					PotionEffectType.DOLPHINS_GRACE,
+					PotionEffectType.CONDUIT_POWER,
+					PotionEffectType.HEALTH_BOOST,
+					PotionEffectType.SATURATION,
+					PotionEffectType.ABSORPTION,
+					PotionEffectType.WATER_BREATHING,
+					PotionEffectType.INCREASE_DAMAGE,
+					PotionEffectType.JUMP,
+					PotionEffectType.SPEED));
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 2.0F, 1.5F);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					int random = new Random().nextInt(types.size());
+					p.applyEffect(eaten, types.get(random), 2, 100);
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 2);
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 500L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Godlike Fluzgla", 
+						Material.PURPLE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Random Effect III (To you): &b5.0 Seconds//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b25.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Godlike_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.PURPLE_CONCRETE);
+				recipe.setIngredient('Z', Material.GOLDEN_APPLE);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Aquatic_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_DOLPHIN_AMBIENT, 2.0F, 1.5F);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					p.applyEffect(eaten, PotionEffectType.DOLPHINS_GRACE, 0, 200);
+					p.applyEffect(eaten, PotionEffectType.WATER_BREATHING, 0, 200);
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 2);
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 300L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Aquatic Fluzgla", 
+						Material.LIGHT_BLUE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Dolphins Grace I: &b10.0 Seconds//"
+						+ "  &7Water Breathing I: &b10.0 Seconds//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b15.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Aquatic_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.LIGHT_BLUE_CONCRETE);
+				recipe.setIngredient('Z', Material.COD);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Frozen_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_HUSK_AMBIENT, 2.0F, 0.5F);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					DFFaction faction = fac.getFaction(eaten.getUniqueId());
+					for(Entity e : eaten.getNearbyEntities(6.0, 6.0, 6.0)) {
+						if(e != eaten) {
+							if(e instanceof LivingEntity) {
+								LivingEntity ent = (LivingEntity) e;
+								if(faction != null) {
+									if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
+										p.applyEffect(ent, PotionEffectType.SLOW, 1, 100);
+									}
+								}
+								else {
+									p.applyEffect(ent, PotionEffectType.SLOW, 1, 100);
+								}
+							}
+						}
+					}
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 3);
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 300L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Frozen Fluzgla", 
+						Material.BLUE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Slowness II (To enemies): &b5.0 Seconds//"
+						+ "  &7Food Gain: &c3//"
+						+ "  &7Range: &66.0 Blocks//"
+						+ "  &7Cooldown: &b15.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Frozen_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.BLUE_CONCRETE);
+				recipe.setIngredient('Z', Material.COD);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Curing_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<PotionEffectType> negative = new ArrayList<PotionEffectType>(Arrays.asList(
+					PotionEffectType.BLINDNESS,
+					PotionEffectType.POISON,
+					PotionEffectType.WITHER,
+					PotionEffectType.CONFUSION,
+					PotionEffectType.HUNGER,
+					PotionEffectType.LEVITATION,
+					PotionEffectType.WEAKNESS,
+					PotionEffectType.SLOW,
+					PotionEffectType.SLOW_DIGGING,
+					PotionEffectType.SLOW_FALLING));
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 3);
+					}
+					ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>();
+					if(eaten.getActivePotionEffects() != null || !eaten.getActivePotionEffects().isEmpty()) {
+						for(PotionEffect effect : eaten.getActivePotionEffects()) {
+							if(effect != null) {
+								if(negative.contains(effect.getType())) {
+									types.add(effect.getType());
+								}
+							}
+						}
+					}
+					if(!types.isEmpty()) {
+						int random = new Random().nextInt(types.size());
+						eaten.removePotionEffect(types.get(random));
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 350L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Curing Fluzgla", 
+						Material.GREEN_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Remove random negative effect//"
+						+ "  &7Food Gain: &c3//"
+						+ "  &7Cooldown: &b17.5 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Curing_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.GREEN_CONCRETE);
+				recipe.setIngredient('Z', Material.DRIED_KELP);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Bouncy_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_RABBIT_AMBIENT, 2.0F, 1.0F);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					if(eaten instanceof Player) {
+						Player p = (Player) eaten;
+						p.setFoodLevel(p.getFoodLevel() + 2);
+					}
+					p.applyEffect(eaten, PotionEffectType.JUMP, 1, 200);
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 250L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Bouncy Fluzgla", 
+						Material.LIME_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Jump Boost II: &b10.0 Seconds//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b12.5 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Bouncy_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.LIME_CONCRETE);
+				recipe.setIngredient('Z', Material.RABBIT_HIDE);
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+			}
+		}));
+		this.listConsumables.put("Poopy_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+				if(!cooldown.contains(eaten.getUniqueId())) {
+					cooldown.add(eaten.getUniqueId());
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT, 2.0F, 0.5F);
+					event.getItem().setAmount(event.getItem().getAmount() - 1);
+					DFFaction faction = fac.getFaction(eaten.getUniqueId());
+					for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
+						if(e != eaten) {
+							if(e instanceof LivingEntity) {
+								LivingEntity ent = (LivingEntity) e;
+								if(faction != null) {
+									if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
+										p.applyEffect(ent, PotionEffectType.CONFUSION, 1, 250);
+									}
+								}
+								else {
+									p.applyEffect(ent, PotionEffectType.CONFUSION, 1, 250);
+								}
+							}
+						}
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(eaten.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 250L);
+				}
+			}
+			Consumable con = new Consumable();
+			@Override
+			public void registerRecipe() {
+				ItemStack item = con.item(
+						"&7Smooth Fluzgla", 
+						Material.WHITE_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Heal: &c2.5 HP//"
+						+ "  &7Food Gain: &c2//"
+						+ "  &7Cooldown: &b3.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				ItemStack result = con.item(
+						"&7Poopy Fluzgla", 
+						Material.BROWN_WOOL, 
+						1, 
+						"&7-----------------------//"
+						+ "&7When consumed://"
+						+ "  &7Nausea II (To enemies): &b10.0 Seconds//"
+						+ "  &7Range: &67.5 Blocks//"
+						+ "  &7Cooldown: &b10.0 Seconds//"
+						+ "&7-----------------------//"
+						+ "&7Also used as a crafting ingridient.");
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Poopy_Fluzgla");
+				ShapedRecipe recipe = new ShapedRecipe(key, result);
+				recipe.shape(" Y ", "ZXZ", " Y ");
+				recipe.setIngredient('X', item);
+				recipe.setIngredient('Y', Material.BROWN_CONCRETE);
+				recipe.setIngredient('Z', new RecipeChoice.MaterialChoice(Arrays.asList(Material.CHARCOAL, Material.COAL)));
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 			}
@@ -472,7 +1195,7 @@ public class Consumable {
 			@Override
 			public void registerRecipe() {
 				//-----------------------------------------------------------------------------------
-				//Chainmail Armor
+				//Stone Armor
 				//-----------------------------------------------------------------------------------
 				ItemStack item = con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", 0, EquipmentSlot.HEAD, 1.15, 0.58, null);
 				LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
@@ -1072,29 +1795,41 @@ public class Consumable {
 	public ArrayList<Pair<ArrayList<UnlockCraftCondition>, Recipe>> getCustomRecipeList(){
 		return this.listRecipes;
 	}
+	public ItemStack item(String name, Material mat, int amount, String lore) {
+		ItemStack item = new ItemStack(mat, amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(name));
+		String parts[] = lore.split("//");
+		for(int i = 0; i < parts.length; i++) {
+			parts[i] = new CCT().colorize(parts[i]);
+		}
+		meta.setLore(new ArrayList<String>(Arrays.asList(parts)));
+		item.setItemMeta(meta);
+		return item;
+	}
 	public ItemStack heart(String part, Material type) {
 		ItemStack item = new ItemStack(type, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.addEnchant(Enchantment.LURE, 0, true);
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&7" + part + " Heart"));
+		meta.setDisplayName(new CCT().colorize("&7" + part + " Heart"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7It's a collection of compressed wood, interesting."));
+		lore.add(new CCT().colorize("&7It's a collection of compressed wood, interesting."));
 		if(type.toString().contains("LOG")) {
-			lore.add(new ColorCodeTranslator().colorize("&7Due to its compressed properties, it has started to glow?"));
+			lore.add(new CCT().colorize("&7Due to its compressed properties, it has started to glow?"));
 		}
 		else if(type == Material.GOLD_INGOT) {
-			lore.add(new ColorCodeTranslator().colorize("&7It shines when you need it the most? Or not."));
+			lore.add(new CCT().colorize("&7It shines when you need it the most? Or not."));
 		}
 		else if(type == Material.COBBLESTONE) {
-			lore.add(new ColorCodeTranslator().colorize("&7It's harder, stronger, faster and better for sure."));
+			lore.add(new CCT().colorize("&7It's harder, stronger, faster and better for sure."));
 		}
 		else if(type == Material.IRON_INGOT) {
-			lore.add(new ColorCodeTranslator().colorize("&7The hard properties of this material are incredible."));
+			lore.add(new CCT().colorize("&7The hard properties of this material are incredible."));
 		}
 		else if(type == Material.DIAMOND) {
-			lore.add(new ColorCodeTranslator().colorize("&7The strongest of them all... Right?"));
+			lore.add(new CCT().colorize("&7The strongest of them all... Right?"));
 		}
-		lore.add(new ColorCodeTranslator().colorize("&7Maybe you can use this for something handy..."));
+		lore.add(new CCT().colorize("&7Maybe you can use this for something handy..."));
 		meta.setLore(lore);
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		item.setItemMeta(meta);
@@ -1103,28 +1838,28 @@ public class Consumable {
 	public ItemStack equipment(Material mat, String name, int tier, EquipmentSlot equip, double value1, double value2, HashMap<String, Integer> enchants) {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new ColorCodeTranslator().colorize(name));
+		meta.setDisplayName(new CCT().colorize(name));
 		ArrayList<String> lore = new ArrayList<String>();
 		if(enchants != null) {
 			for(Entry<String, Integer> map : enchants.entrySet()) {
-				lore.add(new ColorCodeTranslator().colorize("&9" + map.getKey() + " " + map.getValue()));
+				lore.add(new CCT().colorize("&9" + map.getKey() + " " + map.getValue()));
 			}
 		}
-		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
+		lore.add(new CCT().colorize("&7-----------------------"));
 		if(equip == EquipmentSlot.HAND) {
-			lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + value1));
-			lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + value2));
+			lore.add(new CCT().colorize("&7Attack Damage: &6" + value1));
+			lore.add(new CCT().colorize("&7Attack Speed: &6" + value2));
 		}
 		else if(equip == EquipmentSlot.HEAD || equip == EquipmentSlot.CHEST || equip == EquipmentSlot.LEGS || equip == EquipmentSlot.FEET) {
-			lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &6" + value1));
-			lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + value2));
+			lore.add(new CCT().colorize("&7Armor Defense: &6" + value1));
+			lore.add(new CCT().colorize("&7Armor Toughness: &6" + value2));
 		}
 		else if(equip == EquipmentSlot.OFF_HAND) {
-			lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + value1));
-			lore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b" + value2));
+			lore.add(new CCT().colorize("&7Armor Toughness: &6" + value1));
+			lore.add(new CCT().colorize("&7Cooldown: &b" + value2));
 		}
-		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+		lore.add(new CCT().colorize("&7-----------------------"));
+		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 		if(tier != 0) {
 			int max = 1;
 			if(item.getType().toString().contains("STONE")) {
@@ -1152,19 +1887,19 @@ public class Consumable {
 				}
 			}
 			if(item.getType().toString().contains("PICKAXE")) {
-				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-				lore.add(new ColorCodeTranslator().colorize("&7A powerfull condensed pickaxe."));
+				lore.add(new CCT().colorize("&7-----------------------"));
+				lore.add(new CCT().colorize("&7A powerfull condensed pickaxe."));
 			}
 			else if(item.getType().toString().contains("AXE")) {
-				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-				lore.add(new ColorCodeTranslator().colorize("&7A powerfull condensed axe."));
+				lore.add(new CCT().colorize("&7-----------------------"));
+				lore.add(new CCT().colorize("&7A powerfull condensed axe."));
 			}
 			else if(item.getType().toString().contains("SHOVEL")) {
-				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-				lore.add(new ColorCodeTranslator().colorize("&7A powerfull condensed shovel."));
+				lore.add(new CCT().colorize("&7-----------------------"));
+				lore.add(new CCT().colorize("&7A powerfull condensed shovel."));
 			}
 			if(tier < max) {
-				lore.add(new ColorCodeTranslator().colorize("&7It seems like it can still become stronger..."));
+				lore.add(new CCT().colorize("&7It seems like it can still become stronger..."));
 			}
 		}
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -1175,16 +1910,16 @@ public class Consumable {
 			return attr.stripModifier(item, new ArrayList<Attribute>(Arrays.asList(Attribute.GENERIC_ATTACK_DAMAGE, Attribute.GENERIC_ATTACK_SPEED)), "mainhand");
 		}
 		else if(equip == EquipmentSlot.HEAD || equip == EquipmentSlot.CHEST || equip == EquipmentSlot.LEGS || equip == EquipmentSlot.FEET) {
-			if(mat.toString().equalsIgnoreCase("helmet")) {
+			if(equip == EquipmentSlot.HEAD) {
 				return attr.stripModifier(item, new ArrayList<Attribute>(Arrays.asList(Attribute.GENERIC_ARMOR, Attribute.GENERIC_ARMOR_TOUGHNESS)), "head");
 			}
-			else if(mat.toString().equalsIgnoreCase("chestplate")) {
+			else if(equip == EquipmentSlot.CHEST) {
 				return attr.stripModifier(item, new ArrayList<Attribute>(Arrays.asList(Attribute.GENERIC_ARMOR, Attribute.GENERIC_ARMOR_TOUGHNESS)), "chest");
 			}
-			else if(mat.toString().equalsIgnoreCase("leggings")) {
+			else if(equip == EquipmentSlot.LEGS) {
 				return attr.stripModifier(item, new ArrayList<Attribute>(Arrays.asList(Attribute.GENERIC_ARMOR, Attribute.GENERIC_ARMOR_TOUGHNESS)), "legs");
 			}
-			else if(mat.toString().equalsIgnoreCase("boots")) {
+			else if(equip == EquipmentSlot.FEET) {
 				return attr.stripModifier(item, new ArrayList<Attribute>(Arrays.asList(Attribute.GENERIC_ARMOR, Attribute.GENERIC_ARMOR_TOUGHNESS)), "feet");
 			}
 		}

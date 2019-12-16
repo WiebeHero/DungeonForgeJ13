@@ -19,7 +19,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Skills.Enums.Classes;
@@ -61,7 +61,7 @@ public class ClassLust implements Listener{
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Drain Blood!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have used &6Drain Blood!"));
 								Location locCF = new Location(player.getWorld(), player.getLocation().getX() + 0D, player.getLocation().getY() + 1.8D, player.getLocation().getZ() + 0D);
 								player.getWorld().spawnParticle(Particle.HEART, locCF, 60, 0.15, 0.15, 0.15, 0.1); 
 								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1.5);
@@ -110,7 +110,7 @@ public class ClassLust implements Listener{
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use your Ability yet!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use your Ability yet!"));
 				}
 			}
 		}

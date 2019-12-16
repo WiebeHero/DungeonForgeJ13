@@ -7,6 +7,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -40,6 +41,14 @@ public class ConsumableHandler implements Listener{
 						if(con.getConsumables().get(contain).getKey() == Condition.CONSUME) {
 							con.getConsumables().get(contain).getValue().activateConsumable(p);
 							con.getConsumables().get(contain).getValue().activateConsumable(p, event);
+							if(item.getItemMeta().getLore().toString().contains("Cooldown")) {
+								for(String s : item.getItemMeta().getLore()) {
+									if(s.contains("Cooldown")) {
+										int cooldown = Integer.parseInt(s.replaceAll("[^\\d.]", "")) * 20;
+										p.setCooldown(item.getType(), cooldown);
+									}
+								}
+							}
 						}
 					}
 				}
@@ -59,7 +68,30 @@ public class ConsumableHandler implements Listener{
 						if(con.getConsumables().get(contain).getKey() == Condition.LEFT_CLICK || con.getConsumables().get(contain).getKey() == Condition.RIGHT_CLICK) {
 							con.getConsumables().get(contain).getValue().activateConsumable(p);
 							con.getConsumables().get(contain).getValue().activateConsumable(p, event);
+							if(item.getItemMeta().getLore().toString().contains("Cooldown")) {
+								for(String s : item.getItemMeta().getLore()) {
+									if(s.contains("Cooldown")) {
+										int cooldown = Integer.parseInt(s.replaceAll("[^\\d.]", "")) * 20;
+										p.setCooldown(item.getType(), cooldown);
+									}
+								}
+							}
 						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void cancelPlaceConsumable(BlockPlaceEvent event) {
+		if(event.getItemInHand() != null) {
+			ItemStack item = event.getItemInHand();
+			if(item.hasItemMeta()) {
+				if(item.getItemMeta().hasDisplayName()) {
+					String contain = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+					contain = contain.replace(' ', '_');
+					if(con.getConsumables().containsKey(contain)) {
+						event.setCancelled(true);
 					}
 				}
 			}

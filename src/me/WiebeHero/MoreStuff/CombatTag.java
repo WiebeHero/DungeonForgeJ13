@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class CombatTag implements Listener{
@@ -33,19 +33,19 @@ public class CombatTag implements Listener{
 				Player damager = (Player) event.getDamager();
 				combatTag.put(damager.getUniqueId(), 10);
 				if(!activated.contains(damager.getUniqueId())) {
-					damager.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
+					damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 					activated.add(damager.getUniqueId());
 					new BukkitRunnable() {
 						@Override
 						public void run() {
 							int duration = combatTag.get(damager.getUniqueId());
 							duration--;
-							sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
+							sendActionbar(damager, new CCT().colorize("&cCombat Tag: &6" + duration));
 							combatTag.put(damager.getUniqueId(), duration);
 							if(duration <= 0) {
 								cancel();
 								activated.remove(damager.getUniqueId());
-								sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
+								sendActionbar(damager, new CCT().colorize("&aOut of combat!"));
 							}
 						}
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -57,19 +57,19 @@ public class CombatTag implements Listener{
 				Player victim = (Player) event.getEntity();
 				combatTag.put(victim.getUniqueId(), 10);
 				if(!activated.contains(victim.getUniqueId())) {
-					victim.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
+					victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 					activated.add(victim.getUniqueId());
 					new BukkitRunnable() {
 						@Override
 						public void run() {
 							int duration = combatTag.get(victim.getUniqueId());
 							duration--;
-							sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
+							sendActionbar(victim, new CCT().colorize("&cCombat Tag: &6" + duration));
 							combatTag.put(victim.getUniqueId(), duration);
 							if(duration <= 0) {
 								cancel();
 								activated.remove(victim.getUniqueId());
-								sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
+								sendActionbar(victim, new CCT().colorize("&aOut of combat!"));
 							}
 						}
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -83,8 +83,8 @@ public class CombatTag implements Listener{
 				combatTag.put(damager.getUniqueId(), 20);
 				combatTag.put(victim.getUniqueId(), 20);
 				if(!activated.contains(damager.getUniqueId()) && !activated.contains(victim.getUniqueId())) {
-					damager.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-					victim.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
+					damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
+					victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 					activated.add(damager.getUniqueId());
 					activated.add(victim.getUniqueId());
 					new BukkitRunnable() {
@@ -92,12 +92,12 @@ public class CombatTag implements Listener{
 						public void run() {
 							int duration = combatTag.get(damager.getUniqueId());
 							duration--;
-							sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
+							sendActionbar(damager, new CCT().colorize("&cCombat Tag: &6" + duration));
 							combatTag.put(damager.getUniqueId(), duration);
 							if(duration <= 0) {
 								cancel();
 								activated.remove(damager.getUniqueId());
-								sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
+								sendActionbar(damager, new CCT().colorize("&aOut of combat!"));
 							}
 						}
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -106,12 +106,12 @@ public class CombatTag implements Listener{
 						public void run() {
 							int duration = combatTag.get(victim.getUniqueId());
 							duration--;
-							sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
+							sendActionbar(victim, new CCT().colorize("&cCombat Tag: &6" + duration));
 							combatTag.put(victim.getUniqueId(), duration);
 							if(duration <= 0) {
 								cancel();
 								activated.remove(victim.getUniqueId());
-								sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
+								sendActionbar(victim, new CCT().colorize("&aOut of combat!"));
 							}
 						}
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -125,19 +125,19 @@ public class CombatTag implements Listener{
 				if(event.getEntity() instanceof LivingEntity) {
 					combatTag.put(damager.getUniqueId(), 20);
 					if(!activated.contains(damager.getUniqueId())) {
-						damager.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
+						damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 						activated.add(damager.getUniqueId());
 						new BukkitRunnable() {
 							@Override
 							public void run() {
 								int duration = combatTag.get(damager.getUniqueId());
 								duration--;
-								sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
+								sendActionbar(damager, new CCT().colorize("&cCombat Tag: &6" + duration));
 								combatTag.put(damager.getUniqueId(), duration);
 								if(duration <= 0) {
 									cancel();
 									activated.remove(damager.getUniqueId());
-									sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
+									sendActionbar(damager, new CCT().colorize("&aOut of combat!"));
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -148,8 +148,8 @@ public class CombatTag implements Listener{
 					combatTag.put(damager.getUniqueId(), 20);
 					combatTag.put(victim.getUniqueId(), 20);
 					if(!activated.contains(damager.getUniqueId()) && !activated.contains(victim.getUniqueId())) {
-						damager.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-						victim.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
+						damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
+						victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 						activated.add(damager.getUniqueId());
 						activated.add(victim.getUniqueId());
 						new BukkitRunnable() {
@@ -157,12 +157,12 @@ public class CombatTag implements Listener{
 							public void run() {
 								int duration = combatTag.get(damager.getUniqueId());
 								duration--;
-								sendActionbar(damager, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
+								sendActionbar(damager, new CCT().colorize("&cCombat Tag: &6" + duration));
 								combatTag.put(damager.getUniqueId(), duration);
 								if(duration <= 0) {
 									cancel();
 									activated.remove(damager.getUniqueId());
-									sendActionbar(damager, new ColorCodeTranslator().colorize("&aOut of combat!"));
+									sendActionbar(damager, new CCT().colorize("&aOut of combat!"));
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -171,12 +171,12 @@ public class CombatTag implements Listener{
 							public void run() {
 								int duration = combatTag.get(victim.getUniqueId());
 								duration--;
-								sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &" + duration));
+								sendActionbar(victim, new CCT().colorize("&cCombat Tag: &" + duration));
 								combatTag.put(victim.getUniqueId(), duration);
 								if(duration <= 0) {
 									cancel();
 									activated.remove(victim.getUniqueId());
-									sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
+									sendActionbar(victim, new CCT().colorize("&aOut of combat!"));
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -189,19 +189,19 @@ public class CombatTag implements Listener{
 					if(event.getEntity() instanceof LivingEntity) {
 						combatTag.put(damager1.getUniqueId(), 20);
 						if(!activated.contains(damager1.getUniqueId())) {
-							damager1.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
+							damager1.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 							activated.add(damager1.getUniqueId());
 							new BukkitRunnable() {
 								@Override
 								public void run() {
 									int duration = combatTag.get(damager1.getUniqueId());
 									duration--;
-									sendActionbar(damager1, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
+									sendActionbar(damager1, new CCT().colorize("&cCombat Tag: &6" + duration));
 									combatTag.put(damager1.getUniqueId(), duration);
 									if(duration <= 0) {
 										cancel();
 										activated.remove(damager1.getUniqueId());
-										sendActionbar(damager1, new ColorCodeTranslator().colorize("&aOut of combat!"));
+										sendActionbar(damager1, new CCT().colorize("&aOut of combat!"));
 									}
 								}
 							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -212,8 +212,8 @@ public class CombatTag implements Listener{
 						combatTag.put(damager1.getUniqueId(), 20);
 						combatTag.put(victim.getUniqueId(), 20);
 						if(!activated.contains(damager1.getUniqueId()) && !activated.contains(victim.getUniqueId())) {
-							damager1.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
-							victim.sendMessage(new ColorCodeTranslator().colorize("&cYou have entered combat tag!"));
+							damager1.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
+							victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 							activated.add(damager1.getUniqueId());
 							activated.add(victim.getUniqueId());
 							new BukkitRunnable() {
@@ -221,12 +221,12 @@ public class CombatTag implements Listener{
 								public void run() {
 									int duration = combatTag.get(damager1.getUniqueId());
 									duration--;
-									sendActionbar(damager1, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
+									sendActionbar(damager1, new CCT().colorize("&cCombat Tag: &6" + duration));
 									combatTag.put(damager1.getUniqueId(), duration);
 									if(duration <= 0) {
 										cancel();
 										activated.remove(damager1.getUniqueId());
-										sendActionbar(damager1, new ColorCodeTranslator().colorize("&aOut of combat!"));
+										sendActionbar(damager1, new CCT().colorize("&aOut of combat!"));
 									}
 								}
 							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -235,12 +235,12 @@ public class CombatTag implements Listener{
 								public void run() {
 									int duration = combatTag.get(victim.getUniqueId());
 									duration--;
-									sendActionbar(victim, new ColorCodeTranslator().colorize("&cCombat Tag: &6" + duration));
+									sendActionbar(victim, new CCT().colorize("&cCombat Tag: &6" + duration));
 									combatTag.put(victim.getUniqueId(), duration);
 									if(duration <= 0) {
 										cancel();
 										activated.remove(victim.getUniqueId());
-										sendActionbar(victim, new ColorCodeTranslator().colorize("&aOut of combat!"));
+										sendActionbar(victim, new CCT().colorize("&aOut of combat!"));
 									}
 								}
 							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);

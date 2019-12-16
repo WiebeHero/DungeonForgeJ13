@@ -55,22 +55,12 @@ public class EffectSkills implements Listener{
 				if(damager.getEquipment().getItemInMainHand() != null) {
 					if(damager.getEquipment().getItemInMainHand().getType() != Material.BOW) {
 						if(event.getEntity() instanceof LivingEntity) {
-							if(dfPlayer.getAtkCal() >= -99.00) {
-								event.setDamage((event.getDamage()) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
-							}
-							else {
-								event.setDamage((event.getDamage()) / 100.00 * (-99.00 + 100.00));
-							}
+							event.setDamage((event.getDamage()) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
 						}
 					}
 				}
 				else {
-					if(dfPlayer.getAtkCal() >= -99.00) {
-						event.setDamage((event.getDamage()) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
-					}
-					else {
-						event.setDamage((event.getDamage()) / 100.00 * (-99.00 + 100.00));
-					}
+					event.setDamage((event.getDamage()) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
 				}
 			}
 		}
@@ -106,12 +96,7 @@ public class EffectSkills implements Listener{
 										double attackDamage = Double.parseDouble(check2);
 										p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(attackDamage);
 										if(p instanceof Player) {
-											if(dfPlayer.getSpdCal() >= -99.00) {
-												p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
-											}
-											else {
-												p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (-99.00 + 100.00));
-											}
+											p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
 										}
 									}
 									else {
@@ -125,12 +110,7 @@ public class EffectSkills implements Listener{
 										double attackSpeed = Double.parseDouble(check1);
 										p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
 										if(p instanceof Player) {
-											if(dfPlayer.getSpdCal() >= -99.00) {
-												p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
-											}
-											else {
-												p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (-99.00 + 100.00));
-											}
+											p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
 										}
 									}
 								}
@@ -228,14 +208,8 @@ public class EffectSkills implements Listener{
 									cd = cd.replaceAll("[^\\d.]", "");
 									double cooldownInSec = Double.parseDouble(cd);
 									int cooldownTime = (int)cooldownInSec * 20;
-									if(dfPlayer.getSpdCal() >= -99.00) {
-										cooldownTime = (int) (cooldownTime - (cooldownTime / 100.00 * (dfPlayer.getSpdCal() + 100.00)));
-									}
-									else {
-										cooldownTime = (int) (cooldownTime - (cooldownTime / 100.00 * (dfPlayer.getSpdCal() + 100.00)));
-									}
+									cooldownTime = (int) (cooldownTime - (cooldownTime / 100.00 * dfPlayer.getSpdCal()));
 									ItemStack item = player.getEquipment().getItemInOffHand();
-									player.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
 									player.setCooldown(Material.SHIELD, cooldownTime);
 									player.getEquipment().setItemInOffHand(item);
 								}
@@ -258,14 +232,8 @@ public class EffectSkills implements Listener{
 									cd = cd.replaceAll("[^\\d.]", "");
 									double cooldownInSec = Double.parseDouble(cd);
 									int cooldownTime = (int)cooldownInSec * 20;
-									if(dfPlayer.getSpdCal() >= -99.00) {
-										cooldownTime = (int) (cooldownTime - (cooldownTime / 100.00 * (dfPlayer.getSpdCal() + 100.00)));
-									}
-									else {
-										cooldownTime = (int) (cooldownTime - (cooldownTime / 100.00 * (dfPlayer.getSpdCal() + 100.00)));
-									}
+									cooldownTime = (int) (cooldownTime - (cooldownTime / 100.00 * dfPlayer.getSpdCal()));
 									ItemStack item = player.getEquipment().getItemInMainHand();
-									player.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
 									player.setCooldown(Material.SHIELD, cooldownTime);
 									player.getEquipment().setItemInMainHand(item);
 								}
@@ -301,12 +269,7 @@ public class EffectSkills implements Listener{
 									cd = cd.replaceAll("[^\\d.]", "");
 									double cooldownInSec = Double.parseDouble(cd);
 									int cooldownTime = (int)cooldownInSec * 20;
-									if(dfPlayer.getSpdCal() >= -99.00) {
-										cooldownTime = (int) (cooldownTime - (cooldownTime / 100.00 * (dfPlayer.getSpdCal() + 100.00)));
-									}
-									else {
-										cooldownTime = (int) (cooldownTime - (cooldownTime / 100.00 * (dfPlayer.getSpdCal() + 100.00)));
-									}
+									cooldownTime = (int) (cooldownTime - (cooldownTime / 100.00 * dfPlayer.getSpdCal()));
 									disableShieldM.add(ent.getUniqueId());
 									new BukkitRunnable() {
 										public void run() {
@@ -337,9 +300,6 @@ public class EffectSkills implements Listener{
 							if(dfPlayer.getCrtCal() > 100.00) {
 								double temp = dfPlayer.getCrtCal() - 100.00;
 								critDmg = critDmg + (temp / 100.00);
-							}
-							else if(dfPlayer.getCrtCal() < 0.00 && dfPlayer.getCrtCal() >= -100.00){
-								critDmg = 0.5;
 							}
 							event.setDamage(event.getDamage() * critDmg);
 						}
@@ -396,12 +356,12 @@ public class EffectSkills implements Listener{
 										}
 									}.runTaskLater(CustomEnchantments.getInstance(), 2L);
 									Location loc = player.getLocation();
-									loc.add(0, 1.57, 0);
+									loc.add(0, 1.40, 0);
 									Vector direction = loc.getDirection();
 									direction.add(direction);
-									direction.setY(direction.getY() + 0.15);
+									direction.setY(direction.getY());
 									direction.normalize();
-									Arrow arrow = player.getWorld().spawnArrow(loc, direction, s.getAttackStrength(player) * 2.10F, 0.0F);
+									Arrow arrow = player.getWorld().spawnArrow(loc, direction, s.getAttackStrength(player) * 2.55F, 0.0F);
 									arrow.setPickupStatus(PickupStatus.ALLOWED);
 									if(s.getAttackStrength(player) == 1.00) {
 										arrow.setCritical(true);
@@ -484,12 +444,7 @@ public class EffectSkills implements Listener{
 						DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
 						if(arrowList.containsKey(arrow.getUniqueId()) && arrowDamage.containsKey(arrow.getUniqueId())) {
 							double damage = arrowDamage.get(arrow.getUniqueId());
-							if(dfPlayer.getRndCal() >= -99.00) {
-								event.setDamage(damage / 100.00 * (dfPlayer.getRndCal() + 100.00) * arrowList.get(arrow.getUniqueId()));
-							}
-							else {
-								event.setDamage(damage / 100.00 * (-99.00 + 100.00) * arrowList.get(arrow.getUniqueId()));
-							}
+							event.setDamage(damage / 100.00 * (dfPlayer.getRndCal() + 100.00) * arrowList.get(arrow.getUniqueId()));
 							arrowList.remove(arrow.getUniqueId());
 						}
 					}
@@ -509,12 +464,7 @@ public class EffectSkills implements Listener{
 				baseHealth = 25.00;
 			}
 			double newHealth = baseHealth;
-			if(dfPlayer.getHpCal() >= -99.00) {
-				newHealth = baseHealth / 100.00 * (dfPlayer.getHpCal() + 100.00);
-			}
-			else {
-				newHealth = baseHealth / 100.00 * (-99.00 + 100.00);
-			}
+			newHealth = baseHealth / 100.00 * (dfPlayer.getHpCal() + 100.00);
 			double roundOff1 = (double) Math.round(newHealth * 100.00) / 100.00;
 			p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
 		}
@@ -546,14 +496,8 @@ public class EffectSkills implements Listener{
 										check2 = check2.replaceAll("[^\\d.]", "");
 										double armorDT = Double.parseDouble(check1);
 										double armorTT = Double.parseDouble(check2);
-										if(dfPlayer.getDfCal() >= -99.00) {
-											armorD = armorD + armorDT / 100.00 * (dfPlayer.getDfCal() + 100.00);
-											armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
-										}
-										else {
-											armorD = armorD + armorDT / 100.00 * (-99.00 + 100.00);
-											armorT = armorT + armorTT / 100.00 * (-99.00 + 100.00);
-										}
+										armorD = armorD + armorDT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+										armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
 									}
 								}
 							}
@@ -572,12 +516,7 @@ public class EffectSkills implements Listener{
 									}
 									check1 = check1.replaceAll("[^\\d.]", "");
 									double armorTT = Double.parseDouble(check1);
-									if(dfPlayer.getDfCal() >= -99.00) {
-										armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
-									}
-									else {
-										armorT = armorT + armorTT / 100.00 * (-99.00 + 100.00);
-									}
+									armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
 								}
 							}
 						}

@@ -24,7 +24,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class NovisInventory extends NovisRewards implements Listener{
@@ -42,7 +42,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 	//
 	//--------------------------------------------------------------------------------------------------------------------
 	public void NewInventory1(Player player, ArrayList<ItemStack> finalLootList) {
-		Inventory i = plugin.getServer().createInventory(null, 27, (new ColorCodeTranslator().colorize("&6Decrypting Crystal...")));
+		Inventory i = plugin.getServer().createInventory(null, 27, (new CCT().colorize("&6Decrypting Crystal...")));
 		player.openInventory(i);
 		check.add(player.getName());
 		ArrayList<ItemStack> lootList = new ArrayList<ItemStack>();

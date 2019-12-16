@@ -3,6 +3,7 @@ package me.WiebeHero.Skills;
 import java.util.Random;
 
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -11,8 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
-import me.WiebeHero.Spawners.SpawnerList;
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtinjector.NBTInjector;
+import me.WiebeHero.CustomEnchantments.CCT;
 import net.md_5.bungee.api.ChatColor;
 
 public class XPEarningMobs implements Listener{
@@ -28,9 +30,11 @@ public class XPEarningMobs implements Listener{
 				int xp = dfPlayer.getExperience();
 				int maxxp = dfPlayer.getMaxExperience();
 				int finalXP = 0;
-				if(SpawnerList.getMobList().containsKey(event.getEntity().getUniqueId())) {
-					int tier = SpawnerList.getMobList().get(event.getEntity().getUniqueId());
-					int levelMob = SpawnerList.getLevelMobList().get(event.getEntity().getUniqueId());
+				Entity ent = NBTInjector.patchEntity(victim);
+				NBTCompound comp = NBTInjector.getNbtData(ent);
+				if(comp.hasKey("SpawnerUUID")) {
+					int tier = comp.getInteger("Tier");
+					int levelMob = comp.getInteger("Level");
 					String lore = "";
 					ItemStack item = player.getInventory().getItemInMainHand();
 					if(item != null) {
@@ -48,6 +52,9 @@ public class XPEarningMobs implements Listener{
 					//XP Adding
 					//-----------------------------------------------------------------------------------------------------------------------------------------
 					int i1 = 0;
+					if(tier == 0) {
+						i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
+					}
 					if(tier == 1) {
 						i1 = new Random().nextInt(50) + 50 + 4 * levelMob;
 					}
@@ -144,7 +151,7 @@ public class XPEarningMobs implements Listener{
 							}
 						}
 	    	    		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
-	    	            player.sendMessage(new ColorCodeTranslator().colorize("&aYou have leveled up to level: &6&l" + level));
+	    	            player.sendMessage(new CCT().colorize("&aYou have leveled up to level: &6&l" + level));
 					}
 					else if(finalXP > 0){
 						dfPlayer.setExperience(finalXP);

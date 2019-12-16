@@ -7,9 +7,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -21,13 +21,14 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import de.tr7zw.itemnbtapi.NBTItem;
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.nbtinjector.NBTInjector;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import me.WiebeHero.Skills.DFPlayer;
 import me.WiebeHero.Skills.EffectSkills;
-import me.WiebeHero.Spawners.SpawnerList;
 
 public class DFWeaponUpgrade implements Listener{
 	public NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
@@ -96,9 +97,19 @@ public class DFWeaponUpgrade implements Listener{
 							    	if(damager.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(realName)) {
 								    	if(lore.get(getLine).contains(ChatColor.stripColor("Upgrade Progress: "))) {
 								    		int totalxpearned = 0;
-								    		if(SpawnerList.getMobList().containsKey(event.getEntity().getUniqueId())) {
-												int tier = SpawnerList.getMobList().get(event.getEntity().getUniqueId());
-												int i1 = new Random().nextInt(100 + 100 * tier) + (50 + 50 * tier);
+								    		Entity e = event.getEntity();
+								    		e = NBTInjector.patchEntity(e);
+								    		NBTCompound comp = NBTInjector.getNbtData(e);
+								    		if(comp.hasKey("SpawnerUUID")) {
+												int tier = comp.getInteger("Tier");
+												int level = comp.getInteger("Level");
+												int i1 = 0;
+												if(tier == 0) {
+													i1 = new Random().nextInt(5) + (level * 3);
+												}
+												else {
+													i1 = new Random().nextInt(50 + 50 * tier) + (level * 3);
+												}
 												totalxpearned = i1 + firstInt;
 											}
 											else {
@@ -236,30 +247,30 @@ public class DFWeaponUpgrade implements Listener{
 									    				else if(rarity.equals("Heroic")) {
 									    					translator = "&e";
 									    				}
-									    				meta.setDisplayName(new ColorCodeTranslator().colorize(translator + realName + " &a[&6Lv " + levelWeapon + "&a]"));
+									    				meta.setDisplayName(new CCT().colorize(translator + realName + " &a[&6Lv " + levelWeapon + "&a]"));
 									    				ArrayList<String> newLore = new ArrayList<String>();
 									    				newLore = enchant.setEnchantments(levelWeapon, enchantmentsString, rarity, newLore);
 									    				double roundOff1 = (double) Math.round((temp1 + incDamage) * 100) / 100;
 									    				double roundOff2 = (double) Math.round((temp2 + incSpeed) * 100) / 100;
-									    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-									    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
-									    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
-									    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
+									    				newLore.add(new CCT().colorize("&7-----------------------"));
+									    				newLore.add(new CCT().colorize("&7Attack Damage: &6" + roundOff1));
+									    				newLore.add(new CCT().colorize("&7Attack Speed: &6" + roundOff2));
+									    				newLore.add(new CCT().colorize("&7-----------------------"));
 									    				if(levelWeapon < 15) {
 									    					int xp = CustomEnchantments.getInstance().getConfig().getInt("XPValue." + levelWeapon);
-									    					newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l" + xp + "&a]"));
+									    					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l" + xp + "&a]"));
 									    				}
 									    				else if(levelWeapon == 15) {
-									    					newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+									    					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
 									    				}
-									    				newLore.add(new ColorCodeTranslator().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
-									    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
+									    				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
+									    				newLore.add(new CCT().colorize("&7-----------------------"));
 									    				if(levelWeapon >= 6) {
 									    					int loreRequired = levelWeapon - 4;
 									    					int levelRequired = loreRequired * 5;
-									    					newLore.add(new ColorCodeTranslator().colorize("&7Level Required: &6" + levelRequired));
+									    					newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
 									    				}
-									    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + translator + rarity));
+									    				newLore.add(new CCT().colorize("&7Rarity: " + translator + rarity));
 									    				meta.setLore(newLore);
 									    				item.setItemMeta(meta);
 									    				NBTItem newItem = new NBTItem(item);
@@ -272,159 +283,159 @@ public class DFWeaponUpgrade implements Listener{
 								    				}
 								    			}
 									    		else {
-										    		lore.set(getLine, new ColorCodeTranslator().colorize("&7Upgrade Progress: " + "&a[&b&l" + (totalxpearned) + " &6/ " + "&b&l" + secondInt + "&a]"));
+										    		lore.set(getLine, new CCT().colorize("&7Upgrade Progress: " + "&a[&b&l" + (totalxpearned) + " &6/ " + "&b&l" + secondInt + "&a]"));
 										    		for(int lijn1 = 0; lijn1 < lore.size(); lijn1++) {
 										    			if(lore.get(lijn1).contains(ChatColor.stripColor("::::"))) {
 											    			double barprogress = (double) totalxpearned / (double) secondInt * 100.0;
 											    			if(barprogress >= 0 && barprogress <= 2) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:&7:::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:&7:::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 2 && barprogress <= 4) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::&7::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::&7::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 4 && barprogress <= 6) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::&7:::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::&7:::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 6 && barprogress <= 8) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::&7::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::&7::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 8 && barprogress <= 10) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::&7:::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::&7:::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 10 && barprogress <= 12) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::&7::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::&7::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 12 && barprogress <= 14) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::&7:::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::&7:::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 14 && barprogress <= 16) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::&7::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::&7::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 16 && barprogress <= 18) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::&7:::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::&7:::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 18 && barprogress <= 20) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::&7::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::&7::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 20 && barprogress <= 22) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::&7:::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::&7:::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 22 && barprogress <= 24) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::&7::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::&7::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 24 && barprogress <= 26) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::&7:::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::&7:::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 26 && barprogress <= 28) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::&7::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::&7::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 28 && barprogress <= 30) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::&7:::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::&7:::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 30 && barprogress <= 32) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::&7::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::&7::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 32 && barprogress <= 34) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::&7:::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::&7:::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 34 && barprogress <= 36) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::&7::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::&7::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 36 && barprogress <= 38) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::&7:::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::&7:::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 38 && barprogress <= 40) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::&7::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::&7::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 40 && barprogress <= 42) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::&7:::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::&7:::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 42 && barprogress <= 44) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::&7::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::&7::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 44 && barprogress <= 46) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::&7:::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::&7:::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 46 && barprogress <= 48) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::&7::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::&7::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 48 && barprogress <= 50) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::&7:::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::&7:::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 50 && barprogress <= 52) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::&7::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::&7::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 52 && barprogress <= 54) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::&7:::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::&7:::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 54 && barprogress <= 56) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::&7::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::&7::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 56 && barprogress <= 58) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::&7:::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::&7:::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 58 && barprogress <= 60) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::&7::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::&7::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 60 && barprogress <= 62) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::&7:::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::&7:::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 62 && barprogress <= 64) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::&7::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::&7::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 64 && barprogress <= 66) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::&7:::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::&7:::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 66 && barprogress <= 68) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::&7::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::&7::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 68 && barprogress <= 70) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::&7:::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::&7:::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 70 && barprogress <= 72) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::&7::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::&7::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 72 && barprogress <= 74) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::&7:::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::&7:::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 74 && barprogress <= 76) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::&7::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::&7::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 76 && barprogress <= 78) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::&7:::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::&7:::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 78 && barprogress <= 80) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::&7::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::&7::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 80 && barprogress <= 82) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::&7:::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::&7:::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 82 && barprogress <= 84) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::&7::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::&7::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 84 && barprogress <= 86) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::&7:::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::&7:::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 86 && barprogress <= 88) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::&7::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::&7::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 88 && barprogress <= 90) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::&7:::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::&7:::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 90 && barprogress <= 92) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::&7::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::&7::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 92 && barprogress <= 94) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::&7:::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::&7:::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 94 && barprogress <= 96) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::&7::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::&7::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 96 && barprogress <= 98) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::::&7:&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::::&7:&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 											    			else if(barprogress >= 98 && barprogress <= 100) {
-											    				lore.set(lijn1, new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+											    				lore.set(lijn1, new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 											    			}
 										    			}
 										    		}

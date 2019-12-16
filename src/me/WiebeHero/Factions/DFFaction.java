@@ -339,6 +339,18 @@ public class DFFaction {
 		}
 		return false;
 	}
+	
+	public boolean isAlly(UUID uuid) {
+		for(int i = 0; i < this.allyList.size(); i++) {
+			for(Entry<UUID, Integer> entry : this.getFaction(this.allyList.get(i)).getMemberList().entrySet()) {
+				if(entry.getKey().equals(uuid)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public void addAlly(String fac) {
 		this.allyList.add(fac);
 	}

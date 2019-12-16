@@ -8,9 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.lucko.luckperms.LuckPerms;
 import me.lucko.luckperms.api.LuckPermsApi;
@@ -53,29 +51,29 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 							if(innerList.size() < rankList.get(player.getUniqueId())) {
 								innerList.put(args[0], player.getLocation());
 								outerList.put(player.getUniqueId(), innerList);
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aHome &6" + args[0] + " &ahas been set!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome &6" + args[0] + " &ahas been set!"));
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have reached the maximum amount of homes you can have!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have reached the maximum amount of homes you can have!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis home already exists!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home already exists!"));
 						}
 					}
 					else {
 						if(innerList.size() < rankList.get(player.getUniqueId())) {
 							innerList.put("Home", player.getLocation());
 							outerList.put(player.getUniqueId(), innerList);
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aHome &6Home &ahas been set!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome &6Home &ahas been set!"));
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have reached the maximum amount of homes you can have!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have reached the maximum amount of homes you can have!"));
 						}
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't set a home here!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't set a home here!"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(homeCommand)) {
@@ -84,10 +82,10 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 						if(innerList.containsKey(args[1])) {
 							innerList.remove(args[1]);
 							outerList.put(player.getUniqueId(), innerList);
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cHome &6" + args[1] + " &chas been removed."));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cHome &6" + args[1] + " &chas been removed."));
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
 						}
 					}
 					else if(innerList.containsKey(args[0])) {
@@ -100,24 +98,24 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 							@Override
 							public void run() {
 								if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
 									count--;
 									if(count == 0) {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aTeleported!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleported!"));
 										player.teleport(loc);
 										count = 10;
 										cancel();
 									}
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
 									cancel();
 								}
 							}	
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
 					}
 				}
 				else {
@@ -131,24 +129,24 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 							@Override
 							public void run() {
 								if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
 									count--;
 									if(count == 0) {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aTeleported!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleported!"));
 										player.teleport(loc);
 										count = 10;
 										cancel();
 									}
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
 									cancel();
 								}
 							}	
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
 					}
 				}
 			}
@@ -156,11 +154,11 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 				if(args.length == 0) {
 					for(Entry<String, Location> entry : innerList.entrySet()) {
 						if(innerList.isEmpty()) {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNo homes have been set!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cNo homes have been set!"));
 							break;
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aHome Name: &6" + entry.getKey()) + " X: " + (int)entry.getValue().getX() + " Y: " + (int)entry.getValue().getY() + " Z: " + (int)entry.getValue().getZ());
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome Name: &6" + entry.getKey()) + " X: " + (int)entry.getValue().getX() + " Y: " + (int)entry.getValue().getY() + " Z: " + (int)entry.getValue().getZ());
 						}
 					}
 				}

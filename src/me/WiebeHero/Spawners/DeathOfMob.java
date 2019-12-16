@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -14,7 +15,9 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtinjector.NBTInjector;
+import me.WiebeHero.CustomEnchantments.CCT;
 
 public class DeathOfMob implements Listener {
 	@EventHandler
@@ -27,11 +30,11 @@ public class DeathOfMob implements Listener {
 				//----------------------------------------------------------------------------------
 				ItemStack item1 = new ItemStack(Material.NETHER_STAR, 1);
 				ItemMeta itemmeta1 = item1.getItemMeta();
-				itemmeta1.setDisplayName(new ColorCodeTranslator().colorize("&7Common Crystal"));
+				itemmeta1.setDisplayName(new CCT().colorize("&7Common Crystal"));
 				ArrayList<String> lore1 = new ArrayList<String>();
-				lore1.add(new ColorCodeTranslator().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore1.add(new ColorCodeTranslator().colorize("&7a reward!"));
-				lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
+				lore1.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
+				lore1.add(new CCT().colorize("&7a reward!"));
+				lore1.add(new CCT().colorize("&7Rarity: Common"));
 				itemmeta1.setLore(lore1);
 				item1.setItemMeta(itemmeta1);
 				//----------------------------------------------------------------------------------
@@ -39,11 +42,11 @@ public class DeathOfMob implements Listener {
 				//----------------------------------------------------------------------------------
 				ItemStack item2 = new ItemStack(Material.NETHER_STAR, 1);
 				ItemMeta itemmeta2 = item2.getItemMeta();
-				itemmeta2.setDisplayName(new ColorCodeTranslator().colorize("&aRare Crystal"));
+				itemmeta2.setDisplayName(new CCT().colorize("&aRare Crystal"));
 				ArrayList<String> lore2 = new ArrayList<String>();
-				lore2.add(new ColorCodeTranslator().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore2.add(new ColorCodeTranslator().colorize("&7a reward!"));
-				lore2.add(new ColorCodeTranslator().colorize("&7Rarity: &aRare"));
+				lore2.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
+				lore2.add(new CCT().colorize("&7a reward!"));
+				lore2.add(new CCT().colorize("&7Rarity: &aRare"));
 				itemmeta2.setLore(lore2);
 				item2.setItemMeta(itemmeta2);
 				//----------------------------------------------------------------------------------
@@ -51,11 +54,11 @@ public class DeathOfMob implements Listener {
 				//----------------------------------------------------------------------------------
 				ItemStack item3 = new ItemStack(Material.NETHER_STAR, 1);
 				ItemMeta itemmeta3 = item3.getItemMeta();
-				itemmeta3.setDisplayName(new ColorCodeTranslator().colorize("&bEpic Crystal"));
+				itemmeta3.setDisplayName(new CCT().colorize("&bEpic Crystal"));
 				ArrayList<String> lore3 = new ArrayList<String>();
-				lore3.add(new ColorCodeTranslator().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore3.add(new ColorCodeTranslator().colorize("&7a reward!"));
-				lore3.add(new ColorCodeTranslator().colorize("&7Rarity: &bEpic"));
+				lore3.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
+				lore3.add(new CCT().colorize("&7a reward!"));
+				lore3.add(new CCT().colorize("&7Rarity: &bEpic"));
 				itemmeta3.setLore(lore3);
 				item3.setItemMeta(itemmeta3);
 				//----------------------------------------------------------------------------------
@@ -63,11 +66,11 @@ public class DeathOfMob implements Listener {
 				//----------------------------------------------------------------------------------
 				ItemStack item4 = new ItemStack(Material.NETHER_STAR, 1);
 				ItemMeta itemmeta4 = item4.getItemMeta();
-				itemmeta4.setDisplayName(new ColorCodeTranslator().colorize("&cLegendary Crystal"));
+				itemmeta4.setDisplayName(new CCT().colorize("&cLegendary Crystal"));
 				ArrayList<String> lore4 = new ArrayList<String>();
-				lore4.add(new ColorCodeTranslator().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore4.add(new ColorCodeTranslator().colorize("&7a reward!"));
-				lore4.add(new ColorCodeTranslator().colorize("&7Rarity: &cLegendary"));
+				lore4.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
+				lore4.add(new CCT().colorize("&7a reward!"));
+				lore4.add(new CCT().colorize("&7Rarity: &cLegendary"));
 				itemmeta4.setLore(lore4);
 				item4.setItemMeta(itemmeta4);
 				//----------------------------------------------------------------------------------
@@ -75,15 +78,18 @@ public class DeathOfMob implements Listener {
 				//----------------------------------------------------------------------------------
 				ItemStack item5 = new ItemStack(Material.NETHER_STAR, 1);
 				ItemMeta itemmeta5 = item5.getItemMeta();
-				itemmeta5.setDisplayName(new ColorCodeTranslator().colorize("&5Mythic Crystal"));
+				itemmeta5.setDisplayName(new CCT().colorize("&5Mythic Crystal"));
 				ArrayList<String> lore5 = new ArrayList<String>();
-				lore5.add(new ColorCodeTranslator().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore5.add(new ColorCodeTranslator().colorize("&7a reward!"));
-				lore5.add(new ColorCodeTranslator().colorize("&7Rarity: &5Mythic"));
+				lore5.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
+				lore5.add(new CCT().colorize("&7a reward!"));
+				lore5.add(new CCT().colorize("&7Rarity: &5Mythic"));
 				itemmeta5.setLore(lore5);
 				item4.setItemMeta(itemmeta5);
-				if(SpawnerList.getMobList().containsKey(victim.getUniqueId())) {
-					int tier = SpawnerList.getMobList().get(victim.getUniqueId());
+				Entity e = event.getEntity();
+	    		e = NBTInjector.patchEntity(e);
+	    		NBTCompound comp = NBTInjector.getNbtData(e);
+				if(comp.hasKey("SpawnerUUID")) {
+					int tier = comp.getInteger("Tier");
 					if(tier >= 1) {
 						if(random() < 0.50 + tier * 0.50) {
 							event.getDrops().add(item1);

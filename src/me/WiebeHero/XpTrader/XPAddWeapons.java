@@ -17,8 +17,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import de.tr7zw.itemnbtapi.NBTItem;
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import de.tr7zw.nbtapi.NBTItem;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import net.md_5.bungee.api.ChatColor;
@@ -56,24 +56,23 @@ public class XPAddWeapons implements Listener{
 												xpProgressCursor = ChatColor.stripColor(s);
 											}
 										}
-										String lore = item.getItemMeta().getLore().toString();
 										Set<String> configList = null;
 										String type = "";
-										if(lore.contains(ChatColor.stripColor("Attack Damage:")) && lore.contains(ChatColor.stripColor("Attack Speed:"))  && item.getType() != Material.BOW){
-											configList = config.getConfigurationSection("Items.Weapons").getKeys(false);
-											type = "Weapons";
+										if(item.getType().toString().contains("HELMET") || item.getType().toString().contains("CHESTPLATE") || item.getType().toString().contains("LEGGINGS") || item.getType().toString().contains("BOOTS")){
+											configList = config.getConfigurationSection("Items.Armor").getKeys(false);
+											type = "Armor";
 										}
-										else if(lore.contains(ChatColor.stripColor("Attack Damage:")) && lore.contains(ChatColor.stripColor("Attack Speed:")) && item.getType() == Material.BOW){
+										else if(item.getType() == Material.BOW){
 											configList = config.getConfigurationSection("Items.Bows").getKeys(false);
 											type = "Bows";
 										}
-										else if(!lore.contains(ChatColor.stripColor("Armor Defense:")) && lore.contains(ChatColor.stripColor("Armor Toughness:"))){
+										else if(item.getType() == Material.SHIELD){
 											configList = config.getConfigurationSection("Items.Shields").getKeys(false);
 											type = "Shields";
 										}
-										else if(lore.contains(ChatColor.stripColor("Armor Defense:")) && lore.contains(ChatColor.stripColor("Armor Toughness:"))){
-											configList = config.getConfigurationSection("Items.Armor").getKeys(false);
-											type = "Armor";
+										else if(item.getType() != Material.BOW){
+											configList = config.getConfigurationSection("Items.Weapons").getKeys(false);
+											type = "Weapons";
 										}
 										String confirm = "";
 										for(String s : configList) {
@@ -99,41 +98,101 @@ public class XPAddWeapons implements Listener{
 										int level = 0;
 										double damageWeapon = 0.00;
 				    	            	double speedWeapon = 0.00;
-				    	            	double wandRange = 0.00;
 				    	            	double armorDefense = 0.00;
 				    	            	double armorToughness = 0.00;
 				    	            	double cooldown = 0.00;
 				    	            	double tempAD = 0.00;
 				    	            	double tempAS = 0.00;
 				    	            	double tempCD = 0.00;
-				    	            	double tempWR = 0.00;
 				    	            	double tempDF = 0.00;
 				    	            	double tempT = 0.00;
 				    	            	NBTItem tempItem = null;
 										if(levelCursor == 1 && xpCursor < 500) {
 											totalXP = xpItem + 500;
 											level = levelItem;
-											tempItem = new NBTItem(item);
 										}
 										else if(levelItem == 1 && xpItem < 500) {
 											totalXP = xpCursor + 500;
 											level = levelCursor;
-											tempItem = new NBTItem(item);
 										}
 										else if(levelCursor < levelItem) {
 											totalXP = xpItem + (3000 * (levelCursor - 1) + xpCursor);
 											level = levelItem;
-											tempItem = new NBTItem(item);
 										}
 										else if(levelCursor > levelItem) {
 											totalXP = (3000 * (levelItem - 1) + xpItem) + xpCursor;
 											level = levelCursor;
-											tempItem = new NBTItem(cursor);
 										}
 										else {
 											totalXP = xpItem + (3000 * (levelCursor - 1) + xpCursor);
 											level = levelItem;
-											tempItem = new NBTItem(item);
+										}
+										NBTItem check1 = new NBTItem(item);
+										NBTItem check2 = new NBTItem(cursor);
+										if(check1.hasKey("Attack Damage") && check2.hasKey("Attack Damage")) {
+											double value1 = check1.getDouble("Attack Damage");
+											double value2 = check2.getDouble("Attack Damage");
+											if(value1 > value2) {
+												tempItem = new NBTItem(item);
+											}
+											else if(value2 > value1) {
+												tempItem = new NBTItem(cursor);
+											}
+											else {
+												tempItem = new NBTItem(item);
+											}
+										}
+										else if(check1.hasKey("Attack Speed") && check2.hasKey("Attack Speed")) {
+											double value1 = check1.getDouble("Attack Speed");
+											double value2 = check2.getDouble("Attack Speed");
+											if(value1 > value2) {
+												tempItem = new NBTItem(item);
+											}
+											else if(value2 > value1) {
+												tempItem = new NBTItem(cursor);
+											}
+											else {
+												tempItem = new NBTItem(item);
+											}
+										}
+										else if(check1.hasKey("Armor Defense") && check2.hasKey("Armor Defense")) {
+											double value1 = check1.getDouble("Armor Defense");
+											double value2 = check2.getDouble("Armor Defense");
+											if(value1 > value2) {
+												tempItem = new NBTItem(item);
+											}
+											else if(value2 > value1) {
+												tempItem = new NBTItem(cursor);
+											}
+											else {
+												tempItem = new NBTItem(item);
+											}
+										}
+										else if(check1.hasKey("Armor Toughness") && check2.hasKey("Armor Toughness")) {
+											double value1 = check1.getDouble("Armor Toughness");
+											double value2 = check2.getDouble("Armor Toughness");
+											if(value1 > value2) {
+												tempItem = new NBTItem(item);
+											}
+											else if(value2 > value1) {
+												tempItem = new NBTItem(cursor);
+											}
+											else {
+												tempItem = new NBTItem(item);
+											}
+										}
+										else if(check1.hasKey("Cooldown") && check2.hasKey("Cooldown")) {
+											double value1 = check1.getDouble("Cooldown");
+											double value2 = check2.getDouble("Cooldown");
+											if(value1 < value2) {
+												tempItem = new NBTItem(item);
+											}
+											else if(value2 < value1) {
+												tempItem = new NBTItem(cursor);
+											}
+											else {
+												tempItem = new NBTItem(item);
+											}
 										}
 										int xpNeeded = 0;
 										for(int i = level; i < 15; i++) {
@@ -169,11 +228,11 @@ public class XPAddWeapons implements Listener{
 				    	            		tempAS = tempItem.getDouble("Attack Speed");
 					    				}
 					    				else if(type.equals("Armor")) {
-					    					tempDF = tempItem.getDouble("Defense");
-				    	            		tempT = tempItem.getDouble("Toughness");
+					    					tempDF = tempItem.getDouble("Armor Defense");
+				    	            		tempT = tempItem.getDouble("Armor Toughness");
 					    				}
 					    				else if(type.equals("Shields")) {
-				    	            		tempAS = tempItem.getDouble("Toughness");
+				    	            		tempT = tempItem.getDouble("Armor Toughness");
 				    	            		tempCD = tempItem.getDouble("Cooldown");
 					    				}
 					    				else if(type.equals("Bows")) {
@@ -209,208 +268,200 @@ public class XPAddWeapons implements Listener{
 					    				else if(rarity.contains("Heroic")) {
 					    					translator = "&e";
 					    				}
-					    				meta.setDisplayName(new ColorCodeTranslator().colorize(translator + confirm + " &a[&6Lv " + level + "&a]"));
+					    				meta.setDisplayName(new CCT().colorize(translator + confirm + " &a[&6Lv " + level + "&a]"));
 					    				ArrayList<String> newLore = new ArrayList<String>();
 					    				enchant.setEnchantments(level, enchantmentsString, rarity, newLore);
-					    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
+					    				newLore.add(new CCT().colorize("&7-----------------------"));
 					    				if(type.equals("Weapons")) {
 					    					double roundOff1 = (double) Math.round((tempAD + damageWeapon) * 100) / 100;
 						    				double roundOff2 = (double) Math.round((tempAS + speedWeapon) * 100) / 100;
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
+						    				newLore.add(new CCT().colorize("&7Attack Damage: &6" + roundOff1));
+						    				newLore.add(new CCT().colorize("&7Attack Speed: &6" + roundOff2));
 					    				}
 					    				if(type.equals("Armor")) {
 					    					double roundOff1 = (double) Math.round((tempDF + armorDefense) * 100) / 100;
 						    				double roundOff2 = (double) Math.round((tempT + armorToughness) * 100) / 100;
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &6" + roundOff1));
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + roundOff2));
-					    				}
-					    				else if(type.equals("Wands")) {
-					    					double roundOff1 = (double) Math.round((tempAD + damageWeapon) * 100) / 100;
-						    				double roundOff2 = (double) Math.round((tempAS + speedWeapon) * 100) / 100;
-						    				double roundOff3 = (double) Math.round((tempWR + wandRange) * 100) / 100;
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
-						    				newLore.add(new ColorCodeTranslator().colorize("&7Attack Range: &6" + roundOff3));
+					    					newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
+						    				newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
 					    				}
 					    				else if(type.equals("Shields")) {
 						    				double roundOff1 = (double) Math.round((tempT + armorToughness) * 100) / 100;
 						    				double roundOff2 = (double) Math.round((tempCD - cooldown) * 100) / 100;
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &6" + roundOff1));
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b" + roundOff2 + " Seconds"));
+					    					newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff1));
+					    					newLore.add(new CCT().colorize("&7Cooldown: &b" + roundOff2 + " Seconds"));
 					    				}
 					    				else if(type.equals("Bows")) {
 					    					double roundOff1 = (double) Math.round((tempAD + damageWeapon) * 100) / 100;
 						    				double roundOff2 = (double) Math.round((tempAS + speedWeapon) * 100) / 100;
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &6" + roundOff1));
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &6" + roundOff2));
+					    					newLore.add(new CCT().colorize("&7Attack Damage: &6" + roundOff1));
+					    					newLore.add(new CCT().colorize("&7Attack Speed: &6" + roundOff2));
 					    				}
-					    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
+					    				newLore.add(new CCT().colorize("&7-----------------------"));
 					    				if(level < 15) {
 					    					int xp = CustomEnchantments.getInstance().getConfig().getInt("XPValue." + level);
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&l" + totalXP + " &6/ &b&l" + xp + "&a]"));
+					    					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + totalXP + " &6/ &b&l" + xp + "&a]"));
 					    				}
 					    				else if(level == 15) {
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+					    					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
 					    				}
 						    			double barprogress = (double) totalXP / (double) xpNeeded * 100.0;
 						    			if(barprogress >= 0 && barprogress <= 2) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:&7:::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:&7:::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 2 && barprogress <= 4) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::&7::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::&7::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 4 && barprogress <= 6) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::&7:::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::&7:::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 6 && barprogress <= 8) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::&7::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::&7::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 8 && barprogress <= 10) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::&7:::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::&7:::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 10 && barprogress <= 12) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::&7::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::&7::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 12 && barprogress <= 14) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::&7:::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::&7:::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 14 && barprogress <= 16) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::&7::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::&7::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 16 && barprogress <= 18) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::&7:::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::&7:::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 18 && barprogress <= 20) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::&7::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::&7::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 20 && barprogress <= 22) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::&7:::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::&7:::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 22 && barprogress <= 24) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::&7::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::&7::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 24 && barprogress <= 26) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::&7:::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::&7:::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 26 && barprogress <= 28) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::&7::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::&7::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 28 && barprogress <= 30) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::&7:::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::&7:::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 30 && barprogress <= 32) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::&7::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::&7::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 32 && barprogress <= 34) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::&7:::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::&7:::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 34 && barprogress <= 36) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::&7::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::&7::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 36 && barprogress <= 38) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::&7:::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::&7:::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 38 && barprogress <= 40) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::&7::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::&7::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 40 && barprogress <= 42) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::&7:::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::&7:::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 42 && barprogress <= 44) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::&7::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::&7::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 44 && barprogress <= 46) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::&7:::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::&7:::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 46 && barprogress <= 48) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::&7::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::&7::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 48 && barprogress <= 50) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::&7:::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::&7:::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 50 && barprogress <= 52) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::&7::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::&7::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 52 && barprogress <= 54) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::&7:::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::&7:::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 54 && barprogress <= 56) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::&7::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::&7::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 56 && barprogress <= 58) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::&7:::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::&7:::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 58 && barprogress <= 60) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::&7::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::&7::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 60 && barprogress <= 62) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::&7:::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::&7:::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 62 && barprogress <= 64) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::&7::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::&7::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 64 && barprogress <= 66) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::&7:::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::&7:::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 66 && barprogress <= 68) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::&7::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::&7::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 68 && barprogress <= 70) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::&7:::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::&7:::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 70 && barprogress <= 72) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::&7::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::&7::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 72 && barprogress <= 74) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::&7:::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::&7:::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 74 && barprogress <= 76) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::&7::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::&7::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 76 && barprogress <= 78) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::&7:::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::&7:::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 78 && barprogress <= 80) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::&7::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::&7::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 80 && barprogress <= 82) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::&7:::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::&7:::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 82 && barprogress <= 84) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::&7::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::&7::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 84 && barprogress <= 86) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::&7:::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::&7:::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 86 && barprogress <= 88) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::&7::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::&7::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 88 && barprogress <= 90) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::&7:::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::&7:::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 90 && barprogress <= 92) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::&7::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::&7::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 92 && barprogress <= 94) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::&7:::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::&7:::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 94 && barprogress <= 96) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::&7::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::&7::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 96 && barprogress <= 98) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::::&7:&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a:::::::::::::::::::::::::::::::::::::::::::::::::&7:&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
 						    			else if(barprogress >= 98 && barprogress <= 100) {
-						    				newLore.add(new ColorCodeTranslator().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
+						    				newLore.add(new CCT().colorize("&7[&a::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a" + String.format("%.2f", barprogress) + "%"));
 						    			}
-					    				newLore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
+					    				newLore.add(new CCT().colorize("&7-----------------------"));
 					    				if(level >= 6) {
 					    					int loreRequired = level - 4;
 					    					int levelRequired = loreRequired * 5;
-					    					newLore.add(new ColorCodeTranslator().colorize("&7Level Required: &6" + levelRequired));
+					    					newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
 					    				}
-					    				newLore.add(new ColorCodeTranslator().colorize("&7Rarity: " + rarity));
+					    				newLore.add(new CCT().colorize("&7Rarity: " + rarity));
 					    				meta.setLore(newLore);
 					    				item1.setItemMeta(meta);
 					    				NBTItem newItem = new NBTItem(item1);
@@ -419,18 +470,11 @@ public class XPAddWeapons implements Listener{
 						    				newItem.setDouble("Attack Speed", tempAS + speedWeapon);
 					    				}
 					    				else if(type.equals("Armor")) {
-					    					newItem.setDouble("Defense", tempDF + armorDefense);
-						    				newItem.setDouble("Toughness", tempT + armorToughness);
-						    				tempDF = newItem.getDouble("Defense");
-				    	            		tempT = newItem.getDouble("Toughness");
-					    				}
-					    				else if(type.equals("Wands")) {
-					    					newItem.setDouble("Attack Damage", tempAD + damageWeapon);
-						    				newItem.setDouble("Attack Speed", tempAS + speedWeapon);
-						    				newItem.setDouble("Attack Range", tempWR + wandRange);
+					    					newItem.setDouble("Armor Defense", tempDF + armorDefense);
+						    				newItem.setDouble("Armor Toughness", tempT + armorToughness);
 					    				}
 					    				else if(type.equals("Shields")) {
-					    					newItem.setDouble("Toughness", tempT + armorToughness);
+					    					newItem.setDouble("Armor Toughness", tempT + armorToughness);
 					    					newItem.setDouble("Cooldown", tempCD - cooldown);
 					    				}
 					    				else if(type.equals("Bows")) {

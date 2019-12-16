@@ -379,11 +379,12 @@ public class EnchantmentHandler extends SwordSwingProgress{
 				else {
 					d = 1.0;
 				}
+				ItemStack item = event.getBow();
 				if(d == 1.0) {
-					if(damager.getEquipment().getItemInMainHand() != null) {
-						if(damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
-							if(damager.getEquipment().getItemInMainHand().getItemMeta().getLore() != null) {
-								for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+					if(item != null) {
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().hasLore()) {
+								for(String s1 : item.getItemMeta().getLore()){
 									String enchant = ChatColor.stripColor(s1);
 									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
 									if(enchantment.getBowEnchantments().containsKey(check)) {

@@ -16,7 +16,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.Enums.Classes;
 
@@ -46,7 +46,7 @@ public class ClassGluttony implements Listener{
 						cooldown = cooldown - (long)(de * 20);
 					}
 					Location locCF = new Location(player.getWorld(), player.getLocation().getX() + 0D, player.getLocation().getY() + 1.5D, player.getLocation().getZ() + 0D);
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have used &6Stand!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have used &6Stand!"));
 					player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, locCF, 60, 0.15, 0.15, 0.15, 0.1); 
 					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 2, (float) 0.5);
 					double totalHeal = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * (heal / 100);
@@ -73,7 +73,7 @@ public class ClassGluttony implements Listener{
 					}.runTaskLater(CustomEnchantments.getInstance(), duration);
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
 				}
 			}
 		}

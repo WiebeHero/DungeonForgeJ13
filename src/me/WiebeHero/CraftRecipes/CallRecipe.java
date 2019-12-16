@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class CallRecipe implements Listener {
@@ -46,7 +46,7 @@ public class CallRecipe implements Listener {
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 0), true);
 			            meta.setColor(Color.fromRGB(111, 55, 23));
-			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Resistance"));
+			            meta.setDisplayName(new CCT().colorize("&fPotion of Resistance"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
 			            	stackList.add(item);
@@ -56,7 +56,7 @@ public class CallRecipe implements Listener {
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 900, 0), true);
 			            meta.setColor(Color.fromRGB(111, 55, 23));
-			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Resistance"));
+			            meta.setDisplayName(new CCT().colorize("&fPotion of Resistance"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
 			            	stackList.add(item);
@@ -66,7 +66,7 @@ public class CallRecipe implements Listener {
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 300, 1), true);
 			            meta.setColor(Color.fromRGB(111, 55, 23));
-			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Resistance"));
+			            meta.setDisplayName(new CCT().colorize("&fPotion of Resistance"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
 			            	stackList.add(item);
@@ -79,7 +79,7 @@ public class CallRecipe implements Listener {
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 600, 0), true);
 			            meta.setColor(Color.fromRGB(255, 198, 0));
-			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Haste"));
+			            meta.setDisplayName(new CCT().colorize("&fPotion of Haste"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
 			            	stackList.add(item);
@@ -89,7 +89,7 @@ public class CallRecipe implements Listener {
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 900, 0), true);
 			            meta.setColor(Color.fromRGB(255, 198, 0));
-			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Haste"));
+			            meta.setDisplayName(new CCT().colorize("&fPotion of Haste"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
 			            	stackList.add(item);
@@ -99,7 +99,7 @@ public class CallRecipe implements Listener {
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 300, 1), true);
 			            meta.setColor(Color.fromRGB(255, 198, 0));
-			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Haste"));
+			            meta.setDisplayName(new CCT().colorize("&fPotion of Haste"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
 			            	stackList.add(item);
@@ -112,7 +112,7 @@ public class CallRecipe implements Listener {
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 600, 0), true);
 			            meta.setColor(Color.fromRGB(0, 0, 0));
-			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Blindness"));
+			            meta.setDisplayName(new CCT().colorize("&fPotion of Blindness"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
 			            	stackList.add(item);
@@ -122,7 +122,7 @@ public class CallRecipe implements Listener {
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 900, 0), true);
 			            meta.setColor(Color.fromRGB(0, 0, 0));
-			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Blindness"));
+			            meta.setDisplayName(new CCT().colorize("&fPotion of Blindness"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
 			            	stackList.add(item);
@@ -132,7 +132,7 @@ public class CallRecipe implements Listener {
 			            PotionMeta meta = (PotionMeta) item.getItemMeta();
 			            meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 300, 1), true);
 			            meta.setColor(Color.fromRGB(0, 0, 0));
-			            meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Blindness"));
+			            meta.setDisplayName(new CCT().colorize("&fPotion of Blindness"));
 			            item.setItemMeta(meta);
 			            if(!stackList.contains(item)) {
 			            	stackList.add(item);
@@ -179,7 +179,7 @@ public class CallRecipe implements Listener {
 		}
 		ItemMeta meta = item.getItemMeta();
 		if(display != null) {
-			meta.setDisplayName(new ColorCodeTranslator().colorize(display));
+			meta.setDisplayName(new CCT().colorize(display));
 		}
 		if(lore != null && lore.size() > 0) {
 			meta.setLore(lore);
@@ -213,7 +213,7 @@ public class CallRecipe implements Listener {
 		PotionMeta meta = (PotionMeta) item.getItemMeta();
 		meta.setBasePotionData(new PotionData(PotionType.THICK));
 		meta.setColor(Color.fromRGB(111, 55, 23));
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Resistance"));
+		meta.setDisplayName(new CCT().colorize("&fPotion of Resistance"));
 		meta.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 0), true);
 		item.setItemMeta(meta);
 		return item;
@@ -223,7 +223,7 @@ public class CallRecipe implements Listener {
 		PotionMeta meta = (PotionMeta) item.getItemMeta();
 		meta.setBasePotionData(new PotionData(PotionType.THICK));
 		meta.setColor(Color.fromRGB(249, 246, 44));
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Haste"));
+		meta.setDisplayName(new CCT().colorize("&fPotion of Haste"));
 		meta.addCustomEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 600, 0), true);
 		item.setItemMeta(meta);
 		return item;
@@ -233,7 +233,7 @@ public class CallRecipe implements Listener {
 		PotionMeta meta = (PotionMeta) item.getItemMeta();
 		meta.setBasePotionData(new PotionData(PotionType.MUNDANE));
 		meta.setColor(Color.fromRGB(0, 0, 0));
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&fPotion of Blindess"));
+		meta.setDisplayName(new CCT().colorize("&fPotion of Blindess"));
 		meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 600, 0), true);
 		item.setItemMeta(meta);
 		return item;
@@ -241,11 +241,11 @@ public class CallRecipe implements Listener {
 	public ItemStack commonCrystal() {
 		ItemStack item1 = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new ColorCodeTranslator().colorize("&7Common Crystal"));
+		meta1.setDisplayName(new CCT().colorize("&7Common Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: Common"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: Common"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
 		return item1;
@@ -253,11 +253,11 @@ public class CallRecipe implements Listener {
 	public ItemStack rareCrystal() {
 		ItemStack item1 = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new ColorCodeTranslator().colorize("&aRare Crystal"));
+		meta1.setDisplayName(new CCT().colorize("&aRare Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: &aRare"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: &aRare"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
 		return item1;
@@ -265,11 +265,11 @@ public class CallRecipe implements Listener {
 	public ItemStack epicCrystal() {
 		ItemStack item1 = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new ColorCodeTranslator().colorize("&bEpic Crystal"));
+		meta1.setDisplayName(new CCT().colorize("&bEpic Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: &bEpic"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: &bEpic"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
 		return item1;
@@ -277,11 +277,11 @@ public class CallRecipe implements Listener {
 	public ItemStack legendaryCrystal() {
 		ItemStack item1 = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new ColorCodeTranslator().colorize("&cLegendary Crystal"));
+		meta1.setDisplayName(new CCT().colorize("&cLegendary Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: &cLegendary"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: &cLegendary"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
 		return item1;
@@ -289,11 +289,11 @@ public class CallRecipe implements Listener {
 	public ItemStack mythicCrystal() {
 		ItemStack item1 = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new ColorCodeTranslator().colorize("&5Mythic Crystal"));
+		meta1.setDisplayName(new CCT().colorize("&5Mythic Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: &5Mythic"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: &5Mythic"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
 		return item1;
@@ -301,11 +301,11 @@ public class CallRecipe implements Listener {
 	public ItemStack heroicCrystal() {
 		ItemStack item1 = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new ColorCodeTranslator().colorize("&eHeroic Crystal"));
+		meta1.setDisplayName(new CCT().colorize("&eHeroic Crystal"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Bring me to &6&lNOVIS &7to get some"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Really nice rewards!"));
-		lore1.add(new ColorCodeTranslator().colorize("&7Rarity: &eHeroic"));
+		lore1.add(new CCT().colorize("&7Bring me to &6&lNOVIS &7to get some"));
+		lore1.add(new CCT().colorize("&7Really nice rewards!"));
+		lore1.add(new CCT().colorize("&7Rarity: &eHeroic"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
 		return item1;

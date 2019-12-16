@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class DFShop implements Listener{
@@ -46,7 +46,7 @@ public class DFShop implements Listener{
 	//Main Page Shop
 	//--------------------------------------------------------------------------------------------------------------------
 	public void ShopMainPage(Player player) {
-		Inventory i = plugin.getServer().createInventory(null, 54, (new ColorCodeTranslator().colorize("&a&lShop")));
+		Inventory i = plugin.getServer().createInventory(null, 54, (new CCT().colorize("&a&lShop")));
 		player.openInventory(i);
 		i.setItem(0, emptyVoid());
 		i.setItem(1, emptyVoid());
@@ -102,7 +102,7 @@ public class DFShop implements Listener{
 		if(pageNumber >= 1 && pageNumber <= maxPageNumber) {
 			Set<String> items = yml.getConfigurationSection("Shop." + name + ".Page " + pageNumber).getKeys(false);
 			ArrayList<String> mainPageItems = new ArrayList<String>(items);
-			Inventory i = plugin.getServer().createInventory(null, 54, (new ColorCodeTranslator().colorize("&a&l" + name + ": Page " + pageNumber + "/" + maxPageNumber)));
+			Inventory i = plugin.getServer().createInventory(null, 54, (new CCT().colorize("&a&l" + name + ": Page " + pageNumber + "/" + maxPageNumber)));
 			player.openInventory(i);
 			for(int i1 = 0; i1 < mainPageItems.size(); i1++) {
 				String materialString = yml.getString("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Material");
@@ -116,14 +116,14 @@ public class DFShop implements Listener{
 					item = new ItemStack(Material.getMaterial(materialString), 1);
 				}
 				ItemMeta itemmeta = item.getItemMeta();
-				itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&l" + mainPageItems.get(i1)));
+				itemmeta.setDisplayName(new CCT().colorize("&a&l" + mainPageItems.get(i1)));
 				ArrayList<String> lore1 = new ArrayList<String>();
 				if(yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Cost") > 0) {
-					lore1.add(new ColorCodeTranslator().colorize("&7Left Click to buy " + yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Amount") + " = " + yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Cost") + "$"));
+					lore1.add(new CCT().colorize("&7Left Click to buy " + yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Amount") + " = " + yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Cost") + "$"));
 				}
 				if(yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Sell") > 0) {
-					lore1.add(new ColorCodeTranslator().colorize(""));
-					lore1.add(new ColorCodeTranslator().colorize("&7Right Click to sell " + yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Amount") + " = " + yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Sell") + "$"));
+					lore1.add(new CCT().colorize(""));
+					lore1.add(new CCT().colorize("&7Right Click to sell " + yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Amount") + " = " + yml.getInt("Shop." + name + ".Page " + pageNumber + "." + mainPageItems.get(i1) + ".Sell") + "$"));
 				}
 				itemmeta.setLore(lore1);
 				item.setItemMeta(itemmeta);
@@ -149,105 +149,105 @@ public class DFShop implements Listener{
 	public ItemStack emptyVoid() {
 		ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize(""));
+		itemmeta.setDisplayName(new CCT().colorize(""));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack backButton() {
 		ItemStack item = new ItemStack(Material.BARRIER, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&c&lBACK"));
+		itemmeta.setDisplayName(new CCT().colorize("&c&lBACK"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack closeButton() {
 		ItemStack item = new ItemStack(Material.BARRIER, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&c&lCLOSE"));
+		itemmeta.setDisplayName(new CCT().colorize("&c&lCLOSE"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack nextPage() {
 		ItemStack item = new ItemStack(Material.PAPER, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lNext Page"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lNext Page"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack previousPage() {
 		ItemStack item = new ItemStack(Material.PAPER, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lPrevious Page"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lPrevious Page"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack blockShop() {
 		ItemStack item = new ItemStack(Material.GRASS_BLOCK, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lBlock Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lBlock Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack foodShop() {
 		ItemStack item = new ItemStack(Material.COOKED_BEEF, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lFood Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lFood Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack redstoneShop() {
 		ItemStack item = new ItemStack(Material.TNT, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lRaid Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lRaid Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack mobDropShop() {
 		ItemStack item = new ItemStack(Material.ROTTEN_FLESH, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lMobdrop Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lMobdrop Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack oreShop() {
 		ItemStack item = new ItemStack(Material.IRON_ORE, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lOre Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lOre Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack specialShop() {
 		ItemStack item = new ItemStack(Material.BEACON, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lSpecial Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lSpecial Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack spawnerShop() {
 		ItemStack item = new ItemStack(Material.SPAWNER, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lSpawner Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lSpawner Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack decorationShop() {
 		ItemStack item = new ItemStack(Material.DANDELION_YELLOW, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lDecoration Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lDecoration Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack brewingShop() {
 		ItemStack item = new ItemStack(Material.BREWING_STAND, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lBrewing Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lBrewing Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
 	public ItemStack farmableShop() {
 		ItemStack item = new ItemStack(Material.CACTUS, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lFarmable Shop"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lFarmable Shop"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
@@ -311,14 +311,14 @@ public class DFShop implements Listener{
 			  				double money = m.getMoneyList().get(player.getUniqueId());
 			  				if(money >= cost) {
 			  					if(item.getType() != Material.SPAWNER) {
-				  					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a for " + cost + "$!"));
+				  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a for " + cost + "$!"));
 				  					player.getInventory().addItem(new ItemStack(item.getType(), amount));
 				  					money = money - cost;
 				  					m.getMoneyList().put(player.getUniqueId(), money);
 				  					CustomEnchantments.getInstance().score.generateScoreboard(player);
 			  					}
 			  					else {
-			  						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a foraa " + cost + "$!"));
+			  						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a foraa " + cost + "$!"));
 			  						ItemStack item1 = new ItemStack(item);
 			  						ItemMeta itemmeta = (ItemMeta) item1.getItemMeta();
 			  						itemmeta.setLore(null);
@@ -330,11 +330,11 @@ public class DFShop implements Listener{
 			  					}
 			  				}
 			  				else {
-			  					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
+			  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
 			  				}
 						}
 						else {
-		  					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't buy this item!"));
+		  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't buy this item!"));
 		  				}
 					}
 				}
@@ -357,18 +357,18 @@ public class DFShop implements Listener{
 			  					}
 			  				}
 		  					if(amountSell >= amount) {
-			  					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have sold " + amount + " " + item.getItemMeta().getDisplayName() + "&a" + " for " + sell + "$!"));
+			  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have sold " + amount + " " + item.getItemMeta().getDisplayName() + "&a" + " for " + sell + "$!"));
 			  					player.getInventory().removeItem(new ItemStack(item.getType(), amount));
 			  					money = money + sell;
 			  					m.getMoneyList().put(player.getUniqueId(), money);
 			  					CustomEnchantments.getInstance().score.generateScoreboard(player);
 		  					}
 		  					else {
-		  						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough items!"));
+		  						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough items!"));
 		  					}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't sell this item!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't sell this item!"));
 						}
 					}
 				}
@@ -433,9 +433,10 @@ public class DFShop implements Listener{
 					stripped = stripped.toUpperCase();
 					stripped = stripped.replaceAll(" ", "_");
 					Block bl = event.getBlock();
-					player.sendMessage(stripped);
 	                CreatureSpawner s = (CreatureSpawner) bl.getState();
-                	s.setSpawnedType(EntityType.valueOf(stripped));
+	                if(!stripped.contains("SPAWNER_SETUP")) {
+	                	s.setSpawnedType(EntityType.valueOf(stripped));
+	                }
 					s.update();
 				}
 			}

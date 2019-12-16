@@ -3,7 +3,6 @@ package me.WiebeHero.CustomMethods;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
@@ -11,7 +10,6 @@ import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import de.tr7zw.itemnbtapi.NBTItem;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.NBTTagDouble;
 import net.minecraft.server.v1_13_R2.NBTTagInt;
@@ -140,10 +138,6 @@ public class NewAttribute {
 		nmsStack.setTag(compound);
 		nmsStack.save(compound);
 		ItemStack finalItem = CraftItemStack.asBukkitCopy(nmsStack);
-		NBTItem tempItem = new NBTItem(finalItem);
-		tempItem.setDouble("Attack Damage", 1.5);
-		tempItem.setDouble("Attack Speed", 1.5);
-		finalItem = tempItem.getItem();
 		return finalItem;
 	}
 }

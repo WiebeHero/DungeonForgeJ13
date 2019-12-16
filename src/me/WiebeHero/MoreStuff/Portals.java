@@ -15,7 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class Portals implements Listener,CommandExecutor{
@@ -65,7 +65,7 @@ public class Portals implements Listener,CommandExecutor{
 							@Override
 							public void run() {
 								if(player.getLocation().getX() == locX && player.getLocation().getZ() == locZ) {
-									player.sendMessage(new ColorCodeTranslator().colorize("&aRandom Teleporting in " + count + "..."));
+									player.sendMessage(new CCT().colorize("&aRandom Teleporting in " + count + "..."));
 									count--;
 									if(count == 0) {
 										userUsed.add(player.getUniqueId().toString());
@@ -91,11 +91,11 @@ public class Portals implements Listener,CommandExecutor{
 											}
 										}
 										cancel();
-										player.sendMessage(new ColorCodeTranslator().colorize("&cTeleported!"));
+										player.sendMessage(new CCT().colorize("&cTeleported!"));
 									}
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&cCancelled teleporting because of you moving."));
+									player.sendMessage(new CCT().colorize("&cCancelled teleporting because of you moving."));
 									cancel();
 								}
 							}
@@ -110,11 +110,11 @@ public class Portals implements Listener,CommandExecutor{
 						}.runTaskLater(CustomEnchantments.getInstance(), 1200L);
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&cYou have already used this! Wait 1 minute!"));
+						player.sendMessage(new CCT().colorize("&cYou have already used this! Wait 1 minute!"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&cYou are in combat tag! You can not teleport!"));
+					player.sendMessage(new CCT().colorize("&cYou are in combat tag! You can not teleport!"));
 				}
 			}
 		}

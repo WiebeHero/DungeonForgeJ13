@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.DFShops.MoneyCreate;
 
 public class SkillMenuInteract implements Listener{
@@ -38,11 +38,11 @@ public class SkillMenuInteract implements Listener{
 							menu.SkillMenuInv(player);
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
 					}
 				}
 				else if(skillName.contains("Attack Speed")) {
@@ -56,11 +56,11 @@ public class SkillMenuInteract implements Listener{
 							menu.SkillMenuInv(player);
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
 					}
 				}
 				else if(skillName.contains("Critical Chance")) {
@@ -73,11 +73,11 @@ public class SkillMenuInteract implements Listener{
 							menu.SkillMenuInv(player);
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
 					}
 				}
 				else if(skillName.contains("Ranged Damage")) {
@@ -90,11 +90,11 @@ public class SkillMenuInteract implements Listener{
 							menu.SkillMenuInv(player);
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
 					}
 				}
 				else if(skillName.contains("Health")) {
@@ -108,11 +108,11 @@ public class SkillMenuInteract implements Listener{
 							sk.changeHealth(player);
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
 					}
 				}
 				else if(skillName.contains("Defense")) {
@@ -126,14 +126,14 @@ public class SkillMenuInteract implements Listener{
 							sk.runDefense(player);
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough &6Skill Points!"));
 					}
 				}
-				else if(skillName.contains(new ColorCodeTranslator().colorize("&4"))) {
+				else if(skillName.contains(new CCT().colorize("&4"))) {
 					if(dfPlayer.getAtkMod() < 5) {
 						if(dfPlayer.getAtk() >= 20 + (20 * dfPlayer.getAtkMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getAtkMod())) {
@@ -145,22 +145,22 @@ public class SkillMenuInteract implements Listener{
 									menu.SkillMenuInv(player);
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Attack Damage Level &crequirement!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Attack Damage Level &crequirement!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains(new ColorCodeTranslator().colorize("&9"))) {
+				else if(skillName.contains(new CCT().colorize("&9"))) {
 					if(dfPlayer.getSpdMod() < 5) {
 						if(dfPlayer.getSpd() >= 20 + (20 * dfPlayer.getSpdMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getSpdMod())) {
@@ -172,22 +172,22 @@ public class SkillMenuInteract implements Listener{
 									menu.SkillMenuInv(player);
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Attack Speed Level &crequirement!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Attack Speed Level &crequirement!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains(new ColorCodeTranslator().colorize("&5"))) {
+				else if(skillName.contains(new CCT().colorize("&5"))) {
 					if(dfPlayer.getCrtMod() < 5) {
 						if(dfPlayer.getCrt() >= 20 + (20 * dfPlayer.getCrtMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getCrtMod())) {
@@ -199,22 +199,22 @@ public class SkillMenuInteract implements Listener{
 									menu.SkillMenuInv(player);
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Critical Chance Level &crequirement!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Critical Chance Level &crequirement!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains(new ColorCodeTranslator().colorize("&d"))) {
+				else if(skillName.contains(new CCT().colorize("&d"))) {
 					if(dfPlayer.getRndMod() < 5) {
 						if(dfPlayer.getRnd() >= 20 + (20 * dfPlayer.getRndMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getRndMod())) {
@@ -226,22 +226,22 @@ public class SkillMenuInteract implements Listener{
 									menu.SkillMenuInv(player);
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Ranged Damage Level &crequirement!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Ranged Damage Level &crequirement!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains(new ColorCodeTranslator().colorize("&c"))) {
+				else if(skillName.contains(new CCT().colorize("&c"))) {
 					if(dfPlayer.getHpMod() < 5) {
 						if(dfPlayer.getHp() >= 20 + (20 * dfPlayer.getHpMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getHpMod())) {
@@ -253,22 +253,22 @@ public class SkillMenuInteract implements Listener{
 									menu.SkillMenuInv(player);
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Health Level &crequirement!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Health Level &crequirement!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
-				else if(skillName.contains(new ColorCodeTranslator().colorize("&8"))) {
+				else if(skillName.contains(new CCT().colorize("&8"))) {
 					if(dfPlayer.getDfMod() < 5) {
 						if(dfPlayer.getDf() >= 20 + (20 * dfPlayer.getDfMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getDfMod())) {
@@ -280,19 +280,19 @@ public class SkillMenuInteract implements Listener{
 									menu.SkillMenuInv(player);
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement!"));
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Player Level &crequirement!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Health Level &crequirement!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal &6Health Level &crequirement!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
 				}
 			}

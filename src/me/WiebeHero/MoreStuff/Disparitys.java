@@ -24,7 +24,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.DFPlayer;
 
@@ -63,15 +63,15 @@ public class Disparitys implements Listener{
 								bar.setProgress(d);
 								if(disparity >= 0 && disparity < 33) {
 									bar.setColor(BarColor.GREEN);
-									bar.setTitle(new ColorCodeTranslator().colorize("&7Disparity: &a" + disparity));
+									bar.setTitle(new CCT().colorize("&7Disparity: &a" + disparity));
 								}
 								else if(disparity >= 33 && disparity < 66) {
 									bar.setColor(BarColor.YELLOW);
-									bar.setTitle(new ColorCodeTranslator().colorize("&7Disparity: &e" + disparity));
+									bar.setTitle(new CCT().colorize("&7Disparity: &e" + disparity));
 								}
 								else if(disparity >= 66 && disparity <= 100) {
 									bar.setColor(BarColor.RED);
-									bar.setTitle(new ColorCodeTranslator().colorize("&7Disparity: &c" + disparity));
+									bar.setTitle(new CCT().colorize("&7Disparity: &c" + disparity));
 								}
 								listPlayers.put(player.getName(), disparity);
 							}
@@ -142,11 +142,11 @@ public class Disparitys implements Listener{
 					int lowerL = levelV - levelD;
 					int higherL = levelD - levelV;
 					if(Math.abs(lowerL) > disparity) {
-						damager.sendMessage(new ColorCodeTranslator().colorize("&cYou can't damage this person here, they are too low level."));
+						damager.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
 						event.setCancelled(true);
 					}
 					else if(higherL > disparity) {
-						damager.sendMessage(new ColorCodeTranslator().colorize("&cYou can't damage this person here, they are too low level."));
+						damager.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
 						event.setCancelled(true);
 					}
 				}
@@ -184,11 +184,11 @@ public class Disparitys implements Listener{
 						int lowerL = levelV - levelD;
 						int higherL = levelD - levelV;
 						if(Math.abs(lowerL) > disparity) {
-							shooter.sendMessage(new ColorCodeTranslator().colorize("&cYou can't damage this person here, they are too low level."));
+							shooter.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
 							event.setCancelled(true);
 						}
 						else if(higherL > disparity) {
-							shooter.sendMessage(new ColorCodeTranslator().colorize("&cYou can't damage this person here, they are too low level."));
+							shooter.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
 							event.setCancelled(true);
 						}
 					}
@@ -226,11 +226,11 @@ public class Disparitys implements Listener{
 						int lowerL = levelV - levelD;
 						int higherL = levelD - levelV;
 						if(Math.abs(lowerL) > disparity) {
-							damager.sendMessage(new ColorCodeTranslator().colorize("&cYou can't damage this person here, they are too low level."));
+							damager.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
 							event.setCancelled(true);
 						}
 						else if(higherL > disparity) {
-							damager.sendMessage(new ColorCodeTranslator().colorize("&cYou can't damage this person here, they are too low level."));
+							damager.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
 							event.setCancelled(true);
 						}
 					}

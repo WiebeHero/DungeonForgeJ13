@@ -36,6 +36,8 @@ import org.bukkit.scoreboard.Team;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtinjector.NBTInjector;
 import javafx.util.Pair;
 import me.WiebeHero.Consumables.Consumable;
 import me.WiebeHero.Consumables.ConsumableHandler;
@@ -46,121 +48,7 @@ import me.WiebeHero.CustomArmor.Common.ArmorChestplate;
 import me.WiebeHero.CustomArmor.Common.ArmorHelmet;
 import me.WiebeHero.CustomArmor.Common.ArmorLeggings;
 import me.WiebeHero.CustomBows.Bows;
-import me.WiebeHero.CustomEnchantmentsA.Absorbing;
-import me.WiebeHero.CustomEnchantmentsA.AbsorbingCombo;
-import me.WiebeHero.CustomEnchantmentsA.AbsorbingComeback;
-import me.WiebeHero.CustomEnchantmentsA.ArcanistExplosion;
-import me.WiebeHero.CustomEnchantmentsA.Bane;
-import me.WiebeHero.CustomEnchantmentsA.BlastOff;
-import me.WiebeHero.CustomEnchantmentsA.Cactus;
-import me.WiebeHero.CustomEnchantmentsA.CreeperSpirit;
-import me.WiebeHero.CustomEnchantmentsA.Curse;
-import me.WiebeHero.CustomEnchantmentsA.DamageReturn;
-import me.WiebeHero.CustomEnchantmentsA.DodgeRoll;
-import me.WiebeHero.CustomEnchantmentsA.Dummy;
-import me.WiebeHero.CustomEnchantmentsA.Enlightened;
-import me.WiebeHero.CustomEnchantmentsA.Escape;
-import me.WiebeHero.CustomEnchantmentsA.ExplodingParrot;
-import me.WiebeHero.CustomEnchantmentsA.Fortitude;
-import me.WiebeHero.CustomEnchantmentsA.FossilBlaze;
-import me.WiebeHero.CustomEnchantmentsA.Ghostly;
-import me.WiebeHero.CustomEnchantmentsA.Harden;
-import me.WiebeHero.CustomEnchantmentsA.Hastened;
-import me.WiebeHero.CustomEnchantmentsA.Ignite;
-import me.WiebeHero.CustomEnchantmentsA.Invincibility;
-import me.WiebeHero.CustomEnchantmentsA.JellyFish;
-import me.WiebeHero.CustomEnchantmentsA.Kadabra;
-import me.WiebeHero.CustomEnchantmentsA.LastStand;
-import me.WiebeHero.CustomEnchantmentsA.Nurtrition;
-import me.WiebeHero.CustomEnchantmentsA.PowerfullStrike;
-import me.WiebeHero.CustomEnchantmentsA.Protection;
-import me.WiebeHero.CustomEnchantmentsA.Rage;
-import me.WiebeHero.CustomEnchantmentsA.Regenerator;
-import me.WiebeHero.CustomEnchantmentsA.Reinforced;
-import me.WiebeHero.CustomEnchantmentsA.Saturation;
-import me.WiebeHero.CustomEnchantmentsA.SelfDestruct;
-import me.WiebeHero.CustomEnchantmentsA.Slowness1;
-import me.WiebeHero.CustomEnchantmentsA.Slowness2;
-import me.WiebeHero.CustomEnchantmentsA.SmokeScreen;
-import me.WiebeHero.CustomEnchantmentsA.SnareA;
-import me.WiebeHero.CustomEnchantmentsA.Tank;
-import me.WiebeHero.CustomEnchantmentsA.TitanicOath;
-import me.WiebeHero.CustomEnchantmentsA.Valor;
-import me.WiebeHero.CustomEnchantmentsA.Withering;
-import me.WiebeHero.CustomEnchantmentsB.BlackHeartB;
-import me.WiebeHero.CustomEnchantmentsB.BlastB;
-import me.WiebeHero.CustomEnchantmentsB.ConfusionB;
-import me.WiebeHero.CustomEnchantmentsB.DisarmorB;
-import me.WiebeHero.CustomEnchantmentsB.GrapplingHook;
-import me.WiebeHero.CustomEnchantmentsB.LifestealB;
-import me.WiebeHero.CustomEnchantmentsB.Lightning;
-import me.WiebeHero.CustomEnchantmentsB.ParalyzeB;
-import me.WiebeHero.CustomEnchantmentsB.PickpocketB;
-import me.WiebeHero.CustomEnchantmentsB.PierceB;
-import me.WiebeHero.CustomEnchantmentsB.PoisonB;
-import me.WiebeHero.CustomEnchantmentsB.Sandstorm;
-import me.WiebeHero.CustomEnchantmentsB.WeaknessB;
-import me.WiebeHero.CustomEnchantmentsB.WitherB;
-import me.WiebeHero.CustomEnchantmentsM.AllOut;
-import me.WiebeHero.CustomEnchantmentsM.Beserk;
-import me.WiebeHero.CustomEnchantmentsM.Blast;
-import me.WiebeHero.CustomEnchantmentsM.Bleed;
-import me.WiebeHero.CustomEnchantmentsM.Blind;
-import me.WiebeHero.CustomEnchantmentsM.Blizzard;
-import me.WiebeHero.CustomEnchantmentsM.Brand;
-import me.WiebeHero.CustomEnchantmentsM.Charge;
-import me.WiebeHero.CustomEnchantmentsM.ChronicalDisturbance;
-import me.WiebeHero.CustomEnchantmentsM.Cyclone;
-import me.WiebeHero.CustomEnchantmentsM.DefensivePosition;
-import me.WiebeHero.CustomEnchantmentsM.Disarmor;
-import me.WiebeHero.CustomEnchantmentsM.DragonsFireball;
-import me.WiebeHero.CustomEnchantmentsM.Drain;
-import me.WiebeHero.CustomEnchantmentsM.Featherweight;
-import me.WiebeHero.CustomEnchantmentsM.FinalBlow;
-import me.WiebeHero.CustomEnchantmentsM.FireAspect;
-import me.WiebeHero.CustomEnchantmentsM.Freeze;
-import me.WiebeHero.CustomEnchantmentsM.HeadHunter;
-import me.WiebeHero.CustomEnchantmentsM.Headbash;
-import me.WiebeHero.CustomEnchantmentsM.HeavyHand;
-import me.WiebeHero.CustomEnchantmentsM.LargeFireball;
-import me.WiebeHero.CustomEnchantmentsM.Levitate;
-import me.WiebeHero.CustomEnchantmentsM.Lifesteal;
-import me.WiebeHero.CustomEnchantmentsM.Looting;
-import me.WiebeHero.CustomEnchantmentsM.NegativeHollow;
-import me.WiebeHero.CustomEnchantmentsM.Paralyze;
-import me.WiebeHero.CustomEnchantmentsM.PerfectSlash;
-import me.WiebeHero.CustomEnchantmentsM.Phantom;
-import me.WiebeHero.CustomEnchantmentsM.Pinch;
-import me.WiebeHero.CustomEnchantmentsM.Poison;
-import me.WiebeHero.CustomEnchantmentsM.Precision;
-import me.WiebeHero.CustomEnchantmentsM.Revenge;
-import me.WiebeHero.CustomEnchantmentsM.Sharpness;
-import me.WiebeHero.CustomEnchantmentsM.SkyHigh;
-import me.WiebeHero.CustomEnchantmentsM.Slow;
-import me.WiebeHero.CustomEnchantmentsM.SoulBurst;
-import me.WiebeHero.CustomEnchantmentsM.SoulReaper;
-import me.WiebeHero.CustomEnchantmentsM.Spectral;
-import me.WiebeHero.CustomEnchantmentsM.StarShine;
-import me.WiebeHero.CustomEnchantmentsM.Steal;
-import me.WiebeHero.CustomEnchantmentsM.Vampirism;
-import me.WiebeHero.CustomEnchantmentsM.Venom;
-import me.WiebeHero.CustomEnchantmentsM.Weakness;
-import me.WiebeHero.CustomEnchantmentsM.Wither;
-import me.WiebeHero.CustomEnchantmentsM.Wizard;
-import me.WiebeHero.CustomEnchantmentsM.WolfPack;
 import me.WiebeHero.CustomHitDelay.HitDelay;
-import me.WiebeHero.CustomItemsFOOD.BunnyPotion;
-import me.WiebeHero.CustomItemsFOOD.ButterscotchPie;
-import me.WiebeHero.CustomItemsFOOD.ChocolateChippedCookie;
-import me.WiebeHero.CustomItemsFOOD.FaceSteak;
-import me.WiebeHero.CustomItemsFOOD.Fusgel;
-import me.WiebeHero.CustomItemsFOOD.HolyPotato;
-import me.WiebeHero.CustomItemsFOOD.LegendaryHero;
-import me.WiebeHero.CustomItemsFOOD.MenJerky;
-import me.WiebeHero.CustomItemsFOOD.PurifiedSpiderEye;
-import me.WiebeHero.CustomItemsFOOD.SeasonedCarrot;
-import me.WiebeHero.CustomItemsFOOD.SkyFish;
-import me.WiebeHero.CustomItemsFOOD.TrickyFish;
 import me.WiebeHero.DFShops.DFShop;
 import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.DFShops.PayCommand;
@@ -176,16 +64,18 @@ import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Factions.FactionsHandler;
 import me.WiebeHero.FishingLoot.ChangeFishDrops;
-import me.WiebeHero.LootChest.ChestList;
+import me.WiebeHero.LootChest.ChestEvents;
+import me.WiebeHero.LootChest.LootChestManager;
 import me.WiebeHero.LootChest.LootRewards;
 import me.WiebeHero.LootChest.MoneyNotes;
-import me.WiebeHero.LootChest.SetChest;
+import me.WiebeHero.Moderation.ModerationEvents;
 import me.WiebeHero.Moderation.ModerationGUI;
 import me.WiebeHero.Moderation.ModerationGUICommand;
+import me.WiebeHero.Moderation.PunishManager;
+import me.WiebeHero.Moderation.StaffManager;
 import me.WiebeHero.MoreStuff.AFKSystem;
 import me.WiebeHero.MoreStuff.CancelJoinLeaveAdvancementMessages;
 import me.WiebeHero.MoreStuff.CancelLootSteal;
-import me.WiebeHero.MoreStuff.CancelWeaponPlaced;
 import me.WiebeHero.MoreStuff.Chat;
 import me.WiebeHero.MoreStuff.ChatItem;
 import me.WiebeHero.MoreStuff.CombatTag;
@@ -220,10 +110,8 @@ import me.WiebeHero.Skills.SkillCommand;
 import me.WiebeHero.Skills.SkillJoin;
 import me.WiebeHero.Skills.SkillMenuInteract;
 import me.WiebeHero.Skills.XPEarningMobs;
-import me.WiebeHero.Spawners.DFSpawner;
+import me.WiebeHero.Spawners.DFSpawnerManager;
 import me.WiebeHero.Spawners.DeathOfMob;
-import me.WiebeHero.Spawners.SetSpawner;
-import me.WiebeHero.Spawners.SpawnerList;
 import me.WiebeHero.XpTrader.XPAddPlayers;
 import me.WiebeHero.XpTrader.XPAddWeapons;
 import me.WiebeHero.XpTrader.XPTraderMenu;
@@ -233,33 +121,30 @@ import me.lucko.luckperms.api.User;
 
 public class CustomEnchantments extends JavaPlugin implements Listener{
 	public HashMap<UUID, DFPlayer> dfPlayerList = new HashMap<UUID, DFPlayer>();
-	public ArrayList<DFSpawner> dfSpawnerList = new ArrayList<DFSpawner>();
 	public HashMap<UUID, DungeonParty> dfDungeonParty = new HashMap<UUID, DungeonParty>();
 	public ArrayList<DungeonMaxima> dfDungeonList = new ArrayList<DungeonMaxima>();
 	public ArrayList<DFFaction> factionList = new ArrayList<DFFaction>();
 	private static CustomEnchantments instance;
 	private SkillCommand skillCommand = new SkillCommand();
-	private SetSpawner command = new SetSpawner();
-	private SpawnerList sp = new SpawnerList();
 	private DungeonPartyCommand party = new DungeonPartyCommand();
 	private DFFactions fac = new DFFactions();
 	private Portals p = new Portals();
 	private PayCommand pay = new PayCommand();
 	private SpawnCommand spa = new SpawnCommand();
-	private SetChest loot = new SetChest();
 	private MoneyCreate money = new MoneyCreate();
 	private SetHomeSystem sethome = new SetHomeSystem();
 	private TPACommand tpa = new TPACommand();
-	private ModerationGUICommand mod = new ModerationGUICommand();
-	private ChestList cList = new ChestList();
 	private LootRewards lootR = new LootRewards();
 	private ConfigManager cfgm;
-//	private CraftableWeapons cw = new CraftableWeapons();
 	private DFPlayer pl = new DFPlayer();
 	private DFFaction method = new DFFaction();
 	public Enchantment enchant = new Enchantment();
 	public Consumable con = new Consumable();
 	public DFScoreboard score = new DFScoreboard();
+	public PunishManager punishManager = new PunishManager();
+	public StaffManager staffManager = new StaffManager();
+	public DFSpawnerManager spawnerManager = new DFSpawnerManager();
+	public LootChestManager lootChestManager = new LootChestManager();
 	int level;
 	public Scoreboard scoreboard;
 	public static boolean shutdown = false;
@@ -271,112 +156,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "\n\nThe plugin CustomEnchantments has been enabled!\n\n");
 		//Config Manager
 		loadConfigManager();
-		//Melee Enchantments
-		getServer().getPluginManager().registerEvents(new Wither(), this);
-		getServer().getPluginManager().registerEvents(new HeavyHand(), this);
-		getServer().getPluginManager().registerEvents(new WolfPack(), this);
-		getServer().getPluginManager().registerEvents(new SkyHigh(), this);
-		getServer().getPluginManager().registerEvents(new Poison(), this);
-		getServer().getPluginManager().registerEvents(new LargeFireball(), this);
-		getServer().getPluginManager().registerEvents(new Beserk(), this);
-		getServer().getPluginManager().registerEvents(new Blizzard(), this);
-		getServer().getPluginManager().registerEvents(new Bleed(), this);
-		getServer().getPluginManager().registerEvents(new Slow(), this);
-		getServer().getPluginManager().registerEvents(new NegativeHollow(), this);
-		getServer().getPluginManager().registerEvents(new Paralyze(), this);
-		getServer().getPluginManager().registerEvents(new Weakness(), this);
-		getServer().getPluginManager().registerEvents(new Freeze(), this);
-		getServer().getPluginManager().registerEvents(new Lifesteal(), this);
-		getServer().getPluginManager().registerEvents(new Blind(), this);
-		getServer().getPluginManager().registerEvents(new Spectral(), this);
-		getServer().getPluginManager().registerEvents(new Levitate(), this);
-		getServer().getPluginManager().registerEvents(new FinalBlow(), this);
-		getServer().getPluginManager().registerEvents(new Blast(), this);
-		getServer().getPluginManager().registerEvents(new Venom(), this);
-		getServer().getPluginManager().registerEvents(new Featherweight(), this);
-		getServer().getPluginManager().registerEvents(new ChronicalDisturbance(), this);
-		getServer().getPluginManager().registerEvents(new AllOut(), this);
-		getServer().getPluginManager().registerEvents(new Wizard(), this);
-		getServer().getPluginManager().registerEvents(new StarShine(), this);
-		getServer().getPluginManager().registerEvents(new FireAspect(), this);
-		getServer().getPluginManager().registerEvents(new Disarmor(), this);
-		getServer().getPluginManager().registerEvents(new Drain(), this);
-		getServer().getPluginManager().registerEvents(new HeadHunter(), this);
-		getServer().getPluginManager().registerEvents(new Vampirism(), this);
-		getServer().getPluginManager().registerEvents(new FireAspect(), this);
-		getServer().getPluginManager().registerEvents(new DragonsFireball(), this);
-		getServer().getPluginManager().registerEvents(new Steal(), this);
-		getServer().getPluginManager().registerEvents(new Pinch(), this);
-		getServer().getPluginManager().registerEvents(new Sharpness(), this);
-		getServer().getPluginManager().registerEvents(new Looting(), this);
-		getServer().getPluginManager().registerEvents(new Headbash(), this);
-		getServer().getPluginManager().registerEvents(new DefensivePosition(), this);
-		getServer().getPluginManager().registerEvents(new Phantom(), this);
-		getServer().getPluginManager().registerEvents(new Revenge(), this);
-		getServer().getPluginManager().registerEvents(new SoulReaper(), this);
-		getServer().getPluginManager().registerEvents(new Precision(), this);
-		getServer().getPluginManager().registerEvents(new PerfectSlash(), this);
-		getServer().getPluginManager().registerEvents(new Charge(), this);
-		getServer().getPluginManager().registerEvents(new Cyclone(), this);
-		getServer().getPluginManager().registerEvents(new SoulBurst(), this);
-		getServer().getPluginManager().registerEvents(new Brand(), this);
-		//Armor AND Shield Enchantments
-		getServer().getPluginManager().registerEvents(new Saturation(), this);
-		getServer().getPluginManager().registerEvents(new Absorbing(), this);
-		getServer().getPluginManager().registerEvents(new Ghostly(), this);
-		getServer().getPluginManager().registerEvents(new Hastened(), this);
-		getServer().getPluginManager().registerEvents(new LastStand(), this);
-		getServer().getPluginManager().registerEvents(new Rage(), this);
-		getServer().getPluginManager().registerEvents(new SmokeScreen(), this);
-		getServer().getPluginManager().registerEvents(new Withering(), this);
-		getServer().getPluginManager().registerEvents(new Slowness1(), this);
-		getServer().getPluginManager().registerEvents(new Regenerator(), this);
-		getServer().getPluginManager().registerEvents(new Kadabra(), this);
-		getServer().getPluginManager().registerEvents(new Invincibility(), this);
-		getServer().getPluginManager().registerEvents(new Ignite(), this);
-		getServer().getPluginManager().registerEvents(new Cactus(), this);
-		getServer().getPluginManager().registerEvents(new Enlightened(), this);
-		getServer().getPluginManager().registerEvents(new Bane(), this);
-		getServer().getPluginManager().registerEvents(new SnareA(), this);
-		getServer().getPluginManager().registerEvents(new SelfDestruct(), this);
-		getServer().getPluginManager().registerEvents(new Slowness2(), this);
-		getServer().getPluginManager().registerEvents(new BlastOff(), this);
-		getServer().getPluginManager().registerEvents(new Nurtrition(), this);
-		getServer().getPluginManager().registerEvents(new Escape(), this);
-		getServer().getPluginManager().registerEvents(new AbsorbingComeback(), this);
-		getServer().getPluginManager().registerEvents(new DamageReturn(), this);
-		getServer().getPluginManager().registerEvents(new Tank(), this);
-		getServer().getPluginManager().registerEvents(new ArcanistExplosion(), this);
-		getServer().getPluginManager().registerEvents(new PowerfullStrike(), this);
-		getServer().getPluginManager().registerEvents(new Harden(), this);
-		getServer().getPluginManager().registerEvents(new Valor(), this);
-		getServer().getPluginManager().registerEvents(new ExplodingParrot(), this);
-		getServer().getPluginManager().registerEvents(new AbsorbingCombo(), this);
-		getServer().getPluginManager().registerEvents(new JellyFish(), this);
-		getServer().getPluginManager().registerEvents(new Dummy(), this);
-		getServer().getPluginManager().registerEvents(new FossilBlaze(), this);
-		getServer().getPluginManager().registerEvents(new Fortitude(), this);
-		getServer().getPluginManager().registerEvents(new Curse(), this);
-		getServer().getPluginManager().registerEvents(new TitanicOath(), this);
-		getServer().getPluginManager().registerEvents(new Protection(), this);
-		getServer().getPluginManager().registerEvents(new CreeperSpirit(), this);
-		getServer().getPluginManager().registerEvents(new DodgeRoll(), this);
-		getServer().getPluginManager().registerEvents(new Reinforced(), this);
-		//Bow Enchantments
-		getServer().getPluginManager().registerEvents(new BlackHeartB(), this);
-		getServer().getPluginManager().registerEvents(new BlastB(), this);
-		getServer().getPluginManager().registerEvents(new ConfusionB(), this);
-		getServer().getPluginManager().registerEvents(new DisarmorB(), this);
-		getServer().getPluginManager().registerEvents(new LifestealB(), this);
-		getServer().getPluginManager().registerEvents(new ParalyzeB(), this);
-		getServer().getPluginManager().registerEvents(new PickpocketB(), this);
-		getServer().getPluginManager().registerEvents(new PierceB(), this);
-		getServer().getPluginManager().registerEvents(new PoisonB(), this);
-		getServer().getPluginManager().registerEvents(new WeaknessB(), this);
-		getServer().getPluginManager().registerEvents(new WitherB(), this);
-		getServer().getPluginManager().registerEvents(new Lightning(), this);
-		getServer().getPluginManager().registerEvents(new Sandstorm(), this);
-		getServer().getPluginManager().registerEvents(new GrapplingHook(), this);
+		ModerationGUICommand mod = new ModerationGUICommand();
 		//Custom Weapons
 		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(), this);
 		//Custom Armor
@@ -406,7 +186,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Novis
 		getServer().getPluginManager().registerEvents(new NovisInventory(), this);
 		//Loot Chest
-		getServer().getPluginManager().registerEvents(cList, this);
+		getServer().getPluginManager().registerEvents(new ChestEvents(), this);
 		getServer().getPluginManager().registerEvents(new MoneyNotes(), this);
 		//Brewing Recipes
 		getServer().getPluginManager().registerEvents(new UnblockBrewing(), this);
@@ -428,23 +208,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(sethome, this);
 		getServer().getPluginManager().registerEvents(new DFPlayerRegister(), this);
 		getServer().getPluginManager().registerEvents(new ConsumableHandler(), this);
-		//Crafteable Weapons and item recipes ;)
-//		getServer().getPluginManager().registerEvents(cw, this);
-//		cw.addChainHemlet();
-//		cw.addChainChestplate();
-//		cw.addChainLeggings();
-//		cw.addChainBoots();
-//		cw.addLongBow();
-//		cw.addBow();
-//		cw.addShortBow();
-//		cw.addAmuletOfHealth();
-//		cw.addAmuletOfDefense();
-//		cw.addAmuletOfCharge();
-//		cw.addAmuletOffResistance();
-//		cw.addAmuletOfPower();
-//		cw.addAmuletOfSpeed();
-//		cw.addAmuletOfToughness();
-		sp.addNames();
 		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
 		try{
@@ -481,10 +244,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				mod.loadWarnReasonList(yml1, f2);
 			}
 		}
-		File f3 = new File("plugins/CustomEnchantments/spawnerConfig.yml");
-		YamlConfiguration yml2 = YamlConfiguration.loadConfiguration(f3);
-		command.loadSpawners(yml2, f3);
-		sp.spawnerJoin();
 		File f4 =  new File("plugins/CustomEnchantments/cashConfig.yml");
 		YamlConfiguration yml3 = YamlConfiguration.loadConfiguration(f4);
 		try{
@@ -517,22 +276,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				sethome.loadHomes(yml5, f6);
 			}
 		}
-		File f7 =  new File("plugins/CustomEnchantments/lootConfig.yml");
-		YamlConfiguration yml6 = YamlConfiguration.loadConfiguration(f7);
-		try{
-			yml6.load(f7);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		if(yml6.getConfigurationSection("Loot.Chests") != null) {
-			if(!yml6.get("Loot.Chests").equals("{}")) {
-				loot.loadLootChests(yml6, f7);
-			}
-		}
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
 		getServer().getPluginManager().registerEvents(new EnchantmentHandler(), this);
@@ -554,7 +297,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new Chat(), this);
 		getServer().getPluginManager().registerEvents(new Portals(), this);
 		getServer().getPluginManager().registerEvents(new SwordSwingProgress(), this);
-		getServer().getPluginManager().registerEvents(new CancelWeaponPlaced(), this);
 		getServer().getPluginManager().registerEvents(new PreventIllegalItems(), this);
 		getServer().getPluginManager().registerEvents(new Disparitys(), this);
 		getServer().getPluginManager().registerEvents(new LevelRestrictions(), this);
@@ -569,8 +311,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//HitDelay
 		getServer().getPluginManager().registerEvents(new HitDelay(), this);
 		//Commands
-		getCommand(command.cmdSpawner).setExecutor(command);
-		getCommand(loot.cmdNovis).setExecutor(loot);
 		getCommand(fac.faction).setExecutor(fac);
 		getCommand(p.rtp).setExecutor(p);
 		getCommand(spa.spawn).setExecutor(spa);
@@ -593,6 +333,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(mod.warn).setExecutor(mod);
 		getCommand(mod.unwarn).setExecutor(mod);
 		getCommand(mod.staffmode).setExecutor(mod);
+		getServer().getPluginManager().registerEvents(new ModerationEvents(), this);
 		//Dungeon Parties
 		getCommand(party.comParty).setExecutor(party);
 		getServer().getPluginManager().registerEvents(mod, this);
@@ -602,58 +343,50 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new GlowingItemDrops(), this);
 		loadConfig();
 		//Custom Items FOOD
-		getServer().getPluginManager().registerEvents(new TrickyFish(), this);
-		getServer().getPluginManager().registerEvents(new SeasonedCarrot(), this);
-		getServer().getPluginManager().registerEvents(new BunnyPotion(), this);
-		getServer().getPluginManager().registerEvents(new ChocolateChippedCookie(), this);
-		getServer().getPluginManager().registerEvents(new FaceSteak(), this);
-		getServer().getPluginManager().registerEvents(new SkyFish(), this);
-		getServer().getPluginManager().registerEvents(new LegendaryHero(), this);
-		getServer().getPluginManager().registerEvents(new MenJerky(), this);
-		getServer().getPluginManager().registerEvents(new PurifiedSpiderEye(), this);
-		getServer().getPluginManager().registerEvents(new HolyPotato(), this);
-		getServer().getPluginManager().registerEvents(new ButterscotchPie(), this);
-		getServer().getPluginManager().registerEvents(new Fusgel(), this);
 		getServer().getPluginManager().registerEvents(new ChangeFishDrops(), this);
 		lootR.loadRewards();
-		cList.lootChest();
 		for(Entity e : Bukkit.getWorld("FactionWorld-1").getEntities()) {
 			if(e instanceof LivingEntity) {
+				e = NBTInjector.patchEntity(e);
+				NBTCompound comp = NBTInjector.getNbtData(e);
+				comp.setString("SpawnerUUID", "");
+				comp.setInteger("Level", 1);
+				comp.setInteger("Tier", 0);
 				this.dfPlayerList.put(e.getUniqueId(), new DFPlayer());
 			}
 		}
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 hour!"));
+				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 hour!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 216000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 30 minutes!"));
+				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 30 minutes!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 252000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 15 minutes!"));
+				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 15 minutes!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 270000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 10 minutes!"));
+				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 10 minutes!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 276000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 5 minutes!"));
+				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 5 minutes!"));
 				shutdown = true;
 				for(Player p : Bukkit.getOnlinePlayers()) {
 					if(p != null) {
-						p.kickPlayer(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
+						p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
 					}
 				}
 			}
@@ -661,19 +394,29 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 minute!"));
+				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 minute!"));
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 286800L);
 		
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cRestarting!"));
+				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
 				Bukkit.getServer().shutdown();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 288000L);
+		new BukkitRunnable() {
+			public void run() {
+				NBTInjector.inject();
+				lootChestManager.loadLootChests();
+				lootChestManager.startLootSpawning();
+				spawnerManager.loadSpawners();
+				spawnerManager.startSpawning();
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 	}
 	public void onDisable() {
+		ModerationGUICommand mod = new ModerationGUICommand();
 		for(Entity e : Bukkit.getWorld("DFWarzone-1").getEntities()) {
 			if(e != null && !(e instanceof Player)) {
 				e.remove();
@@ -765,7 +508,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		command.saveSpawners(yml2, f3);
 		File f4 =  new File("plugins/CustomEnchantments/cashConfig.yml");
 		YamlConfiguration yml3 = YamlConfiguration.loadConfiguration(f4);
 		try{
@@ -790,9 +532,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		sethome.saveHomes(yml5, f6);
-		File f7 =  new File("plugins/CustomEnchantments/lootConfig.yml");
-		YamlConfiguration yml6 = YamlConfiguration.loadConfiguration(f7);
-		loot.saveLootChests(yml6, f7);
+		lootChestManager.saveLootChests();
+		spawnerManager.saveSpawners();
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {
@@ -810,7 +551,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			board.getObjective("health").unregister();
 		}
 		Objective o = board.registerNewObjective("health", "health", "display");
-		o.setDisplayName(new ColorCodeTranslator().colorize("&c❤"));
+		o.setDisplayName(new CCT().colorize("&c❤"));
 		o.setDisplaySlot(DisplaySlot.BELOW_NAME);
 	}
 	public static HashMap<UUID, String> ranks = new HashMap<UUID, String>();
@@ -898,7 +639,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dungeonforge","root","");
-            CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new ColorCodeTranslator().colorize("&aConnection established!"));
+            CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new CCT().colorize("&aConnection established!"));
             ArrayList<OfflinePlayer> playerList = new ArrayList<OfflinePlayer>(Arrays.asList(Bukkit.getOfflinePlayers()));
             LuckPermsApi api = LuckPerms.getApi();
             for(int i = 0; i < playerList.size(); i++) {
@@ -961,10 +702,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
                     int rsNew = stmtNew.executeUpdate("INSERT INTO ranktable (UUID, PlayerName, Rank) VALUES ('" + uuidString + "', '" + playerName + "', 'None')");
                 }
             }
-            CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new ColorCodeTranslator().colorize("&aConnection closing down!"));
+            CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new CCT().colorize("&aConnection closing down!"));
             con.close();
 		} catch(Exception e){
-			CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new ColorCodeTranslator().colorize("&aConnection failed!"));
+			CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new CCT().colorize("&aConnection failed!"));
             System.out.println(e);
 		}
 	}

@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.Enums.Classes;
 
@@ -35,7 +35,7 @@ public class ClassGreed implements Listener{
 					long cooldown = 1700 - level * 6;
 					double attackS = 20 + level * 0.30;
 					long duration = 130 + level;
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have prepared a &6Hunting Arrow!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have prepared a &6Hunting Arrow!"));
 					Location loc = player.getLocation();
 					loc.setY(loc.getY() + 2.5);
 					BlockData bd = Material.COAL_BLOCK.createBlockData();
@@ -54,7 +54,7 @@ public class ClassGreed implements Listener{
 					}.runTaskLater(CustomEnchantments.getInstance(), duration);
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this Ability yet!"));
 				}
 			}
 		}

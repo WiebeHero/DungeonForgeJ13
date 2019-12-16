@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class AFKSystem implements Listener{
@@ -99,7 +99,7 @@ public class AFKSystem implements Listener{
 		Location locNow = player.getLocation();
 		Vector vecNow = player.getLocation().getDirection();
 		if(locNow == locCheck || vecNow == vecCheck) {
-			player.kickPlayer(new ColorCodeTranslator().colorize("&4&lYou have been AFK for to long! This resulted in a kick."));
+			player.kickPlayer(new CCT().colorize("&4&lYou have been AFK for to long! This resulted in a kick."));
 		}
 	}
 }

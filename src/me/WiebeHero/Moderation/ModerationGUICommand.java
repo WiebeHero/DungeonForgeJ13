@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
@@ -19,25 +18,19 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import de.tr7zw.nbtapi.NBTItem;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.lucko.luckperms.LuckPerms;
-import me.lucko.luckperms.api.LuckPermsApi;
-import me.lucko.luckperms.api.User;
 
 public class ModerationGUICommand implements CommandExecutor,Listener{
+	private StaffManager sManager = CustomEnchantments.getInstance().staffManager;
+	private PunishManager pManager = CustomEnchantments.getInstance().punishManager;
 	public static HashMap<UUID, Boolean> staffModeList = new HashMap<UUID, Boolean>();
 	public static HashMap<UUID, Integer> staffRankList = new HashMap<UUID, Integer>();
 	public HashMap<UUID, Boolean> vanishMode = new HashMap<UUID, Boolean>();
@@ -68,32 +61,39 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
 			if(cmd.getName().equalsIgnoreCase(staffmode)) {
-				if(staffModeList.containsKey(player.getUniqueId())) {
-					if(staffModeList.get(player.getUniqueId()) == true) {
-						player.getInventory().setContents(saveInv.get(player.getUniqueId()));
-						saveInv.remove(player.getUniqueId());
-						staffModeList.put(player.getUniqueId(), false);
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &c&lStaffmode Disabled."));
+				if(sManager.contains(player.getUniqueId())) {
+					Staff staff = sManager.get(player.getUniqueId());
+					if(staff.getStaffMode() == true) {
+						player.getInventory().setContents(staff.getInv());
+						staff.switchStaffMode(false);
+						staff.switchLootMode(false);
+						staff.switchVanishMode(false);
+						staff.switchSpawnerMode(false);
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &c&lStaffmode Disabled."));
 					}
-					else if(staffModeList.get(player.getUniqueId()) == false) {
-						saveInv.put(player.getUniqueId(), player.getInventory().getContents());
+					else if(staff.getStaffMode() == false) {
+						staff.saveInv(player.getInventory().getContents());
 						player.getInventory().clear();
-						staffModeList.put(player.getUniqueId(), true);
+						staff.switchStaffMode(true);
 						player.getInventory().setItem(0, compass());
-						player.getInventory().setItem(1, report());
+						player.getInventory().setItem(1, punish());
 						player.getInventory().setItem(2, vanish());
-						player.getInventory().setItem(3, playerInfo());
-						player.getInventory().setItem(4, examine());
+						player.getInventory().setItem(3, examine());
+						player.getInventory().setItem(4, playerInfo());
+						if(staff.getRank() >= 6) {
+							player.getInventory().setItem(7, spawner());
+							player.getInventory().setItem(8, loot());
+						}
 						player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 						player.setFoodLevel(20);
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a&lStaffmode Enabled."));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &a&lStaffmode Enabled."));
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &4Fatal error, please consult higher ups."));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &4Fatal error, please consult higher ups."));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(ban)) {
@@ -168,7 +168,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 										    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
 										    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
 										    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
-											String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have banned &6" + offender.getName() + " &afor &6");
+											String message = new CCT().colorize("&2&l[DungeonForge]: &cYou have banned &6" + offender.getName() + " &afor &6");
 											if(diffSeconds > 0) {
 												message = message + diffSeconds + " Seconds, ";
 											}
@@ -187,7 +187,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 											if(diffYears > 0) {
 												message = message + diffYears + " Years.";
 											}
-											player.sendMessage(new ColorCodeTranslator().colorize(message));
+											player.sendMessage(new CCT().colorize(message));
 											if(reasonBanList.get(offender.getUniqueId()) == null) {
 												reasonBanList.put(offender.getUniqueId(), new ArrayList<String>());
 												reasonBanList.get(offender.getUniqueId()).add(reason);
@@ -208,11 +208,11 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 											offender.kickPlayer(offender.getName());
 										}
 										else {
-											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNot a valid time, use m (minute) h (hour) d (day) mo (month) y (year)"));
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cNot a valid time, use m (minute) h (hour) d (day) mo (month) y (year)"));
 										}
 									}
 									else {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't ban staff higher then you!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't ban staff higher then you!"));
 									}
 								}
 								else {
@@ -279,7 +279,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 									    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
 									    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
 									    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
-										String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have banned &6" + offender.getName() + " &afor &6");
+										String message = new CCT().colorize("&2&l[DungeonForge]: &cYou have banned &6" + offender.getName() + " &afor &6");
 										if(diffSeconds > 0) {
 											message = message + diffSeconds + " Seconds, ";
 										}
@@ -298,7 +298,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 										if(diffYears > 0) {
 											message = message + diffYears + " Years.";
 										}
-										player.sendMessage(new ColorCodeTranslator().colorize(message));
+										player.sendMessage(new CCT().colorize(message));
 										if(reasonBanList.get(offender.getUniqueId()) == null) {
 											reasonBanList.put(offender.getUniqueId(), new ArrayList<String>());
 											reasonBanList.get(offender.getUniqueId()).add(reason);
@@ -319,21 +319,21 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 										offender.kickPlayer(offender.getName());
 									}
 									else {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNot a valid time, use m (minute) h (hour) d (day) mo (month) y (year)"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cNot a valid time, use m (minute) h (hour) d (day) mo (month) y (year)"));
 									}
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 							}
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have the permission to ban someone!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have the permission to ban someone!"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(mute)) {
@@ -396,7 +396,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 								    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
 								    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
 								    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
-									String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have muted &6" + offender.getName() + " &afor &6");
+									String message = new CCT().colorize("&2&l[DungeonForge]: &cYou have muted &6" + offender.getName() + " &afor &6");
 									if(diffSeconds > 0) {
 										message = message + diffSeconds + " Seconds, ";
 									}
@@ -415,10 +415,10 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 									if(diffYears > 0) {
 										message = message + diffYears + " Years.";
 									}
-									player.sendMessage(new ColorCodeTranslator().colorize(message));
+									player.sendMessage(new CCT().colorize(message));
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't ban staff higher then you!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't ban staff higher then you!"));
 								}
 							}
 							else {
@@ -474,7 +474,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 							    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
 							    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
 							    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
-								String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have muted &6" + offender.getName() + " &afor &6");
+								String message = new CCT().colorize("&2&l[DungeonForge]: &cYou have muted &6" + offender.getName() + " &afor &6");
 								if(diffSeconds > 0) {
 									message = message + diffSeconds + " Seconds, ";
 								}
@@ -493,11 +493,11 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 								if(diffYears > 0) {
 									message = message + diffYears + " Years.";
 								}
-								player.sendMessage(new ColorCodeTranslator().colorize(message));
+								player.sendMessage(new CCT().colorize(message));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 						}
 					}
 				}
@@ -513,10 +513,10 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 										if(banTimeList.containsKey(offender.getUniqueId())|| banPerm.contains(offender.getUniqueId())) {
 											banTimeList.remove(offender.getUniqueId());
 											banPerm.remove(offender.getUniqueId());
-											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + offender.getName()));
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + offender.getName()));
 										}
 										else {
-											player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
 										}
 									}
 								}
@@ -524,27 +524,27 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 									if(banTimeList.containsKey(offender.getUniqueId())|| banPerm.contains(offender.getUniqueId())) {
 										banTimeList.remove(offender.getUniqueId());
 										banPerm.remove(offender.getUniqueId());
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + offender.getName()));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + offender.getName()));
 									}
 									else {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not banned!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not banned!"));
 									}
 								}
 							}
 							else{
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /unban (Player Name)"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /unban (Player Name)"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have the permission to ban someone!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have the permission to ban someone!"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(unmute)) {
@@ -557,10 +557,10 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 									if(muteTimeList.containsKey(offender.getUniqueId())|| mutePerm.contains(offender.getUniqueId())) {
 										muteTimeList.remove(offender.getUniqueId());
 										mutePerm.remove(offender.getUniqueId());
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + offender.getName()));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + offender.getName()));
 									}
 									else {
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
 									}
 								}
 							}
@@ -568,23 +568,23 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 								if(muteTimeList.containsKey(offender.getUniqueId())|| mutePerm.contains(offender.getUniqueId())) {
 									muteTimeList.remove(offender.getUniqueId());
 									mutePerm.remove(offender.getUniqueId());
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + offender.getName()));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + offender.getName()));
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + offender.getName() + " &cis not muted!"));
 								}
 							}
 						}
 						else{
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /unmute (Player Name)"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /unmute (Player Name)"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(warn)) {
@@ -593,18 +593,18 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 						Player offender = Bukkit.getPlayer(args[0]);
 						if(offender != null) {
 							warnList.put(offender.getUniqueId(), warnList.get(offender.getUniqueId()) + 1);
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have warned &6" + offender.getName()));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have warned &6" + offender.getName()));
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /warn (Player Name) (Reason)"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /warn (Player Name) (Reason)"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(unwarn)) {
@@ -613,18 +613,18 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 						Player offender = Bukkit.getPlayer(args[0]);
 						if(offender != null) {
 							warnList.put(offender.getUniqueId(), 0);
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have unwarned &6" + offender.getName()));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unwarned &6" + offender.getName()));
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /warn (Player Name) (Reason)"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /warn (Player Name) (Reason)"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(kick)) {
@@ -634,18 +634,18 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 						if(offender != null) {
 							kickedBy.put(player.getUniqueId(), offender.getUniqueId());
 							player.kickPlayer(offender.getName());
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + offender.getName()));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + offender.getName()));
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /warn (Player Name) (Reason)"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /warn (Player Name) (Reason)"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 				}
 			}
 		}
@@ -666,7 +666,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 			    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
 			    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
 			    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
-				String message = new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou have been muted! You can chat again in &6");
+				String message = new CCT().colorize("&2&l[DungeonForge]: &cYou have been muted! You can chat again in &6");
 				if(diffSeconds > 0) {
 					message = message + diffSeconds + " Seconds, ";
 				}
@@ -685,14 +685,14 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 				if(diffYears > 0) {
 					message = message + diffYears + " Years.";
 				}
-				player.sendMessage(new ColorCodeTranslator().colorize(message));
+				player.sendMessage(new CCT().colorize(message));
 			}
 			else {
 				muteTimeList.remove(player.getUniqueId());
 			}
 		}
 		else if(mutePerm.contains(player.getUniqueId())){
-			player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: You have been permanently muted. You can appeal at: "));
+			player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: You have been permanently muted. You can appeal at: "));
 		}
 	}
 	@EventHandler
@@ -714,7 +714,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 	public void bannedMessage(PlayerKickEvent event) {
 		Player offender = event.getPlayer();
 		if(banPerm.contains(offender.getUniqueId())) {
-			event.setReason(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: You have been permanently banned! You can appeal at: "));
+			event.setReason(new CCT().colorize("&2&l[DungeonForge]: You have been permanently banned! You can appeal at: "));
 		}
 		else if(banTimeList.containsKey(offender.getUniqueId())) {
 			long now = System.currentTimeMillis();
@@ -726,7 +726,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 		    long diffDays = (long) (timeDifference / (24 * 60 * 60 * 1000) % 30.41666666);
 		    long diffMonths = (long) (timeDifference / (60 * 60 * 1000 * 24 * 30.41666666) % 12);
 		    long diffYears = timeDifference / ((long)60 * 60 * 1000 * 24 * 365);
-			String message = new ColorCodeTranslator().colorize("&cYou have been banned! You can join again in: &6");
+			String message = new CCT().colorize("&cYou have been banned! You can join again in: &6");
 			if(diffSeconds > 0) {
 				message = message + diffSeconds + " Seconds, ";
 			}
@@ -751,7 +751,7 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 					name = Bukkit.getPlayer(entry.getKey()).getName();
 				}
 			}
-			event.setReason(new ColorCodeTranslator().colorize(message + "\n&cIngame Name: &6" + offender.getName() + "\n&cBanned by: &6" + name + "\n&cReason: &4&l" + reasonBanList.get(offender.getUniqueId()).get(banOffends.get(offender.getUniqueId())) + "\n&cAppeal at: "));
+			event.setReason(new CCT().colorize(message + "\n&cIngame Name: &6" + offender.getName() + "\n&cBanned by: &6" + name + "\n&cReason: &4&l" + reasonBanList.get(offender.getUniqueId()).get(banOffends.get(offender.getUniqueId())) + "\n&cAppeal at: "));
 		}
 		else if(kickedBy.containsValue(offender.getUniqueId())){
 			String name = "Console";
@@ -760,192 +760,106 @@ public class ModerationGUICommand implements CommandExecutor,Listener{
 					name = Bukkit.getPlayer(entry.getKey()).getName();
 				}
 			}
-			event.setReason(new ColorCodeTranslator().colorize("&cYou have been kicked from the server by &6" + name + "\n&cReason: &4&l"));
-		}
-	}
-	@EventHandler
-	public void staffList(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-		LuckPermsApi api = LuckPerms.getApi();
-		User user = api.getUser(player.getUniqueId());
-		if(!staffModeList.containsKey(player.getUniqueId()) && !staffRankList.containsKey(player.getUniqueId())) {
-			if(user.inheritsGroup(api.getGroup("owner"))) {
-				staffModeList.put(player.getUniqueId(), false);
-				staffRankList.put(player.getUniqueId(), 8);
-			}
-			else if(user.inheritsGroup(api.getGroup("manager"))) {
-				staffModeList.put(player.getUniqueId(), false);
-				staffRankList.put(player.getUniqueId(), 7);
-			}
-			else if(user.inheritsGroup(api.getGroup("headadmin"))) {
-				staffModeList.put(player.getUniqueId(), false);
-				staffRankList.put(player.getUniqueId(), 6);
-			}
-			else if(user.inheritsGroup(api.getGroup("admin"))) {
-				staffModeList.put(player.getUniqueId(), false);
-				staffRankList.put(player.getUniqueId(), 5);
-			}
-			else if(user.inheritsGroup(api.getGroup("headmod"))) {
-				staffModeList.put(player.getUniqueId(), false);
-				staffRankList.put(player.getUniqueId(), 4);
-			}
-			else if(user.inheritsGroup(api.getGroup("moderator"))) {
-				staffModeList.put(player.getUniqueId(), false);
-				staffRankList.put(player.getUniqueId(), 3);
-			}
-			else if(user.inheritsGroup(api.getGroup("helper+"))) {
-				staffModeList.put(player.getUniqueId(), false);
-				staffRankList.put(player.getUniqueId(), 2);
-			}
-			else if(user.inheritsGroup(api.getGroup("helper"))) {
-				staffModeList.put(player.getUniqueId(), false);
-				staffRankList.put(player.getUniqueId(), 1);
-			}
-		}
-	}
-	@EventHandler
-	public void staffListLeave(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		if(staffModeList.containsKey(player.getUniqueId())) {
-			if(staffModeList.get(player.getUniqueId()) == true) {
-				staffModeList.remove(player.getUniqueId());
-				player.getInventory().setContents(saveInv.get(player.getUniqueId()));
-				saveInv.remove(player.getUniqueId());
-			}
-		}
-	}
-	@EventHandler
-	public void foodChangeStaff(FoodLevelChangeEvent event) {
-		if(event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			if(staffModeList.containsKey(player.getUniqueId())) {
-				if(staffModeList.get(player.getUniqueId()) == true) {
-					player.setFoodLevel(20);
-				}
-			}
-		}
-	}
-	@EventHandler
-	public void cancelHealthLoss(EntityDamageEvent event) {
-		if(event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			if(staffModeList.containsKey(player.getUniqueId())) {
-				if(staffModeList.get(player.getUniqueId()) == true) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
-	@EventHandler
-	public void cancelHealthLossEntity(EntityDamageByEntityEvent event) {
-		if(event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			if(staffModeList.containsKey(player.getUniqueId())) {
-				if(staffModeList.get(player.getUniqueId()) == true) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
-	@EventHandler
-	public void activatePerk(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
-		if(staffModeList.containsKey(player.getUniqueId())) {
-			if(staffModeList.get(player.getUniqueId()) == true) {
-				if(player.getInventory().getItemInMainHand() != null) {
-					if(player.getInventory().getItemInMainHand().hasItemMeta()) {
-						if(player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
-							String name = ChatColor.stripColor(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName());
-							if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-								ModerationGUI gui = new ModerationGUI();
-								if(name.equals("Teleport")) {
-									gui.InventoryTeleport(player, 1);
-								}
-								else if(name.equals("Report")) {
-									
-								}
-								else if(name.equals("Vanish")) {
-									if(vanishMode.get(player.getUniqueId()) == true) {
-										vanishMode.put(player.getUniqueId(), false);
-										for(Player p : Bukkit.getOnlinePlayers()) {
-											p.showPlayer(CustomEnchantments.getInstance(), player);
-										}
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &c&lVanish Disabled."));
-									}
-									else if(vanishMode.get(player.getUniqueId()) == false) {
-										vanishMode.put(player.getUniqueId(), true);
-										for(Player p : Bukkit.getOnlinePlayers()) {
-											p.hidePlayer(CustomEnchantments.getInstance(), player);
-										}
-										player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a&lVanish Enabled."));
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+			event.setReason(new CCT().colorize("&cYou have been kicked from the server by &6" + name + "\n&cReason: &4&l"));
 		}
 	}
 	public ItemStack compass() {
 		ItemStack item = new ItemStack(Material.COMPASS, 1);
 		ItemMeta meta = item.getItemMeta();	
 		ArrayList<String> lore = new ArrayList<String>();
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&6Teleport"));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
-		lore.add(new ColorCodeTranslator().colorize("&fRight click to teleport to a player."));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
+		meta.setDisplayName(new CCT().colorize("&6Teleport"));
+		lore.add(new CCT().colorize("&f-------------------"));
+		lore.add(new CCT().colorize("&fRight click to teleport to a player."));
+		lore.add(new CCT().colorize("&f-------------------"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return item;
+		NBTItem tempItem = new NBTItem(item);
+		tempItem.setString("TeleporterItem", "");
+		return tempItem.getItem();
 	}
-	public ItemStack report() {
+	public ItemStack punish() {
 		ItemStack item = new ItemStack(Material.PAPER, 1);
-		ItemMeta meta = item.getItemMeta();
+		ItemMeta meta = item.getItemMeta();	
 		ArrayList<String> lore = new ArrayList<String>();
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&cReport"));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
-		lore.add(new ColorCodeTranslator().colorize("&fRight click to open the report history."));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
+		meta.setDisplayName(new CCT().colorize("&cPunish"));
+		lore.add(new CCT().colorize("&f-------------------"));
+		lore.add(new CCT().colorize("&fRight click to punish a player."));
+		lore.add(new CCT().colorize("&f-------------------"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return item;
+		NBTItem tempItem = new NBTItem(item);
+		tempItem.setString("PunishItem", "");
+		return tempItem.getItem();
 	}
 	public ItemStack vanish() {
 		ItemStack item = new ItemStack(Material.LIME_DYE, 1);
 		ItemMeta meta = item.getItemMeta();	
 		ArrayList<String> lore = new ArrayList<String>();
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&aVansih"));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
-		lore.add(new ColorCodeTranslator().colorize("&fRight click to vanish/unvanish."));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
+		meta.setDisplayName(new CCT().colorize("&aVanish"));
+		lore.add(new CCT().colorize("&f-------------------"));
+		lore.add(new CCT().colorize("&fRight click to vanish/unvanish."));
+		lore.add(new CCT().colorize("&f-------------------"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return item;
+		NBTItem tempItem = new NBTItem(item);
+		tempItem.setString("VanishItem", "");
+		return tempItem.getItem();
 	}
 	public ItemStack playerInfo() {
 		ItemStack item = new ItemStack(Material.CLOCK, 1);
 		ItemMeta meta = item.getItemMeta();	
 		ArrayList<String> lore = new ArrayList<String>();
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&bInfo"));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
-		lore.add(new ColorCodeTranslator().colorize("&fRight click a player for their info."));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
+		meta.setDisplayName(new CCT().colorize("&bInfo"));
+		lore.add(new CCT().colorize("&f-------------------"));
+		lore.add(new CCT().colorize("&fRight click a player for their info."));
+		lore.add(new CCT().colorize("&f-------------------"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return item;
+		NBTItem tempItem = new NBTItem(item);
+		tempItem.setString("InfoItem", "");
+		return tempItem.getItem();
 	}
 	public ItemStack examine() {
 		ItemStack item = new ItemStack(Material.CHEST, 1);
 		ItemMeta meta = item.getItemMeta();	
 		ArrayList<String> lore = new ArrayList<String>();
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&4Examine"));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
-		lore.add(new ColorCodeTranslator().colorize("&fRight click to view an inventory of a player."));
-		lore.add(new ColorCodeTranslator().colorize("&f-------------------"));
+		meta.setDisplayName(new CCT().colorize("&4Examine"));
+		lore.add(new CCT().colorize("&f-------------------"));
+		lore.add(new CCT().colorize("&fRight click to view an inventory of a player."));
+		lore.add(new CCT().colorize("&f-------------------"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
-		return item;
+		NBTItem tempItem = new NBTItem(item);
+		tempItem.setString("ExamineItem", "");
+		return tempItem.getItem();
+	}
+	public ItemStack spawner() {
+		ItemStack item = new ItemStack(Material.SPAWNER, 1);
+		ItemMeta meta = item.getItemMeta();	
+		ArrayList<String> lore = new ArrayList<String>();
+		meta.setDisplayName(new CCT().colorize("&dSpawner Setup"));
+		lore.add(new CCT().colorize("&f-------------------"));
+		lore.add(new CCT().colorize("&fRight click to switch to setting up spawners."));
+		lore.add(new CCT().colorize("&f-------------------"));
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem tempItem = new NBTItem(item);
+		tempItem.setString("SpawnerItem", "");
+		return tempItem.getItem();
+	}
+	public ItemStack loot() {
+		ItemStack item = new ItemStack(Material.ENDER_CHEST, 1);
+		ItemMeta meta = item.getItemMeta();	
+		ArrayList<String> lore = new ArrayList<String>();
+		meta.setDisplayName(new CCT().colorize("&5Loot Setup"));
+		lore.add(new CCT().colorize("&f-------------------"));
+		lore.add(new CCT().colorize("&fRight click to switch to setting up loot chests."));
+		lore.add(new CCT().colorize("&f-------------------"));
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem tempItem = new NBTItem(item);
+		tempItem.setString("LootItem", "");
+		return tempItem.getItem();
 	}
 	public void loadReasonBanList(YamlConfiguration yml, File f) {
 		reasonBanList.clear();

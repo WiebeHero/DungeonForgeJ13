@@ -20,7 +20,7 @@ import org.bukkit.event.Listener;
 //import org.bukkit.inventory.ShapedRecipe;
 //import org.bukkit.inventory.meta.ItemMeta;
 //
-//import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+//import me.WiebeHero.CustomEnchantments.CCT;
 //import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 //import me.WiebeHero.CustomMethods.NewAttribute;
 //import net.minecraft.server.v1_13_R2.NBTTagCompound;
@@ -37,13 +37,13 @@ public class CraftableWeapons implements Listener{
 //			if(event.getInventory().getResult().getType() == Material.WOODEN_SWORD) {
 //				ItemStack item = new ItemStack(Material.WOODEN_SWORD, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Wooden Sword"));
+//				meta.setDisplayName(new CCT().colorize("&7Wooden Sword"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &64.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.3"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &64.0"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.3"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -79,13 +79,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.STONE_SWORD) {
 //				ItemStack item = new ItemStack(Material.STONE_SWORD, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Stone Sword"));
+//				meta.setDisplayName(new CCT().colorize("&7Stone Sword"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &64.25"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.32"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &64.25"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.32"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -121,13 +121,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.IRON_SWORD) {
 //				ItemStack item = new ItemStack(Material.IRON_SWORD, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Iron Sword"));
+//				meta.setDisplayName(new CCT().colorize("&7Iron Sword"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &64.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.34"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &64.5"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.34"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -163,13 +163,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.GOLDEN_SWORD) {
 //				ItemStack item = new ItemStack(Material.GOLDEN_SWORD, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Golden Sword"));
+//				meta.setDisplayName(new CCT().colorize("&7Golden Sword"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &63.50"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.44"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &63.50"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.44"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -205,13 +205,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.DIAMOND_SWORD) {
 //				ItemStack item = new ItemStack(Material.DIAMOND_SWORD, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Diamond Sword"));
+//				meta.setDisplayName(new CCT().colorize("&7Diamond Sword"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &65.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.36"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &65.0"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.36"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -247,13 +247,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.WOODEN_AXE) {
 //				ItemStack item = new ItemStack(Material.WOODEN_AXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Wooden Axe"));
+//				meta.setDisplayName(new CCT().colorize("&7Wooden Axe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &66.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.2"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &66.0"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.2"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -289,13 +289,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.STONE_AXE) {
 //				ItemStack item = new ItemStack(Material.STONE_AXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Stone Axe"));
+//				meta.setDisplayName(new CCT().colorize("&7Stone Axe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &66.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.23"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &66.0"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.23"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -331,13 +331,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.IRON_AXE) {
 //				ItemStack item = new ItemStack(Material.IRON_AXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Iron Axe"));
+//				meta.setDisplayName(new CCT().colorize("&7Iron Axe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &66.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.26"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &66.0"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.26"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -373,13 +373,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.GOLDEN_AXE) {
 //				ItemStack item = new ItemStack(Material.GOLDEN_AXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Golden Axe"));
+//				meta.setDisplayName(new CCT().colorize("&7Golden Axe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &64.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.4"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &64.5"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.4"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -415,13 +415,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.DIAMOND_AXE) {
 //				ItemStack item = new ItemStack(Material.DIAMOND_AXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Diamond Axe"));
+//				meta.setDisplayName(new CCT().colorize("&7Diamond Axe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &66.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.3"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &66.5"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.3"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -457,13 +457,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.WOODEN_PICKAXE) {
 //				ItemStack item = new ItemStack(Material.WOODEN_PICKAXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Wooden Pickaxe"));
+//				meta.setDisplayName(new CCT().colorize("&7Wooden Pickaxe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &63.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.35"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &63.5"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.35"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -499,13 +499,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.STONE_PICKAXE) {
 //				ItemStack item = new ItemStack(Material.STONE_PICKAXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Stone Pickaxe"));
+//				meta.setDisplayName(new CCT().colorize("&7Stone Pickaxe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &63.65"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.37"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &63.65"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.37"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -541,13 +541,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.IRON_PICKAXE) {
 //				ItemStack item = new ItemStack(Material.IRON_PICKAXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Iron Pickaxe"));
+//				meta.setDisplayName(new CCT().colorize("&7Iron Pickaxe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &63.80"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.39"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &63.80"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.39"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -583,13 +583,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.GOLDEN_PICKAXE) {
 //				ItemStack item = new ItemStack(Material.GOLDEN_PICKAXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Golden Pickaxe"));
+//				meta.setDisplayName(new CCT().colorize("&7Golden Pickaxe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &63.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.48"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &63.0"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.48"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -625,13 +625,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.DIAMOND_PICKAXE) {
 //				ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Diamond Pickaxe"));
+//				meta.setDisplayName(new CCT().colorize("&7Diamond Pickaxe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &64.10"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.42"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &64.10"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.42"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -667,13 +667,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.WOODEN_SHOVEL) {
 //				ItemStack item = new ItemStack(Material.WOODEN_SHOVEL, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Wooden Shovel"));
+//				meta.setDisplayName(new CCT().colorize("&7Wooden Shovel"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &62.50"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.51"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &62.50"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.51"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -709,13 +709,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.STONE_SHOVEL) {
 //				ItemStack item = new ItemStack(Material.STONE_SHOVEL, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Stone Shovel"));
+//				meta.setDisplayName(new CCT().colorize("&7Stone Shovel"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &62.60"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.52"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &62.60"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.52"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -751,13 +751,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.IRON_SHOVEL) {
 //				ItemStack item = new ItemStack(Material.IRON_SHOVEL, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Iron Shovel"));
+//				meta.setDisplayName(new CCT().colorize("&7Iron Shovel"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &62.70"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.53"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &62.70"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.53"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -793,13 +793,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.GOLDEN_SHOVEL) {
 //				ItemStack item = new ItemStack(Material.GOLDEN_SHOVEL, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Golden Shovel"));
+//				meta.setDisplayName(new CCT().colorize("&7Golden Shovel"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &62.2"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &62.2"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.6"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -835,13 +835,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.DIAMOND_SHOVEL) {
 //				ItemStack item = new ItemStack(Material.DIAMOND_SHOVEL, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Diamond Shovel"));
+//				meta.setDisplayName(new CCT().colorize("&7Diamond Shovel"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &63.1"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.55"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &63.1"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &60.55"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -877,13 +877,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.WOODEN_HOE) {
 //				ItemStack item = new ItemStack(Material.WOODEN_HOE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Wooden Hoe"));
+//				meta.setDisplayName(new CCT().colorize("&7Wooden Hoe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &61.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &61.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &61.5"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &61.0"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -919,13 +919,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.STONE_HOE) {
 //				ItemStack item = new ItemStack(Material.STONE_HOE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Wooden Hoe"));
+//				meta.setDisplayName(new CCT().colorize("&7Wooden Hoe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &61.55"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &61.05"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &61.55"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &61.05"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -961,13 +961,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.IRON_HOE) {
 //				ItemStack item = new ItemStack(Material.IRON_HOE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Iron Hoe"));
+//				meta.setDisplayName(new CCT().colorize("&7Iron Hoe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &61.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &61.1"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &61.6"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &61.1"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1003,13 +1003,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.GOLDEN_HOE) {
 //				ItemStack item = new ItemStack(Material.GOLDEN_HOE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Golden Hoe"));
+//				meta.setDisplayName(new CCT().colorize("&7Golden Hoe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &61.35"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &61.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &61.35"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &61.5"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1045,13 +1045,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.DIAMOND_HOE) {
 //				ItemStack item = new ItemStack(Material.DIAMOND_HOE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Diamond Hoe"));
+//				meta.setDisplayName(new CCT().colorize("&7Diamond Hoe"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &61.7"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &61.20"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Attack Damage: &61.7"));
+//				lore.add(new CCT().colorize("&7Attack Speed: &61.20"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1087,13 +1087,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.LEATHER_HELMET) {
 //				ItemStack item = new ItemStack(Material.LEATHER_HELMET, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Leather Helmet"));
+//				meta.setDisplayName(new CCT().colorize("&7Leather Helmet"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.7"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.2"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.7"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.2"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1129,13 +1129,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.LEATHER_CHESTPLATE) {
 //				ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Leather Chestplate"));
+//				meta.setDisplayName(new CCT().colorize("&7Leather Chestplate"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.7"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.2"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.7"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.2"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1171,13 +1171,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.LEATHER_LEGGINGS) {
 //				ItemStack item = new ItemStack(Material.LEATHER_LEGGINGS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Leather Leggings"));
+//				meta.setDisplayName(new CCT().colorize("&7Leather Leggings"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.7"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.2"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.7"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.2"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1213,13 +1213,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.LEATHER_BOOTS) {
 //				ItemStack item = new ItemStack(Material.LEATHER_BOOTS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Leather Boots"));
+//				meta.setDisplayName(new CCT().colorize("&7Leather Boots"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.7"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.2"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.7"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.2"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1255,13 +1255,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.CHAINMAIL_HELMET) {
 //				ItemStack item = new ItemStack(Material.CHAINMAIL_HELMET, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Chainmail Helmet"));
+//				meta.setDisplayName(new CCT().colorize("&7Chainmail Helmet"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.8"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.3"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.8"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.3"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1297,13 +1297,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.CHAINMAIL_CHESTPLATE) {
 //				ItemStack item = new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Chainmail Chestplate"));
+//				meta.setDisplayName(new CCT().colorize("&7Chainmail Chestplate"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.8"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.3"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.8"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.3"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1339,13 +1339,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.CHAINMAIL_LEGGINGS) {
 //				ItemStack item = new ItemStack(Material.CHAINMAIL_LEGGINGS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Chainmail Leggings"));
+//				meta.setDisplayName(new CCT().colorize("&7Chainmail Leggings"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.8"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.3"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.8"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.3"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1381,13 +1381,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.CHAINMAIL_BOOTS) {
 //				ItemStack item = new ItemStack(Material.CHAINMAIL_BOOTS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Chainmail Boots"));
+//				meta.setDisplayName(new CCT().colorize("&7Chainmail Boots"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.8"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.3"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.8"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.3"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1423,13 +1423,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.IRON_HELMET) {
 //				ItemStack item = new ItemStack(Material.IRON_HELMET, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Iron Helmet"));
+//				meta.setDisplayName(new CCT().colorize("&7Iron Helmet"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.9"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.4"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.9"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.4"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1465,13 +1465,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.IRON_CHESTPLATE) {
 //				ItemStack item = new ItemStack(Material.IRON_CHESTPLATE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Iron Chestplate"));
+//				meta.setDisplayName(new CCT().colorize("&7Iron Chestplate"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.9"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.4"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.9"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.4"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1507,13 +1507,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.IRON_LEGGINGS) {
 //				ItemStack item = new ItemStack(Material.IRON_LEGGINGS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Iron Leggings"));
+//				meta.setDisplayName(new CCT().colorize("&7Iron Leggings"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.9"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.4"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.9"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.4"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1549,13 +1549,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.IRON_BOOTS) {
 //				ItemStack item = new ItemStack(Material.IRON_BOOTS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Iron Boots"));
+//				meta.setDisplayName(new CCT().colorize("&7Iron Boots"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.9"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.4"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.9"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.4"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1591,13 +1591,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.GOLDEN_HELMET) {
 //				ItemStack item = new ItemStack(Material.GOLDEN_HELMET, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Golden Helmet"));
+//				meta.setDisplayName(new CCT().colorize("&7Golden Helmet"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.6"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.6"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1633,13 +1633,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.GOLDEN_CHESTPLATE) {
 //				ItemStack item = new ItemStack(Material.GOLDEN_CHESTPLATE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Golden Chestplate"));
+//				meta.setDisplayName(new CCT().colorize("&7Golden Chestplate"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.6"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.6"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1675,13 +1675,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.GOLDEN_LEGGINGS) {
 //				ItemStack item = new ItemStack(Material.GOLDEN_LEGGINGS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Golden Leggings"));
+//				meta.setDisplayName(new CCT().colorize("&7Golden Leggings"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.6"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.6"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1717,13 +1717,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.GOLDEN_BOOTS) {
 //				ItemStack item = new ItemStack(Material.GOLDEN_BOOTS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Golden Boots"));
+//				meta.setDisplayName(new CCT().colorize("&7Golden Boots"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &60.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.6"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &60.6"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.6"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1759,13 +1759,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.DIAMOND_HELMET) {
 //				ItemStack item = new ItemStack(Material.DIAMOND_HELMET, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Diamond Helmet"));
+//				meta.setDisplayName(new CCT().colorize("&7Diamond Helmet"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &61.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &61.0"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.5"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1801,13 +1801,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.DIAMOND_CHESTPLATE) {
 //				ItemStack item = new ItemStack(Material.DIAMOND_CHESTPLATE, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Diamond Chestplate"));
+//				meta.setDisplayName(new CCT().colorize("&7Diamond Chestplate"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &61.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &61.0"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.5"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1843,13 +1843,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.DIAMOND_LEGGINGS) {
 //				ItemStack item = new ItemStack(Material.DIAMOND_LEGGINGS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Diamond Leggings"));
+//				meta.setDisplayName(new CCT().colorize("&7Diamond Leggings"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &61.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &61.0"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.5"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1885,13 +1885,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.DIAMOND_BOOTS) {
 //				ItemStack item = new ItemStack(Material.DIAMOND_BOOTS, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Diamond Boots"));
+//				meta.setDisplayName(new CCT().colorize("&7Diamond Boots"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: &61.0"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.5"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Defense: &61.0"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.5"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1927,13 +1927,13 @@ public class CraftableWeapons implements Listener{
 //			else if(event.getInventory().getResult().getType() == Material.SHIELD) {
 //				ItemStack item = new ItemStack(Material.SHIELD, 1);
 //				ItemMeta meta = item.getItemMeta();
-//				meta.setDisplayName(new ColorCodeTranslator().colorize("&7Shield"));
+//				meta.setDisplayName(new CCT().colorize("&7Shield"));
 //				ArrayList<String> lore = new ArrayList<String>();
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: &60.7"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Cooldown: &b5.0 Seconds"));
-//				lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//				lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Armor Toughness: &60.7"));
+//				lore.add(new CCT().colorize("&7Cooldown: &b5.0 Seconds"));
+//				lore.add(new CCT().colorize("&7-----------------------"));
+//				lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //				meta.setLore(lore);
 //				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -1994,13 +1994,13 @@ public class CraftableWeapons implements Listener{
 //	public void addShortBow() {
 //		ItemStack item = new ItemStack(Material.BOW, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Shortbow"));
+//		meta.setDisplayName(new CCT().colorize("&7Shortbow"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &62.5"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &61.0"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Attack Damage: &62.5"));
+//		lore.add(new CCT().colorize("&7Attack Speed: &61.0"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.setLore(lore);
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -2016,13 +2016,13 @@ public class CraftableWeapons implements Listener{
 //	public void addLongBow() {
 //		ItemStack item = new ItemStack(Material.BOW, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Longbow"));
+//		meta.setDisplayName(new CCT().colorize("&7Longbow"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &67.0"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.3"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Attack Damage: &67.0"));
+//		lore.add(new CCT().colorize("&7Attack Speed: &60.3"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.setLore(lore);
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -2038,13 +2038,13 @@ public class CraftableWeapons implements Listener{
 //	public void addBow() {
 //		ItemStack item = new ItemStack(Material.BOW, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Bow"));
+//		meta.setDisplayName(new CCT().colorize("&7Bow"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: &64.5"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: &60.5"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Attack Damage: &64.5"));
+//		lore.add(new CCT().colorize("&7Attack Speed: &60.5"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.setLore(lore);
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -2066,13 +2066,13 @@ public class CraftableWeapons implements Listener{
 //	public void addAmuletOfHealth() {
 //		ItemStack item = new ItemStack(Material.BEACON, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Amulet of Life"));
+//		meta.setDisplayName(new CCT().colorize("&7Amulet of Life"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Max Health: +2.5%"));
-//		lore.add(new ColorCodeTranslator().colorize("&7This effect applies when held in the offhand!"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Max Health: +2.5%"));
+//		lore.add(new CCT().colorize("&7This effect applies when held in the offhand!"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 //		meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -2090,13 +2090,13 @@ public class CraftableWeapons implements Listener{
 //	public void addAmuletOfPower() {
 //		ItemStack item = new ItemStack(Material.BEACON, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Amulet of Power"));
+//		meta.setDisplayName(new CCT().colorize("&7Amulet of Power"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Attack Damage: +2.5%"));
-//		lore.add(new ColorCodeTranslator().colorize("&7This effect applies when held in the offhand!"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Attack Damage: +2.5%"));
+//		lore.add(new CCT().colorize("&7This effect applies when held in the offhand!"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 //		meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -2114,13 +2114,13 @@ public class CraftableWeapons implements Listener{
 //	public void addAmuletOfSpeed() {
 //		ItemStack item = new ItemStack(Material.BEACON, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Amulet of Speed"));
+//		meta.setDisplayName(new CCT().colorize("&7Amulet of Speed"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Movement Speed: +2.5%"));
-//		lore.add(new ColorCodeTranslator().colorize("&7This effect applies when held in the offhand!"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Movement Speed: +2.5%"));
+//		lore.add(new CCT().colorize("&7This effect applies when held in the offhand!"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 //		meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -2138,13 +2138,13 @@ public class CraftableWeapons implements Listener{
 //	public void addAmuletOfCharge() {
 //		ItemStack item = new ItemStack(Material.BEACON, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Amulet of Charge"));
+//		meta.setDisplayName(new CCT().colorize("&7Amulet of Charge"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Attack Speed: +2.5%"));
-//		lore.add(new ColorCodeTranslator().colorize("&7This effect applies when held in the offhand!"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Attack Speed: +2.5%"));
+//		lore.add(new CCT().colorize("&7This effect applies when held in the offhand!"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 //		meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -2162,13 +2162,13 @@ public class CraftableWeapons implements Listener{
 //	public void addAmuletOfDefense() {
 //		ItemStack item = new ItemStack(Material.BEACON, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Amulet of Defense"));
+//		meta.setDisplayName(new CCT().colorize("&7Amulet of Defense"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Armor Defense: +2.5%"));
-//		lore.add(new ColorCodeTranslator().colorize("&7This effect applies when held in the offhand!"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Armor Defense: +2.5%"));
+//		lore.add(new CCT().colorize("&7This effect applies when held in the offhand!"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 //		meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -2186,13 +2186,13 @@ public class CraftableWeapons implements Listener{
 //	public void addAmuletOfToughness() {
 //		ItemStack item = new ItemStack(Material.BEACON, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Amulet of Toughness"));
+//		meta.setDisplayName(new CCT().colorize("&7Amulet of Toughness"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Armor Toughness: +2.5%"));
-//		lore.add(new ColorCodeTranslator().colorize("&7This effect applies when held in the offhand!"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Armor Toughness: +2.5%"));
+//		lore.add(new CCT().colorize("&7This effect applies when held in the offhand!"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 //		meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -2210,13 +2210,13 @@ public class CraftableWeapons implements Listener{
 //	public void addAmuletOffResistance() {
 //		ItemStack item = new ItemStack(Material.BEACON, 1);
 //		ItemMeta meta = item.getItemMeta();
-//		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Amulet of Resistance"));
+//		meta.setDisplayName(new CCT().colorize("&7Amulet of Resistance"));
 //		ArrayList<String> lore = new ArrayList<String>();
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Knockback Resistance: +2.5%"));
-//		lore.add(new ColorCodeTranslator().colorize("&7This effect applies when held in the offhand!"));
-//		lore.add(new ColorCodeTranslator().colorize("&7-----------------------"));
-//		lore.add(new ColorCodeTranslator().colorize("&7Rarity: &fRegular"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Knockback Resistance: +2.5%"));
+//		lore.add(new CCT().colorize("&7This effect applies when held in the offhand!"));
+//		lore.add(new CCT().colorize("&7-----------------------"));
+//		lore.add(new CCT().colorize("&7Rarity: &fRegular"));
 //		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 //		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 //		meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);

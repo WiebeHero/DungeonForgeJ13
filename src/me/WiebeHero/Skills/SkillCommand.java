@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 
 public class SkillCommand implements CommandExecutor{
 	SkillMenu menu = new SkillMenu();
@@ -20,7 +20,7 @@ public class SkillCommand implements CommandExecutor{
 					menu.SkillMenuInv(player);
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /skill or /skills"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /skill or /skills"));
 				}
 			}
 		}

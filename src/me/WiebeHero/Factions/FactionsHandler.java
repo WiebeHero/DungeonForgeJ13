@@ -23,7 +23,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 
 public class FactionsHandler implements Listener{
 	private DFFaction method = new DFFaction();
@@ -47,7 +47,7 @@ public class FactionsHandler implements Listener{
 							int rank = faction.getRank(player.getUniqueId());
 							if(rank < 2) {
 								event.setCancelled(true);
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to interact in your claimed territory!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to interact in your claimed territory!"));
 							}
 						}
 						
@@ -57,13 +57,13 @@ public class FactionsHandler implements Listener{
 							Block b = event.getClickedBlock();
 							if(!blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
 								event.setCancelled(true);
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 							}
 						}
 						else if(event.getAction() == Action.PHYSICAL) {
 							if(plates.contains(event.getClickedBlock().getType())) {
 								event.setCancelled(true);
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 							}
 						}
 					}
@@ -86,12 +86,12 @@ public class FactionsHandler implements Listener{
 					int rank = faction.getRank(player.getUniqueId());
 					if(rank < 2) {
 						event.setCancelled(true);
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
 					}
 				}
 				else if(faction.isInAChunk(player, block.getLocation())) {
 					event.setCancelled(true);
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
 			}
 		}
@@ -111,12 +111,12 @@ public class FactionsHandler implements Listener{
 					int rank = faction.getRank(player.getUniqueId());
 					if(rank < 2) {
 						event.setCancelled(true);
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
 					}
 				}
 				else if(faction.isInAChunk(player, block.getLocation())) {
 					event.setCancelled(true);
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
 			}
 		}
@@ -135,7 +135,7 @@ public class FactionsHandler implements Listener{
 				if(!fName.equals("")) {
 					if(faction.isMember(victim.getUniqueId())) {
 						event.setCancelled(true);
-						damager.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+						damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
 					}
 				}
 			}
@@ -154,7 +154,7 @@ public class FactionsHandler implements Listener{
 					if(!fName.equals("")) {
 						if(faction.isMember(victim.getUniqueId())) {
 							event.setCancelled(true);
-							damager.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+							damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
 						}
 					}
 				}

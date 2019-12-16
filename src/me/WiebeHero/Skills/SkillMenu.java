@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.Skills.EnumSkills.SkillState;
 import me.WiebeHero.Skills.Enums.Classes;
 import me.WiebeHero.Skills.State.States;
@@ -19,7 +19,7 @@ public class SkillMenu {
 	SkillJoin join = new SkillJoin();
 	ClassMenu menu = new ClassMenu();
 	public void SkillMenuInv(Player player) {
-		Inventory i = Bukkit.getServer().createInventory(null, 36, new ColorCodeTranslator().colorize("&7Skills of: &6" + player.getName()));
+		Inventory i = Bukkit.getServer().createInventory(null, 36, new CCT().colorize("&7Skills of: &6" + player.getName()));
 		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 		dfPlayer.resetCalculations();
 		i.setItem(0, skillBook(player));
@@ -852,9 +852,9 @@ public class SkillMenu {
 		ItemStack item = new ItemStack(Material.BOOK);
 		int skillPoints = dfPlayer.getSkillPoints();
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&7Skill Points: &6" + skillPoints));
+		meta.setDisplayName(new CCT().colorize("&7Skill Points: &6" + skillPoints));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7Here, you can view how many &6Skill Points &7you have."));
+		lore.add(new CCT().colorize("&7Here, you can view how many &6Skill Points &7you have."));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -862,10 +862,10 @@ public class SkillMenu {
 	public ItemStack modCreator(Player p, Material mat, String display, ArrayList<String> lore) {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new ColorCodeTranslator().colorize(display));
+		meta.setDisplayName(new CCT().colorize(display));
 		ArrayList<String> replaceLore = new ArrayList<String>();
 		for(int i = 0; i < lore.size(); i++) {
-			replaceLore.add(new ColorCodeTranslator().colorize(lore.get(i)));
+			replaceLore.add(new CCT().colorize(lore.get(i)));
 		}
 		meta.setLore(replaceLore);
 		item.setItemMeta(meta);
@@ -878,10 +878,10 @@ public class SkillMenu {
 		int xp = dfPlayer.getExperience();
 		int maxxp = dfPlayer.getMaxExperience();
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&6Progression Table"));
+		meta.setDisplayName(new CCT().colorize("&6Progression Table"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7Level: &b" + level));
-		lore.add(new ColorCodeTranslator().colorize("&7Next Level: &7[&b" + xp + " &6/ &b" + maxxp + "&7]"));
+		lore.add(new CCT().colorize("&7Level: &b" + level));
+		lore.add(new CCT().colorize("&7Next Level: &7[&b" + xp + " &6/ &b" + maxxp + "&7]"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -902,15 +902,15 @@ public class SkillMenu {
 		else if(dfPlayer.getSkillState(SkillState.ATK) == States.NM){
 			calcNext = calcNext + 1.5;
 		}
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&4Attack Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
+		meta.setDisplayName(new CCT().colorize("&4Attack Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7Increase the damage you deal through melee."));
-		lore.add(new ColorCodeTranslator().colorize(""));
-		lore.add(new ColorCodeTranslator().colorize("                 &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
-		lore.add(new ColorCodeTranslator().colorize("                        &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                        &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                        &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                 &6&lNext: " + String.format("%.2f", calcNext) + "%"));
+		lore.add(new CCT().colorize("&7Increase the damage you deal through melee."));
+		lore.add(new CCT().colorize(""));
+		lore.add(new CCT().colorize("                 &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
+		lore.add(new CCT().colorize("                        &7|"));
+		lore.add(new CCT().colorize("                        &7|"));
+		lore.add(new CCT().colorize("                        &7|"));
+		lore.add(new CCT().colorize("                 &6&lNext: " + String.format("%.2f", calcNext) + "%"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -931,15 +931,15 @@ public class SkillMenu {
 		else if(dfPlayer.getSkillState(SkillState.SPD) == States.NM){
 			calcNext = calcNext + 0.50;
 		}
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&9Attack Speed: &7[&b" + levelNow + " &6/ &b100&7]"));
+		meta.setDisplayName(new CCT().colorize("&9Attack Speed: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7You can attack faster."));
-		lore.add(new ColorCodeTranslator().colorize(""));
-		lore.add(new ColorCodeTranslator().colorize("    &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
-		lore.add(new ColorCodeTranslator().colorize("           &7|"));
-		lore.add(new ColorCodeTranslator().colorize("           &7|"));
-		lore.add(new ColorCodeTranslator().colorize("           &7|"));
-		lore.add(new ColorCodeTranslator().colorize("    &6&lNext: " + String.format("%.2f", calcNext) + "%"));
+		lore.add(new CCT().colorize("&7You can attack faster."));
+		lore.add(new CCT().colorize(""));
+		lore.add(new CCT().colorize("    &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
+		lore.add(new CCT().colorize("           &7|"));
+		lore.add(new CCT().colorize("           &7|"));
+		lore.add(new CCT().colorize("           &7|"));
+		lore.add(new CCT().colorize("    &6&lNext: " + String.format("%.2f", calcNext) + "%"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -960,15 +960,15 @@ public class SkillMenu {
 		else if(dfPlayer.getSkillState(SkillState.CRT) == States.NM){
 			calcNext = calcNext + 0.50;
 		}
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&5Critical Chance: &7[&b" + levelNow + " &6/ &b100&7]"));
+		meta.setDisplayName(new CCT().colorize("&5Critical Chance: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7Have a chance to deal double damage."));
-		lore.add(new ColorCodeTranslator().colorize(""));
-		lore.add(new ColorCodeTranslator().colorize("              &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
-		lore.add(new ColorCodeTranslator().colorize("                     &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                     &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                     &7|"));
-		lore.add(new ColorCodeTranslator().colorize("              &6&lNext: " + String.format("%.2f", calcNext) + "%"));
+		lore.add(new CCT().colorize("&7Have a chance to deal double damage."));
+		lore.add(new CCT().colorize(""));
+		lore.add(new CCT().colorize("              &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
+		lore.add(new CCT().colorize("                     &7|"));
+		lore.add(new CCT().colorize("                     &7|"));
+		lore.add(new CCT().colorize("                     &7|"));
+		lore.add(new CCT().colorize("              &6&lNext: " + String.format("%.2f", calcNext) + "%"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -989,15 +989,15 @@ public class SkillMenu {
 		else if(dfPlayer.getSkillState(SkillState.RND) == States.NM){
 			calcNext = calcNext + 2.0;
 		}
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&dRanged Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
+		meta.setDisplayName(new CCT().colorize("&dRanged Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7Increase the damage you deal through ranged."));
-		lore.add(new ColorCodeTranslator().colorize(""));
-		lore.add(new ColorCodeTranslator().colorize("                   &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
-		lore.add(new ColorCodeTranslator().colorize("                          &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                          &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                          &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                   &6&lNext: " + String.format("%.2f", calcNext) + "%"));
+		lore.add(new CCT().colorize("&7Increase the damage you deal through ranged."));
+		lore.add(new CCT().colorize(""));
+		lore.add(new CCT().colorize("                   &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
+		lore.add(new CCT().colorize("                          &7|"));
+		lore.add(new CCT().colorize("                          &7|"));
+		lore.add(new CCT().colorize("                          &7|"));
+		lore.add(new CCT().colorize("                   &6&lNext: " + String.format("%.2f", calcNext) + "%"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -1018,15 +1018,15 @@ public class SkillMenu {
 		else if(dfPlayer.getSkillState(SkillState.HP) == States.NM){
 			calcNext = calcNext + 5.0;
 		}
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&cHealth: &7[&b" + levelNow + " &6/ &b100&7]"));
+		meta.setDisplayName(new CCT().colorize("&cHealth: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7Increase your MAX HP."));
-		lore.add(new ColorCodeTranslator().colorize(""));
-		lore.add(new ColorCodeTranslator().colorize("     &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
-		lore.add(new ColorCodeTranslator().colorize("            &7|"));
-		lore.add(new ColorCodeTranslator().colorize("            &7|"));
-		lore.add(new ColorCodeTranslator().colorize("            &7|"));
-		lore.add(new ColorCodeTranslator().colorize("     &6&lNext: " + String.format("%.2f", calcNext) + "%"));
+		lore.add(new CCT().colorize("&7Increase your MAX HP."));
+		lore.add(new CCT().colorize(""));
+		lore.add(new CCT().colorize("     &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
+		lore.add(new CCT().colorize("            &7|"));
+		lore.add(new CCT().colorize("            &7|"));
+		lore.add(new CCT().colorize("            &7|"));
+		lore.add(new CCT().colorize("     &6&lNext: " + String.format("%.2f", calcNext) + "%"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -1047,15 +1047,15 @@ public class SkillMenu {
 		else if(dfPlayer.getSkillState(SkillState.DF) == States.NM){
 			calcNext = calcNext + 1.00;
 		}
-		meta.setDisplayName(new ColorCodeTranslator().colorize("&8Defense: &7[&b" + levelNow + " &6/ &b100&7]"));
+		meta.setDisplayName(new CCT().colorize("&8Defense: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new ColorCodeTranslator().colorize("&7Increase armor points you recieve from armor."));
-		lore.add(new ColorCodeTranslator().colorize(""));
-		lore.add(new ColorCodeTranslator().colorize("                   &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
-		lore.add(new ColorCodeTranslator().colorize("                          &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                          &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                          &7|"));
-		lore.add(new ColorCodeTranslator().colorize("                   &6&lNext: " + String.format("%.2f", calcNext) + "%"));
+		lore.add(new CCT().colorize("&7Increase armor points you recieve from armor."));
+		lore.add(new CCT().colorize(""));
+		lore.add(new CCT().colorize("                   &7&lCurrent: " + String.format("%.2f", calcNow) + "%"));
+		lore.add(new CCT().colorize("                          &7|"));
+		lore.add(new CCT().colorize("                          &7|"));
+		lore.add(new CCT().colorize("                          &7|"));
+		lore.add(new CCT().colorize("                   &6&lNext: " + String.format("%.2f", calcNext) + "%"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

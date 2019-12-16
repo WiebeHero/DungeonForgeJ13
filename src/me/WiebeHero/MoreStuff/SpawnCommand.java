@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class SpawnCommand implements Listener,CommandExecutor{
@@ -34,10 +34,10 @@ public class SpawnCommand implements Listener,CommandExecutor{
 							@Override
 							public void run() {
 								if(player.getLocation().getX() == locX && player.getLocation().getZ() == locZ) {
-									player.sendMessage(new ColorCodeTranslator().colorize("&aSending you to spawn in " + count + "..."));
+									player.sendMessage(new CCT().colorize("&aSending you to spawn in " + count + "..."));
 									count--;
 									if(count == 0) {
-										player.sendMessage(new ColorCodeTranslator().colorize("&aTeleporting!"));
+										player.sendMessage(new CCT().colorize("&aTeleporting!"));
 										World world = Bukkit.getWorld("DFWarzone-1");
 										double x = Bukkit.getWorld("DFWarzone-1").getSpawnLocation().getX();
 										double y = Bukkit.getWorld("DFWarzone-1").getSpawnLocation().getY();
@@ -50,7 +50,7 @@ public class SpawnCommand implements Listener,CommandExecutor{
 									}
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&cCancelled teleporting because of you moving."));
+									player.sendMessage(new CCT().colorize("&cCancelled teleporting because of you moving."));
 									cancel();
 									spawning.remove(player.getUniqueId().toString());
 								}
@@ -58,11 +58,11 @@ public class SpawnCommand implements Listener,CommandExecutor{
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&cYou are already going to spawn!"));
+						player.sendMessage(new CCT().colorize("&cYou are already going to spawn!"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&cYou can't use this command! You are in combat!"));
+					player.sendMessage(new CCT().colorize("&cYou can't use this command! You are in combat!"));
 				}
 			}
 		}

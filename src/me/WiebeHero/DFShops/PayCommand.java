@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 
 public class PayCommand implements Listener,CommandExecutor{
 	MoneyCreate m = new MoneyCreate();
@@ -52,48 +52,48 @@ public class PayCommand implements Listener,CommandExecutor{
 									double newMoneyThem = moneyThem + amount;
 									m.getMoneyList().put(uuid1, newMoneyMe);
 									m.getMoneyList().put(uuid2, newMoneyThem);
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &aYou have paid &6" + amount + "$ &a&lto " + newPlayer.getName() + "!"));
-									newPlayer.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &a&l" + player.getName() + " &ahas paid you &6" + amount + "$!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have paid &6" + amount + "$ &a&lto " + newPlayer.getName() + "!"));
+									newPlayer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &a&l" + player.getName() + " &ahas paid you &6" + amount + "$!"));
 								}
 								else {
-									player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
 								}
 							}
 							else {
-								player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cNot a valid amount!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cNot a valid amount!"));
 							}
 						}
 						else {
-							player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cPlayer not found, or its yourself silly ;)"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cPlayer not found, or its yourself silly ;)"));
 						}
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to type the amount you want to pay the player."));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to type the amount you want to pay the player."));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&2&l[DungeonForge]: &cYou need to type the players name after 'pay'"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to type the players name after 'pay'"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(balance) || cmd.getName().equalsIgnoreCase(money)) {
 				if(args.length == 0) {
 					UUID uuid1 = player.getUniqueId();
 					double moneyMe = m.getMoneyList().get(uuid1);
-					player.sendMessage(new ColorCodeTranslator().colorize("&aYou're balance is: &6" + moneyMe + "$"));
+					player.sendMessage(new CCT().colorize("&aYou're balance is: &6" + moneyMe + "$"));
 				}
 				else if(args.length == 1) {
 					Player target = Bukkit.getPlayer(args[0]);
 					if(target != null) {
 						UUID uuid1 = target.getUniqueId();
 						double moneyMe = m.getMoneyList().get(uuid1);
-						player.sendMessage(new ColorCodeTranslator().colorize("&a" + target.getName() + " balance is: &6" + moneyMe + "$"));
+						player.sendMessage(new CCT().colorize("&a" + target.getName() + " balance is: &6" + moneyMe + "$"));
 					}
 					else {
-						player.sendMessage(new ColorCodeTranslator().colorize("&cThis player has not logged online, or is offline!"));
+						player.sendMessage(new CCT().colorize("&cThis player has not logged online, or is offline!"));
 					}
 				}
 				else {
-					player.sendMessage(new ColorCodeTranslator().colorize("&cThere are to many arguments! Use: /bal (Player Name)"));
+					player.sendMessage(new CCT().colorize("&cThere are to many arguments! Use: /bal (Player Name)"));
 				}
 			}
 		}

@@ -20,7 +20,7 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.Factions.DFFaction;
@@ -43,7 +43,7 @@ public class DFScoreboard implements Listener{
 			
 		}
 		else {
-			player.kickPlayer(new ColorCodeTranslator().colorize("&cThe server is going into shutdown, try to join back in 5 minutes."));
+			player.kickPlayer(new CCT().colorize("&cThe server is going into shutdown, try to join back in 5 minutes."));
 		}
 	}
 	@EventHandler
@@ -66,13 +66,13 @@ public class DFScoreboard implements Listener{
 		//Set health scoreboard
 		//--------------------------------------------------------------------------------------
 		Objective o = scoreboard.registerNewObjective("health", "health", "display");
-		o.setDisplayName(new ColorCodeTranslator().colorize("&c❤"));
+		o.setDisplayName(new CCT().colorize("&c❤"));
 		o.setDisplaySlot(DisplaySlot.BELOW_NAME);
 		//--------------------------------------------------------------------------------------
 		//Set normal scoreboard
 		//--------------------------------------------------------------------------------------
 		Objective score = scoreboard.registerNewObjective("score", "", "");
-		score.setDisplayName(new ColorCodeTranslator().colorize("&2&lDungeonForge"));
+		score.setDisplayName(new CCT().colorize("&2&lDungeonForge"));
 		score.setDisplaySlot(DisplaySlot.SIDEBAR);
 		DFFaction faction = method.getFaction(player.getUniqueId());
 		//--------------------------------------------------------------------------------------
@@ -102,23 +102,23 @@ public class DFScoreboard implements Listener{
 		else {
 			territory = "&7Wilderness";
 		}
-		Score facLine = score.getScore(new ColorCodeTranslator().colorize("&7Faction: " + facN));
-		Score facTeritory = score.getScore(new ColorCodeTranslator().colorize("&7Territory: " + territory));
-		Score rank = score.getScore(new ColorCodeTranslator().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
-		Score level = score.getScore(new ColorCodeTranslator().colorize("&7Level: &b&l" + def.getPlayer(player).getLevel()));
-		Score adress = score.getScore(new ColorCodeTranslator().colorize("    &2&lplay.dungeonforge.net"));
-		Score cash = score.getScore(new ColorCodeTranslator().colorize("&7Money: &a$" + String.format("%.2f", money.getMoneyList().get(player.getUniqueId()))));
+		Score facLine = score.getScore(new CCT().colorize("&7Faction: " + facN));
+		Score facTeritory = score.getScore(new CCT().colorize("&7Territory: " + territory));
+		Score rank = score.getScore(new CCT().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
+		Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + def.getPlayer(player).getLevel()));
+		Score adress = score.getScore(new CCT().colorize("    &2&lplay.dungeonforge.net"));
+		Score cash = score.getScore(new CCT().colorize("&7Money: &a$" + String.format("%.2f", money.getMoneyList().get(player.getUniqueId()))));
 		//--------------------------------------------------------------------------------------
 		//Prefix/Suffix setting
 		//--------------------------------------------------------------------------------------
 		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 		Team t = scoreboard.registerNewTeam(player.getName());
 		teams.put(player.getUniqueId(), t);
-		t.setPrefix(new ColorCodeTranslator().colorize("&6[&b" + dfPlayer.getLevel() + "&6]&7 "));
+		t.setPrefix(new CCT().colorize("&6[&b" + dfPlayer.getLevel() + "&6]&7 "));
 		String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
 		String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
-		t.setSuffix(new ColorCodeTranslator().colorize(" &6" + now));
-		player.setPlayerListName(new ColorCodeTranslator().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
+		t.setSuffix(new CCT().colorize(" &6" + now));
+		player.setPlayerListName(new CCT().colorize(t.getPrefix() + player.getName() + " " + ranks.get(player.getUniqueId())));
 		t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 		t.addEntry(player.getName());
 		//--------------------------------------------------------------------------------------

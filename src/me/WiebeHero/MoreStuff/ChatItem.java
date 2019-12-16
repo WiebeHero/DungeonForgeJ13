@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Skills.DFPlayer;
 import net.md_5.bungee.api.ChatColor;
@@ -65,12 +65,12 @@ public class ChatItem implements Listener{
 				        TextComponent componentAfter = new TextComponent();
 				        if(!facN.equals("")) {
 							if(textBefore != null) {
-								componentBefore.setText(new ColorCodeTranslator().colorize("&6" + facN + "&a | &b&l"  + level + "&a | &7" + player.getName() + ": " + textBefore));
+								componentBefore.setText(new CCT().colorize("&6" + facN + "&a | &b&l"  + level + "&a | &7" + player.getName() + ": " + textBefore));
 						        componentBefore.setColor(ChatColor.GRAY);
 								componentBefore.setHoverEvent(null);
 							}
 							else {
-								componentBefore.setText(new ColorCodeTranslator().colorize("&6" + facN + "&a | &b&l"  + level + "&a | &7" + player.getName() + ": "));
+								componentBefore.setText(new CCT().colorize("&6" + facN + "&a | &b&l"  + level + "&a | &7" + player.getName() + ": "));
 								componentBefore.setColor(ChatColor.GRAY);
 						        componentBefore.setHoverEvent(null);
 							}
@@ -90,11 +90,11 @@ public class ChatItem implements Listener{
 						}
 				        else {
 				        	if(textBefore != null) {
-								componentBefore.setText(new ColorCodeTranslator().colorize("&b&l"  + level + "&a | &7" + player.getName() + ": " + textBefore));
+								componentBefore.setText(new CCT().colorize("&b&l"  + level + "&a | &7" + player.getName() + ": " + textBefore));
 						        componentBefore.setHoverEvent(null);
 							}
 							else {
-								componentBefore.setText(new ColorCodeTranslator().colorize("&b&l"  + level + "&a | &7" + player.getName() + ": "));
+								componentBefore.setText(new CCT().colorize("&b&l"  + level + "&a | &7" + player.getName() + ": "));
 						        componentBefore.setHoverEvent(null);
 							}
 							componentBefore.addExtra(component);

@@ -10,6 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -50,7 +51,7 @@ import org.bukkit.util.Vector;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
 import javafx.util.Pair;
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.CustomMethods.PotionM;
@@ -1230,7 +1231,7 @@ public class Enchantment extends CommandFile implements Listener{
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_WOLF_HOWL, 2, (float) 1);
 					}
 					Wolf wolf = (Wolf) damager.getWorld().spawnEntity(victim.getLocation(), EntityType.WOLF);
-					wolf.setCustomName(new ColorCodeTranslator().colorize("&a&lWolf &6[&aLv 1&6]"));
+					wolf.setCustomName(new CCT().colorize("&a&lWolf &6[&aLv 1&6]"));
 					wolf.setCustomNameVisible(true);
 					wolf.setOwner((AnimalTamer)damager);
 					wolf.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50.00 + level * 10.00);
@@ -2180,10 +2181,9 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Boolean> prepared = new HashMap<UUID, Boolean>();
 			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			HashMap<UUID, Integer> levelBow = new HashMap<UUID, Integer>();
-			HashMap<Player, Vector> vector = new HashMap<Player, Vector>();
+			HashMap<UUID, Vector> vector = new HashMap<UUID, Vector>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
-				float i = ThreadLocalRandom.current().nextFloat() * 100;
 				if(!cooldown.contains(damager.getUniqueId())) {
 					prepared.put(damager.getUniqueId(), true);
 					cooldown.add(damager.getUniqueId());
@@ -2196,7 +2196,7 @@ public class Enchantment extends CommandFile implements Listener{
 				if(prepared.containsKey(player.getUniqueId())) {
 					if(prepared.get(player.getUniqueId()) == true) {
 						prepared.put(player.getUniqueId(), false);
-						vector.put(player, player.getLocation().getDirection());
+						vector.put(player.getUniqueId(), player.getLocation().getDirection());
 					}
 				}
 			}
@@ -2211,15 +2211,15 @@ public class Enchantment extends CommandFile implements Listener{
 								player.setVelocity(new Vector(0, 0.5, 0));
 								new BukkitRunnable() {
 									public void run() {
-										player.setVelocity(vector.get(player).normalize().multiply(player.getLocation().distance(arrow.getLocation()) / 15));
-										vector.remove(player);
+										player.setVelocity(vector.get(player.getUniqueId()).normalize().multiply(player.getLocation().distance(arrow.getLocation()) / 15));
+										vector.remove(player.getUniqueId());
 									}
 								}.runTaskLater(CustomEnchantments.getInstance(), 3L);
 								new BukkitRunnable() {
 									public void run() {
-										cooldown.remove(player);
+										cooldown.remove(player.getUniqueId());
 									}
-								}.runTaskLater(CustomEnchantments.getInstance(), 1200 - 100 * levelBow.get(player));
+								}.runTaskLater(CustomEnchantments.getInstance(), 1200 - 100 * levelBow.get(player.getUniqueId()));
 							}
 						}
 					}
@@ -2230,77 +2230,206 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(i <= 70 + 10 * level) {
+					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.6D, victim.getLocation().getZ() + 0D);
+					victim.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, locCF, 40, 0.2, 0.2, 0.2, 0.1); 
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_ZOMBIE_VILLAGER_CURE, 2, (float) 1);
+					}
+					double heal = damager.getHealth() + 1.50 + 1.50 * level;
+					double attribute = damager.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+					if(heal < attribute) {
+						damager.setHealth(heal);
+					}
+					else {
+						damager.setHealth(attribute);
+					}
+				}
 			}
 		}));
 		this.listBow.put("Lightning", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(i <= 3.5 + 0.5 * level) {
+					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 0D, victim.getLocation().getZ() + 0D);
+					victim.getWorld().strikeLightningEffect(locCF);
+					victim.damage(event.getFinalDamage() + (5.00 + 1.00 * level));
+				}
 			}
 		}));
 		this.listBow.put("Paralyze", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(i <= 4  + level) {
+					Location location = victim.getLocation();
+			        location.getWorld().strikeLightningEffect(location);
+			        p.applyEffect(victim, PotionEffectType.SLOW, 20, 100 + 20 * level);
+			        new BukkitRunnable() {
+			        	int count = 0;
+			        	public void run() {
+			        		if(count <= 100 + level * 20) {
+			        			victim.playEffect(EntityEffect.HURT); 
+				        		victim.damage(0.5 + 0.1 * level);
+			        		}
+			        		else {
+			        			count = 0;
+			        			cancel();
+			        		}
+			        	}
+			        }.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+				}
 			}
 		}));
 		this.listBow.put("Pickpocket", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(i <= 0.5 + 0.5 * level) {
+					if(damager instanceof Player && victim instanceof Player) {
+						Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.7D, victim.getLocation().getZ() + 0D);
+						damager.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, locCF, 30, 0.1, 0.1, 0.1); 
+						for(Player victim1 : Bukkit.getOnlinePlayers()) {
+							((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, (float) 1.25);
+						}
+						double moneyD = money.getMoneyList().get(damager.getUniqueId());
+						double moneyV = money.getMoneyList().get(victim.getUniqueId());
+						double tempMoney = moneyV * (0.01 + 0.01 * level);
+						double newV = moneyV - tempMoney;
+						double newD = moneyD + tempMoney;
+						money.getMoneyList().put(damager.getUniqueId(), newD);
+						money.getMoneyList().put(victim.getUniqueId(), newV);
+					}
+				}
 			}
 		}));
 		this.listBow.put("Pierce", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(i <= 2 + 0.5 * level) {
+					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.7D, victim.getLocation().getZ() + 0D);
+					victim.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, locCF, 100, 5.5, 5.5, 5.5, 0.1); 
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, (float) 1);
+					}
+					event.setCancelled(true);
+					victim.damage(event.getDamage());
+				}
 			}
 		}));
 		this.listBow.put("Poison", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(i <= 7 + level) {
+					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.7D, victim.getLocation().getZ() + 0D);
+					damager.getWorld().spawnParticle(Particle.SLIME, locCF, 20, 0.05, 0.3, 0.05, 0.1); 
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_SPIDER_AMBIENT, 2, (float) 1.25);
+					}
+					int amp = 0 + level;
+					int durationAdd = 160 + 40 * level;
+					p.applyEffect(victim, PotionEffectType.POISON, amp, durationAdd);
+				}
 			}
 		}));
-		this.listBow.put("Sandstorm", new Pair<>(Condition.PROJECTILE_LAND, new CommandFile() {
-			public ArrayList<UUID> sandList = new ArrayList<UUID>();
+		this.listBow.put("Sandstorm", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
-			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, PlayerInteractEvent event) {
-				
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
+				float i = ThreadLocalRandom.current().nextFloat() * 100;
+				if(i <= 7 + level) {
+					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 2.5D, victim.getLocation().getZ() + 0D);
+					victim.getWorld().spawnParticle(Particle.FALLING_DUST, locCF1, 80, 1, 1, 1, 0, Material.SAND.createBlockData()); 
+					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_SKELETON_HURT, 2, (float) 1.1);
+					double range = 5.00 + 1.5 * level;
+					for(Entity e : damager.getNearbyEntities(range, range, range)) {
+						if(e != null) {
+							if(e instanceof LivingEntity) {
+								LivingEntity entity = (LivingEntity) e;
+								if(entity != damager) {
+									int amp = 0;
+									int durationAdd = 200 + 40 * level;
+									p.applyEffect(entity, PotionEffectType.BLINDNESS, amp, durationAdd);
+								}
+							}
+						}
+					}
+				}
 			}
 		}));
 		this.listBow.put("Sharpshooter", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
-				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(damager.getLocation().distance(victim.getLocation()) < 5.50 + 1.50 * level) {
+					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 2.5D, victim.getLocation().getZ() + 0D);
+					victim.getWorld().spawnParticle(Particle.CRIT_MAGIC, locCF1, 40, 0.1, 0.1, 0.1, 0.1); 
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 2, (float) 1.5);
+					}
+					event.setDamage(event.getFinalDamage() + 5.50 + 1.50 * level - damager.getLocation().distance(victim.getLocation()));
+				}
 			}
 		}));
 		this.listBow.put("Sniper Shot", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
-				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(damager.getLocation().distance(victim.getLocation()) > 20.00 - 1.60 * level) {
+					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 2.5D, victim.getLocation().getZ() + 0D);
+					victim.getWorld().spawnParticle(Particle.FALLING_DUST, locCF1, 80, 0.15, 0.15, 0.15, 0); 
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_SKELETON_HURT, 2, (float) 1.1);
+					}
+					event.setDamage(event.getFinalDamage() + damager.getLocation().distance(victim.getLocation()) - 20.00 - 1.60 * level);
+				}
+			}
+		}));
+		this.listBow.put("Newtowns Power", new Pair<>(Condition.PROJECTILE_SHOOT, new CommandFile() {
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, DFShootBowEvent event) {
+				Vector v = event.getProjectile().getVelocity().multiply(1.035D + 0.035D * level);
+				event.getProjectile().setVelocity(v);
+				event.getProjectile().setGravity(false);
+				new BukkitRunnable() {
+					public void run() {
+						if(event.getProjectile() != null) {
+							event.getProjectile().remove();
+						}
+					}	
+				}.runTaskLater(CustomEnchantments.getInstance(), 100L);
 			}
 		}));
 		this.listBow.put("Weakness", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(i <= 6 + level) {
+					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 2.5D, victim.getLocation().getZ() + 0D);
+					victim.getWorld().spawnParticle(Particle.FALLING_DUST, locCF1, 80, 0.15, 0.15, 0.15, 0); 
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_SKELETON_HURT, 2, (float) 1.1);
+					}
+					int amp = (int)Math.floor(0 + (level) / 2);
+					int durationAdd = 200 + 50 * level;
+					p.applyEffect(victim, PotionEffectType.WEAKNESS, amp, durationAdd);
+				}
 			}
 		}));
 		this.listBow.put("Wither", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				
+				if(i <= 7 + level) {
+					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 2D, victim.getLocation().getZ() + 0D);
+					damager.getWorld().spawnParticle(Particle.SMOKE_NORMAL, locCF, 60, 0, 0, 0, 0.1); 
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, (float) 1);
+					}
+					int amp = 0 + level;
+					int durationAdd = 200 + 40 * level;
+					p.applyEffect(victim, PotionEffectType.WITHER, amp, durationAdd);
+				}
 			}
 		}));
 		
@@ -2308,6 +2437,43 @@ public class Enchantment extends CommandFile implements Listener{
 	
 	public void loadShieldEnchantments() {
 		this.listShield = new HashMap<String, Pair<Condition, CommandFile>>();
+		this.listShield.put("Parry", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+			HashMap<UUID, Integer> activate = new HashMap<UUID, Integer>();
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
+				if(!cooldown.contains(victim.getUniqueId())) {
+					activate.put(victim.getUniqueId(), level);
+					cooldown.add(victim.getUniqueId());
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.BLOCK_ANVIL_PLACE, 2, (float) 2.0);
+					}
+					new BukkitRunnable() {
+						public void run() {
+							if(activate.containsKey(victim.getUniqueId())) {
+								activate.remove(victim.getUniqueId());
+								for(Player victim1 : Bukkit.getOnlinePlayers()) {
+									((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, (float) 0.75);
+								}
+							}
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 40L);
+				}
+			}
+			@EventHandler
+			public void check(EntityDamageByEntityEvent event) {
+				if(event.getDamager() instanceof LivingEntity) {
+					LivingEntity damager = (LivingEntity) event.getDamager();
+					if(activate.containsKey(damager.getUniqueId())) {
+						event.setDamage(event.getDamage() + 1.5 + 1.5 * activate.get(damager.getUniqueId()));
+						activate.remove(damager.getUniqueId());
+						for(Player victim1 : Bukkit.getOnlinePlayers()) {
+							((Player) victim1).playSound(damager.getLocation(), Sound.BLOCK_ANVIL_PLACE, 2, (float) 2.5);
+						}
+					}
+				}
+			}
+		}));
 	}
 	
 	public HashMap<String, Pair<Condition, CommandFile>> getMeleeEnchantments(){

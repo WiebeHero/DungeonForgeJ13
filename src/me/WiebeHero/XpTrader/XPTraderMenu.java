@@ -24,13 +24,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import me.WiebeHero.CustomEnchantments.ColorCodeTranslator;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class XPTraderMenu implements Listener{
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
 	public void XPTraderPlayer(Player player) {
-		Inventory i = plugin.getServer().createInventory(null, 54, (new ColorCodeTranslator().colorize("&6&lXP Trader")));
+		Inventory i = plugin.getServer().createInventory(null, 54, (new CCT().colorize("&6&lXP Trader")));
 		i.setItem(0, emptyVoid());
 		i.setItem(1, emptyVoid());
 		i.setItem(2, emptyVoid());
@@ -140,7 +140,7 @@ public class XPTraderMenu implements Listener{
 									Inventory invXPTrader = view.getTopInventory(); 
 									ArrayList<ItemStack> importantSlots = new ArrayList<ItemStack>(Arrays.asList(invXPTrader.getItem(14), invXPTrader.getItem(15), invXPTrader.getItem(16), invXPTrader.getItem(23), invXPTrader.getItem(24), invXPTrader.getItem(25), invXPTrader.getItem(32), invXPTrader.getItem(33), invXPTrader.getItem(34), invXPTrader.getItem(41), invXPTrader.getItem(42), invXPTrader.getItem(43)));
 									ArrayList<Integer> slotNumber = new ArrayList<Integer>(Arrays.asList(10, 11, 12, 14, 15, 16, 19, 20, 21, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37, 38, 39, 41, 42, 43));
-									player.sendMessage(new ColorCodeTranslator().colorize("&aTrade Accepted!"));
+									player.sendMessage(new CCT().colorize("&aTrade Accepted!"));
 									for(int i = 0; i < importantSlots.size(); i++) {
 										if(importantSlots.get(i) != null) {
 											if(title.contains("XP Trader")) {
@@ -298,17 +298,17 @@ public class XPTraderMenu implements Listener{
 									}
 									else {
 										event.setCancelled(true);
-										player.sendMessage(new ColorCodeTranslator().colorize("&cUnvalid Item."));
+										player.sendMessage(new CCT().colorize("&cUnvalid Item."));
 									}
 								}
 								else {
 									event.setCancelled(true);
-									player.sendMessage(new ColorCodeTranslator().colorize("&cUnvalid Item."));
+									player.sendMessage(new CCT().colorize("&cUnvalid Item."));
 								}
 							}
 							else {
 								event.setCancelled(true);
-								player.sendMessage(new ColorCodeTranslator().colorize("&cUnvalid Item."));
+								player.sendMessage(new CCT().colorize("&cUnvalid Item."));
 							}
 						}
 					}
@@ -332,7 +332,7 @@ public class XPTraderMenu implements Listener{
 	public ItemStack backButton() {
 		ItemStack item = new ItemStack(Material.BARRIER, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&c&lBACK"));
+		itemmeta.setDisplayName(new CCT().colorize("&c&lBACK"));
 		item.setItemMeta(itemmeta);
 		return item;
 	}
@@ -342,11 +342,11 @@ public class XPTraderMenu implements Listener{
 	public ItemStack xpBottleItem(int xpAmount, int amountItem) {
 		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, amountItem);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lXP Bottle (Item)"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Item)"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new ColorCodeTranslator().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new ColorCodeTranslator().colorize("&6XP Amount: " + xpAmount));
+		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
+		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
+		lore1.add(new CCT().colorize("&6XP Amount: " + xpAmount));
 		itemmeta.setLore(lore1);
 		item.setItemMeta(itemmeta);
 		return item;
@@ -357,11 +357,11 @@ public class XPTraderMenu implements Listener{
 	public ItemStack xpBottlePlayer(int xpAmount, int amountItem) {
 		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, amountItem);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lXP Bottle (Player)"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new ColorCodeTranslator().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new ColorCodeTranslator().colorize("&6XP Amount: " + xpAmount));
+		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
+		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
+		lore1.add(new CCT().colorize("&6XP Amount: " + xpAmount));
 		itemmeta.setLore(lore1);
 		item.setItemMeta(itemmeta);
 		return item;
@@ -372,9 +372,9 @@ public class XPTraderMenu implements Listener{
 	public ItemStack acceptButton() {
 		ItemStack item = new ItemStack(Material.LIME_DYE, 1);
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new ColorCodeTranslator().colorize("&a&lAccept?"));
+		itemmeta.setDisplayName(new CCT().colorize("&a&lAccept?"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new ColorCodeTranslator().colorize("&7Click this to accept the trade."));
+		lore1.add(new CCT().colorize("&7Click this to accept the trade."));
 		itemmeta.setLore(lore1);
 		item.setItemMeta(itemmeta);
 		return item;
