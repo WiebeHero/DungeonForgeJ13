@@ -37,33 +37,19 @@ public class NovisRewards {
 		Set<String> configListWep = config.getConfigurationSection("Items.Weapons").getKeys(false);
 		ArrayList<String> listItemsWep = new ArrayList<String>(configListWep);
 		for(int i = 0; i < listItemsWep.size(); i++) {
+			String name = config.getString("Items.Weapons." + listItemsWep.get(i) + ".Name");
 			String check = config.getString("Items.Weapons." + listItemsWep.get(i) + ".Rarity");
 			String type = config.getString("Items.Weapons." + listItemsWep.get(i) + ".Type");
 			ItemStack item = new ItemStack(Material.getMaterial(type), 1);
 			ItemMeta meta = item.getItemMeta();
-			if(check.equals("Common")) {
-				meta.setDisplayName(new CCT().colorize("&7" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Rare")) {
-				meta.setDisplayName(new CCT().colorize("&a" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));		
-			}
-			else if(check.equals("Epic")) {
-				meta.setDisplayName(new CCT().colorize("&b" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Legendary")) {
-				meta.setDisplayName(new CCT().colorize("&c" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Mythic")) {
-				meta.setDisplayName(new CCT().colorize("&5" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Heroic")) {
-				meta.setDisplayName(new CCT().colorize("&e" + listItemsWep.get(i) + " &a[&6Lv 1&a]"));
-			}
+			meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv 1&a]"));
 			String enchantmentsString = config.getString("Items.Weapons." + listItemsWep.get(i) + ".Enchantments");
 			double damageWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".BeginDamage");
 			double speedWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".BeginSpeed");
+			double incDamageWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".IncDamage");
+			double incDamageSpeed = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".IncSpeed");
 			ArrayList<String> newLore = new ArrayList<String>();
-			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
+			newLore = enchant.setEnchantments(1, enchantmentsString, newLore);
 			newLore.add(new CCT().colorize("&7-----------------------"));
 			newLore.add(new CCT().colorize("&7Attack Damage: &6" + damageWeapon));
 			newLore.add(new CCT().colorize("&7Attack Speed: &6" + speedWeapon));
@@ -105,58 +91,57 @@ public class NovisRewards {
 			nmsStack.save(compound);
 			ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack);
 			NBTItem tempItem = new NBTItem(newItem);
+			tempItem.setString("Upgradeable", "");
+			tempItem.setString("WeaponKey", listItemsWep.get(i));
+			tempItem.setString("EnchantmentString", enchantmentsString);
+			tempItem.setInteger("Level", 1);
+			tempItem.setInteger("XP", 0);
+			tempItem.setInteger("MAXXP", 3000);
+			tempItem.setInteger("TotalXP", 0);
+			tempItem.setDouble("Base Attack Damage", damageWeapon);
+			tempItem.setDouble("Base Attack Speed", speedWeapon);
+			tempItem.setDouble("Inc Attack Damage", incDamageWeapon);
+			tempItem.setDouble("Inc Attack Speed", incDamageSpeed);
 			tempItem.setDouble("Attack Damage", damageWeapon);
 			tempItem.setDouble("Attack Speed", speedWeapon);
+			tempItem.setString("Rarity", check);
+			tempItem.setString("ItemName", name);
 			item = tempItem.getItem();
-			if(check.equals("Common")) {
+			if(check.contains("Common")) {
 				rewards1.add(item);
 			}
-			else if(check.equals("Rare")) {
+			else if(check.contains("Rare")) {
 				rewards2.add(item);
 			}
-			else if(check.equals("Epic")) {
+			else if(check.contains("Epic")) {
 				rewards3.add(item);
 			}
-			else if(check.equals("Legendary")) {
+			else if(check.contains("Legendary")) {
 				rewards4.add(item);
 			}
-			else if(check.equals("Mythic")) {
+			else if(check.contains("Mythic")) {
 				rewards5.add(item);
 			}
-			else if(check.equals("Heroic")) {
+			else if(check.contains("Heroic")) {
 				rewards6.add(item);
 			}
 		}
 		Set<String> configListBow = config.getConfigurationSection("Items.Bows").getKeys(false);
 		ArrayList<String> listItemsBows = new ArrayList<String>(configListBow);
 		for(int i = 0; i < listItemsBows.size(); i++) {
+			String name = config.getString("Items.Bows." + listItemsBows.get(i) + ".Name");
 			String check = config.getString("Items.Bows." + listItemsBows.get(i) + ".Rarity");
 			String type = config.getString("Items.Bows." + listItemsBows.get(i) + ".Type");
 			ItemStack item = new ItemStack(Material.getMaterial(type), 1);
 			ItemMeta meta = item.getItemMeta();
-			if(check.equals("Common")) {
-				meta.setDisplayName(new CCT().colorize("&7" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Rare")) {
-				meta.setDisplayName(new CCT().colorize("&a" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));		
-			}
-			else if(check.equals("Epic")) {
-				meta.setDisplayName(new CCT().colorize("&b" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Legendary")) {
-				meta.setDisplayName(new CCT().colorize("&c" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Mythic")) {
-				meta.setDisplayName(new CCT().colorize("&5" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Heroic")) {
-				meta.setDisplayName(new CCT().colorize("&e" + listItemsBows.get(i) + " &a[&6Lv 1&a]"));
-			}
+			meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv 1&a]"));
 			String enchantmentsString = config.getString("Items.Bows." + listItemsBows.get(i) + ".Enchantments");
 			double damageWeapon = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".BeginDamage");
 			double drawSpeedWeapon = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".BeginSpeed");
+			double incDamage = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".IncDamage");
+			double incSpeed = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".IncSpeed");
 			ArrayList<String> newLore = new ArrayList<String>();
-			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
+			newLore = enchant.setEnchantments(1, enchantmentsString, newLore);
 			newLore.add(new CCT().colorize("&7-----------------------"));
 			newLore.add(new CCT().colorize("&7Attack Damage: &6" + damageWeapon));
 			newLore.add(new CCT().colorize("&7Attack Speed: &6" + drawSpeedWeapon));
@@ -173,58 +158,57 @@ public class NovisRewards {
 			item.setItemMeta(meta);
 			ItemStack newItem = item;
 			NBTItem tempItem = new NBTItem(newItem);
+			tempItem.setString("Upgradeable", "");
+			tempItem.setString("BowKey", listItemsBows.get(i));
+			tempItem.setString("EnchantmentString", enchantmentsString);
+			tempItem.setInteger("Level", 1);
+			tempItem.setInteger("XP", 0);
+			tempItem.setInteger("MAXXP", 3000);
+			tempItem.setInteger("TotalXP", 0);
+			tempItem.setDouble("Base Attack Damage", damageWeapon);
+			tempItem.setDouble("Base Attack Speed", drawSpeedWeapon);
+			tempItem.setDouble("Inc Attack Damage", incDamage);
+			tempItem.setDouble("Inc Attack Speed", incSpeed);
 			tempItem.setDouble("Attack Damage", damageWeapon);
 			tempItem.setDouble("Attack Speed", drawSpeedWeapon);
+			tempItem.setString("Rarity", check);
+			tempItem.setString("ItemName", name);
 			item = tempItem.getItem();
-			if(check.equals("Common")) {
+			if(check.contains("Common")) {
 				rewards1.add(item);
 			}
-			else if(check.equals("Rare")) {
+			else if(check.contains("Rare")) {
 				rewards2.add(item);
 			}
-			else if(check.equals("Epic")) {
+			else if(check.contains("Epic")) {
 				rewards3.add(item);
 			}
-			else if(check.equals("Legendary")) {
+			else if(check.contains("Legendary")) {
 				rewards4.add(item);
 			}
-			else if(check.equals("Mythic")) {
+			else if(check.contains("Mythic")) {
 				rewards5.add(item);
 			}
-			else if(check.equals("Heroic")) {
+			else if(check.contains("Heroic")) {
 				rewards6.add(item);
 			}
 		}
 		Set<String> configListShields = config.getConfigurationSection("Items.Shields").getKeys(false);
 		ArrayList<String> listItemsShields = new ArrayList<String>(configListShields);
 		for(int i = 0; i < listItemsShields.size(); i++) {
+			String name = config.getString("Items.Shields." + listItemsShields.get(i) + ".Name");
 			String check = config.getString("Items.Shields." + listItemsShields.get(i) + ".Rarity");
 			String type = config.getString("Items.Shields." + listItemsShields.get(i) + ".Type");
 			ItemStack item = new ItemStack(Material.getMaterial(type), 1);
 			ItemMeta meta = item.getItemMeta();
-			if(check.equals("Common")) {
-				meta.setDisplayName(new CCT().colorize("&7" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Rare")) {
-				meta.setDisplayName(new CCT().colorize("&a" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));		
-			}
-			else if(check.equals("Epic")) {
-				meta.setDisplayName(new CCT().colorize("&b" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Legendary")) {
-				meta.setDisplayName(new CCT().colorize("&c" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Mythic")) {
-				meta.setDisplayName(new CCT().colorize("&5" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Heroic")) {
-				meta.setDisplayName(new CCT().colorize("&e" + listItemsShields.get(i) + " &a[&6Lv 1&a]"));
-			}
+			meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv 1&a]"));
 			String enchantmentsString = config.getString("Items.Shields." + listItemsShields.get(i) + ".Enchantments");
 			double damageWeapon = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".BeginToughness");
 			double cooldown = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".BeginCooldown");
+			double incDamageWeapon = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".IncToughness");
+			double incCooldown = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".IncCooldown");
 			ArrayList<String> newLore = new ArrayList<String>();
-			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
+			newLore = enchant.setEnchantments(1, enchantmentsString, newLore);
 			newLore.add(new CCT().colorize("&7-----------------------"));
 			newLore.add(new CCT().colorize("&7Armor Toughness: &6" + damageWeapon));
 			newLore.add(new CCT().colorize("&7Cooldown: &b" + cooldown + " Seconds"));
@@ -240,31 +224,45 @@ public class NovisRewards {
 			meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 			item.setItemMeta(meta);
 			NBTItem tempItem = new NBTItem(item);
+			tempItem.setString("Upgradeable", "");
+			tempItem.setString("ShieldKey", listItemsShields.get(i));
+			tempItem.setString("EnchantmentString", enchantmentsString);
+			tempItem.setInteger("Level", 1);
+			tempItem.setInteger("XP", 0);
+			tempItem.setInteger("MAXXP", 3000);
+			tempItem.setInteger("TotalXP", 0);
+			tempItem.setDouble("Base Armor Toughness", damageWeapon);
+			tempItem.setDouble("Base Cooldown", cooldown);
+			tempItem.setDouble("Inc Armor Toughness", incDamageWeapon);
+			tempItem.setDouble("Inc Cooldown", incCooldown);
 			tempItem.setDouble("Armor Toughness", damageWeapon);
 			tempItem.setDouble("Cooldown", cooldown);
+			tempItem.setString("Rarity", check);
+			tempItem.setString("ItemName", name);
 			item = tempItem.getItem();
-			if(check.equals("Common")) {
+			if(check.contains("Common")) {
 				rewards1.add(item);
 			}
-			else if(check.equals("Rare")) {
+			else if(check.contains("Rare")) {
 				rewards2.add(item);
 			}
-			else if(check.equals("Epic")) {
+			else if(check.contains("Epic")) {
 				rewards3.add(item);
 			}
-			else if(check.equals("Legendary")) {
+			else if(check.contains("Legendary")) {
 				rewards4.add(item);
 			}
-			else if(check.equals("Mythic")) {
+			else if(check.contains("Mythic")) {
 				rewards5.add(item);
 			}
-			else if(check.equals("Heroic")) {
+			else if(check.contains("Heroic")) {
 				rewards6.add(item);
 			}
 		}
 		Set<String> configListArmor = config.getConfigurationSection("Items.Armor").getKeys(false);
 		ArrayList<String> listItemsArmor = new ArrayList<String>(configListArmor);
 		for(int i = 0; i < listItemsArmor.size(); i++) {
+			String name = config.getString("Items.Armor." + listItemsArmor.get(i) + ".Name");
 			String check = config.getString("Items.Armor." + listItemsArmor.get(i) + ".Rarity");
 			String type = config.getString("Items.Armor." + listItemsArmor.get(i) + ".Type");
 			ItemStack item = new ItemStack(Material.getMaterial(type), 1);
@@ -281,26 +279,11 @@ public class NovisRewards {
 			String enchantmentsString = config.getString("Items.Armor." + listItemsArmor.get(i) + ".Enchantments");
 			double armorDefense = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".BeginDefense");
 			double armorToughness = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".BeginToughness");
-			if(check.equals("Common")) {
-				meta.setDisplayName(new CCT().colorize("&7" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Rare")) {
-				meta.setDisplayName(new CCT().colorize("&a" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Epic")) {
-				meta.setDisplayName(new CCT().colorize("&b" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Legendary")) {
-				meta.setDisplayName(new CCT().colorize("&c" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Mythic")) {
-				meta.setDisplayName(new CCT().colorize("&5" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-			}
-			else if(check.equals("Heroic")) {
-				meta.setDisplayName(new CCT().colorize("&e" + listItemsArmor.get(i) + " &a[&6Lv 1&a]"));
-			}
+			double incArmorDefense = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".IncDefense");
+			double incArmorToughness = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".IncToughness");
+			meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv 1&a]"));
 			ArrayList<String> newLore = new ArrayList<String>();
-			newLore = enchant.setEnchantments(1, enchantmentsString, check, newLore);
+			newLore = enchant.setEnchantments(1, enchantmentsString, newLore);
 			newLore.add(new CCT().colorize("&7-----------------------"));
 			newLore.add(new CCT().colorize("&7Armor Defense: &6" + armorDefense));
 			newLore.add(new CCT().colorize("&7Armor Toughness: &6" + armorToughness));
@@ -368,26 +351,39 @@ public class NovisRewards {
 			nmsStack.setTag(compound);
 			nmsStack.save(compound);
 			item = CraftItemStack.asCraftMirror(nmsStack);
-			NBTItem newItem = new NBTItem(item);
-			newItem.setDouble("Armor Defense", armorDefense);
-			newItem.setDouble("Armor Toughness", armorToughness);
-			item = newItem.getItem();
-			if(check.equals("Common")) {
+			NBTItem tempItem = new NBTItem(item);
+			tempItem.setString("Upgradeable", "");
+			tempItem.setString("ArmorKey", listItemsArmor.get(i));
+			tempItem.setString("EnchantmentString", enchantmentsString);
+			tempItem.setInteger("Level", 1);
+			tempItem.setInteger("XP", 0);
+			tempItem.setInteger("TotalXP", 0);
+			tempItem.setInteger("MAXXP", 3000);
+			tempItem.setDouble("Base Armor Defense", armorDefense);
+			tempItem.setDouble("Base Armor Toughness", armorToughness);
+			tempItem.setDouble("Inc Armor Defense", incArmorDefense);
+			tempItem.setDouble("Inc Armor Toughness", incArmorToughness);
+			tempItem.setDouble("Armor Defense", armorDefense);
+			tempItem.setDouble("Armor Toughness", armorToughness);
+			tempItem.setString("Rarity", check);
+			tempItem.setString("ItemName", name);
+			item = tempItem.getItem();
+			if(check.contains("Common")) {
 				rewards1.add(item);
 			}
-			else if(check.equals("Rare")) {
+			else if(check.contains("Rare")) {
 				rewards2.add(item);
 			}
-			else if(check.equals("Epic")) {
+			else if(check.contains("Epic")) {
 				rewards3.add(item);
 			}
-			else if(check.equals("Legendary")) {
+			else if(check.contains("Legendary")) {
 				rewards4.add(item);
 			}
-			else if(check.equals("Mythic")) {
+			else if(check.contains("Mythic")) {
 				rewards5.add(item);
 			}
-			else if(check.equals("Heroic")) {
+			else if(check.contains("Heroic")) {
 				rewards6.add(item);
 			}
 		}

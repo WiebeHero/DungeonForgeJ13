@@ -39,20 +39,19 @@ import com.mojang.authlib.properties.Property;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
 import javafx.util.Pair;
+import me.WiebeHero.ArmoryPackage.DFArmorUpgrade;
+import me.WiebeHero.ArmoryPackage.DFShieldUpgrade;
+import me.WiebeHero.ArmoryPackage.DFWeaponUpgrade;
+import me.WiebeHero.ArmoryPackage.XPAddWeapons;
 import me.WiebeHero.Consumables.Consumable;
 import me.WiebeHero.Consumables.ConsumableHandler;
+import me.WiebeHero.Consumables.CustomDurability;
 import me.WiebeHero.CraftRecipes.CallRecipe;
 import me.WiebeHero.CraftRecipes.UnblockBrewing;
-import me.WiebeHero.CustomArmor.Common.ArmorBoots;
-import me.WiebeHero.CustomArmor.Common.ArmorChestplate;
-import me.WiebeHero.CustomArmor.Common.ArmorHelmet;
-import me.WiebeHero.CustomArmor.Common.ArmorLeggings;
-import me.WiebeHero.CustomBows.Bows;
 import me.WiebeHero.CustomHitDelay.HitDelay;
 import me.WiebeHero.DFShops.DFShop;
 import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.DFShops.PayCommand;
-import me.WiebeHero.DFWeapons.DFWeaponUpgrade;
 import me.WiebeHero.DungeonInstances.DungeonMaxima;
 import me.WiebeHero.DungeonInstances.DungeonParty;
 import me.WiebeHero.DungeonInstances.DungeonPartyCommand;
@@ -94,7 +93,7 @@ import me.WiebeHero.MoreStuff.TNTExplodeCovered;
 import me.WiebeHero.MoreStuff.TPACommand;
 import me.WiebeHero.Novis.NovisInventory;
 import me.WiebeHero.Scoreboard.DFScoreboard;
-import me.WiebeHero.Shields.DFShields;
+import me.WiebeHero.SeasonalEvents.ChristmasInventoryEvents;
 import me.WiebeHero.Skills.ClassEnvy;
 import me.WiebeHero.Skills.ClassGluttony;
 import me.WiebeHero.Skills.ClassGreed;
@@ -113,7 +112,6 @@ import me.WiebeHero.Skills.XPEarningMobs;
 import me.WiebeHero.Spawners.DFSpawnerManager;
 import me.WiebeHero.Spawners.DeathOfMob;
 import me.WiebeHero.XpTrader.XPAddPlayers;
-import me.WiebeHero.XpTrader.XPAddWeapons;
 import me.WiebeHero.XpTrader.XPTraderMenu;
 import me.lucko.luckperms.LuckPerms;
 import me.lucko.luckperms.api.LuckPermsApi;
@@ -160,14 +158,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Custom Weapons
 		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(), this);
 		//Custom Armor
-		getServer().getPluginManager().registerEvents(new ArmorHelmet(), this);
-		getServer().getPluginManager().registerEvents(new ArmorChestplate(), this);
-		getServer().getPluginManager().registerEvents(new ArmorLeggings(), this);
-		getServer().getPluginManager().registerEvents(new ArmorBoots(), this);
+		getServer().getPluginManager().registerEvents(new DFArmorUpgrade(), this);
+		getServer().getPluginManager().registerEvents(new DFShieldUpgrade(), this);
 		//Custom Shields
-		getServer().getPluginManager().registerEvents(new DFShields(), this);
-		//Custom Bows
-		getServer().getPluginManager().registerEvents(new Bows(), this);
 		//Skills
 		getServer().getPluginManager().registerEvents(new SkillMenuInteract(), this);
 		getServer().getPluginManager().registerEvents(new SkillJoin(), this);
@@ -183,6 +176,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new ClassPride(), this);
 		//Spawners
 		getServer().getPluginManager().registerEvents(new DeathOfMob(), this);
+		getServer().getPluginManager().registerEvents(new CustomDurability(), this);
 		//Novis
 		getServer().getPluginManager().registerEvents(new NovisInventory(), this);
 		//Loot Chest
@@ -208,6 +202,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(sethome, this);
 		getServer().getPluginManager().registerEvents(new DFPlayerRegister(), this);
 		getServer().getPluginManager().registerEvents(new ConsumableHandler(), this);
+		//Seasonal Events
+		getServer().getPluginManager().registerEvents(new ChristmasInventoryEvents(), this);
 		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
 		try{
@@ -405,12 +401,12 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				Bukkit.getServer().shutdown();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 288000L);
+		lootChestManager.loadLootChests();
+		spawnerManager.loadSpawners();
 		new BukkitRunnable() {
 			public void run() {
 				NBTInjector.inject();
-				lootChestManager.loadLootChests();
 				lootChestManager.startLootSpawning();
-				spawnerManager.loadSpawners();
 				spawnerManager.startSpawning();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);

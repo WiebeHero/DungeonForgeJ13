@@ -78,15 +78,15 @@ public class EffectSkills implements Listener{
 					if(item != null) {
 						if(item.hasItemMeta()) {
 							if(item.getItemMeta().hasLore()) {
-								if(item.getItemMeta().getLore().toString().contains("Attack Speed")) {
+								if(ChatColor.stripColor(item.getItemMeta().getLore().toString()).contains("Attack Speed:")) {
 									if(item.getType() != Material.BOW) {
 										String check1 = "";
 										String check2 = "";
 										for(String s : item.getItemMeta().getLore()) {
-											if(s.contains("Attack Speed")) {
+											if(ChatColor.stripColor(s).contains("Attack Speed:")) {
 												check1 = ChatColor.stripColor(s);
 											}
-											else if(s.contains("Attack Damage")) {
+											else if(ChatColor.stripColor(s).contains("Attack Damage:")) {
 												check2 = ChatColor.stripColor(s);
 											}
 										}
@@ -550,6 +550,7 @@ public class EffectSkills implements Listener{
 						if(toughness > 20) {
 							total = total + (toughness - 20);
 						}
+						total = total / 1.35;
 						event.setDamage(event.getDamage() / 100.00 * (100.00 - total));
 					}
 				}

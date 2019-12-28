@@ -1,7 +1,6 @@
 package me.WiebeHero.MoreStuff;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -30,6 +28,7 @@ import me.WiebeHero.Skills.DFPlayer;
 
 public class Disparitys implements Listener{
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
+	DFPlayer method = new DFPlayer();
 	public static HashMap<String, BossBar> disparityList = new HashMap<String, BossBar>();
 	public static HashMap<String, Integer> listPlayers = new HashMap<String, Integer>();
 	public static ArrayList<String> names = new ArrayList<String>();
@@ -117,104 +116,10 @@ public class Disparitys implements Listener{
 	public void disparityAttack(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player) {
 			if(event.getEntity() instanceof Player) {
-				File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-				YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-				try{
-					yml.load(f);
-		        }
-		        catch(IOException e){
-		            e.printStackTrace();
-		        } 
-				catch (InvalidConfigurationException e) {
-					e.printStackTrace();
-				}
 				Player damager = (Player) event.getDamager();
-				if(damager.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
-					Player victim = (Player) event.getEntity();
-					DFPlayer dfPlayerD = new DFPlayer().getPlayer(damager);
-					DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
-					int levelD = dfPlayerD.getLevel();
-					int levelV = dfPlayerV.getLevel();
-					int disparity = 0;
-					if(listPlayers.containsKey(victim.getName())) {
-						disparity = listPlayers.get(victim.getName());
-					}
-					int lowerL = levelV - levelD;
-					int higherL = levelD - levelV;
-					if(Math.abs(lowerL) > disparity) {
-						damager.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
-						event.setCancelled(true);
-					}
-					else if(higherL > disparity) {
-						damager.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
-						event.setCancelled(true);
-					}
-				}
-			}
-		}
-	}
-	@EventHandler
-	public void disparityBowAttack(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof Projectile) {
-			if(event.getEntity() instanceof Player) {
-				Projectile damager = (Projectile) event.getDamager();
 				Player victim = (Player) event.getEntity();
-				if(damager.getShooter() instanceof Player) {
-					Player shooter = (Player) damager.getShooter();
-					File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-					YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-					try{
-						yml.load(f);
-			        }
-			        catch(IOException e){
-			            e.printStackTrace();
-			        } 
-					catch (InvalidConfigurationException e) {
-						e.printStackTrace();
-					}
-					if(shooter.getWorld().getName().equalsIgnoreCase("dfwn-1")) {
-						DFPlayer dfPlayerD = new DFPlayer().getPlayer(shooter);
-						DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
-						int levelD = dfPlayerD.getLevel();
-						int levelV = dfPlayerV.getLevel();
-						int disparity = 0;
-						if(listPlayers.containsKey(victim.getName())) {
-							disparity = listPlayers.get(victim.getName());
-						}
-						int lowerL = levelV - levelD;
-						int higherL = levelD - levelV;
-						if(Math.abs(lowerL) > disparity) {
-							shooter.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
-							event.setCancelled(true);
-						}
-						else if(higherL > disparity) {
-							shooter.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
-							event.setCancelled(true);
-						}
-					}
-				}
-			}
-		}
-	}
-	@EventHandler
-	public void disparityPotionSplash(PotionSplashEvent event) {
-		if(event.getEntity().getShooter() instanceof Player) {
-			for (LivingEntity livingEntities : event.getAffectedEntities()) {
-				if (livingEntities instanceof Player) {
-					Player damager = (Player) event.getEntity().getShooter();
-					Player victim = (Player) livingEntities;
-					File f =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-					YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-					try{
-						yml.load(f);
-			        }
-			        catch(IOException e){
-			            e.printStackTrace();
-			        } 
-					catch (InvalidConfigurationException e) {
-						e.printStackTrace();
-					}
-					if(damager.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
+				if(damager.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
+					if(method.containsPlayer(victim) && method.containsPlayer(damager)) {
 						DFPlayer dfPlayerD = new DFPlayer().getPlayer(damager);
 						DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
 						int levelD = dfPlayerD.getLevel();
@@ -232,6 +137,73 @@ public class Disparitys implements Listener{
 						else if(higherL > disparity) {
 							damager.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
 							event.setCancelled(true);
+						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void disparityBowAttack(EntityDamageByEntityEvent event) {
+		if(event.getDamager() instanceof Projectile) {
+			if(event.getEntity() instanceof Player) {
+				Projectile damager = (Projectile) event.getDamager();
+				Player victim = (Player) event.getEntity();
+				if(damager.getShooter() instanceof Player) {
+					Player shooter = (Player) damager.getShooter();
+					if(shooter.getWorld().getName().equalsIgnoreCase("dfwn-1")) {
+						if(method.containsPlayer(victim) && method.containsPlayer(shooter)) {
+							DFPlayer dfPlayerD = new DFPlayer().getPlayer(shooter);
+							DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
+							int levelD = dfPlayerD.getLevel();
+							int levelV = dfPlayerV.getLevel();
+							int disparity = 0;
+							if(listPlayers.containsKey(victim.getName())) {
+								disparity = listPlayers.get(victim.getName());
+							}
+							int lowerL = levelV - levelD;
+							int higherL = levelD - levelV;
+							if(Math.abs(lowerL) > disparity) {
+								shooter.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
+								event.setCancelled(true);
+							}
+							else if(higherL > disparity) {
+								shooter.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
+								event.setCancelled(true);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void disparityPotionSplash(PotionSplashEvent event) {
+		if(event.getEntity().getShooter() instanceof Player) {
+			for (LivingEntity livingEntities : event.getAffectedEntities()) {
+				if (livingEntities instanceof Player) {
+					Player damager = (Player) event.getEntity().getShooter();
+					Player victim = (Player) livingEntities;
+					if(damager.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
+						if(method.containsPlayer(victim) && method.containsPlayer(damager)) {
+							DFPlayer dfPlayerD = new DFPlayer().getPlayer(damager);
+							DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
+							int levelD = dfPlayerD.getLevel();
+							int levelV = dfPlayerV.getLevel();
+							int disparity = 0;
+							if(listPlayers.containsKey(victim.getName())) {
+								disparity = listPlayers.get(victim.getName());
+							}
+							int lowerL = levelV - levelD;
+							int higherL = levelD - levelV;
+							if(Math.abs(lowerL) > disparity) {
+								damager.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
+								event.setCancelled(true);
+							}
+							else if(higherL > disparity) {
+								damager.sendMessage(new CCT().colorize("&cYou can't damage this person here, they are too low level."));
+								event.setCancelled(true);
+							}
 						}
 					}
 				}

@@ -303,6 +303,8 @@ public class LootRewards {
 		rewards2.add(enderPearl16());
 		rewards2.add(enderPearl16());
 		rewards2.add(commonCrystal());
+		rewards2.add(commonCrystal());
+		rewards2.add(rareCrystal());
 		rewards2.add(rareCrystal());
 		rewards2.add(epicCrystal());
 		rewards2.add(playerXPBottle25());
@@ -453,7 +455,12 @@ public class LootRewards {
 		rewards3.add(enderPearl16());
 		rewards3.add(enderPearl16());
 		rewards3.add(commonCrystal());
+		rewards3.add(commonCrystal());
+		rewards3.add(commonCrystal());
 		rewards3.add(rareCrystal());
+		rewards3.add(rareCrystal());
+		rewards3.add(rareCrystal());
+		rewards3.add(epicCrystal());
 		rewards3.add(epicCrystal());
 		rewards3.add(legendaryCrystal());
 		rewards3.add(playerXPBottle25());
@@ -607,8 +614,17 @@ public class LootRewards {
 		rewards4.add(enderPearl16());
 		rewards4.add(enderPearl16());
 		rewards4.add(commonCrystal());
+		rewards4.add(commonCrystal());
+		rewards4.add(commonCrystal());
+		rewards4.add(commonCrystal());
+		rewards4.add(rareCrystal());
+		rewards4.add(rareCrystal());
+		rewards4.add(rareCrystal());
 		rewards4.add(rareCrystal());
 		rewards4.add(epicCrystal());
+		rewards4.add(epicCrystal());
+		rewards4.add(epicCrystal());
+		rewards4.add(legendaryCrystal());
 		rewards4.add(legendaryCrystal());
 		rewards4.add(mythicCrystal());
 		rewards4.add(playerXPBottle25());
@@ -1071,7 +1087,7 @@ public class LootRewards {
 	public ItemStack santaCoal() {
 		ItemStack item = new ItemStack(Material.CHARCOAL);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize("&2L&cu&2m&cp &2o&cf &2C&co&2a&2l"));
+		meta.setDisplayName(new CCT().colorize("&2L&cu&2m&cp &2o&cf &2C&co&2a&cl"));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new CCT().colorize("&7A lump of coal? Are you kidding me?"));
 		lore.add(new CCT().colorize("&7But ive been a good boy this year!"));

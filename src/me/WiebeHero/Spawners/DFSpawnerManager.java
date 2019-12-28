@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -23,6 +22,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -32,7 +32,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTEntity;
 import de.tr7zw.nbtinjector.NBTInjector;
 import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
@@ -124,6 +123,8 @@ public class DFSpawnerManager {
 								if(comp.hasKey("SpawnerUUID")) {
 									if(!comp.getString("SpawnerUUID").equals("")) {
 										if(spawner.getUUID().equals(UUID.fromString(comp.getString("SpawnerUUID")))) {
+											spawnerLoc.setX(spawnerLoc.getX() + randomLocOffSet());
+											spawnerLoc.setZ(spawnerLoc.getZ() + randomLocOffSet());
 											for(double y = spawnerLoc.getY() + 10.00; y > 0.00;) {
 												y--;
 												spawnerLoc.setY(y);
@@ -142,36 +143,54 @@ public class DFSpawnerManager {
 				}
 			}
 		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 100L);
+		new BukkitRunnable() {
+			public void run() {
+				for(DFSpawner spawner : spawnerList.values()) {
+					spawner.setCanSpawn(true);
+				}
+			}
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 3600L);
 		DFSpawnerManager manager = new DFSpawnerManager();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				for(DFSpawner spawner : spawnerList.values()) {
-					Location loc = spawner.getLocation();
-					Location spawnerLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
-					spawnerLoc.setPitch(0.0F);
-					spawnerLoc.setYaw(0.0F);
-					spawnerLoc.setX(spawnerLoc.getX() + randomLocOffSet());
-					spawnerLoc.setZ(spawnerLoc.getZ() + randomLocOffSet());
-					int count = 0;
-					for(Entity e : spawnerLoc.getWorld().getNearbyEntities(spawnerLoc, 50, 50, 50)) {
-						if(e != null) {
-							if(e instanceof Monster) {
-								Entity ent = NBTInjector.patchEntity(e);
-								NBTCompound comp = NBTInjector.getNbtData(ent);
-								if(comp.hasKey("SpawnerUUID")) {
-									if(!comp.getString("SpawnerUUID").equals("")) {
-										if(spawner.getUUID().equals(UUID.fromString(comp.getString("SpawnerUUID")))) {
-											count++;
+					if(spawner.getCanSpawn()) {
+						Location loc = spawner.getLocation();
+						Location spawnerLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
+						spawnerLoc.setPitch(0.0F);
+						spawnerLoc.setYaw(0.0F);
+						spawnerLoc.setX(spawnerLoc.getX() + randomLocOffSet());
+						spawnerLoc.setZ(spawnerLoc.getZ() + randomLocOffSet());
+						int count = 0;
+						for(Entity e : spawnerLoc.getWorld().getNearbyEntities(spawnerLoc, 50, 50, 50)) {
+							if(e != null) {
+								if(e instanceof Monster) {
+									Entity ent = NBTInjector.patchEntity(e);
+									NBTCompound comp = NBTInjector.getNbtData(ent);
+									if(comp.hasKey("SpawnerUUID")) {
+										if(!comp.getString("SpawnerUUID").equals("")) {
+											if(spawner.getUUID().equals(UUID.fromString(comp.getString("SpawnerUUID")))) {
+												count++;
+											}
 										}
 									}
 								}
 							}
 						}
-					}
-					int max = (int)(1.5 * spawner.getTier());
-					for(int current = count; current <= max; current++) {
-						manager.spawnMob(spawner);
+						boolean confirmed = false;
+						for(Entity e : spawner.getLocation().getNearbyEntities(40, 40, 40)) {
+							if(e instanceof Player) {
+								confirmed = true;
+							}
+						}
+						if(confirmed == true) {
+							int max = 1 + (int)Math.round((spawner.getTier() * 0.4));
+							for(int current = count; current <= max; current++) {
+								manager.spawnMob(spawner);
+							}
+							spawner.setCanSpawn(false);
+						}
 					}
 				}
 			}
@@ -430,7 +449,7 @@ public class DFSpawnerManager {
 				break;
 			}
 		}
-		dfPlayer.setMove(0.2 + 0.02 * tier + 0.005 * level);
+		dfPlayer.setMove(0.2 + 0.0175 * tier + 0.00035 * level);
 		dfPlayer.resetCalculations();
 		sk.attackSpeed(mob);
 		sk.changeHealth(mob);
@@ -442,7 +461,7 @@ public class DFSpawnerManager {
 		sk.runDefense(mob);
 		mob.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(0.2 * dfPlayer.getDf());
 		mob.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(0.1333 * dfPlayer.getDf());
-		mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(12.50);
+		mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(17.50);
 		mob.getEquipment().setHelmetDropChance(0.00F);
 		mob.getEquipment().setChestplateDropChance(0.00F);
 		mob.getEquipment().setLeggingsDropChance(0.00F);

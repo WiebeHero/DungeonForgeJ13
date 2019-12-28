@@ -1,6 +1,7 @@
 package me.WiebeHero.Moderation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -30,25 +31,31 @@ public class ModerationGUI implements Listener{
 		i.setItem(0, nothing());
 		i.setItem(1, this.createDisplayItem(
 				Material.BOOK, 
-				"&cBan", 
-				"&7--------------------"
-				+ "&7Click this to go to the ban menu."
-				+ "&7--------------------" 
+				"&cBan",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to go to the ban menu.",
+						"&7--------------------" 
+				))
 		));
 		i.setItem(2, this.createDisplayItem(
 				Material.BOOKSHELF, 
 				"&bHistory", 
-				"&7--------------------"
-				+ "&7Click this to go to the history menu."
-				+ "&7This shows a menu of previous punishments."
-				+ "&7--------------------" 
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to go to the history menu.",
+						"&7This shows a menu of previous punishments.",
+						"&7--------------------" 
+				))
 		));
 		i.setItem(3, this.createDisplayItem(
 				Material.PAPER, 
 				"&bMute", 
-				"&7--------------------"
-				+ "&7Click this to go to the mute menu."
-				+ "&7--------------------" 
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to go to the mute menu.",
+						"&7--------------------" 
+				))
 		));
 		i.setItem(4, nothing());
 		reporter.openInventory(i);
@@ -59,17 +66,21 @@ public class ModerationGUI implements Listener{
 		i.setItem(1, this.createDisplayItem(
 				Material.ENCHANTED_BOOK, 
 				"&cBan", 
-				"&7--------------------"
-				+ "&7Click this to ban &6" + offender.getName()
-				+ "&7--------------------" 
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to ban &6" + offender.getName(),
+						"&7--------------------" 
+				))
 		));
 		i.setItem(2, nothing());
 		i.setItem(3, this.createDisplayItem(
 				Material.BOOK, 
 				"&cUnban", 
-				"&7--------------------"
-				+ "&7Click this to unban &6" + offender.getName()
-				+ "&7--------------------" 
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to unban &6" + offender.getName(),
+						"&7--------------------" 
+				))
 		));
 		i.setItem(4, nothing());
 		reporter.openInventory(i);
@@ -126,17 +137,21 @@ public class ModerationGUI implements Listener{
 		i.setItem(1, this.createDisplayItem(
 				Material.ENCHANTED_BOOK, 
 				"&cMute", 
-				"&7--------------------"
-				+ "&7Click this to mute &6" + offender.getName()
-				+ "&7--------------------" 
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to mute &6" + offender.getName(),
+						"&7--------------------" 
+				))
 		));
 		i.setItem(2, nothing());
 		i.setItem(3, this.createDisplayItem(
 				Material.BOOK, 
 				"&cUnmute", 
-				"&7--------------------"
-				+ "&7Click this to unmute &6" + offender.getName()
-				+ "&7--------------------" 
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to unmute &6" + offender.getName(),
+						"&7--------------------" 
+				))
 		));
 		i.setItem(4, nothing());
 		reporter.openInventory(i);
@@ -197,7 +212,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(12, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Spawner",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new spawner.",
+							"&7--------------------" 
+					)),
 					"SpawnerSlot"
 			));
 		}
@@ -208,7 +227,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(13, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Spawner",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new spawner.",
+							"&7--------------------" 
+					)),
 					"SpawnerSlot"
 			));
 		}
@@ -219,7 +242,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(14, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Spawner",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new spawner.",
+							"&7--------------------" 
+					)),
 					"SpawnerSlot"
 			));
 		}
@@ -230,7 +257,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(15, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Spawner",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new spawner.",
+							"&7--------------------" 
+					)),
 					"SpawnerSlot"
 			));
 		}
@@ -241,7 +272,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(16, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Spawner",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new spawner.",
+							"&7--------------------" 
+					)),
 					"SpawnerSlot"
 			));
 		}
@@ -275,49 +310,84 @@ public class ModerationGUI implements Listener{
 		i.setItem(10, this.createDisplayItem(
 				Material.ZOMBIE_SPAWN_EGG, 
 				"&fZombie",
-				"",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to select the mob type",
+					"&7to be a zombie!",
+					"&7--------------------"
+				)),
 				"EntityType",
 				EntityType.ZOMBIE
 		));
 		i.setItem(11, this.createDisplayItem(
 				Material.SKELETON_SPAWN_EGG, 
 				"&fSkeleton",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the mob type",
+						"&7to be a zombie!",
+						"&7--------------------"
+					)),
 				"EntityType",
 				EntityType.SKELETON
 		));
 		i.setItem(12, this.createDisplayItem(
 				Material.ZOMBIE_PIGMAN_SPAWN_EGG, 
 				"&fZombie Pigmen",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the mob type",
+						"&7to be a zombie pigmen!",
+						"&7--------------------"
+					)),
 				"EntityType",
 				EntityType.PIG_ZOMBIE
 		));
 		i.setItem(13, this.createDisplayItem(
 				Material.SPIDER_SPAWN_EGG, 
 				"&fSpider",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the mob type",
+						"&7to be a spider!",
+						"&7--------------------"
+					)),
 				"EntityType",
 				EntityType.SPIDER
 		));
 		i.setItem(14, this.createDisplayItem(
 				Material.HUSK_SPAWN_EGG, 
 				"&fHusk",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the mob type",
+						"&7to be a husk!",
+						"&7--------------------"
+					)),
 				"EntityType",
 				EntityType.HUSK
 		));
 		i.setItem(15, this.createDisplayItem(
 				Material.STRAY_SPAWN_EGG, 
 				"&fStray",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the mob type",
+						"&7to be a stray!",
+						"&7--------------------"
+					)),
 				"EntityType",
 				EntityType.STRAY
 		));
 		i.setItem(16, this.createDisplayItem(
 				Material.BLAZE_SPAWN_EGG, 
 				"&fBlaze",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the mob type",
+						"&7to be a blaze!",
+						"&7--------------------"
+					)),
 				"EntityType",
 				EntityType.BLAZE
 		));
@@ -338,35 +408,60 @@ public class ModerationGUI implements Listener{
 		i.setItem(0, this.createDisplayItem(
 				Material.PAPER, 
 				"&fTier 1",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the tier of the",
+						"&7spawner to be 1!",
+						"&7--------------------"
+					)),
 				"Tier",
 				1
 		));
 		i.setItem(1, this.createDisplayItem(
 				Material.PAPER, 
 				"&fTier 2",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the tier of the",
+						"&7spawner to be 2!",
+						"&7--------------------"
+					)),
 				"Tier",
 				2
 		));
 		i.setItem(2, this.createDisplayItem(
 				Material.PAPER, 
 				"&fTier 3",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the tier of the",
+						"&7spawner to be 3!",
+						"&7--------------------"
+					)),
 				"Tier",
 				3
 		));
 		i.setItem(3, this.createDisplayItem(
 				Material.PAPER, 
 				"&fTier 4",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the tier of the",
+						"&7spawner to be 4!",
+						"&7--------------------"
+					)),
 				"Tier",
 				4
 		));
 		i.setItem(4, this.createDisplayItem(
 				Material.PAPER, 
 				"&fTier 5",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to select the tier of the",
+						"&7spawner to be 5!",
+						"&7--------------------"
+					)),
 				"Tier",
 				5
 		));
@@ -390,7 +485,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(12, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Loot Chest",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new loot chest.",
+							"&7--------------------"
+						)),
 					"LootSlot"
 			));
 		}
@@ -401,7 +500,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(13, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Loot Chest",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new loot chest.",
+							"&7--------------------"
+						)),
 					"LootSlot"
 			));
 		}
@@ -412,7 +515,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(14, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Loot Chest",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new loot chest.",
+							"&7--------------------"
+						)),
 					"LootSlot"
 			));
 		}
@@ -423,7 +530,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(15, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Loot Chest",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new loot chest.",
+							"&7--------------------"
+						)),
 					"LootSlot"
 			));
 		}
@@ -434,7 +545,11 @@ public class ModerationGUI implements Listener{
 			i.setItem(16, this.createDisplayItem(
 					Material.WHITE_STAINED_GLASS_PANE, 
 					"&fNew Loot Chest",
-					"",
+					new ArrayList<String>(Arrays.asList(
+							"&7--------------------",
+							"&7Click this to create a new loot chest.",
+							"&7--------------------"
+						)),
 					"LootSlot"
 			));
 		}
@@ -468,49 +583,84 @@ public class ModerationGUI implements Listener{
 		i.setItem(10, this.createDisplayItem(
 				Material.PAPER, 
 				"&fRadius of spawning: 1",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7spawning radius of 1.",
+						"&7--------------------"
+					)),
 				"Radius",
 				1
 		));
 		i.setItem(11, this.createDisplayItem(
 				Material.PAPER, 
 				"&fRadius of spawning: 2",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7spawning radius of 2.",
+						"&7--------------------"
+					)),
 				"Radius",
 				2
 		));
 		i.setItem(12, this.createDisplayItem(
 				Material.PAPER, 
 				"&fRadius of spawning: 3",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7spawning radius of 3.",
+						"&7--------------------"
+					)),
 				"Radius",
 				3
 		));
 		i.setItem(13, this.createDisplayItem(
 				Material.PAPER, 
 				"&fRadius of spawning: 4",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7spawning radius of 4.",
+						"&7--------------------"
+					)),
 				"Radius",
 				4
 		));
 		i.setItem(14, this.createDisplayItem(
 				Material.PAPER, 
 				"&fRadius of spawning: 5",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7spawning radius of 5.",
+						"&7--------------------"
+					)),
 				"Radius",
 				5
 		));
 		i.setItem(15, this.createDisplayItem(
 				Material.PAPER, 
 				"&fRadius of spawning: 8",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7spawning radius of 8.",
+						"&7--------------------"
+					)),
 				"Radius",
 				8
 		));
 		i.setItem(16, this.createDisplayItem(
 				Material.PAPER, 
 				"&fRadius of spawning: 10",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7spawning radius of 10.",
+						"&7--------------------"
+					)),
 				"Radius",
 				10
 		));
@@ -531,37 +681,50 @@ public class ModerationGUI implements Listener{
 		i.setItem(0, this.createDisplayItem(
 				Material.PAPER, 
 				"&fTier 1",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7tier radius of 1.",
+						"&7--------------------"
+					)),
 				"Tier",
 				1
 		));
 		i.setItem(1, this.createDisplayItem(
 				Material.PAPER, 
 				"&fTier 2",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7tier radius of 2.",
+						"&7--------------------"
+					)),
 				"Tier",
 				2
 		));
 		i.setItem(2, this.createDisplayItem(
 				Material.PAPER, 
 				"&fTier 3",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7tier radius of 3.",
+						"&7--------------------"
+					)),
 				"Tier",
 				3
 		));
 		i.setItem(3, this.createDisplayItem(
 				Material.PAPER, 
 				"&fTier 4",
-				"",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this for the loot chest to have a",
+						"&7tier radius of 4.",
+						"&7--------------------"
+					)),
 				"Tier",
 				4
-		));
-		i.setItem(4, this.createDisplayItem(
-				Material.PAPER, 
-				"&fTier 5",
-				"",
-				"Tier",
-				5
 		));
 		reporter.openInventory(i);
 	}
@@ -688,27 +851,56 @@ public class ModerationGUI implements Listener{
 		}
 		clicker.openInventory(i);
 	}
-	public ItemStack createDisplayItem(Material mat, String name, String loreS) {
+	public ItemStack createDisplayItem(Material mat, String name, String tag) {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new CCT().colorize(name));
-		ArrayList<String> lore = new ArrayList<String>();
-		String loreL[] = loreS.split("//");
-		for(int i = 0; i < loreL.length; i++) {
-			lore.add(new CCT().colorize(loreL[i]));
-		}
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setString(tag, "");
+		return i.getItem();
+	}
+	public ItemStack createDisplayItem(Material mat, String name, String tag, String value) {
+		ItemStack item = new ItemStack(mat, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(name));
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setString(tag, value);
+		return i.getItem();
+	}
+	public ItemStack createDisplayItem(Material mat, String name, String tag, int value) {
+		ItemStack item = new ItemStack(mat, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(name));
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setInteger(tag, value);
+		return i.getItem();
+	}
+	public ItemStack createDisplayItem(Material mat, String name, String tag, Object value) {
+		ItemStack item = new ItemStack(mat, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(name));
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setObject(tag, value);
+		return i.getItem();
+	}
+	public ItemStack createDisplayItem(Material mat, String name, ArrayList<String> lore) {
+		ItemStack item = new ItemStack(mat, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(name));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
 	}
-	public ItemStack createDisplayItem(Material mat, String name, String loreS, String tag) {
+	public ItemStack createDisplayItem(Material mat, String name, ArrayList<String> lore, String tag) {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new CCT().colorize(name));
-		ArrayList<String> lore = new ArrayList<String>();
-		String loreL[] = loreS.split("//");
-		for(int i = 0; i < loreL.length; i++) {
-			lore.add(new CCT().colorize(loreL[i]));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -717,14 +909,12 @@ public class ModerationGUI implements Listener{
 		item = tempItem.getItem();
 		return item;
 	}
-	public ItemStack createDisplayItem(Material mat, String name, String loreS, String tag, String tagValue) {
+	public ItemStack createDisplayItem(Material mat, String name, ArrayList<String> lore, String tag, String tagValue) {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new CCT().colorize(name));
-		ArrayList<String> lore = new ArrayList<String>();
-		String loreL[] = loreS.split("//");
-		for(int i = 0; i < loreL.length; i++) {
-			lore.add(new CCT().colorize(loreL[i]));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -734,14 +924,12 @@ public class ModerationGUI implements Listener{
 		return item;
 	}
 
-	public ItemStack createDisplayItem(Material mat, String name, String loreS, String tag, int tagValue) {
+	public ItemStack createDisplayItem(Material mat, String name, ArrayList<String> lore, String tag, int tagValue) {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new CCT().colorize(name));
-		ArrayList<String> lore = new ArrayList<String>();
-		String loreL[] = loreS.split("//");
-		for(int i = 0; i < loreL.length; i++) {
-			lore.add(new CCT().colorize(loreL[i]));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -750,14 +938,12 @@ public class ModerationGUI implements Listener{
 		item = tempItem.getItem();
 		return item;
 	}
-	public ItemStack createDisplayItem(Material mat, String name, String loreS, String tag, Object tagValue) {
+	public ItemStack createDisplayItem(Material mat, String name, ArrayList<String> lore, String tag, Object tagValue) {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new CCT().colorize(name));
-		ArrayList<String> lore = new ArrayList<String>();
-		String loreL[] = loreS.split("//");
-		for(int i = 0; i < loreL.length; i++) {
-			lore.add(new CCT().colorize(loreL[i]));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
 		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);

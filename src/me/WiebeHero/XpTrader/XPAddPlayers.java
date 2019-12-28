@@ -38,6 +38,7 @@ public class XPAddPlayers implements Listener {
 							int maxxp = dfPlayer.getMaxExperience();
 							int level = dfPlayer.getLevel();
 							int finalXP = xp + xpAdd;
+							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, 2, (float) 1.0);
 							if(level < 100) {
 								if(finalXP >= maxxp) {
 									level++;

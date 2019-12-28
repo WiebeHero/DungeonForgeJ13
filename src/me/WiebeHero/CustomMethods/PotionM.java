@@ -18,10 +18,11 @@ public class PotionM {
 				int durationNow = victim.getPotionEffect(type).getDuration();
 				int ampDiff = victim.getPotionEffect(type).getAmplifier() - amp;
 				for(int i = 1; i <= ampDiff; i++) {
-					durationNow = durationNow / 50;
+					durationAdd = durationAdd / 25;
 				}
+				int ampNew = victim.getPotionEffect(type).getAmplifier();
 				victim.removePotionEffect(type);
-				victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, victim.getPotionEffect(type).getAmplifier()));
+				victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, ampNew));
 			}
 			else if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() < amp) {
 				int durationNow = victim.getPotionEffect(type).getDuration();
@@ -30,7 +31,7 @@ public class PotionM {
 					durationNow = durationNow / 25;
 				}
 				victim.removePotionEffect(type);
-				victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, victim.getPotionEffect(type).getAmplifier()));
+				victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
 			}
 			else {
 				victim.removePotionEffect(type);
@@ -48,10 +49,11 @@ public class PotionM {
 			int durationNow = victim.getPotionEffect(type).getDuration();
 			int ampDiff = victim.getPotionEffect(type).getAmplifier() - amp;
 			for(int i = 1; i <= ampDiff; i++) {
-				durationNow = durationNow / 25;
+				durationAdd = durationAdd / 25;
 			}
+			int ampNew = victim.getPotionEffect(type).getAmplifier();
 			victim.removePotionEffect(type);
-			victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, victim.getPotionEffect(type).getAmplifier()));
+			victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, ampNew));
 		}
 		else if(victim.hasPotionEffect(type) && victim.getPotionEffect(type).getAmplifier() < amp) {
 			int durationNow = victim.getPotionEffect(type).getDuration();
@@ -60,9 +62,10 @@ public class PotionM {
 				durationNow = durationNow / 25;
 			}
 			victim.removePotionEffect(type);
-			victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, victim.getPotionEffect(type).getAmplifier()));
+			victim.addPotionEffect(new PotionEffect(type, durationNow + durationAdd, amp));
 		}
 		else {
+			victim.removePotionEffect(type);
 			victim.addPotionEffect(new PotionEffect(type, durationAdd, amp));
 		}
 	}

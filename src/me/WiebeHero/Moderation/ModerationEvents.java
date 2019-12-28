@@ -2,6 +2,7 @@ package me.WiebeHero.Moderation;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -287,24 +288,30 @@ public class ModerationEvents implements Listener{
 							player.getInventory().setItem(0, gui.createDisplayItem(
 									Material.COMPASS, 
 									"&aSpawner Menu", 
-									"&7Right click this item to open//"
-									+ "&7up the spawner menu to create/delete spawner items.", 
+									new ArrayList<String>(Arrays.asList(
+										"&7Right click this item to open",
+										"&7up the spawner menu to create/delete spawner items."
+									)),
 									"SpawnerCreate"
 							));
 							player.getInventory().setItem(1, gui.createDisplayItem(
 									Material.BARRIER, 
 									"&cSpawner Delete", 
-									"&7Right click this item to delete//"
-									+ "&7any spawner. Make sure there is a block//"
-									+ "&7actually placed in the spawner.", 
+									new ArrayList<String>(Arrays.asList(
+										"&7Right click this item to delete",
+										"&7any spawner. Make sure there is a block",
+										"&7actually placed in the spawner."
+									)),
 									"SpawnerDelete"
 							));
 							player.getInventory().setItem(2, gui.createDisplayItem(
 									Material.YELLOW_STAINED_GLASS, 
 									"&6Spawner See", 
-									"&7Right click this item to see//"
-									+ "&7any spawner in a 20 block radius.//"
-									+ "&7These spawners will turn into yellow glass.", 
+									new ArrayList<String>(Arrays.asList(
+										"&7Right click this item to see",
+										"&7any spawner in a 20 block radius.",
+										"&7These spawners will turn into yellow glass."
+									)),
 									"SpawnerSee"
 							));
 						}
@@ -314,25 +321,31 @@ public class ModerationEvents implements Listener{
 							player.getInventory().setItem(0, gui.createDisplayItem(
 									Material.COMPASS, 
 									"&aLoot Menu", 
-									"&7Right click this item to open//"
-									+ "&7up the loot chests menu to create/delete spawner items.", 
+									new ArrayList<String>(Arrays.asList(
+										"&7Right click this item to open",
+										"&7up the loot chests menu to create/delete spawner items."
+									)),
 									"LootCreate"
 							));
 							player.getInventory().setItem(1, gui.createDisplayItem(
 									Material.BARRIER, 
 									"&cLoot Delete", 
-									"&7Right click this item to delete//"
-									+ "&7any loot chest. Make sure there is a block//"
-									+ "&7actually placed in the position of the loot chest.//"
-									+ "&7(A chest in its place is also valid)",
+									new ArrayList<String>(Arrays.asList(
+										"&7Right click this item to delete",
+										"&7any loot chest. Make sure there is a block",
+										"&7actually placed in the position of the loot chest.",
+										"&7(A chest in its place is also valid)"
+									)),
 									"LootDelete"
 							));
 							player.getInventory().setItem(2, gui.createDisplayItem(
 									Material.YELLOW_STAINED_GLASS, 
 									"&6Loot See", 
-									"&7Right click this item to see//"
-									+ "&7any loot chest in a 20 block radius.//"
-									+ "&7These loot chests will turn into yellow glass.", 
+									new ArrayList<String>(Arrays.asList(
+										"&7Right click this item to see",
+										"&7any loot chest in a 20 block radius.",
+										"&7These loot chests will turn into yellow glass."
+									)),
 									"LootSee"
 							));
 						}

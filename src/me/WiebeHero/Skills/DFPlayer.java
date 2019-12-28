@@ -1085,6 +1085,7 @@ public class DFPlayer {
 	
 	public void setMove(double amount) {
 		this.move = amount;
+		this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
 	}
 	
 	public void addMove(double amount, long time) {
@@ -1101,6 +1102,7 @@ public class DFPlayer {
 		}
 		else {
 			this.move = this.move + amount;
+			this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
 		}
 		sk.runDefense(this.player);
 	}
@@ -1118,6 +1120,7 @@ public class DFPlayer {
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
+			this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
 			this.move = this.move - amount;
 		}
 		sk.runDefense(this.player);

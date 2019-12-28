@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -134,6 +135,7 @@ public class XPTraderMenu implements Listener{
 										invXPTrader.clear(slot);
 										invXPTrader.clear(slot + 4);
 										player.updateInventory();
+										player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)0.5);
 									}
 								}
 								else if(item.getItemMeta().getDisplayName().contains("Accept?")) {
@@ -154,6 +156,7 @@ public class XPTraderMenu implements Listener{
 										invXPTrader.remove(view.getItem(i1));
 										player.updateInventory();
 									}
+									player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, (float)2, (float)1);
 								}
 							}
 						}
@@ -190,6 +193,7 @@ public class XPTraderMenu implements Listener{
 									}
 									if(loreFinal.contains("Common") || loreFinal.contains("Rare") || loreFinal.contains("Epic") || loreFinal.contains("Legendary") || loreFinal.contains("Mythic") || loreFinal.contains("Heroic")) {
 										if(name.contains("Lv")) {
+											player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)1.5);
 											String finalNameL = "";
 											String levelS[] = name.split("\\[|\\]");
 											finalNameL = levelS[1];
@@ -203,95 +207,23 @@ public class XPTraderMenu implements Listener{
 											invPlayer.removeItem(invPlayer.getItem(event.getSlot()));
 											int slot = invXPTrader.firstEmpty();
 											invXPTrader.setItem(slot, item);
-											String nameXPInv = view.getTitle();
-											if(nameXPInv.contains("Blacksmith")) {
-												if(loreFinal.contains("Common")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(25 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Rare")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(50 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Epic")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(100 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Legendary")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(250 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Mythic")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(500 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Heroic")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(1000 * level, item.getAmount()));
-												}
+											if(loreFinal.contains("Common")) {
+												invXPTrader.setItem(slot + 4, xpBottlePlayer(25 * level, item.getAmount()));
 											}
-											else {
-												if(loreFinal.contains("Common")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(25 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Rare")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(50 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Epic")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(100 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Legendary")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(250 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Mythic")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(500 * level, item.getAmount()));
-												}
-												else if(loreFinal.contains("Heroic")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(1000 * level, item.getAmount()));
-												}
+											else if(loreFinal.contains("Rare")) {
+												invXPTrader.setItem(slot + 4, xpBottlePlayer(50 * level, item.getAmount()));
 											}
-											player.updateInventory();
-										}
-										else {
-											Inventory invXPTrader = view.getTopInventory();
-											Inventory invPlayer = player.getInventory();
-											invPlayer.removeItem(invPlayer.getItem(event.getSlot()));
-											int slot = invXPTrader.firstEmpty();
-											invXPTrader.setItem(slot, item);
-											String nameXPInv = view.getTitle();
-											if(nameXPInv.contains("Blacksmith")) {
-												if(loreFinal.contains("Common")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(25, item.getAmount()));
-												}
-												else if(loreFinal.contains("Rare")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(50, item.getAmount()));
-												}
-												else if(loreFinal.contains("Epic")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(100, item.getAmount()));
-												}
-												else if(loreFinal.contains("Legendary")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(250, item.getAmount()));
-												}
-												else if(loreFinal.contains("Mythic")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(500, item.getAmount()));
-												}
-												else if(loreFinal.contains("Heroic")) {
-													invXPTrader.setItem(slot + 4, xpBottleItem(1000, item.getAmount()));
-												}
+											else if(loreFinal.contains("Epic")) {
+												invXPTrader.setItem(slot + 4, xpBottlePlayer(100 * level, item.getAmount()));
 											}
-											else {
-												if(loreFinal.contains("Common")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(25, item.getAmount()));
-												}
-												else if(loreFinal.contains("Rare")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(50, item.getAmount()));
-												}
-												else if(loreFinal.contains("Epic")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(100, item.getAmount()));
-												}
-												else if(loreFinal.contains("Legendary")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(250, item.getAmount()));
-												}
-												else if(loreFinal.contains("Mythic")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(500, item.getAmount()));
-												}
-												else if(loreFinal.contains("Heroic")) {
-													invXPTrader.setItem(slot + 4, xpBottlePlayer(1000, item.getAmount()));
-												}
+											else if(loreFinal.contains("Legendary")) {
+												invXPTrader.setItem(slot + 4, xpBottlePlayer(250 * level, item.getAmount()));
+											}
+											else if(loreFinal.contains("Mythic")) {
+												invXPTrader.setItem(slot + 4, xpBottlePlayer(500 * level, item.getAmount()));
+											}
+											else if(loreFinal.contains("Heroic")) {
+												invXPTrader.setItem(slot + 4, xpBottlePlayer(1000 * level, item.getAmount()));
 											}
 											player.updateInventory();
 										}

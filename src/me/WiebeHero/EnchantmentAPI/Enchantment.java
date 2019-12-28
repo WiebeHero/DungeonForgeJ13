@@ -29,6 +29,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Snowball;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -51,6 +53,7 @@ import org.bukkit.util.Vector;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
 import javafx.util.Pair;
+import me.WiebeHero.APIs.ParticleAPI;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
@@ -69,6 +72,7 @@ public class Enchantment extends CommandFile implements Listener{
 	DFFaction fac = new DFFaction();
 	MoneyCreate money = new MoneyCreate();
 	PotionM p = new PotionM();
+	ParticleAPI pApi = new ParticleAPI();
 	//Enchantment Functionality List
 	public HashMap<String, Pair<Condition, CommandFile>> listMelee;
 	public HashMap<String, Pair<Condition, CommandFile>> listArmor;
@@ -433,6 +437,62 @@ public class Enchantment extends CommandFile implements Listener{
 						}
 					}
 				}
+			}
+		}));
+		this.listMelee.put("Energy Ball", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				Location loc = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 1.8D, damager.getLocation().getZ() + 0D, damager.getLocation().getYaw(), damager.getLocation().getPitch());
+				damager.getWorld().spawnParticle(Particle.SPELL_WITCH, loc, 80, 0.15, 0.15, 0.15, 0); 
+				damager.getWorld().playSound(damager.getLocation(), Sound.ENTITY_EVOKER_CAST_SPELL, 2, (float) 1.0);
+				Location ballLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+				ballLoc.add(loc.getDirection());
+				double speed = ballLoc.getDirection().length();
+				new BukkitRunnable() {
+					int duration = 100 + 20 * level;
+					int count = 0;
+					public void run() {
+						if(count <= duration) {
+							count++;
+							if(ballLoc.getBlock().getType() == Material.AIR) {
+								pApi.sphere(Particle.CRIT_MAGIC, ballLoc, 0.5, 10);
+								boolean found = false;
+								for(Entity e : ballLoc.getNearbyEntities(10, 10, 10)) {
+									if(e instanceof LivingEntity) {
+										if(e != damager) {
+											found = true;
+											LivingEntity ent = (LivingEntity) e;
+											ballLoc.add(ballLoc.getDirection().add(ent.getLocation().add(0, 1, 0).subtract(ballLoc).toVector().normalize().multiply(speed / 100 * 175)).normalize().multiply(speed / 100 * 87.5));
+											break;
+										}
+									}
+								}
+								if(found == false) {
+									ballLoc.add(ballLoc.getDirection().multiply(speed));
+								}
+								for(Entity e : ballLoc.getNearbyEntities(0.5, 0.5, 0.5)) {
+									if(e instanceof LivingEntity) {
+										if(e != damager) {
+											LivingEntity ent = (LivingEntity) e;
+											ent.damage(8 + 1.5 * level);
+											ent.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, ent.getLocation().add(0, 1, 0), 50, 0.15, 0.15, 0.15, 0.1); 
+											ent.getWorld().playSound(ent.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 2, (float) 1.0);
+											cancel();
+											break;
+										}
+									}
+								}
+							}
+							else {
+								cancel();
+							}
+						}
+						else {
+							cancel();
+						}
+					}
+				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
 			}
 		}));
 		this.listMelee.put("Fatigue", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
@@ -999,6 +1059,44 @@ public class Enchantment extends CommandFile implements Listener{
 					int amp = 0 + level;
 					int durationAdd = 120 + 40 * level;
 					p.applyEffect(victim, PotionEffectType.SLOW, amp, durationAdd);
+				}
+			}
+		}));
+		this.listMelee.put("Snowball", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			HashMap<UUID, Integer> snowball = new HashMap<UUID, Integer>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!cooldown.contains(damager.getUniqueId())) {
+					Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 1.7D, damager.getLocation().getZ() + 0D);
+					damager.getWorld().spawnParticle(Particle.SNOW_SHOVEL, locCF, 60, 0.05, 0.05, 0.05, 0.1); 
+					damager.getWorld().playSound(damager.getLocation(), Sound.ENTITY_EGG_THROW, 2, (float) 1);
+					Snowball ball = damager.launchProjectile(Snowball.class);
+					snowball.put(ball.getUniqueId(), level);
+					cooldown.add(damager.getUniqueId());
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(damager.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 200L - 16L * level);
+				}
+			} 
+			@EventHandler
+			public void snowballHit(ProjectileHitEvent event) {
+				if(event.getHitEntity() != null && event.getEntity() != null && event.getEntity().getShooter() instanceof LivingEntity) {
+					if(event.getHitEntity() instanceof LivingEntity && event.getEntity().getShooter() instanceof LivingEntity) {
+						Projectile pro = event.getEntity();
+						if(snowball.containsKey(pro.getUniqueId())) {
+							int level = snowball.get(pro.getUniqueId());
+							snowball.remove(pro.getUniqueId());
+							LivingEntity ent = (LivingEntity) event.getHitEntity();
+							int amp = level;
+							int durationAdd = 100 + 20 * level;
+							ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.SLOW, PotionEffectType.BLINDNESS));
+							p.applyEffect(ent, types, amp, durationAdd);
+							ent.damage(1.5 + 0.5 * level);
+						}
+					}
 				}
 			}
 		}));
