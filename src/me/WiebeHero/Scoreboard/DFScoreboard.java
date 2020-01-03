@@ -122,18 +122,13 @@ public class DFScoreboard implements Listener{
 		t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 		t.addEntry(player.getName());
 		//--------------------------------------------------------------------------------------
-		//Adding me to others scoreboard
+		//Adding players to my scoreboard
 		//--------------------------------------------------------------------------------------
 		for(UUID uuid : scoreboards.keySet()) {
 			Player p = Bukkit.getPlayer(uuid);
 			if(p != null) {
-				Scoreboard other = p.getScoreboard();
-				if(other != null) {
-					if(other.getTeam(p.getName()) != null) {
-						if(!other.getTeam(p.getName()).hasEntry(player.getName())) {
-							t.addEntry(player.getName());
-						}
-					}
+				if(!scoreboard.getTeam(player.getName()).hasEntry(p.getName())) {
+					t.addEntry(p.getName());
 				}
 			}
 		}
