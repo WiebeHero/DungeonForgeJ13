@@ -15,9 +15,11 @@ import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.Scoreboard.DFScoreboard;
 import net.md_5.bungee.api.ChatColor;
 
 public class XPEarningMobs implements Listener{
+	DFScoreboard board = new DFScoreboard();
 	SkillJoin join = new SkillJoin();
 	@EventHandler
 	public void xpEarnMobs10(EntityDeathEvent event) {
@@ -150,6 +152,7 @@ public class XPEarningMobs implements Listener{
 								break;
 							}
 						}
+						board.generateScoreboard(player);
 	    	    		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
 	    	            player.sendMessage(new CCT().colorize("&aYou have leveled up to level: &6&l" + level));
 					}
