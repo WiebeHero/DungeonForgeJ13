@@ -132,6 +132,22 @@ public class DFScoreboard implements Listener{
 				}
 			}
 		}
+		//--------------------------------------------------------------------------------------
+		//Adding me to others scoreboard
+		//--------------------------------------------------------------------------------------
+		for(UUID uuid : scoreboards.keySet()) {
+			Player p = Bukkit.getPlayer(uuid);
+			if(p != null) {
+				Scoreboard other = p.getScoreboard();
+				if(other != null) {
+					if(other.getTeam(p.getName()) != null) {
+						if(!other.getTeam(p.getName()).hasEntry(player.getName())) {
+							other.getTeam(p.getName()).addEntry(player.getName());
+						}
+					}
+				}
+			}
+		}
 		if(scoreboard.getTeam("GRAY") == null) {
 			scoreboard.registerNewTeam("GRAY");
 			scoreboard.getTeam("GRAY").setPrefix(ChatColor.GRAY + "");
