@@ -163,7 +163,7 @@ public class LootChestManager {
 		  						else {
 		  							Location tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
 		  							tempLoc.add(randomCoords(loot.getRadius()), 0, randomCoords(loot.getRadius()));
-		  							for(double i = tempLoc.getY(); i >= tempLoc.getY() - loot.getRadius(); i--) {
+		  							for(double i = tempLoc.getY() + 5; i >= tempLoc.getY() - loot.getRadius() * 2; i--) {
 		  								tempLoc.add(0, -1, 0);
 		  								if(tempLoc.getBlock().getType() == Material.AIR) {
 		  									continue;
@@ -202,7 +202,7 @@ public class LootChestManager {
 	  				}
 				}
 			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 100L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 6000L);
 	}
 	public LootChest get(UUID uuid) {
 		return this.lootChest.get(uuid);

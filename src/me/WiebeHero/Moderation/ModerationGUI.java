@@ -98,27 +98,79 @@ public class ModerationGUI implements Listener{
 		i.setItem(8, nothing());
 		i.setItem(9, nothing());
 		i.setItem(10, this.createDisplayItem(
-				Material.DIAMOND_ORE, 
-				"&cXray"
+				Material.DIAMOND_SWORD, 
+				"&cCombat Modifications",
+				new ArrayList<String>(Arrays.asList(
+					"&cAimbot, Bowaimbot, Forcefield",
+					"&cor other combat related modifications."
+				)),
+				"Combat Related"
 		));
 		i.setItem(11, this.createDisplayItem(
-				Material.RABBIT_FOOT, 
-				"&cBHop"
+				Material.REDSTONE, 
+				"&cAuto Modifications",
+				new ArrayList<String>(Arrays.asList(
+					"&cAutoarmor, Autosword, Automine, Autoeat, Autofish, Autoswim, Autosoup, Autosteal",
+					"&cor other auto related modifications."
+				)),
+				"Auto Related"
 		));
 		i.setItem(12, this.createDisplayItem(
 				Material.FEATHER, 
-				"&cFly"
+				"&cMovement Modifications",
+				new ArrayList<String>(Arrays.asList(
+					"&cTeleport, Fly, Bunny Hop, Blink, Safewalk, Speed, Anit Knockback, Sneak, Freecam",
+					"&cor other movement related modifications."
+				)),
+				"Movement Related"
 		));
 		i.setItem(13, this.createDisplayItem(
-				Material.REDSTONE_BLOCK, 
-				"&cKill Aura"
+				Material.COMPASS, 
+				"&cESP Modifications",
+				new ArrayList<String>(Arrays.asList(
+					"&cPlayer ESP, Player Tracer, Item ESP, Mob ESP, Chest ESP, Block ESP, Minimap",
+					"&cor other ESP related modifications."
+				)),
+				"ESP Related"
 		));
 		i.setItem(14, this.createDisplayItem(
-				Material.REDSTONE, 
-				"&cAuto Clicker"
+				Material.APPLE, 
+				"&cHealth Modifications",
+				new ArrayList<String>(Arrays.asList(
+					"&cGodmode, Antipotion, Zoot, Health Hacks",
+					"&cor other health related modifications."
+				)),
+				"Health Related"
+		));
+		i.setItem(15, this.createDisplayItem(
+				Material.OAK_PLANKS, 
+				"&cBuilding Modifications",
+				new ArrayList<String>(Arrays.asList(
+					"&cNuker, Fastbuild, Fastbreak, Scaffold",
+					"&cor other building related modifications."
+				)),
+				"Building Related"
+		));
+		i.setItem(16, this.createDisplayItem(
+				Material.OAK_PLANKS, 
+				"&cWallhack Modifications",
+				new ArrayList<String>(Arrays.asList(
+					"&cXray, Wallhack",
+					"&cor other wallhack related modifications."
+				)),
+				"Wallhack Related"
 		));
 		i.setItem(17, nothing());
 		i.setItem(18, nothing());
+		i.setItem(19, this.createDisplayItem(
+				Material.OAK_PLANKS, 
+				"&cParty Modifications",
+				new ArrayList<String>(Arrays.asList(
+					"&cFullbright, Twerk, Derp",
+					"&cor other party related modifications."
+				)),
+				"Party Related"
+		));
 		i.setItem(26, nothing());
 		i.setItem(27, nothing());
 		i.setItem(28, nothing());
@@ -157,7 +209,7 @@ public class ModerationGUI implements Listener{
 		reporter.openInventory(i);
 	}
 	public void MuteReason(Player reporter, Player offender) {
-		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 36, (new CCT().colorize("&6Punish Reason: &c" + offender.getName())));
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 27, (new CCT().colorize("&6Punish Reason: &c" + offender.getName())));
 		i.setItem(0, nothing());
 		i.setItem(1, nothing());
 		i.setItem(2, nothing());
@@ -170,28 +222,54 @@ public class ModerationGUI implements Listener{
 		i.setItem(9, nothing());
 		i.setItem(10, this.createDisplayItem(
 				Material.BARRIER, 
-				"&cCursing"
+				"&cSpamming",
+				new ArrayList<String>(Arrays.asList(
+						"&cSpamming, Bypassing chat filters/caps typing."
+				)),
+				"Spamming Related"
 		));
 		i.setItem(11, this.createDisplayItem(
 				Material.BROWN_WOOL, 
-				"&cRacism"
+				"&cInsulting",
+				new ArrayList<String>(Arrays.asList(
+						"&cInsulting staff or a member (example; FUCK YOU CALLEDRISINGSUN)"
+				)),
+				"Insult Related"
 		));
 		i.setItem(12, this.createDisplayItem(
 				Material.PINK_WOOL, 
-				"&cSexism"
+				"&cSlurs",
+				new ArrayList<String>(Arrays.asList(
+						"&cSexual Slurs/Racist Slurs/Pedophilic Slurs."
+				)),
+				"Slur related"
+		));
+		i.setItem(13, this.createDisplayItem(
+				Material.RED_WOOL, 
+				"&cThreats",
+				new ArrayList<String>(Arrays.asList(
+						"&cDeath Threats/General Threats (for example; I'M GOING TO FIND YOUR ADRESS AND I'LL KILL YOUR FAMILY)"
+				)),
+				"Threat related"
+		));
+		i.setItem(14, this.createDisplayItem(
+				Material.REDSTONE, 
+				"&cChat Modifications",
+				new ArrayList<String>(Arrays.asList(
+						"&cFancy Chat/Chat Modifications/Autotext Spammer"
+				)),
+				"Chat related"
 		));
 		i.setItem(17, nothing());
 		i.setItem(18, nothing());
+		i.setItem(19, nothing());
+		i.setItem(20, nothing());
+		i.setItem(21, nothing());
+		i.setItem(22, nothing());
+		i.setItem(23, nothing());
+		i.setItem(24, nothing());
+		i.setItem(25, nothing());
 		i.setItem(26, nothing());
-		i.setItem(27, nothing());
-		i.setItem(28, nothing());
-		i.setItem(29, nothing());
-		i.setItem(30, nothing());
-		i.setItem(31, nothing());
-		i.setItem(32, nothing());
-		i.setItem(33, nothing());
-		i.setItem(34, nothing());
-		i.setItem(35, nothing());
 		reporter.openInventory(i);
 	}
 	public void SpawnerCreate(Player player) {

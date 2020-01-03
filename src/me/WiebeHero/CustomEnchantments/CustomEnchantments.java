@@ -49,6 +49,7 @@ import me.WiebeHero.Consumables.CustomDurability;
 import me.WiebeHero.CraftRecipes.CallRecipe;
 import me.WiebeHero.CraftRecipes.UnblockBrewing;
 import me.WiebeHero.CustomHitDelay.HitDelay;
+import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.DFShops.DFShop;
 import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.DFShops.PayCommand;
@@ -69,7 +70,6 @@ import me.WiebeHero.LootChest.LootRewards;
 import me.WiebeHero.LootChest.MoneyNotes;
 import me.WiebeHero.Moderation.ModerationEvents;
 import me.WiebeHero.Moderation.ModerationGUI;
-import me.WiebeHero.Moderation.ModerationGUICommand;
 import me.WiebeHero.Moderation.PunishManager;
 import me.WiebeHero.Moderation.StaffManager;
 import me.WiebeHero.MoreStuff.AFKSystem;
@@ -85,6 +85,7 @@ import me.WiebeHero.MoreStuff.MOTDSetting;
 import me.WiebeHero.MoreStuff.MoneyCreation;
 import me.WiebeHero.MoreStuff.Portals;
 import me.WiebeHero.MoreStuff.PreventIllegalItems;
+import me.WiebeHero.MoreStuff.PreventPhantom;
 import me.WiebeHero.MoreStuff.RestrictInteractionWithBlocks;
 import me.WiebeHero.MoreStuff.SetHomeSystem;
 import me.WiebeHero.MoreStuff.SpawnCommand;
@@ -113,9 +114,10 @@ import me.WiebeHero.Spawners.DFSpawnerManager;
 import me.WiebeHero.Spawners.DeathOfMob;
 import me.WiebeHero.XpTrader.XPAddPlayers;
 import me.WiebeHero.XpTrader.XPTraderMenu;
-import me.lucko.luckperms.LuckPerms;
-import me.lucko.luckperms.api.LuckPermsApi;
-import me.lucko.luckperms.api.User;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.GroupManager;
+import net.luckperms.api.model.user.User;
 
 public class CustomEnchantments extends JavaPlugin implements Listener{
 	public HashMap<UUID, DFPlayer> dfPlayerList = new HashMap<UUID, DFPlayer>();
@@ -143,18 +145,33 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	public StaffManager staffManager = new StaffManager();
 	public DFSpawnerManager spawnerManager = new DFSpawnerManager();
 	public LootChestManager lootChestManager = new LootChestManager();
+	private MethodLuck luck = new MethodLuck();
 	int level;
 	public Scoreboard scoreboard;
 	public static boolean shutdown = false;
+	public static boolean maintenance = false;
+	public static boolean load = true;
 	@Override
 	public void onEnable() {
 		instance = this;
 		scoreboard = this.getServer().getScoreboardManager().getMainScoreboard();
 		//Enable Plugin Message
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "\n\nThe plugin CustomEnchantments has been enabled!\n\n");
+		File f1 =  new File("plugins/CustomEnchantments/GeneralConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
+		try{
+			yml.load(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		maintenance = yml.getBoolean("General.Values.Maintenance");
 		//Config Manager
 		loadConfigManager();
-		ModerationGUICommand mod = new ModerationGUICommand();
+		ModerationEvents mod = new ModerationEvents();
 		//Custom Weapons
 		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(), this);
 		//Custom Armor
@@ -177,6 +194,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Spawners
 		getServer().getPluginManager().registerEvents(new DeathOfMob(), this);
 		getServer().getPluginManager().registerEvents(new CustomDurability(), this);
+		getServer().getPluginManager().registerEvents(new PreventPhantom(), this);
 		//Novis
 		getServer().getPluginManager().registerEvents(new NovisInventory(), this);
 		//Loot Chest
@@ -204,42 +222,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new ConsumableHandler(), this);
 		//Seasonal Events
 		getServer().getPluginManager().registerEvents(new ChristmasInventoryEvents(), this);
-		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
-		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
-		try{
-			yml.load(f1);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
 		method.loadFactions();
 		method.activeEnergyTimer();
-		File f2 =  new File("plugins/CustomEnchantments/modConfig.yml");
-		YamlConfiguration yml1 = YamlConfiguration.loadConfiguration(f2);
-		try{
-			yml1.load(f2);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		if(yml1.getConfigurationSection("Moderation.Punishments") != null) {
-			if(!yml1.get("Moderation.Punishments").equals("{}")) {
-				mod.loadBanTime(yml1, f2);
-				mod.loadMuteTime(yml1, f2);
-				mod.loadPermBan(yml1, f2);
-				mod.loadPermMute(yml1, f2);
-				mod.loadReasonBanList(yml1, f2);
-				mod.loadReasonMuteList(yml1, f2);
-				mod.loadWarnOffenseList(yml1, f2);
-				mod.loadWarnReasonList(yml1, f2);
-			}
-		}
+		punishManager.loadPunishList();
 		File f4 =  new File("plugins/CustomEnchantments/cashConfig.yml");
 		YamlConfiguration yml3 = YamlConfiguration.loadConfiguration(f4);
 		try{
@@ -326,10 +311,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(mod.unban).setExecutor(mod);
 		getCommand(mod.mute).setExecutor(mod);
 		getCommand(mod.unmute).setExecutor(mod);
-		getCommand(mod.warn).setExecutor(mod);
-		getCommand(mod.unwarn).setExecutor(mod);
 		getCommand(mod.staffmode).setExecutor(mod);
-		getServer().getPluginManager().registerEvents(new ModerationEvents(), this);
+		getCommand(mod.protocol).setExecutor(mod);
 		//Dungeon Parties
 		getCommand(party.comParty).setExecutor(party);
 		getServer().getPluginManager().registerEvents(mod, this);
@@ -401,6 +384,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				Bukkit.getServer().shutdown();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 288000L);
+		new BukkitRunnable() {
+			public void run() {
+				load = false;
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 100L);
 		lootChestManager.loadLootChests();
 		spawnerManager.loadSpawners();
 		new BukkitRunnable() {
@@ -410,9 +398,27 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				spawnerManager.startSpawning();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+		mod.priorityQueue();
 	}
 	public void onDisable() {
-		ModerationGUICommand mod = new ModerationGUICommand();
+		File f =  new File("plugins/CustomEnchantments/GeneralConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
+		try{
+			yml.load(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		yml.set("General.Values.Maintenance", maintenance);
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
 		for(Entity e : Bukkit.getWorld("DFWarzone-1").getEntities()) {
 			if(e != null && !(e instanceof Player)) {
 				e.remove();
@@ -423,76 +429,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				e.remove();
 			}
 		}
-		File f5 =  new File("plugins/CustomEnchantments/playerskillsDF.yml");
-		YamlConfiguration yml4 = YamlConfiguration.loadConfiguration(f5);
-		try{
-			yml4.load(f5);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
 		pl.savePlayers();
 		for(Team t : scoreboard.getTeams()) {
 			t.unregister();
 		}
 		method.saveFactions();
-		File f2 =  new File("plugins/CustomEnchantments/modConfig.yml");
-		YamlConfiguration yml1 = YamlConfiguration.loadConfiguration(f2);
-		try{
-			yml1.load(f2);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		yml1.set("Mod.Punishments", null);
-		int size = Bukkit.getOfflinePlayers().length;
-		OfflinePlayer players[] = Bukkit.getOfflinePlayers();
-		for(int i = 0; i < size; i++) {
-			UUID uuid = players[i].getUniqueId();
-			yml1.createSection("Mod.Punishments." + uuid);
-			if(mod.getMutePermList().contains(uuid)) {
-				yml1.set("Mod.Punishments." + uuid + ".Mute Data.Perm", true);
-			}
-			else {
-				yml1.set("Mod.Punishments." + uuid + ".Mute Data.Perm", false);
-			}
-			if(mod.getMuteTimeList().get(uuid) != null) {
-				yml1.set("Mod.Punishments." + uuid + ".Mute Data.Temp", mod.getMuteTimeList().get(uuid));
-			}
-			else {
-				yml1.set("Mod.Punishments." + uuid + ".Mute Data.Temp", 0);
-			}
-			if(mod.getBanPermList().contains(uuid)) {
-				yml1.set("Mod.Punishments." + uuid + ".Ban Data.Perm", true);
-			}
-			else {
-				yml1.set("Mod.Punishments." + uuid + ".Ban Data.Perm", false);
-			}
-			if(mod.getBanTimeList().get(uuid) != null) {
-				yml1.set("Mod.Punishments." + uuid + ".Ban Data.Temp", mod.getBanTimeList().get(uuid));
-			}
-			else {
-				yml1.set("Mod.Punishments." + uuid + ".Ban Data.Temp", 0);
-			}
-			yml1.set("Mod.Punishments." + uuid + ".Mute Data.Reason", mod.getMuteReasonList().get(uuid));
-			yml1.set("Mod.Punishments." + uuid + ".Ban Data.Reason", mod.getBanReasonList().get(uuid));
-			yml1.set("Mod.Punishments." + uuid + ".Mute Data.Offends", mod.getMuteOffendsList().get(uuid));
-			yml1.set("Mod.Punishments." + uuid + ".Ban Data.Offends", mod.getBanOffendsList().get(uuid));
-			yml1.set("Mod.Punishments." + uuid + ".Warn Data.Offends", mod.getWarnList().get(uuid));
-			yml1.set("Mod.Punishments." + uuid + ".Warn Data.Reason", mod.getWarnReasonList().get(uuid));
-		}
-		try{
-			yml1.save(f2);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
+		punishManager.savePunishList();
+		
 		File f3 =  new File("plugins/CustomEnchantments/spawnerConfig.yml");
 		YamlConfiguration yml2 = YamlConfiguration.loadConfiguration(f3);
 		try{
@@ -637,28 +580,29 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dungeonforge","root","");
             CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new CCT().colorize("&aConnection established!"));
             ArrayList<OfflinePlayer> playerList = new ArrayList<OfflinePlayer>(Arrays.asList(Bukkit.getOfflinePlayers()));
-            LuckPermsApi api = LuckPerms.getApi();
+            LuckPerms api = LuckPermsProvider.get();
             for(int i = 0; i < playerList.size(); i++) {
             	String uuidString = playerList.get(i).getUniqueId().toString();
             	String playerName = playerList.get(i).getName();
-            	User user = api.getUser(playerList.get(i).getUniqueId());
+            	GroupManager manager = api.getGroupManager();
+            	User user = api.getUserManager().getUser(playerList.get(i).getUniqueId());
             	String groupName = "None";
-            	if(user.inheritsGroup(api.getGroup("bronze"))) {
+            	if(luck.containsParrent(user, "bronze")) {
             		groupName = "bronze";
             	}
-            	else if(user.inheritsGroup(api.getGroup("silver"))) {
+            	else if(luck.containsParrent(user, "silver")) {
             		groupName = "silver";
             	}
-            	else if(user.inheritsGroup(api.getGroup("gold"))) {
+            	else if(luck.containsParrent(user, "gold")) {
             		groupName = "gold";
             	}
-            	else if(user.inheritsGroup(api.getGroup("platinum"))) {
+            	else if(luck.containsParrent(user, "platinum")) {
             		groupName = "platinum";
             	}
-            	else if(user.inheritsGroup(api.getGroup("diamond"))) {
+            	else if(luck.containsParrent(user, "diamond")) {
             		groupName = "diamond";
             	}
-            	else if(user.inheritsGroup(api.getGroup("emerald"))) {
+            	else if(luck.containsParrent(user, "emerald")) {
             		groupName = "emerald";
             	}
             	Statement stmt = con.createStatement();

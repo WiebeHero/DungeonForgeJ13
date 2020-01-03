@@ -1025,7 +1025,7 @@ public class Enchantment extends CommandFile implements Listener{
 		this.listMelee.put("Sharpness", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
-				event.setDamage(event.getDamage() + 0.50 + 0.50 * level);
+				event.setDamage(event.getDamage() + 0.40 + 0.40 * level);
 			}
 		}));
 		this.listMelee.put("Sky High", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {

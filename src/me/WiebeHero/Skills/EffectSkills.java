@@ -20,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -160,7 +161,7 @@ public class EffectSkills implements Listener{
 			public void run() {
 				attackSpeed(player);
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 4L);
 	}
 	@EventHandler
 	public void attackSpeedItemDrop(PlayerDropItemEvent event) {
@@ -171,6 +172,13 @@ public class EffectSkills implements Listener{
 	public void attackSpeedItemPickup(PlayerAttemptPickupItemEvent event) {
 		Player player = event.getPlayer();
 		attackSpeed(player);
+	}
+	@EventHandler
+	public void attackSpeedItemPickup(CraftItemEvent event) {
+		if(event.getWhoClicked() instanceof Player) {
+			Player player = (Player) event.getWhoClicked();
+			attackSpeed(player);
+		}
 	}
 	@EventHandler
 	public void attackSpeedInvClick(InventoryClickEvent event) {

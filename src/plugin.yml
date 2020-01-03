@@ -1,33 +1,18 @@
 name: CustomEnchantments
 author: WiebeHero
-version: 1.32
+version: 0.10
 api-version: 1.13
 softdepend: [Multiverse-Core, WorldEdit, WorldGuard]
 main: me.WiebeHero.CustomEnchantments.CustomEnchantments
 description: Custom Enchantment coded in java for DungeonForge
 
 commands:
-  giveitem:
-    ussage: /<command>
-    description: 'Tutorial Command'
-  SpawnNovis:
-    ussage: /<command>
-    description: 'Tutorial Command'
   skill:
     ussage: /<command>
     description: 'Command for opening skills'
   skills:
     ussage: /<command>
     description: 'Command for opening skills'
-  spawner:
-    ussage: /<command>
-    description: 'Command for setting spawners'
-  Novis:
-    ussage: /<command>
-    description: 'Command for Novis'
-  Loot:
-    ussage: /<command>
-    description: 'Command for Loot'
   faction:
     ussage: /<command>
     description: 'Command for Factions'
@@ -84,6 +69,9 @@ commands:
   warn:
     ussage: /<command>
     description: 'Command for warn'
+  procedure:
+    ussage: /<command>
+    description: 'Command for initiating procedure'
   unwarn:
     ussage: /<command>
     description: 'Command for unwarn'

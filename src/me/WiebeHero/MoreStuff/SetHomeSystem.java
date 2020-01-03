@@ -22,12 +22,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.lucko.luckperms.LuckPerms;
-import me.lucko.luckperms.api.LuckPermsApi;
-import me.lucko.luckperms.api.User;
+import me.WiebeHero.CustomMethods.MethodLuck;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 import net.md_5.bungee.api.ChatColor;
 
 public class SetHomeSystem implements Listener,CommandExecutor{
+	private MethodLuck luck = new MethodLuck();
 	public String command = "sethome";
 	public String homeCommand = "home";
 	public String homesCommand = "homes";
@@ -164,33 +166,33 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 	@EventHandler
 	public void rankedListregister(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if(!rankList.containsKey(player.getUniqueId())) {
-			LuckPermsApi api = LuckPerms.getApi();
-			User user = api.getUser(player.getUniqueId());
-			if(user.getPrimaryGroup().equalsIgnoreCase("bronze")) {
+			LuckPerms api = LuckPermsProvider.get();
+			User user = api.getUserManager().getUser(player.getUniqueId());
+			if(luck.containsParrent(user, "bronze")) {
 				rankList.put(player.getUniqueId(), 2);
 			}
-			else if(user.getPrimaryGroup().equalsIgnoreCase("silver")) {
+			else if(luck.containsParrent(user, "silver")) {
 				rankList.put(player.getUniqueId(), 3);
 			}
-			else if(user.getPrimaryGroup().equalsIgnoreCase("gold")) {
+			else if(luck.containsParrent(user, "gold")) {
 				rankList.put(player.getUniqueId(), 4);
 			}
-			else if(user.getPrimaryGroup().equalsIgnoreCase("platinum")) {
+			else if(luck.containsParrent(user, "platinum")) {
 				rankList.put(player.getUniqueId(), 5);
 			}
-			else if(user.getPrimaryGroup().equalsIgnoreCase("diamond")) {
+			else if(luck.containsParrent(user, "diamond")) {
 				rankList.put(player.getUniqueId(), 6);
 			}
-			else if(user.getPrimaryGroup().equalsIgnoreCase("emerald")) {
+			else if(luck.containsParrent(user, "emerald")) {
 				rankList.put(player.getUniqueId(), 8);
 			}
-			else if(user.getPrimaryGroup().equalsIgnoreCase("owner") || user.getPrimaryGroup().equalsIgnoreCase("manager") || user.getPrimaryGroup().equalsIgnoreCase("headadmin")) {
+			else if(luck.containsParrent(user, "owner") || luck.containsParrent(user, "manager") || luck.containsParrent(user, "headadmin")) {
 				rankList.put(player.getUniqueId(), 999);
 			}
 			else {

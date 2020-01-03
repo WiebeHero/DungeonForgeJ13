@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 
 public class LootRewards {
@@ -826,6 +827,10 @@ public class LootRewards {
 		lore1.add(new CCT().colorize("&7Rarity: Common"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(item1);
+		item.setString("CrystalObject", "");
+		item.setString("Rarity", "Common");
+		item1 = item.getItem();
 		return item1;
 	}
 	public ItemStack rareCrystal() {
@@ -838,6 +843,10 @@ public class LootRewards {
 		lore1.add(new CCT().colorize("&7Rarity: &aRare"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(item1);
+		item.setString("CrystalObject", "");
+		item.setString("Rarity", "Rare");
+		item1 = item.getItem();
 		return item1;
 	}
 	public ItemStack epicCrystal() {
@@ -850,6 +859,10 @@ public class LootRewards {
 		lore1.add(new CCT().colorize("&7Rarity: &bEpic"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(item1);
+		item.setString("CrystalObject", "");
+		item.setString("Rarity", "Epic");
+		item1 = item.getItem();
 		return item1;
 	}
 	public ItemStack legendaryCrystal() {
@@ -862,6 +875,10 @@ public class LootRewards {
 		lore1.add(new CCT().colorize("&7Rarity: &cLegendary"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(item1);
+		item.setString("CrystalObject", "");
+		item.setString("Rarity", "Legendary");
+		item1 = item.getItem();
 		return item1;
 	}
 	public ItemStack mythicCrystal() {
@@ -874,6 +891,10 @@ public class LootRewards {
 		lore1.add(new CCT().colorize("&7Rarity: &5Mythic"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(item1);
+		item.setString("CrystalObject", "");
+		item.setString("Rarity", "Mythic");
+		item1 = item.getItem();
 		return item1;
 	}
 	public ItemStack heroicCrystal() {
@@ -886,6 +907,10 @@ public class LootRewards {
 		lore1.add(new CCT().colorize("&7Rarity: &eHeroic"));
 		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
+		NBTItem item = new NBTItem(item1);
+		item.setString("CrystalObject", "");
+		item.setString("Rarity", "Heroic");
+		item1 = item.getItem();
 		return item1;
 	}
 	public ItemStack trickyFish() {

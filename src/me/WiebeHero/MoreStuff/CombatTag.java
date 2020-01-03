@@ -263,13 +263,13 @@ public class CombatTag implements Listener {
 	@EventHandler
 	public void combatTagResetDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
+		player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
 		new BukkitRunnable() {
 			public void run() {
-				player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
 				player.spigot().respawn();
-				combatTag.put(player.getUniqueId(), 0);
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 5L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+		combatTag.put(player.getUniqueId(), 0);
 	}
 
 	@EventHandler

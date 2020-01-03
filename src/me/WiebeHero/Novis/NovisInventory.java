@@ -24,6 +24,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
@@ -211,14 +212,24 @@ public class NovisInventory extends NovisRewards implements Listener{
 																	((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
 																}
 																cancel();
-																player.getInventory().addItem(finalReward);
+																if(player.getInventory().firstEmpty() != -1) {
+																	player.getInventory().setItem(player.getInventory().firstEmpty(), finalReward);
+																}
+																else {
+																	player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThere is not enough space in your inventory, so the item has been dropped on the ground."));
+																}
 															}
 														}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 16L);
 													}
 												}
 												else {
 													cancel();
-													player.getInventory().addItem(finalReward);
+													if(player.getInventory().firstEmpty() != -1) {
+														player.getInventory().setItem(player.getInventory().firstEmpty(), finalReward);
+													}
+													else {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThere is not enough space in your inventory, so the item has been dropped on the ground."));
+													}
 												}
 											}
 										}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 12L);
@@ -226,7 +237,12 @@ public class NovisInventory extends NovisRewards implements Listener{
 								}
 								else {
 									cancel();
-									player.getInventory().addItem(finalReward);
+									if(player.getInventory().firstEmpty() != -1) {
+										player.getInventory().setItem(player.getInventory().firstEmpty(), finalReward);
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThere is not enough space in your inventory, so the item has been dropped on the ground."));
+									}
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 6L);
@@ -234,7 +250,12 @@ public class NovisInventory extends NovisRewards implements Listener{
 				}
 				else {
 					cancel();
-					player.getInventory().addItem(finalReward);
+					if(player.getInventory().firstEmpty() != -1) {
+						player.getInventory().setItem(player.getInventory().firstEmpty(), finalReward);
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThere is not enough space in your inventory, so the item has been dropped on the ground."));
+					}
 				}
 			}
 		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 3L);
@@ -247,80 +268,27 @@ public class NovisInventory extends NovisRewards implements Listener{
 		if(event.getPlayer() instanceof Player) {
 			if(event.getRightClicked() instanceof MagmaCube) {
 				Player player = event.getPlayer();
-				ItemStack item = player.getInventory().getItemInMainHand();
+				ItemStack i = player.getInventory().getItemInMainHand();
 				LivingEntity novis = (LivingEntity) event.getRightClicked();
 				if(novis.getName().contains(ChatColor.stripColor("Novis"))) {
-					if(item != null) {
-						if(item.hasItemMeta()) {
-							if(item.getItemMeta().hasDisplayName()){
-								if(!(check.contains(player.getName()))) {
-									if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Common Crystal"))) {
-										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Common"));
-										check.add(player.getName());
-										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
-											  public void run() {
-												  check.remove(player.getName());
-											  }
-										}, 20L);
-									}
-									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Rare Crystal"))) {
-										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Rare"));
-										check.add(player.getName());
-										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
-											  public void run() {
-												  check.remove(player.getName());
-											  }
-										}, 20L);
-									}
-									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Epic Crystal"))) {
-										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Epic"));
-										check.add(player.getName());
-										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
-											  public void run() {
-												  check.remove(player.getName());
-											  }
-										}, 20L);
-									}
-									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Legendary Crystal"))) {
-										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Legendary"));
-										check.add(player.getName());
-										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
-											  public void run() {
-												  check.remove(player.getName());
-											  }
-										}, 20L);
-									}
-									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Mythic Crystal"))) {
-										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Mythic"));
-										check.add(player.getName());
-										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
-											  public void run() {
-												  check.remove(player.getName());
-											  }
-										}, 20L);
-									}
-									else if(item.getItemMeta().getDisplayName().contains(ChatColor.stripColor("Heroic Crystal"))) {
-										player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-										NovisInventory novis1 = new NovisInventory();
-										novis1.NewInventory1(player, listSelection("Heroic"));
-										check.add(player.getName());
-										CustomEnchantments.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(CustomEnchantments.getInstance(), new Runnable() {
-											  public void run() {
-												  check.remove(player.getName());
-											  }
-										}, 20L);
-									}
+					if(i != null) {
+						if(!check.contains(player.getName())) {
+							if(player.getInventory().firstEmpty() != -1) {
+								NBTItem item = new NBTItem(i);
+								if(item.hasKey("CrystalObject")) {
+									check.add(player.getName());
+									String loottable = item.getString("Rarity");
+									NovisInventory inv = new NovisInventory();
+									inv.NewInventory1(player, listSelection(loottable));
+									new BukkitRunnable() {
+										public void run() {
+											check.remove(player.getName());
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), 20L);
 								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThere is not enough space in your inventory."));
 							}
 						}
 					}

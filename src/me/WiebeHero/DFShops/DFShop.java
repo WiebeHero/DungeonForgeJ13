@@ -447,7 +447,7 @@ public class DFShop implements Listener{
 		if(!event.isCancelled()) {
 			Player player = event.getEntity();
 			m.getMoneyList().put(player.getUniqueId(), m.getMoneyList().get(player.getUniqueId()) - m.getMoneyList().get(player.getUniqueId()) / 100 * 10);
-			player.sendMessage("&2&l[DungeonForge]: &cYou lost 10% of your current balance due to punishment of death.");
+			player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou lost 10% of your current balance due to punishment of death."));
 		}
 	}
 }

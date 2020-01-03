@@ -8,8 +8,5 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class MOTDSetting implements Listener{
-	@EventHandler
-	public void onPingChange(ServerListPingEvent event) {
-		event.setMotd(new CCT().colorize("&6&l          >-----&2&lDungeonForge&6&l-----<                         &c&lMAINTENANCE &2&lBETA &6" + CustomEnchantments.getInstance().getDescription().getVersion() + " &cJ"));
-	}
+	
 }

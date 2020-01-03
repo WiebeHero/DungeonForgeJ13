@@ -44,6 +44,9 @@ public class ConfigManager {
 	public FileConfiguration blowable;
 	public File blowableConfig;
 	
+	public FileConfiguration general;
+	public File generalConfig;
+	
 	public void setUp() {
 		if(!plugin.getDataFolder().exists()) {
 			plugin.getDataFolder().mkdir();
@@ -89,8 +92,12 @@ public class ConfigManager {
 		dungeon.options().copyDefaults(true);
 		
 		blowableConfig = new File(plugin.getDataFolder(), "Blowable.yml");
-		blowable = YamlConfiguration.loadConfiguration(dungeonConfig);
+		blowable = YamlConfiguration.loadConfiguration(blowableConfig);
 		blowable.options().copyDefaults(true);
+		
+		generalConfig = new File(plugin.getDataFolder(), "GeneralConfig.yml");
+		general = YamlConfiguration.loadConfiguration(generalConfig);
+		general.options().copyDefaults(true);
 		if(!playerskills.exists()) {
 			try {
 				playerskills.createNewFile();
@@ -307,9 +314,29 @@ public class ConfigManager {
 		            e.printStackTrace();
 		        }
 				
-				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Dungeon Config has been created!");
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Blowable Config has been created!");
 			}catch(IOException e) {
-				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "Dungeon Config could not be created!");
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "Blowable Config could not be created!");
+			}
+		}
+		else {
+			Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "else");
+		}
+		if(!generalConfig.exists()) {
+			try {
+				generalConfig.createNewFile();
+				general.addDefault("General.Values", "");
+				general.options().copyDefaults(true);
+				try{
+					general.save(generalConfig);
+		        }
+		        catch(IOException e){
+		            e.printStackTrace();
+		        }
+				
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "General Config has been created!");
+			}catch(IOException e) {
+				Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "General Config could not be created!");
 			}
 		}
 		else {

@@ -13,8 +13,11 @@ public class Punish {
 	public ArrayList<String> warnReason;
 	public ArrayList<String> bannedBy;
 	public ArrayList<String> mutedBy;
+	public ArrayList<String> warnedBy;
 	public Long banTime;
 	public Long muteTime;
+	public boolean banPerm;
+	public boolean mutePerm;
 	public Punish(UUID uuid) {
 		this.uuid = uuid;
 		this.banReason = new ArrayList<String>();
@@ -24,6 +27,8 @@ public class Punish {
 		this.mutedBy = new ArrayList<String>();
 		this.banTime = 0L;
 		this.muteTime = 0L;
+		this.banPerm = false;
+		this.mutePerm = false;
 		manager.add(uuid, this);
 	}
 	public Punish() {
@@ -69,6 +74,9 @@ public class Punish {
 	public void addBanReason(String reason) {
 		this.banReason.add(reason);
 	}
+	public void setBanReason(ArrayList<String> reason) {
+		this.banReason = reason;
+	}
 	public void clearBanReasons() {
 		this.banReason.clear();
 	}
@@ -102,6 +110,9 @@ public class Punish {
 	}
 	public void addMuteReason(String reason) {
 		this.muteReason.add(reason);
+	}
+	public void setMuteReason(ArrayList<String> reason) {
+		this.muteReason = reason;
 	}
 	public void clearMuteReasons() {
 		this.muteReason.clear();
@@ -137,6 +148,9 @@ public class Punish {
 	public void addWarnReason(String reason) {
 		this.warnReason.add(reason);
 	}
+	public void setWarnReason(ArrayList<String> reason) {
+		this.warnReason = reason;
+	}
 	public void clearWarnReasons() {
 		this.warnReason.clear();
 	}
@@ -144,30 +158,33 @@ public class Punish {
 	 * Banned By Methods
 	 */
 	public ArrayList<String> getBannedByList() {
-		return this.warnReason;
+		return this.bannedBy;
 	}
 	public String getBannedBy(int index) {
-		if(warnReason.get(index) != null) {
-			return warnReason.get(index);
+		if(bannedBy.get(index) != null) {
+			return bannedBy.get(index);
 		}
 		return null;
 	}
 	public String getBannedBy(String s) {
-		if(warnReason.contains(s)) {
+		if(bannedBy.contains(s)) {
 			return s;
 		}
 		return null;
 	}
 	public void removeBannedBy(int index) {
-		if(warnReason.get(index) != null) {
-			warnReason.remove(index);
+		if(bannedBy.get(index) != null) {
+			bannedBy.remove(index);
 		}
 	}
 	public void addBannedBy(String reason) {
-		this.warnReason.add(reason);
+		this.bannedBy.add(reason);
+	}
+	public void setBannedBy(ArrayList<String> reason) {
+		this.bannedBy = reason;
 	}
 	public void clearBanned() {
-		this.warnReason.clear();
+		this.bannedBy.clear();
 	}
 	/*
 	 * Muted By Methods
@@ -200,12 +217,58 @@ public class Punish {
 	public void addMutedBy(String reason) {
 		this.warnReason.add(reason);
 	}
+	public void setMutedBy(ArrayList<String> reason) {
+		this.mutedBy = reason;
+	}
 	public void clearMutedBy() {
+		this.warnReason.clear();
+	}
+	/*
+	 * Warned By Methods
+	 */
+	public ArrayList<String> getWarnedByList() {
+		return this.warnReason;
+	}
+	public String getWarnedBy(int index) {
+		if(warnReason.get(index) != null) {
+			return warnReason.get(index);
+		}
+		return null;
+	}
+	public String getWarnedBy(String s) {
+		if(warnReason.contains(s)) {
+			return s;
+		}
+		return null;
+	}
+	public void editWarnedBy(String replace, int index) {
+		if(warnReason.get(index) != null) {
+			warnReason.set(index, replace);
+		}
+	}
+	public void removeWarnedBy(int index) {
+		if(warnReason.get(index) != null) {
+			warnReason.remove(index);
+		}
+	}
+	public void addWarnedBy(String reason) {
+		this.warnReason.add(reason);
+	}
+	public void setWarnedBy(ArrayList<String> reason) {
+		this.mutedBy = reason;
+	}
+	public void clearWarnedBy() {
 		this.warnReason.clear();
 	}
 	/*
 	 * Ban Time Methods
 	 */
+	public void setBanPerm(boolean banPerm) {
+		this.banPerm = banPerm;
+	}
+	public boolean getBanPerm() {
+		return this.banPerm;
+	}
 	public void setBanTime(Long time) {
 		this.banTime = time;
 	}
@@ -213,7 +276,7 @@ public class Punish {
 		return this.banTime;
 	}
 	public boolean isBanned() {
-		if(this.banTime > System.currentTimeMillis()) {
+		if(this.banTime > System.currentTimeMillis() || this.banPerm == true) {
 			return true;
 		}
 		return false;
@@ -221,6 +284,12 @@ public class Punish {
 	/*
 	 * Mute Time Methods
 	 */
+	public void setMutePerm(boolean mutePerm) {
+		this.mutePerm = mutePerm;
+	}
+	public boolean getMutePerm() {
+		return this.mutePerm;
+	}
 	public void setMuteTime(Long time) {
 		this.muteTime = time;
 	}
@@ -228,7 +297,7 @@ public class Punish {
 		return this.muteTime;
 	}
 	public boolean isMuted() {
-		if(this.muteTime > System.currentTimeMillis()) {
+		if(this.muteTime > System.currentTimeMillis() || this.mutePerm == true) {
 			return true;
 		}
 		return false;

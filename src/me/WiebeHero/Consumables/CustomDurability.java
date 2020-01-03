@@ -1,9 +1,12 @@
 package me.WiebeHero.Consumables;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -99,7 +102,15 @@ public class CustomDurability implements Listener{
 		if(item.hasKey("Durability") && item.hasKey("MaxDurability")) {
 			int dura = item.getInteger("Durability");
 			int maxDura = item.getInteger("MaxDurability");
-			dura = dura - 1;
+			if(item.hasKey("Unbreaking")) {
+				float i1 = ThreadLocalRandom.current().nextFloat() * 100;
+				if(!(i1 <= 12.50 + 12.50 * item.getInteger("Unbreaking"))) {
+					dura = dura - 1;
+				}
+			}
+			else {
+				dura = dura - 1;
+			}
 			item.setInteger("Durability", dura);
 			i = item.getItem();
 			double totalLost = 1.00 - (double)dura / (double)maxDura;

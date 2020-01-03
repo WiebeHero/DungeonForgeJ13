@@ -7,11 +7,15 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -20,6 +24,7 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
+import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFShops.MoneyCreate;
@@ -30,6 +35,7 @@ public class DFScoreboard implements Listener{
 	MoneyCreate money = new MoneyCreate();
 	DFFaction method = new DFFaction();
 	DFPlayer def = new DFPlayer();
+	Methods m = new Methods();
 	public HashMap<UUID, Chunk> delay = new HashMap<UUID, Chunk>();
 	public HashMap<UUID, Scoreboard> scoreboards = new HashMap<UUID, Scoreboard>();
 	public HashMap<UUID, Team> teams = new HashMap<UUID, Team>();
@@ -37,14 +43,8 @@ public class DFScoreboard implements Listener{
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if(CustomEnchantments.shutdown != true) {
-			this.registerRank(player);
-			this.generateScoreboard(player);
-			
-		}
-		else {
-			player.kickPlayer(new CCT().colorize("&cThe server is going into shutdown, try to join back in 5 minutes."));
-		}
+		this.registerRank(player);
+		this.generateScoreboard(player);
 	}
 	@EventHandler
 	public void moveIt(PlayerMoveEvent event) {
