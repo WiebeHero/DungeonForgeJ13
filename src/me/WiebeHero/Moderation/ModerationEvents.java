@@ -50,6 +50,7 @@ import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodLuck;
+import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.LootChest.LootChest;
 import me.WiebeHero.LootChest.LootChestManager;
 import me.WiebeHero.Scoreboard.DFScoreboard;
@@ -69,6 +70,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	private MethodLuck luck = new MethodLuck();
 	private Methods m = new Methods();
 	private DFScoreboard board = new DFScoreboard();
+	private MoneyCreate money = new MoneyCreate();
 	private HashMap<UUID, UUID> target = new HashMap<UUID, UUID>();
 	private HashMap<UUID, String> reason = new HashMap<UUID, String>();
 	private HashMap<UUID, EntityType> spawnerType = new HashMap<UUID, EntityType>();
@@ -571,14 +573,16 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											p.saveData();
 										}
 									}
+									money.getMoneyList().clear();
+									CustomEnchantments.getInstance().factionList.clear();
+									CustomEnchantments.getInstance().dfPlayerList.clear();
 									new BukkitRunnable() {
 										@Override
 										public void run() {
-											CustomEnchantments.getInstance().dfPlayerList.clear();
 											Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
 											Bukkit.getServer().shutdown();
 										}
-									}.runTaskLater(CustomEnchantments.getInstance(), 6000L);
+									}.runTaskLater(CustomEnchantments.getInstance(), 100L);
 								}
 							}
 							else {

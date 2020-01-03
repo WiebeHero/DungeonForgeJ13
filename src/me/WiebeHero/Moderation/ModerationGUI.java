@@ -143,7 +143,7 @@ public class ModerationGUI implements Listener{
 				"Health Related"
 		));
 		i.setItem(15, this.createDisplayItem(
-				Material.OAK_PLANKS, 
+				Material.GLASS, 
 				"&cBuilding Modifications",
 				new ArrayList<String>(Arrays.asList(
 					"&cNuker, Fastbuild, Fastbreak, Scaffold",
@@ -152,7 +152,7 @@ public class ModerationGUI implements Listener{
 				"Building Related"
 		));
 		i.setItem(16, this.createDisplayItem(
-				Material.OAK_PLANKS, 
+				Material.OBSIDIAN, 
 				"&cWallhack Modifications",
 				new ArrayList<String>(Arrays.asList(
 					"&cXray, Wallhack",
@@ -163,7 +163,7 @@ public class ModerationGUI implements Listener{
 		i.setItem(17, nothing());
 		i.setItem(18, nothing());
 		i.setItem(19, this.createDisplayItem(
-				Material.OAK_PLANKS, 
+				Material.JUKEBOX, 
 				"&cParty Modifications",
 				new ArrayList<String>(Arrays.asList(
 					"&cFullbright, Twerk, Derp",
@@ -248,7 +248,8 @@ public class ModerationGUI implements Listener{
 				Material.RED_WOOL, 
 				"&cThreats",
 				new ArrayList<String>(Arrays.asList(
-						"&cDeath Threats/General Threats (for example; I'M GOING TO FIND YOUR ADRESS AND I'LL KILL YOUR FAMILY)"
+						"&cDeath Threats/General Threats",
+						"(for example; I'M GOING TO FIND YOUR ADRESS AND I'LL KILL YOUR FAMILY)"
 				)),
 				"Threat related"
 		));

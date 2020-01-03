@@ -31,7 +31,7 @@ public class TPACommand implements Listener,CommandExecutor{
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
 			if(cmd.getName().equalsIgnoreCase(tpa) || cmd.getName().equalsIgnoreCase(tpahere)) {
-				if(CombatTag.getCombatTag().get(player.getName()) == 0) {
+				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 					if(args.length == 1) {
 						Player target = Bukkit.getPlayer(args[0]);
 						if(target == null) {
@@ -90,7 +90,7 @@ public class TPACommand implements Listener,CommandExecutor{
 				}
 			}
 			if(cmd.getName().equalsIgnoreCase(tpaccept)) {
-				if(CombatTag.getCombatTag().get(player.getName()) == 0) {
+				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 					if(args.length == 0) {
 						if(tpaToggle.get(player) == false) {
 							if(tpRequests.containsValue(player)) {
@@ -129,7 +129,7 @@ public class TPACommand implements Listener,CommandExecutor{
 				}
 			}
 			if(cmd.getName().equalsIgnoreCase(tpdeny)) {
-				if(CombatTag.getCombatTag().get(player.getName()) == 0) {
+				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 					if(args.length == 0) {
 						if(tpaToggle.get(player) == false) {
 							if(tpRequests.containsValue(player)) {
@@ -158,7 +158,7 @@ public class TPACommand implements Listener,CommandExecutor{
 				}
 			}
 			if(cmd.getName().equalsIgnoreCase(tpatoggle)) {
-				if(CombatTag.getCombatTag().get(player.getName()) == 0) {
+				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 					if(args.length == 0) {
 						if(tpaToggle.get(player) == false) {
 							tpaToggle.put(player, true);
