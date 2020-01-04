@@ -341,7 +341,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						if(staff.getRank() >= 5) {
 							Player p = m.convertOfflinePlayer(args[0]);
 							if(sManager.contains(p.getUniqueId())) {
-								Staff s = sManager.get(player.getUniqueId());
+								Staff s = sManager.get(p.getUniqueId());
 								if(staff.getRank() > s.getRank()) {
 									if(p.getName() != null && pManager.contains(p.getUniqueId())) {
 										Punish pun = pManager.get(p.getUniqueId());
@@ -428,7 +428,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						if(staff.getRank() >= 3) {
 							Player p = m.convertOfflinePlayer(args[0]);
 							if(sManager.contains(p.getUniqueId())) {
-								Staff s = sManager.get(player.getUniqueId());
+								Staff s = sManager.get(p.getUniqueId());
 								if(staff.getRank() > s.getRank()) {
 									if(p.getName() != null) {
 										target.put(player.getUniqueId(), p.getUniqueId());
@@ -1031,7 +1031,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				if(player.getInventory().getItemInMainHand() != null) {
 					ItemStack i = player.getInventory().getItemInMainHand();
 					NBTItem item = new NBTItem(i);
-					if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					if(event.getAction() == Action.RIGHT_CLICK_AIR) {
 						if(item.hasKey("TeleporterItem")) {
 							gui.InventoryTeleport(player, 1);
 						}
@@ -1154,7 +1154,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 		}
-	}
+	}	
 	@EventHandler
 	public void teleportInv(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();

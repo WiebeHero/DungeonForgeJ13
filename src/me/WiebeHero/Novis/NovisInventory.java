@@ -276,6 +276,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 							if(player.getInventory().firstEmpty() != -1) {
 								NBTItem item = new NBTItem(i);
 								if(item.hasKey("CrystalObject")) {
+									player.getInventory().getItemInMainHand().setAmount(i.getAmount() - 1);
 									check.add(player.getName());
 									String loottable = item.getString("Rarity");
 									NovisInventory inv = new NovisInventory();

@@ -878,7 +878,7 @@ public class ModerationGUI implements Listener{
 		i.setItem(24, nothing());
 		i.setItem(25, nothing());
 		i.setItem(26, nothing());
-		
+		clicker.openInventory(i);
 	}
 	public ItemStack dfPlayerItem(Player p) {
 		DFPlayer dfPlayer = method.getPlayer(p);
@@ -903,32 +903,32 @@ public class ModerationGUI implements Listener{
 		return item;
 	}
 	public void ExamineMenu(Player clicker, Player clicked) {
-		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 45, (new CCT().colorize("&6Examine")));
-		PlayerInventory inv = clicked.getInventory();
-		ItemStack stack[] = inv.getArmorContents();
-		for(int n = 0; n <= 3; n++) {
-			if(stack[n] != null || stack[n].getType() != Material.AIR) {
-				i.setItem(n, stack[n]);
-			}
-			else {
-				i.setItem(n, nothing());
-			}
-		}
-		if(inv.getItemInOffHand() != null) {
-			i.setItem(4, inv.getItemInOffHand());
-		}
-		else {
-			i.setItem(4, nothing());
-		}
-		i.setItem(5, nothing());
-		i.setItem(6, nothing());
-		i.setItem(7, nothing());
-		i.setItem(8, nothing());
-		ItemStack content[] = inv.getContents();
-		for(int n = 9; n <= 53; n++) {
-			i.setItem(n, content[n - 9]);
-		}
-		clicker.openInventory(i);
+//		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 45, (new CCT().colorize("&6Examine")));
+//		PlayerInventory inv = clicked.getInventory();
+//		ItemStack stack[] = inv.getArmorContents();
+//		for(int n = 0; n <= 3; n++) {
+//			if(stack[n] != null || stack[n].getType() != Material.AIR) {
+//				i.setItem(n, stack[n]);
+//			}
+//			else {
+//				i.setItem(n, nothing());
+//			}
+//		}
+//		if(inv.getItemInOffHand() != null) {
+//			i.setItem(4, inv.getItemInOffHand());
+//		}
+//		else {
+//			i.setItem(4, nothing());
+//		}
+//		i.setItem(5, nothing());
+//		i.setItem(6, nothing());
+//		i.setItem(7, nothing());
+//		i.setItem(8, nothing());
+//		ItemStack content[] = inv.getContents();
+//		for(int n = 9; n <= 53; n++) {
+//			i.setItem(n, content[n - 9]);
+//		}
+//		clicker.openInventory(i);
 	}
 	public ItemStack createDisplayItem(Material mat, String name, String tag) {
 		ItemStack item = new ItemStack(mat, 1);

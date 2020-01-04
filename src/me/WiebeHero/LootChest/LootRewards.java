@@ -2,6 +2,7 @@ package me.WiebeHero.LootChest;
 
 import java.util.ArrayList;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -703,6 +704,7 @@ public class LootRewards {
 		ItemStack item1 = new ItemStack(Material.POTION, 1);
 		PotionMeta meta = (PotionMeta) item1.getItemMeta();
 		meta.setDisplayName(new CCT().colorize("&fPotion of Strength"));
+		meta.setColor(Color.fromRGB(150, 0, 0));
 		meta.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 0), true);
 		item1.setItemMeta(meta);
 		return item1;
@@ -711,6 +713,7 @@ public class LootRewards {
 		ItemStack item1 = new ItemStack(Material.POTION, 1);
 		PotionMeta meta = (PotionMeta) item1.getItemMeta();
 		meta.setDisplayName(new CCT().colorize("&fPotion of Speed"));
+		meta.setColor(Color.fromRGB(200, 200, 200));
 		meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 600, 0), true);
 		item1.setItemMeta(meta);
 		return item1;

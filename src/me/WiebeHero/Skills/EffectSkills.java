@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -46,22 +47,35 @@ public class EffectSkills implements Listener{
 	public static ArrayList<UUID> disableBow = new ArrayList<UUID>();
 	public ArrayList<UUID> disableShieldM = new ArrayList<UUID>();
 	public SwordSwingProgress s = new SwordSwingProgress();
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void nerfStrength(EntityDamageByEntityEvent event) {
+		if(event.getDamager() instanceof LivingEntity) {
+			LivingEntity damager = (LivingEntity) event.getDamager();
+			double damage = event.getDamage();
+			if(damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
+				int amp = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier();
+				damage = damage - ((amp + 1) * 2.25);
+			}
+			event.setDamage(damage);
+		}
+	}
+	@EventHandler(priority = EventPriority.HIGH)
 	public void attackDamage(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof LivingEntity) {
 			LivingEntity damager = (LivingEntity) event.getDamager();
 			DFPlayer method = new DFPlayer();
+			double damage = event.getDamage();
 			if(method.containsPlayer(damager)) {
 				DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
 				if(damager.getEquipment().getItemInMainHand() != null) {
 					if(damager.getEquipment().getItemInMainHand().getType() != Material.BOW) {
 						if(event.getEntity() instanceof LivingEntity) {
-							event.setDamage((event.getDamage()) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
+							event.setDamage((damage) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
 						}
 					}
 				}
 				else {
-					event.setDamage((event.getDamage()) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
+					event.setDamage((damage) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
 				}
 			}
 		}
@@ -292,7 +306,7 @@ public class EffectSkills implements Listener{
 			}
 		}
 	}
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void criticalChance(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
 			if(event.getDamager() instanceof LivingEntity) {

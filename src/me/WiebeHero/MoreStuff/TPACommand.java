@@ -110,13 +110,13 @@ public class TPACommand implements Listener,CommandExecutor{
 													if(temp == 0) {
 														temp = temp - 20;
 														if(count / 20 != 0) {
-															p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
+															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
 														}
 													}
 													if(count == 0) {
-														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
-														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHas teleported to your location!"));
-														p.getKey().teleport(player);
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHas teleported to your location!"));
+														player.teleport(p.getKey());
 														tpRequests.remove(p.getKey());
 														cancel();
 													}
@@ -238,7 +238,7 @@ public class TPACommand implements Listener,CommandExecutor{
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 	@EventHandler
 	public void joinActivate(PlayerJoinEvent event) {

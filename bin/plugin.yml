@@ -47,6 +47,9 @@ commands:
     description: 'Command for tpa'
   tpaccept:
     ussage: /<command>
+    description: 'Command for tpahere'
+  tpahere:
+    ussage: /<command>
     description: 'Command for tpaccept'
   tpdeny:
     ussage: /<command>

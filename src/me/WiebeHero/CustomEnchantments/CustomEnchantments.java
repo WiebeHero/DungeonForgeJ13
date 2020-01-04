@@ -285,6 +285,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(sethome.homesCommand).setExecutor(sethome);
 		getCommand(tpa.tpa).setExecutor(tpa);
 		getCommand(tpa.tpaccept).setExecutor(tpa);
+		getCommand(tpa.tpahere).setExecutor(tpa);
 		getCommand(tpa.tpatoggle).setExecutor(tpa);
 		getCommand(tpa.tpdeny).setExecutor(tpa);
 		getCommand(skillCommand.skill).setExecutor(skillCommand);
