@@ -37,6 +37,9 @@ public class TPACommand implements Listener,CommandExecutor{
 						if(target == null) {
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThat player is not online!"));
 						}
+						else if(target == player) {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't send a tpa request to yourself!"));
+						}
 						else {
 							if(tpaToggle.get(target) == false) {
 								if(cmd.getName().equalsIgnoreCase(tpa)) {
@@ -94,21 +97,78 @@ public class TPACommand implements Listener,CommandExecutor{
 					if(args.length == 0) {
 						if(tpaToggle.get(player) == false) {
 							if(tpRequests.containsValue(player)) {
-								Location loc = player.getLocation();
 								for(Entry<Player, Player> p : tpRequests.entrySet()) {
 									if(p.getValue() == player) {
-										p.getKey().teleport(loc);
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aRequest Accepted!"));	
-										tpRequests.remove(p.getKey());
+										Location loc = p.getKey().getLocation();
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aRequest Accepted!"));
+										p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas accepted your tpa request!"));
+										new BukkitRunnable() {
+											int count = 60;
+											int temp = 0;
+											public void run() {
+												if(loc.distance(p.getKey().getLocation()) == 0.00) {
+													if(temp == 0) {
+														temp = temp - 20;
+														if(count / 20 != 0) {
+															p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
+														}
+													}
+													if(count == 0) {
+														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHas teleported to your location!"));
+														p.getKey().teleport(player);
+														tpRequests.remove(p.getKey());
+														cancel();
+													}
+												}
+												else {
+													p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cTeleportation was cancelled, you have to stand still."));
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cTeleportation was cancelled, &6" + player.getName() + " &cdidn't stand still."));
+													tpRequests.remove(p.getKey());
+													cancel();
+												}
+												count--;
+												temp++;
+											}
+										}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 									}
 								}
 							}
 							else if(tphereRequests.containsValue(player)) {
 								for(Entry<Player, Player> p : tpRequests.entrySet()) {
 									if(p.getValue() == player) {
-										p.getValue().teleport(p.getKey().getLocation());
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aRequest Accepted!"));	
-										tpRequests.remove(p.getKey());
+										Location loc = player.getLocation();
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aRequest Accepted!"));
+										p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas accepted your tpahere request!"));
+										new BukkitRunnable() {
+											int count = 60;
+											int temp = 0;
+											public void run() {
+												if(loc.distance(player.getLocation()) == 0.00) {
+													if(temp == 0) {
+														temp = temp - 20;
+														if(count / 20 != 0) {
+															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
+														}
+													}
+													if(count == 0) {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHas teleported to your location!"));
+														player.teleport(p.getKey());
+														tpRequests.remove(p.getKey());
+														cancel();
+													}
+												}
+												else {
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cTeleportation was cancelled, you have to stand still."));
+													p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cTeleportation was cancelled, &6" + player.getName() + " &cdidn't stand still."));
+													tpRequests.remove(p.getKey());
+													cancel();
+												}
+												count--;
+												temp++;
+											}
+										}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 									}
 								}
 							}
@@ -166,7 +226,7 @@ public class TPACommand implements Listener,CommandExecutor{
 						}
 						else if(tpaToggle.get(player) == true) {
 							tpaToggle.put(player, false);
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have turned on tpa requests!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have turned on tpa requests!"));
 						}
 					}
 					else {

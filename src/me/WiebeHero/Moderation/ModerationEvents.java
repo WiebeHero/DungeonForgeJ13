@@ -50,7 +50,6 @@ import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodLuck;
-import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.LootChest.LootChest;
 import me.WiebeHero.LootChest.LootChestManager;
 import me.WiebeHero.Scoreboard.DFScoreboard;
@@ -70,7 +69,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	private MethodLuck luck = new MethodLuck();
 	private Methods m = new Methods();
 	private DFScoreboard board = new DFScoreboard();
-	private MoneyCreate money = new MoneyCreate();
 	private HashMap<UUID, UUID> target = new HashMap<UUID, UUID>();
 	private HashMap<UUID, String> reason = new HashMap<UUID, String>();
 	private HashMap<UUID, EntityType> spawnerType = new HashMap<UUID, EntityType>();
@@ -560,6 +558,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								Staff staff = sManager.get(player.getUniqueId());
 								if(staff.getRank() >= 8) {
 									CustomEnchantments.shutdown = true;
+									CustomEnchantments.maintenance = true;
 									for(Player p : Bukkit.getOnlinePlayers()) {
 										if(p != null) {
 											p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
@@ -573,9 +572,8 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											p.saveData();
 										}
 									}
-									money.getMoneyList().clear();
-									CustomEnchantments.getInstance().factionList.clear();
-									CustomEnchantments.getInstance().dfPlayerList.clear();
+									CustomEnchantments.getInstance().clearDfPlayers();
+									CustomEnchantments.getInstance().clearFactions();
 									new BukkitRunnable() {
 										@Override
 										public void run() {
@@ -664,7 +662,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
         if(command.getName().equalsIgnoreCase("procedure")) { 
             if(sender instanceof Player) { 
             	if(args.length == 1) {
-            		return Arrays.asList("maintenance", "clearinv", "shutdown");
+            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset");
             	}
             	else if(args.length == 2) {
             		if(args[0].equalsIgnoreCase("maintenance")) {
@@ -823,34 +821,35 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		if(!pManager.contains(p.getUniqueId())) {
 			new Punish(p.getUniqueId());
 		}
-		if(p.hasPermission("owner")) {
+		User user = luck.loadUser(p.getUniqueId());
+		if(luck.containsParrent(user, "owner")) {
 			new Staff(p.getUniqueId(), 10);
 		}
-		else if(p.hasPermission("manager")) {
+		else if(luck.containsParrent(user, "manager")) {
 			new Staff(p.getUniqueId(), 9);
 		}
-		else if(p.hasPermission("headadmin")) {
+		else if(luck.containsParrent(user, "headadmin")) {
 			new Staff(p.getUniqueId(), 8);
 		}
-		else if(p.hasPermission("admin")) {
+		else if(luck.containsParrent(user, "admin")) {
 			new Staff(p.getUniqueId(), 7);
 		}
-		else if(p.hasPermission("headmod")) {
+		else if(luck.containsParrent(user, "headmod")) {
 			new Staff(p.getUniqueId(), 6);
 		}
-		else if(p.hasPermission("moderator")) {
+		else if(luck.containsParrent(user, "moderator")) {
 			new Staff(p.getUniqueId(), 5);
 		}
-		else if(p.hasPermission("helper+")) {
+		else if(luck.containsParrent(user, "helper+")) {
 			new Staff(p.getUniqueId(), 4);
 		}
-		else if(p.hasPermission("helper")) {
+		else if(luck.containsParrent(user, "helper")) {
 			new Staff(p.getUniqueId(), 3);
 		}
-		else if(p.hasPermission("qaadmin")) {
+		else if(luck.containsParrent(user, "qaadmin")) {
 			new Staff(p.getUniqueId(), 2);
 		}
-		else if(p.hasPermission("qa")) {
+		else if(luck.containsParrent(user, "qa")) {
 			new Staff(p.getUniqueId(), 1);
 		}
 		else {

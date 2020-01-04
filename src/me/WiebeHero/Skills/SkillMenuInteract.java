@@ -9,11 +9,9 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.DFShops.MoneyCreate;
 
 public class SkillMenuInteract implements Listener{
 	SkillMenu menu = new SkillMenu();
-	MoneyCreate money = new MoneyCreate();
 	EffectSkills sk = new EffectSkills();
 	@EventHandler
 	public void skillMenuClick(InventoryClickEvent event) {
@@ -137,9 +135,9 @@ public class SkillMenuInteract implements Listener{
 					if(dfPlayer.getAtkMod() < 5) {
 						if(dfPlayer.getAtk() >= 20 + (20 * dfPlayer.getAtkMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getAtkMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getAtkMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getAtkMod()));
-									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+								if(dfPlayer.getMoney() > 20000.00 + (20000.00 * dfPlayer.getAtkMod())) {
+									double moneyNow = dfPlayer.getMoney() - (20000.00 + (20000.00 * dfPlayer.getAtkMod()));
+									dfPlayer.setMoney(moneyNow);
 									dfPlayer.addAtkMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
@@ -164,9 +162,9 @@ public class SkillMenuInteract implements Listener{
 					if(dfPlayer.getSpdMod() < 5) {
 						if(dfPlayer.getSpd() >= 20 + (20 * dfPlayer.getSpdMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getSpdMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getSpdMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getSpdMod()));
-									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+								if(dfPlayer.getMoney() > 20000.00 + (20000.00 * dfPlayer.getSpdMod())) {
+									double moneyNow = dfPlayer.getMoney() - (20000.00 + (20000.00 * dfPlayer.getSpdMod()));
+									dfPlayer.setMoney(moneyNow);
 									dfPlayer.addSpdMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
@@ -191,9 +189,9 @@ public class SkillMenuInteract implements Listener{
 					if(dfPlayer.getCrtMod() < 5) {
 						if(dfPlayer.getCrt() >= 20 + (20 * dfPlayer.getCrtMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getCrtMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getCrtMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getCrtMod()));
-									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+								if(dfPlayer.getMoney() > 20000.00 + (20000.00 * dfPlayer.getCrtMod())) {
+									double moneyNow = dfPlayer.getMoney() - (20000.00 + (20000.00 * dfPlayer.getCrtMod()));
+									dfPlayer.setMoney(moneyNow);
 									dfPlayer.addCrtMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
@@ -218,9 +216,9 @@ public class SkillMenuInteract implements Listener{
 					if(dfPlayer.getRndMod() < 5) {
 						if(dfPlayer.getRnd() >= 20 + (20 * dfPlayer.getRndMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getRndMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getRndMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getRndMod()));
-									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+								if(dfPlayer.getMoney() > 20000.00 + (20000.00 * dfPlayer.getRndMod())) {
+									double moneyNow = dfPlayer.getMoney() - (20000.00 + (20000.00 * dfPlayer.getRndMod()));
+									dfPlayer.setMoney(moneyNow);
 									dfPlayer.addRndMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
@@ -245,9 +243,9 @@ public class SkillMenuInteract implements Listener{
 					if(dfPlayer.getHpMod() < 5) {
 						if(dfPlayer.getHp() >= 20 + (20 * dfPlayer.getHpMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getHpMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getHpMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getHpMod()));
-									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+								if(dfPlayer.getMoney() > 20000.00 + (20000.00 * dfPlayer.getHpMod())) {
+									double moneyNow = dfPlayer.getMoney() - (20000.00 + (20000.00 * dfPlayer.getHpMod()));
+									dfPlayer.setMoney(moneyNow);
 									dfPlayer.addHpMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);
@@ -272,9 +270,9 @@ public class SkillMenuInteract implements Listener{
 					if(dfPlayer.getDfMod() < 5) {
 						if(dfPlayer.getDf() >= 20 + (20 * dfPlayer.getDfMod())) {
 							if(dfPlayer.getLevel() >= 10 + (10 * dfPlayer.getDfMod())) {
-								if(money.getMoneyList().get(player.getUniqueId()) > 20000.00 + (20000.00 * dfPlayer.getDfMod())) {
-									double moneyNow = money.getMoneyList().get(player.getUniqueId()) - (20000.00 + (20000.00 * dfPlayer.getDfMod()));
-									money.getMoneyList().put(player.getUniqueId(), moneyNow);
+								if(dfPlayer.getMoney() > 20000.00 + (20000.00 * dfPlayer.getDfMod())) {
+									double moneyNow = dfPlayer.getMoney() - (20000.00 + (20000.00 * dfPlayer.getDfMod()));
+									dfPlayer.setMoney(moneyNow);
 									dfPlayer.addDfMod(1);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 									menu.SkillMenuInv(player);

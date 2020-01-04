@@ -58,7 +58,6 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.CustomMethods.PotionM;
-import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
 import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Skills.DFPlayer;
@@ -70,7 +69,6 @@ public class Enchantment extends CommandFile implements Listener{
 	//Empty Constructor
 	DFPlayer df = new DFPlayer();
 	DFFaction fac = new DFFaction();
-	MoneyCreate money = new MoneyCreate();
 	PotionM p = new PotionM();
 	ParticleAPI pApi = new ParticleAPI();
 	//Enchantment Functionality List
@@ -972,11 +970,11 @@ public class Enchantment extends CommandFile implements Listener{
 						for(Player victim1 : Bukkit.getOnlinePlayers()) {
 							((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, (float) 1.25);
 						}
-						double tempMoney = (double) (money.getMoneyList().get(victim.getUniqueId()) * (0.01 + 0.01 * level));
-						double newV = (double)(money.getMoneyList().get(victim.getUniqueId()) - tempMoney);
-						double newD = (double)(money.getMoneyList().get(damager.getUniqueId()) + tempMoney);
-						money.getMoneyList().put(victim.getUniqueId(), newV);
-						money.getMoneyList().put(damager.getUniqueId(), newD);
+						DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+						DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
+						double tempMoney = (double) (dfVictim.getMoney() * (0.01 + 0.01 * level));
+						dfPlayer.addMoney(tempMoney);
+						dfVictim.removeMoney(tempMoney);
 					}
 				}
 			}
@@ -2391,13 +2389,11 @@ public class Enchantment extends CommandFile implements Listener{
 						for(Player victim1 : Bukkit.getOnlinePlayers()) {
 							((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, (float) 1.25);
 						}
-						double moneyD = money.getMoneyList().get(damager.getUniqueId());
-						double moneyV = money.getMoneyList().get(victim.getUniqueId());
-						double tempMoney = moneyV * (0.01 + 0.01 * level);
-						double newV = moneyV - tempMoney;
-						double newD = moneyD + tempMoney;
-						money.getMoneyList().put(damager.getUniqueId(), newD);
-						money.getMoneyList().put(victim.getUniqueId(), newV);
+						DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+						DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
+						double tempMoney = (double) (dfVictim.getMoney() * (0.01 + 0.01 * level));
+						dfPlayer.addMoney(tempMoney);
+						dfVictim.removeMoney(tempMoney);
 					}
 				}
 			}

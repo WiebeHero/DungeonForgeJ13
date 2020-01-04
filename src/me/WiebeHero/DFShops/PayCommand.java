@@ -13,9 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.Skills.DFPlayer;
 
 public class PayCommand implements Listener,CommandExecutor{
-	MoneyCreate m = new MoneyCreate();
 	public String command = "pay";
 	public String balance = "balance";
 	public String money = "money";
@@ -38,8 +38,10 @@ public class PayCommand implements Listener,CommandExecutor{
 							}
 						}
 						if(uuid2 != null) {
-							double moneyMe = m.getMoneyList().get(uuid1);
-							double moneyThem = m.getMoneyList().get(uuid2);
+							DFPlayer dfPlayerMe = new DFPlayer().getPlayer(uuid1);
+							DFPlayer dfPlayerThem = new DFPlayer().getPlayer(uuid1);
+							double moneyMe = dfPlayerMe.getMoney();
+							double moneyThem = dfPlayerThem.getMoney();
 							String sAmount = args[1];
 							int amount = 0;
 							Matcher matcher6 = Pattern.compile("(\\d+)").matcher(ChatColor.stripColor(sAmount));
@@ -50,8 +52,8 @@ public class PayCommand implements Listener,CommandExecutor{
 								if(amount <= moneyMe) {
 									double newMoneyMe = moneyMe - amount;
 									double newMoneyThem = moneyThem + amount;
-									m.getMoneyList().put(uuid1, newMoneyMe);
-									m.getMoneyList().put(uuid2, newMoneyThem);
+									dfPlayerMe.setMoney(newMoneyMe);
+									dfPlayerThem.setMoney(newMoneyThem);
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have paid &6" + amount + "$ &a&lto " + newPlayer.getName() + "!"));
 									newPlayer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &a&l" + player.getName() + " &ahas paid you &6" + amount + "$!"));
 								}
@@ -78,14 +80,16 @@ public class PayCommand implements Listener,CommandExecutor{
 			else if(cmd.getName().equalsIgnoreCase(balance) || cmd.getName().equalsIgnoreCase(money)) {
 				if(args.length == 0) {
 					UUID uuid1 = player.getUniqueId();
-					double moneyMe = m.getMoneyList().get(uuid1);
+					DFPlayer dfPlayer = new DFPlayer().getPlayer(uuid1);
+					double moneyMe = dfPlayer.getMoney();
 					player.sendMessage(new CCT().colorize("&aYou're balance is: &6" + moneyMe + "$"));
 				}
 				else if(args.length == 1) {
 					Player target = Bukkit.getPlayer(args[0]);
 					if(target != null) {
 						UUID uuid1 = target.getUniqueId();
-						double moneyMe = m.getMoneyList().get(uuid1);
+						DFPlayer dfPlayer = new DFPlayer().getPlayer(uuid1);
+						double moneyMe = dfPlayer.getMoney();
 						player.sendMessage(new CCT().colorize("&a" + target.getName() + " balance is: &6" + moneyMe + "$"));
 					}
 					else {

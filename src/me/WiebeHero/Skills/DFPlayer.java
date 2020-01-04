@@ -27,6 +27,7 @@ public class DFPlayer {
 	public UUID id;
 	public LivingEntity player = null;
 	public Classes cClass;
+	public double money;
 	public int xp;
 	public int maxxp;
 	public int sk_pt;
@@ -79,6 +80,7 @@ public class DFPlayer {
 			this.active = false;
 			this.use = true;
 			this.move = 0.2;
+			this.money = 1000.00;
 			this.id = _player.getUniqueId();
 		}
 	}
@@ -92,6 +94,9 @@ public class DFPlayer {
 	}
 	public DFPlayer getPlayer(LivingEntity p){
 		return CustomEnchantments.getInstance().dfPlayerList.get(p.getUniqueId());
+	}
+	public DFPlayer getPlayer(UUID uuid){
+		return CustomEnchantments.getInstance().dfPlayerList.get(uuid);
 	}
 	public boolean containsPlayer(LivingEntity p){
 		if(CustomEnchantments.getInstance().dfPlayerList.containsKey(p.getUniqueId())) {
@@ -119,6 +124,7 @@ public class DFPlayer {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		yml.set("Skills.Players", null);
 		if(yml.getConfigurationSection("Skills.Players") != null) {
 			if(!yml.get("Skills.Players").equals("{}")) {
 				ArrayList<String> uuidStrings = new ArrayList<String>(yml.getConfigurationSection("Skills.Players").getKeys(false));
@@ -148,6 +154,7 @@ public class DFPlayer {
 					this.rnd_m = yml.getInt("Skills.Players." + this.id + ".Ranged Modifier");
 					this.hp_m = yml.getInt("Skills.Players." + this.id + ".Health Modifier");
 					this.df_m = yml.getInt("Skills.Players." + this.id + ".Defense Modifier");
+					this.money = yml.getDouble("Skills.Players." + this.id + ".Money");
 					this.active = false;
 					this.use = true;
 					this.move = 0.2;
@@ -189,6 +196,7 @@ public class DFPlayer {
 					yml.set("Skills.Players." + entry.getKey().toString() + ".Ranged Modifier", player.getRndMod());
 					yml.set("Skills.Players." + entry.getKey().toString() + ".Health Modifier", player.getHpMod());
 					yml.set("Skills.Players." + entry.getKey().toString() + ".Defense Modifier", player.getDfMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Money", player.getMoney());
 				}
 			}
 		}
@@ -618,6 +626,24 @@ public class DFPlayer {
 	
 	public void removeDfMod(int amount) {
 		this.df_m = this.df_m - amount;
+	}
+	//---------------------------------------------------------
+	//Money Handler
+	//---------------------------------------------------------
+	public double getMoney() {
+		return this.money;
+	}
+	
+	public void setMoney(double amount) {
+		this.money = amount;
+	}
+	
+	public void addMoney(double amount) {
+		this.money = this.money + amount;
+	}
+	
+	public void removeMoney(double amount) {
+		this.money = this.money - amount;
 	}
 	//---------------------------------------------------------
 	//Attack Damage Calculated Handler

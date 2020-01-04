@@ -32,9 +32,9 @@ import org.bukkit.plugin.Plugin;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.Skills.DFPlayer;
 
 public class DFShop implements Listener{
-	MoneyCreate m = new MoneyCreate();
 	public Set<String> check = new HashSet<String>();
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
 	File f =  new File("plugins/CustomEnchantments/shopConfig.yml");
@@ -259,6 +259,7 @@ public class DFShop implements Listener{
 		File f1 =  new File("plugins/CustomEnchantments/shopConfig.yml");
 		YamlConfiguration yml1 = YamlConfiguration.loadConfiguration(f1);
 		Player player = (Player) event.getWhoClicked();
+		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 		ItemStack item = event.getCurrentItem();
 		Inventory open = event.getClickedInventory();
 		InventoryView view = player.getOpenInventory();
@@ -308,13 +309,12 @@ public class DFShop implements Listener{
 							String parts1[] = loreBuy.split(" |\\$");
 							int amount = Integer.parseInt(parts1[4]);
 							double cost = Double.parseDouble(parts1[6]);
-			  				double money = m.getMoneyList().get(player.getUniqueId());
+			  				double money = dfPlayer.getMoney();
 			  				if(money >= cost) {
 			  					if(item.getType() != Material.SPAWNER) {
 				  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a for " + cost + "$!"));
 				  					player.getInventory().addItem(new ItemStack(item.getType(), amount));
-				  					money = money - cost;
-				  					m.getMoneyList().put(player.getUniqueId(), money);
+				  					dfPlayer.removeMoney(cost);
 				  					CustomEnchantments.getInstance().score.generateScoreboard(player);
 			  					}
 			  					else {
@@ -324,8 +324,7 @@ public class DFShop implements Listener{
 			  						itemmeta.setLore(null);
 			  						item1.setItemMeta(itemmeta);
 			  						player.getInventory().addItem(item1);
-				  					money = money - cost;
-				  					m.getMoneyList().put(player.getUniqueId(), money);
+			  						dfPlayer.removeMoney(cost);
 				  					CustomEnchantments.getInstance().score.generateScoreboard(player);
 			  					}
 			  				}
@@ -345,7 +344,6 @@ public class DFShop implements Listener{
 							String parts2[] = loreSell.split(" |\\$");
 							int amount = Integer.parseInt(parts2[4]);
 							double sell = Double.parseDouble(parts2[6]);
-			  				double money = m.getMoneyList().get(player.getUniqueId());
 			  				double amountSell = 0;
 			  				for(ItemStack sellItem : player.getOpenInventory().getBottomInventory().getContents()) {
 			  					if(sellItem != null) {
@@ -359,8 +357,7 @@ public class DFShop implements Listener{
 		  					if(amountSell >= amount) {
 			  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have sold " + amount + " " + item.getItemMeta().getDisplayName() + "&a" + " for " + sell + "$!"));
 			  					player.getInventory().removeItem(new ItemStack(item.getType(), amount));
-			  					money = money + sell;
-			  					m.getMoneyList().put(player.getUniqueId(), money);
+			  					dfPlayer.addMoney(sell);
 			  					CustomEnchantments.getInstance().score.generateScoreboard(player);
 		  					}
 		  					else {
@@ -446,7 +443,8 @@ public class DFShop implements Listener{
 	public void onDeath(PlayerDeathEvent event) {
 		if(!event.isCancelled()) {
 			Player player = event.getEntity();
-			m.getMoneyList().put(player.getUniqueId(), m.getMoneyList().get(player.getUniqueId()) - m.getMoneyList().get(player.getUniqueId()) / 100 * 10);
+			DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+			dfPlayer.removeMoney(dfPlayer.getMoney() / 100 * 10);
 			player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou lost 10% of your current balance due to punishment of death."));
 		}
 	}

@@ -51,7 +51,6 @@ import me.WiebeHero.CraftRecipes.UnblockBrewing;
 import me.WiebeHero.CustomHitDelay.HitDelay;
 import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.DFShops.DFShop;
-import me.WiebeHero.DFShops.MoneyCreate;
 import me.WiebeHero.DFShops.PayCommand;
 import me.WiebeHero.DungeonInstances.DungeonMaxima;
 import me.WiebeHero.DungeonInstances.DungeonParty;
@@ -131,7 +130,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private Portals p = new Portals();
 	private PayCommand pay = new PayCommand();
 	private SpawnCommand spa = new SpawnCommand();
-	private MoneyCreate money = new MoneyCreate();
 	private SetHomeSystem sethome = new SetHomeSystem();
 	private TPACommand tpa = new TPACommand();
 	private LootRewards lootR = new LootRewards();
@@ -225,22 +223,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		method.loadFactions();
 		method.activeEnergyTimer();
 		punishManager.loadPunishList();
-		File f4 =  new File("plugins/CustomEnchantments/cashConfig.yml");
-		YamlConfiguration yml3 = YamlConfiguration.loadConfiguration(f4);
-		try{
-			yml3.load(f4);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		if(yml3.getConfigurationSection("List") != null) {
-			if(!yml3.get("List").equals("{}")) {
-				money.loadMoney(yml3, f4);
-			}
-		}
 		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
 		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
 		try{
@@ -289,7 +271,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new CancelJoinLeaveAdvancementMessages(), this);
 		//Shop
 		getServer().getPluginManager().registerEvents(new DFShop(), this);
-		getServer().getPluginManager().registerEvents(new MoneyCreate(), this);
 		//HitDelay
 		getServer().getPluginManager().registerEvents(new HitDelay(), this);
 		//Commands
@@ -400,7 +381,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				spawnerManager.startSpawning();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
-		mod.priorityQueue();
+		new BukkitRunnable() {
+			public void run() {
+				mod.priorityQueue();
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 2L);
 	}
 	public void onDisable() {
 		File f =  new File("plugins/CustomEnchantments/GeneralConfig.yml");
@@ -449,18 +434,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		File f4 =  new File("plugins/CustomEnchantments/cashConfig.yml");
-		YamlConfiguration yml3 = YamlConfiguration.loadConfiguration(f4);
-		try{
-			yml3.load(f4);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		money.saveMoney(yml3, f4);
 		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
 		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
 		try{
@@ -650,6 +623,12 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(new CCT().colorize("&aConnection failed!"));
             System.out.println(e);
 		}
+	}
+	public void clearDfPlayers() {
+		this.dfPlayerList = new HashMap<UUID, DFPlayer>();
+	}
+	public void clearFactions() {
+		this.factionList = new ArrayList<DFFaction>();
 	}
 	public static CustomEnchantments getInstance() {
 		return instance;

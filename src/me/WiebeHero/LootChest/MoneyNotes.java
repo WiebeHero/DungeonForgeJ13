@@ -8,10 +8,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.DFShops.MoneyCreate;
+import me.WiebeHero.Skills.DFPlayer;
 
 public class MoneyNotes implements Listener{
-	MoneyCreate m = new MoneyCreate();
 	@EventHandler
 	public void moneyGain(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -24,7 +23,8 @@ public class MoneyNotes implements Listener{
 								String name = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
 								name = name.replaceAll("[^\\d.]", "");
 								int money = Integer.parseInt(name);
-								m.getMoneyList().put(player.getUniqueId(), m.getMoneyList().get(player.getUniqueId()) + money);
+								DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+								dfPlayer.addMoney(money);
 								CustomEnchantments.getInstance().score.generateScoreboard(player);
 								player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 							}
