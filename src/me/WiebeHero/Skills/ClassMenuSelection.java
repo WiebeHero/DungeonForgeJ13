@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent.Reason;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -74,21 +75,17 @@ public class ClassMenuSelection implements Listener{
 		if(!dfPlayer.hasPlayerClass()) {
 			if(current.getTitle().contains("Class Selection")) {
 				if(!activated.contains(player.getUniqueId())) {
-					new BukkitRunnable() {
-						public void run() {
-							menu.ClassSelect(player);
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+					if(event.getReason() != Reason.OPEN_NEW) {
+						menu.ClassSelect(player);
+					}
 				}
 			}
 			else if(current.getTitle().contains("Class:")) {
 				if(activated.contains(player.getUniqueId())) {
 					String className[] = current.getTitle().split(" ");
-					new BukkitRunnable() {
-						public void run() {
-							menu.ClassConfirm(player, className[1], current.getItem(4));
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+					if(event.getReason() != Reason.OPEN_NEW) {
+						menu.ClassConfirm(player, className[1], current.getItem(4));
+					}
 				}
 			}
 		}

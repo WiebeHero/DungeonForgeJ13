@@ -106,7 +106,7 @@ public class DFScoreboard implements Listener{
 		Score facTeritory = score.getScore(new CCT().colorize("&7Territory: " + territory));
 		Score rank = score.getScore(new CCT().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
 		Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + def.getPlayer(player).getLevel()));
-		Score adress = score.getScore(new CCT().colorize("    &2&lplay.dungeonforge.net"));
+		Score adress = score.getScore(new CCT().colorize("    &2&lplay.dungeonforge.eu"));
 		Score cash = score.getScore(new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
