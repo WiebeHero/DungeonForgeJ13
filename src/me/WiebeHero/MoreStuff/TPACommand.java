@@ -155,7 +155,7 @@ public class TPACommand implements Listener,CommandExecutor{
 														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
 														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHas teleported to your location!"));
 														player.teleport(p.getKey());
-														tpRequests.remove(p.getKey());
+														tphereRequests.remove(p.getKey());
 														cancel();
 													}
 												}
@@ -238,7 +238,7 @@ public class TPACommand implements Listener,CommandExecutor{
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 	@EventHandler
 	public void joinActivate(PlayerJoinEvent event) {
