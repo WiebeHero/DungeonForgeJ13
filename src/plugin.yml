@@ -51,6 +51,9 @@ commands:
   tpdeny:
     ussage: /<command>
     description: 'Command for tpadeny'
+  tpatoggle:
+    ussage: /<command>
+    description: 'Command for tpatoggle'
   staffmode:
     ussage: /<command>
     description: 'Command for staffmode'
