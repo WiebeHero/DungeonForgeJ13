@@ -77,6 +77,7 @@ import me.WiebeHero.MoreStuff.CancelLootSteal;
 import me.WiebeHero.MoreStuff.Chat;
 import me.WiebeHero.MoreStuff.ChatItem;
 import me.WiebeHero.MoreStuff.CombatTag;
+import me.WiebeHero.MoreStuff.DisableThings;
 import me.WiebeHero.MoreStuff.Disparitys;
 import me.WiebeHero.MoreStuff.EnderPearlCooldown;
 import me.WiebeHero.MoreStuff.LevelRestrictions;
