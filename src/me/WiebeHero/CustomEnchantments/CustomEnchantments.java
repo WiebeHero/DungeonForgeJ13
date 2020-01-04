@@ -273,7 +273,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
 		}
 		//NeededStuff
-		getServer().getPluginManager().registerEvents(new TPACommand(), this);
+		getServer().getPluginManager().registerEvents(tpa, this);
 		getServer().getPluginManager().registerEvents(new MoneyCreation(), this);
 		getServer().getPluginManager().registerEvents(new CombatTag(), this);
 		getServer().getPluginManager().registerEvents(new Chat(), this);
