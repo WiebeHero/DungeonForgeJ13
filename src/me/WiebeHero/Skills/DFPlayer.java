@@ -124,7 +124,6 @@ public class DFPlayer {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		yml.set("Skills.Players", null);
 		if(yml.getConfigurationSection("Skills.Players") != null) {
 			if(!yml.get("Skills.Players").equals("{}")) {
 				ArrayList<String> uuidStrings = new ArrayList<String>(yml.getConfigurationSection("Skills.Players").getKeys(false));
@@ -174,6 +173,7 @@ public class DFPlayer {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		yml.set("Skills.Players", null);
 		if(!CustomEnchantments.getInstance().dfPlayerList.isEmpty()) {
 			for(Entry<UUID, DFPlayer> entry : CustomEnchantments.getInstance().dfPlayerList.entrySet()) {
 				if(Bukkit.getOfflinePlayer(entry.getKey()).getName() != null) {
