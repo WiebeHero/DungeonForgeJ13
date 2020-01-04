@@ -822,38 +822,40 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			new Punish(p.getUniqueId());
 		}
 		User user = luck.loadUser(p.getUniqueId());
-		if(luck.containsParrent(user, "owner")) {
-			new Staff(p.getUniqueId(), 10);
-		}
-		else if(luck.containsParrent(user, "manager")) {
-			new Staff(p.getUniqueId(), 9);
-		}
-		else if(luck.containsParrent(user, "headadmin")) {
-			new Staff(p.getUniqueId(), 8);
-		}
-		else if(luck.containsParrent(user, "admin")) {
-			new Staff(p.getUniqueId(), 7);
-		}
-		else if(luck.containsParrent(user, "headmod")) {
-			new Staff(p.getUniqueId(), 6);
-		}
-		else if(luck.containsParrent(user, "moderator")) {
-			new Staff(p.getUniqueId(), 5);
-		}
-		else if(luck.containsParrent(user, "helper+")) {
-			new Staff(p.getUniqueId(), 4);
-		}
-		else if(luck.containsParrent(user, "helper")) {
-			new Staff(p.getUniqueId(), 3);
-		}
-		else if(luck.containsParrent(user, "qaadmin")) {
-			new Staff(p.getUniqueId(), 2);
-		}
-		else if(luck.containsParrent(user, "qa")) {
-			new Staff(p.getUniqueId(), 1);
-		}
-		else {
-			new Staff(p.getUniqueId(), 0);
+		if(user != null) {
+			if(luck.containsParrent(user, "owner")) {
+				new Staff(p.getUniqueId(), 10);
+			}
+			else if(luck.containsParrent(user, "manager")) {
+				new Staff(p.getUniqueId(), 9);
+			}
+			else if(luck.containsParrent(user, "headadmin")) {
+				new Staff(p.getUniqueId(), 8);
+			}
+			else if(luck.containsParrent(user, "admin")) {
+				new Staff(p.getUniqueId(), 7);
+			}
+			else if(luck.containsParrent(user, "headmod")) {
+				new Staff(p.getUniqueId(), 6);
+			}
+			else if(luck.containsParrent(user, "moderator")) {
+				new Staff(p.getUniqueId(), 5);
+			}
+			else if(luck.containsParrent(user, "helper+")) {
+				new Staff(p.getUniqueId(), 4);
+			}
+			else if(luck.containsParrent(user, "helper")) {
+				new Staff(p.getUniqueId(), 3);
+			}
+			else if(luck.containsParrent(user, "qualityassuranceadmin")) {
+				new Staff(p.getUniqueId(), 2);
+			}
+			else if(luck.containsParrent(user, "qualityassurance")) {
+				new Staff(p.getUniqueId(), 1);
+			}
+			else {
+				new Staff(p.getUniqueId(), 0);
+			}
 		}
 	}
 	@EventHandler
