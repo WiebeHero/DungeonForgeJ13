@@ -135,7 +135,7 @@ public class TPACommand implements Listener,CommandExecutor{
 								}
 							}
 							else if(tphereRequests.containsValue(player)) {
-								for(Entry<Player, Player> p : tpRequests.entrySet()) {
+								for(Entry<Player, Player> p : tphereRequests.entrySet()) {
 									if(p.getValue() == player) {
 										Location loc = player.getLocation();
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aRequest Accepted!"));
