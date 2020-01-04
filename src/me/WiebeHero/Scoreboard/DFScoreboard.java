@@ -44,7 +44,9 @@ public class DFScoreboard implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		this.registerRank(player);
-		this.generateScoreboard(player);
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			this.generateScoreboard(p);
+		}
 	}
 	@EventHandler
 	public void moveIt(PlayerMoveEvent event) {
@@ -243,22 +245,6 @@ public class DFScoreboard implements Listener{
 			p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + ranks.get(p.getUniqueId())));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(p.getName());
-		}
-		//--------------------------------------------------------------------------------------
-		//Adding me to others scoreboard
-		//--------------------------------------------------------------------------------------
-		for(UUID uuid : scoreboards.keySet()) {
-			Player p = Bukkit.getPlayer(uuid);
-			if(p != null) {
-				Scoreboard other = p.getScoreboard();
-				if(other != null) {
-					if(other.getTeam(p.getName()) != null) {
-						if(!other.getTeam(p.getName()).hasEntry(player.getName())) {
-							other.getTeam(p.getName()).addEntry(player.getName());
-						}
-					}
-				}
-			}
 		}
 		if(scoreboard.getTeam("GRAY") == null) {
 			scoreboard.registerNewTeam("GRAY");
