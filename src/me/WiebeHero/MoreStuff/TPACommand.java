@@ -110,13 +110,13 @@ public class TPACommand implements Listener,CommandExecutor{
 													if(temp == 0) {
 														temp = temp - 20;
 														if(count / 20 != 0) {
-															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
+															p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
 														}
 													}
 													if(count == 0) {
-														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
-														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHas teleported to your location!"));
-														player.teleport(p.getKey());
+														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getKey().getName() + "Has teleported to your location!"));
+														p.getKey().teleport(player);
 														tpRequests.remove(p.getKey());
 														cancel();
 													}
