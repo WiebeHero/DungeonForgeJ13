@@ -147,6 +147,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private MethodLuck luck = new MethodLuck();
 	int level;
 	public Scoreboard scoreboard;
+	public static boolean hardSave = false;
 	public static boolean shutdown = false;
 	public static boolean maintenance = false;
 	public static boolean load = true;
@@ -320,6 +321,15 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				this.dfPlayerList.put(e.getUniqueId(), new DFPlayer());
 			}
 		}
+		new BukkitRunnable(){
+			public void run() {
+				pl.savePlayers();
+				method.saveFactions();
+				punishManager.savePunishList();
+				lootChestManager.saveLootChests();
+				spawnerManager.saveSpawners();
+			}
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 18000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -419,13 +429,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				e.remove();
 			}
 		}
-		pl.savePlayers();
 		for(Team t : scoreboard.getTeams()) {
 			t.unregister();
 		}
-		method.saveFactions();
-		punishManager.savePunishList();
-		
 		File f3 =  new File("plugins/CustomEnchantments/spawnerConfig.yml");
 		YamlConfiguration yml2 = YamlConfiguration.loadConfiguration(f3);
 		try{
@@ -449,8 +455,21 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		sethome.saveHomes(yml5, f6);
-		lootChestManager.saveLootChests();
-		spawnerManager.saveSpawners();
+		
+		if(hardSave) {
+			pl.hardSavePlayers();
+			method.hardSaveFactions();
+			punishManager.savePunishList();
+			lootChestManager.saveLootChests();
+			spawnerManager.saveSpawners();
+		}
+		else {
+			pl.savePlayers();
+			method.saveFactions();
+			punishManager.savePunishList();
+			lootChestManager.saveLootChests();
+			spawnerManager.saveSpawners();
+		}
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {

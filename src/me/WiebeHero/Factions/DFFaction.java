@@ -130,6 +130,41 @@ public class DFFaction {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
+			yml.createSection("Factions.List." + fac.getName());
+			for(Entry<UUID, Integer> entry : fac.getMemberList().entrySet()) {
+				yml.set("Factions.List." + fac.getName() + ".Members." + entry.getKey() + ".Rank", entry.getValue());
+				yml.set("Factions.List." + fac.getName() + ".Members." + entry.getKey() + ".Name", Bukkit.getOfflinePlayer(entry.getKey()).getName());
+			}
+			ArrayList<Long> list = new ArrayList<Long>();
+			for(Chunk c : fac.getChunkList()) {
+				list.add(c.getChunkKey());
+			}
+			yml.set("Factions.List." + fac.getName() + ".Faction Home", fac.getFactionHome());
+			yml.set("Factions.List." + fac.getName() + ".Chunks List", list);
+			yml.set("Factions.List." + fac.getName() + ".Faction Points", fac.facP);
+			yml.set("Factions.List." + fac.getName() + ".Allies", fac.getAllyList());
+			yml.set("Factions.List." + fac.getName() + ".Energy", fac.getEnergy());
+		}
+		try{
+			yml.save(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
+	public void hardSaveFactions() {
+		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
+		try{
+			yml.load(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 		yml.set("Factions.List", null);
 		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
 			yml.createSection("Factions.List." + fac.getName());

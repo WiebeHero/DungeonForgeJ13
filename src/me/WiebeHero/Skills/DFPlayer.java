@@ -173,6 +173,51 @@ public class DFPlayer {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		if(!CustomEnchantments.getInstance().dfPlayerList.isEmpty()) {
+			for(Entry<UUID, DFPlayer> entry : CustomEnchantments.getInstance().dfPlayerList.entrySet()) {
+				if(Bukkit.getOfflinePlayer(entry.getKey()).getName() != null) {
+					Bukkit.broadcastMessage(Bukkit.getOfflinePlayer(entry.getKey()).getName());
+					DFPlayer player = entry.getValue();
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Class", player.getPlayerClass().toString());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Level", player.getLevel());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".XP", player.getExperience());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".MXP", player.getMaxExperience());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Skill Points", player.getSkillPoints());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Attack Damage", player.getAtk());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Attack Speed", player.getSpd());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Critical Chance", player.getCrt());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Ranged Damage", player.getRnd());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Health", player.getHp());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Defense", player.getDf());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Attack Modifier", player.getAtkMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Speed Modifier", player.getSpdMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Critical Modifier", player.getCrtMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Ranged Modifier", player.getRndMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Health Modifier", player.getHpMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Defense Modifier", player.getDfMod());
+					yml.set("Skills.Players." + entry.getKey().toString() + ".Money", player.getMoney());
+				}
+			}
+		}
+		try{
+			yml.save(f);
+	    }
+	    catch(IOException e){
+	        e.printStackTrace();
+	    }
+	}
+	public void hardSavePlayers() {
+		File f = new File("plugins/CustomEnchantments/playerskillsDF.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
+		try{
+			yml.load(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 		yml.set("Skills.Players", null);
 		if(!CustomEnchantments.getInstance().dfPlayerList.isEmpty()) {
 			for(Entry<UUID, DFPlayer> entry : CustomEnchantments.getInstance().dfPlayerList.entrySet()) {

@@ -106,6 +106,34 @@ public class DFSpawnerManager {
             e.printStackTrace();
         }
 	}
+	public void hardSaveSpawners() {
+		File f =  new File("plugins/CustomEnchantments/spawnerConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
+		try{
+			yml.load(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		if(!this.spawnerList.isEmpty()) {
+			for(DFSpawner spawner : this.spawnerList.values()) {
+				if(spawner != null) {
+					yml.set("Spawners.UUID." + spawner.getUUID() + ".Location", spawner.getLocation());
+					yml.set("Spawners.UUID." + spawner.getUUID() + ".Tier", spawner.getTier());
+					yml.set("Spawners.UUID." + spawner.getUUID() + ".EntityType", spawner.getType().toString());
+				}
+			}
+		}
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
 	public void startSpawning() {
 		new BukkitRunnable() {
 			public void run() {

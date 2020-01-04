@@ -76,6 +76,42 @@ public class PunishManager {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		for(Entry<UUID, Punish> entry : this.punishList.entrySet()) {
+			if(entry != null && entry.getKey() != null && entry.getValue() != null && this.contains(entry.getKey())) {
+				UUID uuid = entry.getKey();
+				Punish pun = this.punishList.get(uuid);
+				yml.createSection("Mod.Punishments." + uuid);
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.Perm", pun.getMutePerm());
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.Temp", pun.getMuteTime());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.Perm", pun.getBanPerm());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.Temp", pun.getBanTime());
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.Reason", pun.getMuteReasonsList());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.Reason", pun.getBanReasonsList());
+				yml.set("Mod.Punishments." + uuid + ".Warn Data.Reason", pun.getWarnReasonsList());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.By", pun.getBannedByList());
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.By", pun.getMutedByList());
+				yml.set("Mod.Punishments." + uuid + ".Warn Data.By", pun.getWarnedByList());
+			}
+		}
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
+	public void hardSavePunishList() {
+		File f =  new File("plugins/CustomEnchantments/modConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
+		try{
+			yml.load(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 		yml.set("Mod.Punishments", null);
 		for(Entry<UUID, Punish> entry : this.punishList.entrySet()) {
 			if(entry != null && entry.getKey() != null && entry.getValue() != null && this.contains(entry.getKey())) {

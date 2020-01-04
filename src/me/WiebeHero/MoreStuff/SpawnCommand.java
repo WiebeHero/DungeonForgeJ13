@@ -22,11 +22,11 @@ public class SpawnCommand implements Listener,CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
-			Location loc = player.getLocation();
 			if(cmd.getName().equalsIgnoreCase(spawn)) {
 				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 					if(!(spawning.contains(player.getUniqueId().toString()))) {
 						spawning.add(player.getUniqueId().toString());
+						Location loc = player.getLocation();
 						new BukkitRunnable() {
 							int count = 200;
 							int temp = 0;
@@ -36,7 +36,7 @@ public class SpawnCommand implements Listener,CommandExecutor{
 									if(temp == 0) {
 										temp = temp - 20;
 										if(count / 20 != 0) {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to spawn in " + count + "..."));
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to spawn in " + (count / 20) + "..."));
 										}
 									}
 									if(count == 0) {
@@ -51,7 +51,6 @@ public class SpawnCommand implements Listener,CommandExecutor{
 										spawning.remove(player.getUniqueId().toString());
 										cancel();
 									}
-									count--;
 								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
@@ -61,7 +60,7 @@ public class SpawnCommand implements Listener,CommandExecutor{
 								count--;
 								temp++;
 							}	
-						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 					}
 					else {
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are already going to spawn!"));
