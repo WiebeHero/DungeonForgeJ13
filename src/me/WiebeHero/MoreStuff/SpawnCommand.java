@@ -28,12 +28,16 @@ public class SpawnCommand implements Listener,CommandExecutor{
 					if(!(spawning.contains(player.getUniqueId().toString()))) {
 						spawning.add(player.getUniqueId().toString());
 						new BukkitRunnable() {
-							int count = 10;
+							int count = 200;
+							int temp = 0;
 							@Override
 							public void run() {
 								if(loc.distance(player.getLocation()) == 0.00) {
-									if(count != 0) {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to spawn in " + count + "..."));
+									if(temp == 0) {
+										temp = temp - 20;
+										if(count / 20 != 0) {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to spawn in " + count + "..."));
+										}
 									}
 									if(count == 0) {
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
@@ -54,6 +58,8 @@ public class SpawnCommand implements Listener,CommandExecutor{
 									cancel();
 									spawning.remove(player.getUniqueId().toString());
 								}
+								count--;
+								temp++;
 							}	
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 					}

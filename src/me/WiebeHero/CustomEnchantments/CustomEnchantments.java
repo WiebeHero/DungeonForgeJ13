@@ -267,6 +267,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new RestrictInteractionWithBlocks(), this);
 		getServer().getPluginManager().registerEvents(new EnderPearlCooldown(), this);
 		getServer().getPluginManager().registerEvents(new MOTDSetting(), this);
+		getServer().getPluginManager().registerEvents(new DisableThings(), this);
 		getServer().getPluginManager().registerEvents(new ChatItem(), this);
 		getServer().getPluginManager().registerEvents(new CancelJoinLeaveAdvancementMessages(), this);
 		//Shop

@@ -75,17 +75,21 @@ public class ClassMenuSelection implements Listener{
 		if(!dfPlayer.hasPlayerClass()) {
 			if(current.getTitle().contains("Class Selection")) {
 				if(!activated.contains(player.getUniqueId())) {
-					if(event.getReason() != Reason.OPEN_NEW) {
-						menu.ClassSelect(player);
-					}
+					new BukkitRunnable() {
+						public void run() {
+							menu.ClassSelect(player);
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 0L);
 				}
 			}
 			else if(current.getTitle().contains("Class:")) {
 				if(activated.contains(player.getUniqueId())) {
 					String className[] = current.getTitle().split(" ");
-					if(event.getReason() != Reason.OPEN_NEW) {
-						menu.ClassConfirm(player, className[1], current.getItem(4));
-					}
+					new BukkitRunnable() {
+						public void run() {
+							menu.ClassConfirm(player, className[1], current.getItem(4));
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 0L);
 				}
 			}
 		}
