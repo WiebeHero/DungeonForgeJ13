@@ -572,6 +572,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											p.saveData();
 										}
 									}
+									CustomEnchantments.getInstance().hardSave = true;
 									CustomEnchantments.getInstance().clearDfPlayers();
 									CustomEnchantments.getInstance().clearFactions();
 									new BukkitRunnable() {
