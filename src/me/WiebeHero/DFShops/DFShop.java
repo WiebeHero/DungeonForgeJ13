@@ -315,7 +315,7 @@ public class DFShop implements Listener{
 				  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a for " + cost + "$!"));
 				  					player.getInventory().addItem(new ItemStack(item.getType(), amount));
 				  					dfPlayer.removeMoney(cost);
-				  					CustomEnchantments.getInstance().score.generateScoreboard(player);
+				  					CustomEnchantments.getInstance().score.updateScoreboard(player);
 			  					}
 			  					else {
 			  						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a foraa " + cost + "$!"));
@@ -325,7 +325,7 @@ public class DFShop implements Listener{
 			  						item1.setItemMeta(itemmeta);
 			  						player.getInventory().addItem(item1);
 			  						dfPlayer.removeMoney(cost);
-				  					CustomEnchantments.getInstance().score.generateScoreboard(player);
+				  					CustomEnchantments.getInstance().score.updateScoreboard(player);
 			  					}
 			  				}
 			  				else {
@@ -358,7 +358,7 @@ public class DFShop implements Listener{
 			  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have sold " + amount + " " + item.getItemMeta().getDisplayName() + "&a" + " for " + sell + "$!"));
 			  					player.getInventory().removeItem(new ItemStack(item.getType(), amount));
 			  					dfPlayer.addMoney(sell);
-			  					CustomEnchantments.getInstance().score.generateScoreboard(player);
+			  					CustomEnchantments.getInstance().score.updateScoreboard(player);
 		  					}
 		  					else {
 		  						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough items!"));

@@ -3,17 +3,16 @@ package me.WiebeHero.ArmoryPackage;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -56,6 +55,7 @@ public class DFArmorUpgrade implements Listener{
 							int xp = item.getInteger("XP");
 							int maxxp = item.getInteger("MAXXP");
 				    		int totalxpearned = 0;
+							DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
 				    		if(!(victim instanceof Player)) {
 								Entity ent = NBTInjector.patchEntity(victim);
 								NBTCompound comp = NBTInjector.getNbtData(ent);
@@ -91,7 +91,6 @@ public class DFArmorUpgrade implements Listener{
 								}
 							}
 							else {
-								DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
 								int level = dfPlayer.getLevel();
 								int i1 = 0;
 								i1 = new Random().nextInt(7 * level) + 4 * level;
@@ -150,25 +149,50 @@ public class DFArmorUpgrade implements Listener{
 					    				}
 					    				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 					    				newLore.add(new CCT().colorize("&7-----------------------"));
+					    				int itemReq = 0;
 					    				if(itemLevel >= 6) {
 					    					int loreRequired = itemLevel - 4;
 					    					int levelRequired = loreRequired * 5;
+					    					itemReq = levelRequired;
 					    					newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
 					    				}
 					    				newLore.add(new CCT().colorize("&7Rarity: " + rarity));
 					    				meta.setLore(newLore);
 					    				i.setItemMeta(meta);
-					    				if(i.getType().toString().contains("HELMET")) {
-						    				damager.getInventory().setHelmet(i);
+					    				if(dfPlayer.getLevel() >= itemReq) {
+						    				if(i.getType().toString().contains("HELMET")) {
+							    				damager.getInventory().setHelmet(i);
+						    				}
+						    				else if(i.getType().toString().contains("CHESTPLATE")) {
+						    					damager.getInventory().setChestplate(i);
+						    				}
+						    				else if(i.getType().toString().contains("LEGGINGS")) {
+						    					damager.getInventory().setLeggings(i);
+						    				}
+						    				else if(i.getType().toString().contains("BOOTS")) {
+						    					damager.getInventory().setBoots(i);
+						    				}
 					    				}
-					    				if(i.getType().toString().contains("CHESTPLATE")) {
-					    					damager.getInventory().setChestplate(i);
-					    				}
-					    				if(i.getType().toString().contains("LEGGINGS")) {
-					    					damager.getInventory().setLeggings(i);
-					    				}
-					    				if(i.getType().toString().contains("BOOTS")) {
-					    					damager.getInventory().setBoots(i);
+					    				else {
+					    					damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this, you are to low level."));
+					    					if(i.getType().toString().contains("HELMET")) {
+							    				damager.getInventory().setHelmet(new ItemStack(Material.AIR));
+						    				}
+					    					else if(i.getType().toString().contains("CHESTPLATE")) {
+						    					damager.getInventory().setChestplate(new ItemStack(Material.AIR));
+						    				}
+					    					else if(i.getType().toString().contains("LEGGINGS")) {
+						    					damager.getInventory().setLeggings(new ItemStack(Material.AIR));
+						    				}
+					    					else if(i.getType().toString().contains("BOOTS")) {
+						    					damager.getInventory().setBoots(new ItemStack(Material.AIR));
+						    				}
+						    				if(damager.getInventory().firstEmpty() != -1) {
+						    					damager.getInventory().setItem(damager.getInventory().firstEmpty(), i);
+						    				}
+						    				else {
+						    					damager.getWorld().dropItemNaturally(damager.getLocation(), i);
+						    				}
 					    				}
 					    				//Weapon Data
 					    				sk.runDefense(damager);

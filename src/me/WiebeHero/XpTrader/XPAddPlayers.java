@@ -52,7 +52,7 @@ public class XPAddPlayers implements Listener {
 									dfPlayer.addSkillPoints(3);
 									player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have leveled up to level &6" + level + "&a!"));
-									board.generateScoreboard(player);
+									board.updateScoreboard(player);
 									DFPlayerLevelUpEvent ev = new DFPlayerLevelUpEvent(player);
 									Bukkit.getServer().getPluginManager().callEvent(ev);
 								}
@@ -67,8 +67,14 @@ public class XPAddPlayers implements Listener {
 									player.setExp((float)barprogress);
 								}
 								else {
-									player.setLevel(level);
-									player.setExp((float)barprogress - 1.0F);
+									if(barprogress >= 0 && barprogress <= 1) {
+										player.setLevel(level);
+										player.setExp((float)barprogress - 1.0F);
+									}
+									else {
+										player.setLevel(level);
+										player.setExp(0.0F);
+									}
 								}
 							}
 							player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);

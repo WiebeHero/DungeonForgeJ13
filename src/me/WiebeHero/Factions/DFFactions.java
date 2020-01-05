@@ -60,7 +60,7 @@ public class DFFactions implements Listener,CommandExecutor{
 							    			if(method.isNameAvailable(facName)) {
 									    		player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have created your faction &6" + facName));
 									    		CustomEnchantments.getInstance().factionList.add(new DFFaction(facName, player));
-									    		CustomEnchantments.getInstance().score.generateScoreboard(player);
+									    		CustomEnchantments.getInstance().score.updateScoreboard(player);
 						    				}
 							    			else {
 								    			player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction name is already taken!"));
@@ -188,7 +188,7 @@ public class DFFactions implements Listener,CommandExecutor{
 															if(faction.getEnergy() > faction.getChunkList().size() + 1) {
 																faction.addChunk(player.getChunk());
 																player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have claimed this chunk!"));
-																CustomEnchantments.getInstance().score.generateScoreboard(player);
+																CustomEnchantments.getInstance().score.updateScoreboard(player);
 															}
 															else {
 																player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have enough energy to claim more chunks!"));
@@ -217,7 +217,7 @@ public class DFFactions implements Listener,CommandExecutor{
 																if(faction.getEnergy() > faction.getChunkList().size() + 1) {
 																	faction.addChunk(player.getChunk());
 																	player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have claimed this chunk!"));
-																	CustomEnchantments.getInstance().score.generateScoreboard(player);
+																	CustomEnchantments.getInstance().score.updateScoreboard(player);
 																}
 																else {
 																	player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have enough energy to claim more chunks!"));

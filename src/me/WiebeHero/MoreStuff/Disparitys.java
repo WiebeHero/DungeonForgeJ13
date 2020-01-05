@@ -1,6 +1,5 @@
 package me.WiebeHero.MoreStuff;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;

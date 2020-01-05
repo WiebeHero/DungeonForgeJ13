@@ -4,19 +4,16 @@ import java.util.Random;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.Scoreboard.DFScoreboard;
-import net.md_5.bungee.api.ChatColor;
 
 public class XPEarningMobs implements Listener{
 	DFScoreboard board = new DFScoreboard();
@@ -90,7 +87,7 @@ public class XPEarningMobs implements Listener{
 								break;
 							}
 						}
-						board.generateScoreboard(player);
+						board.updateScoreboard(player);
 	    	    		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
 	    	            player.sendMessage(new CCT().colorize("&aYou have leveled up to level: &6&l" + level));
 					}

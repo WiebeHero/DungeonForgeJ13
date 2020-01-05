@@ -176,7 +176,6 @@ public class DFPlayer {
 		if(!CustomEnchantments.getInstance().dfPlayerList.isEmpty()) {
 			for(Entry<UUID, DFPlayer> entry : CustomEnchantments.getInstance().dfPlayerList.entrySet()) {
 				if(Bukkit.getOfflinePlayer(entry.getKey()).getName() != null) {
-					Bukkit.broadcastMessage(Bukkit.getOfflinePlayer(entry.getKey()).getName());
 					DFPlayer player = entry.getValue();
 					yml.set("Skills.Players." + entry.getKey().toString() + ".Class", player.getPlayerClass().toString());
 					yml.set("Skills.Players." + entry.getKey().toString() + ".Level", player.getLevel());

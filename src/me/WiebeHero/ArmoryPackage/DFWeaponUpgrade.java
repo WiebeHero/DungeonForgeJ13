@@ -1,17 +1,10 @@
 package me.WiebeHero.ArmoryPackage;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +19,6 @@ import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import me.WiebeHero.Skills.DFPlayer;
 import me.WiebeHero.Skills.EffectSkills;

@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -19,7 +21,6 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.DFPlayer;
 
 public class LevelRestrictions implements Listener{
-	@EventHandler
 	public void levelRestrictWeapons(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player || event.getDamager() instanceof Arrow) {
 			Player player = null;
@@ -61,6 +62,7 @@ public class LevelRestrictions implements Listener{
 	public void levelRestrictArmorEquip(PlayerArmorChangeEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = event.getNewItem();
+		InventoryView view = player.getOpenInventory();
 		if(item != null) {
 			if(item.hasItemMeta()) {
 				if(item.getItemMeta().hasLore()) {
@@ -72,9 +74,9 @@ public class LevelRestrictions implements Listener{
 							check = check.replaceAll("[^\\d.]", "");
 							int reqLevel = Integer.parseInt(check);
 		  					if(level < reqLevel) {
-		  						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this, you are to low level."));
+	  							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this, you are to low level."));
 		  						if(event.getSlotType() == SlotType.HEAD) {
-		  							player.getInventory().setHelmet(event.getOldItem());
+	  								player.getInventory().setHelmet(event.getOldItem());
 		  						}
 		  						else if(event.getSlotType() == SlotType.CHEST) {
 		  							player.getInventory().setChestplate(event.getOldItem());
@@ -85,13 +87,19 @@ public class LevelRestrictions implements Listener{
 		  						else if(event.getSlotType() == SlotType.FEET) {
 		  							player.getInventory().setBoots(event.getOldItem());
 		  						}
-		  						player.getInventory().addItem(item);
+		  						if(view != null) {
+		  							if(view.getType() == InventoryType.PLAYER) {
+		  								view.setCursor(item);
+		  							}
+		  							else {
+		  								player.getInventory().setItem(player.getInventory().firstEmpty(), item);
+		  							}
+		  						}
 		  						new BukkitRunnable() {
 		  							public void run() {
 		  								player.updateInventory();
 		  							}
 		  						}.runTaskLater(CustomEnchantments.getInstance(), 2L);
-		  						
 		  					}
 		  					break;
 						}

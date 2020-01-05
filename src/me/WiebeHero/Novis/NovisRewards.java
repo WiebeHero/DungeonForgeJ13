@@ -308,7 +308,6 @@ public class NovisRewards {
 			damage.set("Name", new NBTTagString("generic.armor"));
 			damage.set("Amount", new NBTTagDouble(0));
 			damage.set("Operation", new NBTTagInt(0));
-			damage.set("Operation", new NBTTagInt(0));
 			if(Material.getMaterial(type) == Material.LEATHER_HELMET || Material.getMaterial(type) == Material.CHAINMAIL_HELMET || Material.getMaterial(type) == Material.IRON_HELMET || Material.getMaterial(type) == Material.GOLDEN_HELMET || Material.getMaterial(type) == Material.DIAMOND_HELMET) {
 				damage.set("Slot", new NBTTagString("head"));
 				speed.set("Slot", new NBTTagString("head"));
@@ -320,24 +319,24 @@ public class NovisRewards {
 			else if(Material.getMaterial(type) == Material.LEATHER_CHESTPLATE || Material.getMaterial(type) == Material.CHAINMAIL_CHESTPLATE || Material.getMaterial(type) == Material.IRON_CHESTPLATE || Material.getMaterial(type) == Material.GOLDEN_CHESTPLATE || Material.getMaterial(type) == Material.DIAMOND_CHESTPLATE) {
 				damage.set("Slot", new NBTTagString("chest"));
 				speed.set("Slot", new NBTTagString("chest"));
-				damage.set("Operation", new NBTTagInt(3));
 				damage.set("UUIDLeast", new NBTTagInt(3));
+				damage.set("UUIDMost", new NBTTagInt(3));
 				speed.set("UUIDLeast", new NBTTagInt(4));
 				speed.set("UUIDMost", new NBTTagInt(4));
 	  		}
 			else if(Material.getMaterial(type) == Material.LEATHER_LEGGINGS || Material.getMaterial(type) == Material.CHAINMAIL_LEGGINGS || Material.getMaterial(type) == Material.IRON_LEGGINGS || Material.getMaterial(type) == Material.GOLDEN_LEGGINGS || Material.getMaterial(type) == Material.DIAMOND_LEGGINGS) {
 				damage.set("Slot", new NBTTagString("legs"));
 				speed.set("Slot", new NBTTagString("legs"));
-				damage.set("Operation", new NBTTagInt(5));
 				damage.set("UUIDLeast", new NBTTagInt(5));
+				damage.set("UUIDMost", new NBTTagInt(5));
 				speed.set("UUIDLeast", new NBTTagInt(6));
 				speed.set("UUIDMost", new NBTTagInt(6));
 			}
 			else if(Material.getMaterial(type) == Material.LEATHER_BOOTS || Material.getMaterial(type) == Material.CHAINMAIL_BOOTS || Material.getMaterial(type) == Material.IRON_BOOTS || Material.getMaterial(type) == Material.GOLDEN_BOOTS || Material.getMaterial(type) == Material.DIAMOND_BOOTS) {
 				damage.set("Slot", new NBTTagString("feet"));
 				speed.set("Slot", new NBTTagString("feet"));
-				damage.set("Operation", new NBTTagInt(7));
 				damage.set("UUIDLeast", new NBTTagInt(7));
+				damage.set("UUIDMost", new NBTTagInt(7));
 				speed.set("UUIDLeast", new NBTTagInt(8));
 				speed.set("UUIDMost", new NBTTagInt(8));
 			}

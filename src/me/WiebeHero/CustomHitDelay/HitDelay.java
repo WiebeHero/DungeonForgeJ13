@@ -11,14 +11,16 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 public class HitDelay implements Listener{
 	@EventHandler
 	public void hitDelay(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof LivingEntity) {
-			if(event.getEntity() instanceof LivingEntity) {
-				LivingEntity victim = (LivingEntity) event.getEntity();
-				new BukkitRunnable() {
-					public void run() {
-						victim.setNoDamageTicks(16);
-					}
-				}.runTaskLater(CustomEnchantments.getInstance(), 0L);
+		if(!event.isCancelled()) {
+			if(event.getDamager() instanceof LivingEntity) {
+				if(event.getEntity() instanceof LivingEntity) {
+					LivingEntity victim = (LivingEntity) event.getEntity();
+					new BukkitRunnable() {
+						public void run() {
+							victim.setNoDamageTicks(16);
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 0L);
+				}
 			}
 		}
 	}

@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent.Reason;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -77,7 +76,9 @@ public class ClassMenuSelection implements Listener{
 				if(!activated.contains(player.getUniqueId())) {
 					new BukkitRunnable() {
 						public void run() {
-							menu.ClassSelect(player);
+							if(player.isOnline()) {
+								menu.ClassSelect(player);
+							}
 						}
 					}.runTaskLater(CustomEnchantments.getInstance(), 0L);
 				}
@@ -87,7 +88,9 @@ public class ClassMenuSelection implements Listener{
 					String className[] = current.getTitle().split(" ");
 					new BukkitRunnable() {
 						public void run() {
-							menu.ClassConfirm(player, className[1], current.getItem(4));
+							if(player.isOnline()) {
+								menu.ClassConfirm(player, className[1], current.getItem(4));
+							}
 						}
 					}.runTaskLater(CustomEnchantments.getInstance(), 0L);
 				}

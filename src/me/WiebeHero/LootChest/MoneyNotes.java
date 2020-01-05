@@ -25,7 +25,7 @@ public class MoneyNotes implements Listener{
 								int money = Integer.parseInt(name);
 								DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 								dfPlayer.addMoney(money);
-								CustomEnchantments.getInstance().score.generateScoreboard(player);
+								CustomEnchantments.getInstance().score.updateScoreboard(player);
 								player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 							}
 						}

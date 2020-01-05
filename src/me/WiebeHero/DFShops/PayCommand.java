@@ -1,11 +1,8 @@
 package me.WiebeHero.DFShops;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,16 +36,12 @@ public class PayCommand implements Listener,CommandExecutor{
 						}
 						if(uuid2 != null) {
 							DFPlayer dfPlayerMe = new DFPlayer().getPlayer(uuid1);
-							DFPlayer dfPlayerThem = new DFPlayer().getPlayer(uuid1);
+							DFPlayer dfPlayerThem = new DFPlayer().getPlayer(uuid2);
 							double moneyMe = dfPlayerMe.getMoney();
 							double moneyThem = dfPlayerThem.getMoney();
 							String sAmount = args[1];
-							int amount = 0;
-							Matcher matcher6 = Pattern.compile("(\\d+)").matcher(ChatColor.stripColor(sAmount));
-							while(matcher6.find()) {
-								amount = Integer.parseInt(matcher6.group(1)); 
-							}
-							if(amount > 0) {
+							double amount = Double.parseDouble(sAmount);
+							if(amount > 0 && amount <= Double.MAX_VALUE) {
 								if(amount <= moneyMe) {
 									double newMoneyMe = moneyMe - amount;
 									double newMoneyThem = moneyThem + amount;

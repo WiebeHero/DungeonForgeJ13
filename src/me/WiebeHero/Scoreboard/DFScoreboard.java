@@ -33,6 +33,7 @@ public class DFScoreboard implements Listener{
 	DFPlayer def = new DFPlayer();
 	Methods m = new Methods();
 	MethodLuck luck = new MethodLuck();
+	WGMethods wg = new WGMethods();
 	public HashMap<UUID, Chunk> delay = new HashMap<UUID, Chunk>();
 	public HashMap<UUID, Scoreboard> scoreboards = new HashMap<UUID, Scoreboard>();
 	public HashMap<UUID, Team> teams = new HashMap<UUID, Team>();
@@ -51,11 +52,105 @@ public class DFScoreboard implements Listener{
 		if(delay.containsKey(player.getUniqueId())) {
 			if(!delay.get(player.getUniqueId()).equals(player.getChunk())) {
 				delay.put(player.getUniqueId(), player.getChunk());
-				this.generateScoreboard(player);
+				this.updateScoreboard(player);
 			}
 		}
 		else {
 			delay.put(player.getUniqueId(), player.getChunk());
+		}
+	}
+	public void updateScoreboard(Player player) {
+		if(player.getScoreboard() != null) {
+			DFPlayer df = new DFPlayer().getPlayer(player);
+			Scoreboard scoreboard = player.getScoreboard();
+			Objective score = scoreboard.getObjective("score");
+			//--------------------------------------------------------------------------------------
+			//Set normal scoreboard
+			//--------------------------------------------------------------------------------------
+			score.setDisplayName(new CCT().colorize("&2&lDungeonForge"));
+			score.setDisplaySlot(DisplaySlot.SIDEBAR);
+			DFFaction faction = method.getFaction(player.getUniqueId());
+			//--------------------------------------------------------------------------------------
+			//Blank Scores
+			//--------------------------------------------------------------------------------------
+			Score blank1 = score.getScore("");
+			Score blank2 = score.getScore(" ");
+			Score blank3 = score.getScore("  ");
+			//--------------------------------------------------------------------------------------
+			//Faction setting
+			//--------------------------------------------------------------------------------------
+			String facN = "&7None";
+			String territory = "";
+			if(faction != null) {
+				facN = "&6" + faction.getName();
+				if(faction.isInChunk(player)) {
+					territory = "&a&l" + faction.getName();
+				}
+				else if(wg.isInZone(player, "warzone")) {
+					territory = "&c&lWarzone";
+				}
+				else if(wg.isInZone(player, "spawn")) {
+					territory = "&a&lSpawn";
+				}
+			}
+			else if(method.isInAChunk(player)) {
+				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
+					if(fac.getChunkList().contains(player.getLocation().getChunk())) {
+						territory = "&c&l" + fac.getName();
+					}
+				}
+			}
+			else if(wg.isInZone(player, "warzone")) {
+				territory = "&c&lWarzone";
+			}
+			else if(wg.isInZone(player, "spawn")) {
+				territory = "&a&lSpawn";
+			}
+			else {
+				territory = "&7Wilderness";
+			}
+			Score facLine = score.getScore(new CCT().colorize("&7Faction: " + facN));
+			Score facTeritory = score.getScore(new CCT().colorize("&7Territory: " + territory));
+			Score rank = score.getScore(new CCT().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
+			Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + def.getPlayer(player).getLevel()));
+			Score adress = score.getScore(new CCT().colorize("    &2&lplay.dungeonforge.eu"));
+			Score cash = score.getScore(new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
+			for(Player p : Bukkit.getOnlinePlayers()) {
+				DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+				Team t = null;
+				if(scoreboard.getTeam(p.getName()) == null) {
+					t = scoreboard.registerNewTeam(p.getName());
+				}
+				else {
+					t = scoreboard.getTeam(p.getName());
+				}
+				t.setPrefix(new CCT().colorize("&6[&b" + dfPlayer.getLevel() + "&6]&7 "));
+				String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
+				String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
+				t.setSuffix(new CCT().colorize(" &6" + now));
+				p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + ranks.get(p.getUniqueId())));
+				t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
+				t.addEntry(p.getName());
+			}
+			Set<String> entries;
+	        entries = scoreboard.getEntries();
+	        for(String entry : entries){
+	        	scoreboard.resetScores(entry);
+	        }
+			blank1.setScore(9);
+			facLine.setScore(8);
+			facTeritory.setScore(7);
+			cash.setScore(6);
+			blank2.setScore(5);
+			rank.setScore(4);
+			level.setScore(3);
+			blank3.setScore(2);
+			adress.setScore(1);
+			scoreboards.put(player.getUniqueId(), scoreboard);
+			player.setScoreboard(scoreboard);
+		}
+		else {
+			this.generateScoreboard(player);
 		}
 	}
 	public void generateScoreboard(Player player) {
@@ -91,6 +186,12 @@ public class DFScoreboard implements Listener{
 			if(faction.isInChunk(player)) {
 				territory = "&a&l" + faction.getName();
 			}
+			else if(wg.isInZone(player, "warzone")) {
+				territory = "&c&lWarzone";
+			}
+			else if(wg.isInZone(player, "spawn")) {
+				territory = "&a&lSpawn";
+			}
 		}
 		else if(method.isInAChunk(player)) {
 			for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
@@ -98,6 +199,12 @@ public class DFScoreboard implements Listener{
 					territory = "&c&l" + fac.getName();
 				}
 			}
+		}
+		else if(wg.isInZone(player, "warzone")) {
+			territory = "&c&lWarzone";
+		}
+		else if(wg.isInZone(player, "spawn")) {
+			territory = "&a&lSpawn";
 		}
 		else {
 			territory = "&7Wilderness";

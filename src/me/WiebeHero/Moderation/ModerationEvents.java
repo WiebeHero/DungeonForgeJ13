@@ -165,7 +165,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player can't be promoted to a higher rank!"));
 												}
 												board.registerRank(p);
-												board.generateScoreboard(p);
+												board.updateScoreboard(p);
 												this.punishJoin(p);
 											}
 											else {
@@ -269,7 +269,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player can't be demoted to a lower rank!"));
 												}
 												board.registerRank(p);
-												board.generateScoreboard(p);
+												board.updateScoreboard(p);
 												this.punishJoin(p);
 											}
 											else {
@@ -305,7 +305,13 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						player.getInventory().setContents(staff.getInv());
 						staff.switchStaffMode(false);
 						staff.switchLootMode(false);
-						staff.switchVanishMode(false);
+						if(staff.getVanishMode() == true) {
+							staff.switchVanishMode(false);
+							for(Player p : Bukkit.getOnlinePlayers()) {
+								p.showPlayer(CustomEnchantments.getInstance(), player);
+							}
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &c&lVanish Disabled."));
+						}
 						staff.switchSpawnerMode(false);
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &c&lStaffmode Disabled."));
 					}
@@ -625,24 +631,22 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
 								Staff staff = sManager.get(player.getUniqueId());
 								if(staff.getRank() >= 7) {
-									if(args[0].equalsIgnoreCase("maintenance")) {
-										if(args[1].equalsIgnoreCase("on")) {
-											CustomEnchantments.maintenance = true;
-											for(Player p : Bukkit.getOnlinePlayers()) {
-												if(p != player) {
-													if(sManager.contains(p.getUniqueId()) && sManager.get(p.getUniqueId()).getRank() == 0) {
-														p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode was initiated, standby."));
-													}
+									if(args[1].equalsIgnoreCase("on")) {
+										CustomEnchantments.maintenance = true;
+										for(Player p : Bukkit.getOnlinePlayers()) {
+											if(p != player) {
+												if(sManager.contains(p.getUniqueId()) && sManager.get(p.getUniqueId()).getRank() == 0) {
+													p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode was initiated, standby."));
 												}
 											}
 										}
-										else if(args[1].equalsIgnoreCase("off")) {
-											CustomEnchantments.maintenance = false;
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode is disengaged. Player's can now join again."));
-										}
-										else {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCommand ussage: /procedure maintenance (Off | On)"));
-										}
+									}
+									else if(args[1].equalsIgnoreCase("off")) {
+										CustomEnchantments.maintenance = false;
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode is disengaged. Player's can now join again."));
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCommand ussage: /procedure maintenance (Off | On)"));
 									}
 								}
 								else {
@@ -1163,7 +1167,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Teleport")) {
-				if(item != null) {
+				if(item != null && item.getType() != Material.AIR) {
 					String name = item.getItemMeta().getDisplayName();
 					title = ChatColor.stripColor(title);
 					String split[] = title.split("/");
