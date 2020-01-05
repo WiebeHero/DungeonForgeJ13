@@ -89,7 +89,6 @@ public class DFSpawnerManager {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		yml.createSection("Spawners.UUID");
 		if(!this.spawnerList.isEmpty()) {
 			for(DFSpawner spawner : this.spawnerList.values()) {
 				if(spawner != null) {
@@ -118,6 +117,7 @@ public class DFSpawnerManager {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		yml.createSection("Spawners.UUID");
 		if(!this.spawnerList.isEmpty()) {
 			for(DFSpawner spawner : this.spawnerList.values()) {
 				if(spawner != null) {
@@ -421,7 +421,7 @@ public class DFSpawnerManager {
 		method.addPlayer(mob);
 		DFPlayer dfPlayer = method.getPlayer(mob);
 		dfPlayer.setLevel(level);
-		int skills = level * 8;
+		int skills = level * 5;
 		int cl = new Random().nextInt(7) + 1;
 		switch(cl) {
 		case 1:
@@ -477,7 +477,7 @@ public class DFSpawnerManager {
 				break;
 			}
 		}
-		dfPlayer.setMove(0.2 + 0.0175 * tier + 0.00035 * level);
+		dfPlayer.setMove(0.2 + 0.01 * tier + 0.00035 * level);
 		dfPlayer.resetCalculations();
 		sk.attackSpeed(mob);
 		sk.changeHealth(mob);

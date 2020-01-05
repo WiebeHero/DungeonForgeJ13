@@ -463,7 +463,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCommand ussage: /ban (Player name)"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCommand ussage: /mute (Player name)"));
 					}
 				}
 				else {
@@ -498,7 +498,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCommand ussage: /ban (Player name)"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCommand ussage: /unmute (Player name)"));
 					}
 				}
 				else {
@@ -549,7 +549,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
 											Bukkit.getServer().shutdown();
 										}
-									}.runTaskLater(CustomEnchantments.getInstance(), 6000L);
+									}.runTaskLater(CustomEnchantments.getInstance(), 100L);
 								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));

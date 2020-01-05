@@ -105,58 +105,60 @@ public class XPTraderMenu implements Listener{
 					if(action == ClickType.LEFT) {
 						if(item.hasItemMeta()) {
 							if(item.getItemMeta().hasDisplayName()) {
-								String loreFinal = "";
-								for(String loreRequired : item.getItemMeta().getLore()) {
-									if(loreRequired.contains(ChatColor.stripColor("Common"))) {
-										loreFinal = loreRequired;
-									}
-									else if(loreRequired.contains(ChatColor.stripColor("Rare"))) {
-										loreFinal = loreRequired;
-									}
-									else if(loreRequired.contains(ChatColor.stripColor("Epic"))) {
-										loreFinal = loreRequired;
-									}
-									else if(loreRequired.contains(ChatColor.stripColor("Legendary"))) {
-										loreFinal = loreRequired;
-									}
-									else if(loreRequired.contains(ChatColor.stripColor("Mythic"))) {
-										loreFinal = loreRequired;
-									}
-									else if(loreRequired.contains(ChatColor.stripColor("Heroic"))) {
-										loreFinal = loreRequired;
-									}
-								}
-								if(item.getItemMeta().getDisplayName().contains("Lv") || loreFinal.contains("Common") || loreFinal.contains("Rare") || loreFinal.contains("Epic") || loreFinal.contains("Legendary") || loreFinal.contains("Mythic") || loreFinal.contains("Heroic")) {
-									if(item.getItemMeta().hasLore()) {
-										Inventory invXPTrader = view.getTopInventory();
-										Inventory invPlayer = view.getBottomInventory();
-										invPlayer.addItem(item);
-										int slot = event.getSlot();
-										invXPTrader.clear(slot);
-										invXPTrader.clear(slot + 4);
-										player.updateInventory();
-										player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)0.5);
-									}
-								}
-								else if(item.getItemMeta().getDisplayName().contains("Accept?")) {
-									Inventory invXPTrader = view.getTopInventory(); 
-									ArrayList<ItemStack> importantSlots = new ArrayList<ItemStack>(Arrays.asList(invXPTrader.getItem(14), invXPTrader.getItem(15), invXPTrader.getItem(16), invXPTrader.getItem(23), invXPTrader.getItem(24), invXPTrader.getItem(25), invXPTrader.getItem(32), invXPTrader.getItem(33), invXPTrader.getItem(34), invXPTrader.getItem(41), invXPTrader.getItem(42), invXPTrader.getItem(43)));
-									ArrayList<Integer> slotNumber = new ArrayList<Integer>(Arrays.asList(10, 11, 12, 14, 15, 16, 19, 20, 21, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37, 38, 39, 41, 42, 43));
-									player.sendMessage(new CCT().colorize("&aTrade Accepted!"));
-									for(int i = 0; i < importantSlots.size(); i++) {
-										if(importantSlots.get(i) != null) {
-											if(title.contains("XP Trader")) {
-												ItemStack xpPot = importantSlots.get(i);
-												player.getInventory().addItem(xpPot);
-											}
+								if(item.getItemMeta().hasLore()) {
+									String loreFinal = "";
+									for(String loreRequired : item.getItemMeta().getLore()) {
+										if(loreRequired.contains(ChatColor.stripColor("Common"))) {
+											loreFinal = loreRequired;
+										}
+										else if(loreRequired.contains(ChatColor.stripColor("Rare"))) {
+											loreFinal = loreRequired;
+										}
+										else if(loreRequired.contains(ChatColor.stripColor("Epic"))) {
+											loreFinal = loreRequired;
+										}
+										else if(loreRequired.contains(ChatColor.stripColor("Legendary"))) {
+											loreFinal = loreRequired;
+										}
+										else if(loreRequired.contains(ChatColor.stripColor("Mythic"))) {
+											loreFinal = loreRequired;
+										}
+										else if(loreRequired.contains(ChatColor.stripColor("Heroic"))) {
+											loreFinal = loreRequired;
 										}
 									}
-									for(int i = 0; i < slotNumber.size(); i++) {
-										int i1 = slotNumber.get(i);
-										invXPTrader.remove(view.getItem(i1));
-										player.updateInventory();
+									if(item.getItemMeta().getDisplayName().contains("Lv") || loreFinal.contains("Common") || loreFinal.contains("Rare") || loreFinal.contains("Epic") || loreFinal.contains("Legendary") || loreFinal.contains("Mythic") || loreFinal.contains("Heroic")) {
+										if(item.getItemMeta().hasLore()) {
+											Inventory invXPTrader = view.getTopInventory();
+											Inventory invPlayer = view.getBottomInventory();
+											invPlayer.addItem(item);
+											int slot = event.getSlot();
+											invXPTrader.clear(slot);
+											invXPTrader.clear(slot + 4);
+											player.updateInventory();
+											player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)0.5);
+										}
 									}
-									player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, (float)2, (float)1);
+									else if(item.getItemMeta().getDisplayName().contains("Accept?")) {
+										Inventory invXPTrader = view.getTopInventory(); 
+										ArrayList<ItemStack> importantSlots = new ArrayList<ItemStack>(Arrays.asList(invXPTrader.getItem(14), invXPTrader.getItem(15), invXPTrader.getItem(16), invXPTrader.getItem(23), invXPTrader.getItem(24), invXPTrader.getItem(25), invXPTrader.getItem(32), invXPTrader.getItem(33), invXPTrader.getItem(34), invXPTrader.getItem(41), invXPTrader.getItem(42), invXPTrader.getItem(43)));
+										ArrayList<Integer> slotNumber = new ArrayList<Integer>(Arrays.asList(10, 11, 12, 14, 15, 16, 19, 20, 21, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37, 38, 39, 41, 42, 43));
+										player.sendMessage(new CCT().colorize("&aTrade Accepted!"));
+										for(int i = 0; i < importantSlots.size(); i++) {
+											if(importantSlots.get(i) != null) {
+												if(title.contains("XP Trader")) {
+													ItemStack xpPot = importantSlots.get(i);
+													player.getInventory().addItem(xpPot);
+												}
+											}
+										}
+										for(int i = 0; i < slotNumber.size(); i++) {
+											int i1 = slotNumber.get(i);
+											invXPTrader.remove(view.getItem(i1));
+											player.updateInventory();
+										}
+										player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, (float)2, (float)1);
+									}
 								}
 							}
 						}
