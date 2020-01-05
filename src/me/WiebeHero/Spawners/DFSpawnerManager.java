@@ -213,7 +213,7 @@ public class DFSpawnerManager {
 							}
 						}
 						if(confirmed == true) {
-							int max = 2;
+							int max = 1 + (int)Math.round((spawner.getTier() * 0.35));
 							for(int current = count; current <= max; current++) {
 								manager.spawnMob(spawner);
 							}
