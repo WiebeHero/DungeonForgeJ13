@@ -299,7 +299,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			if(cmd.getName().equalsIgnoreCase(staffmode)) {
-				if(sManager.contains(player.getUniqueId()) || sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
 					Staff staff = sManager.get(player.getUniqueId());
 					if(staff.getStaffMode() == true) {
 						player.getInventory().setContents(staff.getInv());
@@ -335,7 +335,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(ban)) {
-				if(sManager.contains(player.getUniqueId()) || sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
 					if(args.length == 1) {
 						Staff staff = sManager.get(player.getUniqueId());
 						if(staff.getRank() >= 5) {
@@ -387,7 +387,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(unban)) {
-				if(sManager.contains(player.getUniqueId()) || sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
 					if(args.length == 1) {
 						Staff staff = sManager.get(player.getUniqueId());
 						if(staff.getRank() >= 5) {
@@ -422,7 +422,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(mute)) {
-				if(sManager.contains(player.getUniqueId()) || sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
 					if(args.length == 1) {
 						Staff staff = sManager.get(player.getUniqueId());
 						if(staff.getRank() >= 3) {
@@ -465,7 +465,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(unmute)) {
-				if(sManager.contains(player.getUniqueId()) || sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
 					if(args.length == 1) {
 						Staff staff = sManager.get(player.getUniqueId());
 						if(staff.getRank() >= 3) {
@@ -500,7 +500,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(protocol)) {
-				if(sManager.contains(player.getUniqueId()) || sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
 					if(args.length == 1) {
 						if(args[0].equalsIgnoreCase("clearall")) {
 							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
@@ -572,7 +572,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											p.saveData();
 										}
 									}
-									CustomEnchantments.getInstance().hardSave = true;
+									CustomEnchantments.hardSave = true;
 									CustomEnchantments.getInstance().clearDfPlayers();
 									CustomEnchantments.getInstance().clearFactions();
 									new BukkitRunnable() {
