@@ -32,108 +32,46 @@ public class XPEarningMobs implements Listener{
 				int xp = dfPlayer.getExperience();
 				int maxxp = dfPlayer.getMaxExperience();
 				int finalXP = 0;
-				Entity ent = NBTInjector.patchEntity(victim);
-				NBTCompound comp = NBTInjector.getNbtData(ent);
-				if(comp.hasKey("SpawnerUUID")) {
-					int tier = comp.getInteger("Tier");
-					int levelMob = comp.getInteger("Level");
-					String lore = "";
-					ItemStack item = player.getInventory().getItemInMainHand();
-					if(item != null) {
-						if(item.hasItemMeta()) {
-							if(item.getItemMeta().hasLore()) {
-								for(String l : item.getItemMeta().getLore()) {
-									if(l.contains(ChatColor.stripColor("XP Boost"))) {
-										lore = ChatColor.stripColor(l);
-									}
-								}
-							}
+				if(!(victim instanceof Player)) {
+					Entity ent = NBTInjector.patchEntity(victim);
+					NBTCompound comp = NBTInjector.getNbtData(ent);
+					if(comp.hasKey("SpawnerUUID")) {
+						int tier = comp.getInteger("Tier");
+						int levelMob = comp.getInteger("Level");
+						//-----------------------------------------------------------------------------------------------------------------------------------------
+						//XP Adding
+						//-----------------------------------------------------------------------------------------------------------------------------------------
+						int i1 = 0;
+						if(tier == 0) {
+							i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
 						}
+						if(tier == 1) {
+							i1 = new Random().nextInt(100) + 100 + 2 * levelMob;
+						}
+						else if(tier == 2) {
+							i1 = new Random().nextInt(135) + 135 + 3 * levelMob;
+						}
+						else if(tier == 3) {
+							i1 = new Random().nextInt(170) + 170 + 4 * levelMob;
+						}
+						else if(tier == 4) {
+							i1 = new Random().nextInt(205) + 205 + 5 * levelMob;
+						}
+						else if(tier == 5) {
+							i1 = new Random().nextInt(240) + 240 + 6 * levelMob;
+						}
+						else {
+							i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
+						}
+						finalXP = i1 + xp;
 					}
-					//-----------------------------------------------------------------------------------------------------------------------------------------
-					//XP Adding
-					//-----------------------------------------------------------------------------------------------------------------------------------------
-					int i1 = 0;
-					if(tier == 0) {
-						i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
-					}
-					if(tier == 1) {
-						i1 = new Random().nextInt(50) + 50 + 4 * levelMob;
-					}
-					else if(tier == 2) {
-						i1 = new Random().nextInt(70) + 70 + 5 * levelMob;
-					}
-					else if(tier == 3) {
-						i1 = new Random().nextInt(90) + 90 + 6 * levelMob;
-					}
-					else if(tier == 4) {
-						i1 = new Random().nextInt(110) + 110 + 7 * levelMob;
-					}
-					else if(tier == 5) {
-						i1 = new Random().nextInt(130) + 130 + 8 * levelMob;
-					}
-					if(lore.contains("XP Boost")) {
-						String check = lore.replaceAll("[^\\d.]", "");
-						int eLevel = Integer.parseInt(check);
-						i1 = i1 * (eLevel / 2 + 1);
-					}
-					finalXP = i1 + xp;
 				}
 				else {
-					if(victim.getType().equals(EntityType.ZOMBIE)) {
-						finalXP = 4 + xp;
-					}
-					else if(victim.getType().equals(EntityType.SKELETON)) {
-						finalXP = 4 + xp;
-					}
-					else if(victim.getType().equals(EntityType.SPIDER) || victim.getType().equals(EntityType.CAVE_SPIDER)) {
-						finalXP = 5 + xp;
-					}
-					else if(victim.getType().equals(EntityType.CREEPER)) {
-						finalXP = 11 + xp;
-					}
-					else if(victim.getType().equals(EntityType.ENDERMAN)) {
-						finalXP = 16 + xp;
-					}
-					else if(victim.getType().equals(EntityType.BLAZE)) {
-						finalXP = 13 + xp;
-					}
-					else if(victim.getType().equals(EntityType.WITCH)) {
-						finalXP = 8 + xp;
-					}
-					else if(victim.getType().equals(EntityType.VILLAGER)) {
-						finalXP = 20 + xp;
-					}
-					else if(victim.getType().equals(EntityType.IRON_GOLEM)) {
-						finalXP = 25 + xp;
-					}
-					else if(victim.getType().equals(EntityType.CHICKEN)) {
-						finalXP = 1 + xp;
-					}
-					else if(victim.getType().equals(EntityType.SHEEP)) {
-						finalXP = 2 + xp;
-					}
-					else if(victim.getType().equals(EntityType.COW)) {
-						finalXP = 3 + xp;
-					}
-					else if(victim.getType().equals(EntityType.PIG)) {
-						finalXP = 2 + xp;
-					}
-					else if(victim.getType().equals(EntityType.PIG_ZOMBIE)) {
-						finalXP = 6 + xp;
-					}
-					else if(victim.getType().equals(EntityType.HORSE)) {
-						finalXP = 3 + xp;
-					}
-					else if(victim.getType().equals(EntityType.PLAYER)) {
-						Player p = (Player) event.getEntity();
-						DFPlayer dfPlayer2 = new DFPlayer().getPlayer(p);
-						int levelVictim = dfPlayer2.getLevel();
-						if(levelVictim > 1) {
-							int i2 = new Random().nextInt(50 + 5 * levelVictim) + 50 + 5 * levelVictim;
-							finalXP = i2 + xp;
-						}
-					}
+					DFPlayer df = new DFPlayer().getPlayer(victim);
+					int otherLevel = df.getLevel();
+					int i1 = 0;
+					i1 = new Random().nextInt(7 * otherLevel) + 4 * otherLevel;
+					finalXP = i1 + xp;
 				}
 				if(level < 100) {
 					if(finalXP >= maxxp) {

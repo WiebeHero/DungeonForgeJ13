@@ -61,113 +61,46 @@ public class DFWeaponUpgrade implements Listener{
 						int xp = item.getInteger("XP");
 						int maxxp = item.getInteger("MAXXP");
 			    		int totalxpearned = 0;
-			    		Entity e = event.getEntity();
-			    		e = NBTInjector.patchEntity(e);
-			    		NBTCompound comp = NBTInjector.getNbtData(e);
-			    		if(comp.hasKey("SpawnerUUID")) {
-							int tier = comp.getInteger("Tier");
-							int level = comp.getInteger("Level");
-							int i1 = 0;
-							if(tier == 0) {
-								i1 = new Random().nextInt(5) + (level * 3);
+			    		if(!(victim instanceof Player)) {
+							Entity ent = NBTInjector.patchEntity(victim);
+							NBTCompound comp = NBTInjector.getNbtData(ent);
+							if(comp.hasKey("SpawnerUUID")) {
+								int tier = comp.getInteger("Tier");
+								int levelMob = comp.getInteger("Level");
+								//-----------------------------------------------------------------------------------------------------------------------------------------
+								//XP Adding
+								//-----------------------------------------------------------------------------------------------------------------------------------------
+								int i1 = 0;
+								if(tier == 0) {
+									i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
+								}
+								if(tier == 1) {
+									i1 = new Random().nextInt(50) + 50 + 4 * levelMob;
+								}
+								else if(tier == 2) {
+									i1 = new Random().nextInt(70) + 70 + 5 * levelMob;
+								}
+								else if(tier == 3) {
+									i1 = new Random().nextInt(90) + 90 + 6 * levelMob;
+								}
+								else if(tier == 4) {
+									i1 = new Random().nextInt(110) + 110 + 7 * levelMob;
+								}
+								else if(tier == 5) {
+									i1 = new Random().nextInt(130) + 130 + 8 * levelMob;
+								}
+								else {
+									i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
+								}
+								totalxpearned = i1 + xp;
 							}
-							else {
-								i1 = new Random().nextInt(50 + 50 * tier) + (level * 3);
-							}
-							totalxpearned = i1 + xp;
 						}
 						else {
-							if(victim.getType().equals(EntityType.ZOMBIE)) {
-								totalxpearned = 2 + xp;
-							}
-							else if(victim.getType().equals(EntityType.SKELETON)) {
-								totalxpearned = 3 + xp;
-							}
-							else if(victim.getType().equals(EntityType.SPIDER)) {
-								totalxpearned = 2 + xp;
-							}
-							else if(victim.getType().equals(EntityType.CREEPER)) {
-								totalxpearned = 3 + xp;
-							}
-							else if(victim.getType().equals(EntityType.ENDERMAN)) {
-								totalxpearned = 6 + xp;
-							}
-							else if(victim.getType().equals(EntityType.BLAZE)) {
-								totalxpearned = 4 + xp;
-							}
-							else if(victim.getType().equals(EntityType.WITCH)) {
-								totalxpearned = 4 + xp;
-							}
-							else if(victim.getType().equals(EntityType.VILLAGER)) {
-								totalxpearned = 2 + xp;
-							}
-							else if(victim.getType().equals(EntityType.IRON_GOLEM)) {
-								totalxpearned = 8 + xp;
-							}
-							else if(victim.getType().equals(EntityType.CHICKEN)) {
-								totalxpearned = 1 + xp;
-							}
-							else if(victim.getType().equals(EntityType.SHEEP)) {
-								totalxpearned = 4 + xp;
-							}
-							else if(victim.getType().equals(EntityType.COW)) {
-								totalxpearned = 4 + xp;
-							}
-							else if(victim.getType().equals(EntityType.PIG_ZOMBIE)) {
-								totalxpearned = 3 + xp;
-							}
-							else if(victim.getType().equals(EntityType.HORSE)) {
-								totalxpearned = 3 + xp;
-							}
-							else if(victim.getType() == EntityType.PLAYER) {
-								Player player = (Player) victim;
-								DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-								int levelVictim = dfPlayer.getLevel();
-								if(levelVictim >= 0) {
-									int i6 = new Random().nextInt(50) + 50;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 10) {
-									int i6 = new Random().nextInt(100) + 60;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 20) {
-									int i6 = new Random().nextInt(150) + 70;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 30) {
-									int i6 = new Random().nextInt(200) + 80;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 40) {
-									int i6 = new Random().nextInt(250) + 90;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 50) {
-									int i6 = new Random().nextInt(300) + 100;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 60) {
-									int i6 = new Random().nextInt(350) + 110;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 70) {
-									int i6 = new Random().nextInt(400) + 120;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 80) {
-									int i6 = new Random().nextInt(450) + 130;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 90) {
-									int i6 = new Random().nextInt(500) + 140;
-									totalxpearned = i6 + xp;
-								}
-								else if(levelVictim > 99) {
-									int i6 = new Random().nextInt(550) + 150;
-									totalxpearned = i6 + xp;
-								}
-							}
+							DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+							int level = dfPlayer.getLevel();
+							int i1 = 0;
+							i1 = new Random().nextInt(7 * level) + 4 * level;
+							totalxpearned = i1 + xp;
 						}
 						if(totalxpearned > 0){
 			    			if(totalxpearned >= maxxp) {
