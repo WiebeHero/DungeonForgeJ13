@@ -311,25 +311,47 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Custom Items FOOD
 		getServer().getPluginManager().registerEvents(new ChangeFishDrops(), this);
 		lootR.loadRewards();
-		for(Entity e : Bukkit.getWorld("FactionWorld-1").getEntities()) {
-			if(e instanceof LivingEntity) {
-				e = NBTInjector.patchEntity(e);
-				NBTCompound comp = NBTInjector.getNbtData(e);
-				comp.setString("SpawnerUUID", "");
-				comp.setInteger("Level", 1);
-				comp.setInteger("Tier", 0);
-				this.dfPlayerList.put(e.getUniqueId(), new DFPlayer());
+		new BukkitRunnable() {
+			public void run() {
+				for(Entity e : Bukkit.getWorld("FactionWorld-1").getEntities()) {
+					if(e != null) {
+						if(e instanceof LivingEntity) {
+							e = NBTInjector.patchEntity(e);
+							NBTCompound comp = NBTInjector.getNbtData(e);
+							comp.setString("SpawnerUUID", "");
+							comp.setInteger("Level", 1);
+							comp.setInteger("Tier", 0);
+							dfPlayerList.put(e.getUniqueId(), new DFPlayer());
+						}
+					}
+				}
 			}
-		}
+		}.runTaskLater(CustomEnchantments.getInstance(), 5L);
 		new BukkitRunnable(){
 			public void run() {
 				pl.savePlayers();
-				method.saveFactions();
-				punishManager.savePunishList();
-				lootChestManager.saveLootChests();
-				spawnerManager.saveSpawners();
 			}
 		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 18000L);
+		new BukkitRunnable(){
+			public void run() {
+				method.saveFactions();
+			}
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 19200L);
+		new BukkitRunnable(){
+			public void run() {
+				punishManager.savePunishList();
+			}
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20400L);
+		new BukkitRunnable(){
+			public void run() {
+				lootChestManager.saveLootChests();
+			}
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 21600L);
+		new BukkitRunnable(){
+			public void run() {
+				spawnerManager.saveSpawners();
+			}
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 22800L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {

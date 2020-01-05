@@ -188,10 +188,10 @@ public class DFScoreboard implements Listener{
 		else if(luck.containsParrent(user, "helper")) {
 			ranks.put(player.getUniqueId(), "&aHelper");
 		}
-		else if(luck.containsParrent(user, "qaadmin")) {
+		else if(luck.containsParrent(user, "qualityassuranceadmin")) {
 			ranks.put(player.getUniqueId(), "&cQA Admin");
 		}
-		else if(luck.containsParrent(user, "qa")) {
+		else if(luck.containsParrent(user, "qualityassurance")) {
 			ranks.put(player.getUniqueId(), "&bQA");
 		}
 		else if(luck.containsParrent(user, "youtuber")) {
