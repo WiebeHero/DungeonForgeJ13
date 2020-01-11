@@ -1,10 +1,8 @@
 package me.WiebeHero.ArmoryPackage;
 
-import java.util.ArrayList;
 import java.util.Random;
 
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -13,13 +11,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtinjector.NBTInjector;
-import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import me.WiebeHero.Skills.DFPlayer;
 import me.WiebeHero.Skills.EffectSkills;
@@ -53,7 +51,6 @@ public class DFArmorUpgrade implements Listener{
 					if(item.hasKey("Upgradeable")) {
 						if(item.hasKey("ArmorKey")) {
 							int xp = item.getInteger("XP");
-							int maxxp = item.getInteger("MAXXP");
 				    		int totalxpearned = 0;
 							DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
 				    		if(!(victim instanceof Player)) {
@@ -70,19 +67,19 @@ public class DFArmorUpgrade implements Listener{
 										i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
 									}
 									if(tier == 1) {
-										i1 = new Random().nextInt(50) + 50 + 4 * levelMob;
+										i1 = new Random().nextInt(50) + 50 + 2 * levelMob;
 									}
 									else if(tier == 2) {
-										i1 = new Random().nextInt(70) + 70 + 5 * levelMob;
+										i1 = new Random().nextInt(70) + 70 + 3 * levelMob;
 									}
 									else if(tier == 3) {
-										i1 = new Random().nextInt(90) + 90 + 6 * levelMob;
+										i1 = new Random().nextInt(90) + 90 + 4 * levelMob;
 									}
 									else if(tier == 4) {
-										i1 = new Random().nextInt(110) + 110 + 7 * levelMob;
+										i1 = new Random().nextInt(110) + 110 + 5 * levelMob;
 									}
 									else if(tier == 5) {
-										i1 = new Random().nextInt(130) + 130 + 8 * levelMob;
+										i1 = new Random().nextInt(130) + 130 + 6 * levelMob;
 									}
 									else {
 										i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
@@ -96,148 +93,25 @@ public class DFArmorUpgrade implements Listener{
 								i1 = new Random().nextInt(7 * level) + 4 * level;
 								totalxpearned = i1 + xp;
 							}
-							if(totalxpearned > 0){
-				    			if(totalxpearned >= maxxp) {
-									int itemLevel = item.getInteger("Level");
-				    				if(itemLevel != 15) {
-				    					int total = item.getInteger("TotalXP");	
-										String name = item.getString("ItemName");
-										String rarity = item.getString("Rarity");
-										String enchantmentString = item.getString("EnchantmentString");
-										double baseDamage = item.getDouble("Base Armor Defense");
-										double baseSpeed = item.getDouble("Base Armor Toughness");
-										double incDamage = item.getDouble("Inc Armor Defense");
-										double incSpeed = item.getDouble("Inc Armor Toughness");
-										damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, (float)2, (float)1);
-										for(int x = itemLevel + 1; x <= 15; x++) {
-											if(totalxpearned >= maxxp) {
-												itemLevel = x;
-												totalxpearned = totalxpearned - maxxp;
-												total = total + maxxp;
-												maxxp = maxxp / 100 * 120;
-											}
-											else {
-												break;
-											}
-										}
-										double value1 = baseDamage + incDamage * (itemLevel - 1);
-				    	            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
-					    				//Config Data
-					    				//Weapon Data
-				    	            	item.setInteger("Level", itemLevel);
-				    	            	item.setInteger("XP", totalxpearned);
-				    	            	item.setInteger("MAXXP", maxxp);
-				    	            	item.setInteger("TotalXP", total);
-				    	            	item.setDouble("Armor Defense", value1);
-				    	            	item.setDouble("Armor Toughness", value2);
-				    	            	i = item.getItem();
-					    				ItemMeta meta = i.getItemMeta();
-					    				meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
-					    				ArrayList<String> newLore = new ArrayList<String>();
-					    				newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
-					    				double roundOff1 = (double) Math.round(value1 * 100) / 100;
-					    				double roundOff2 = (double) Math.round(value2 * 100) / 100;
-					    				newLore.add(new CCT().colorize("&7-----------------------"));
-					    				newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
-					    				newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
-					    				newLore.add(new CCT().colorize("&7-----------------------"));
-					    				if(itemLevel < 15) {
-					    					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + totalxpearned + " &6/ &b&l" + maxxp + "&a]"));
-					    				}
-					    				else if(itemLevel == 15) {
-					    					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
-					    				}
-					    				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
-					    				newLore.add(new CCT().colorize("&7-----------------------"));
-					    				int itemReq = 0;
-					    				if(itemLevel >= 6) {
-					    					int loreRequired = itemLevel - 4;
-					    					int levelRequired = loreRequired * 5;
-					    					itemReq = levelRequired;
-					    					newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
-					    				}
-					    				newLore.add(new CCT().colorize("&7Rarity: " + rarity));
-					    				meta.setLore(newLore);
-					    				i.setItemMeta(meta);
-					    				if(dfPlayer.getLevel() >= itemReq) {
-						    				if(i.getType().toString().contains("HELMET")) {
-							    				damager.getInventory().setHelmet(i);
-						    				}
-						    				else if(i.getType().toString().contains("CHESTPLATE")) {
-						    					damager.getInventory().setChestplate(i);
-						    				}
-						    				else if(i.getType().toString().contains("LEGGINGS")) {
-						    					damager.getInventory().setLeggings(i);
-						    				}
-						    				else if(i.getType().toString().contains("BOOTS")) {
-						    					damager.getInventory().setBoots(i);
-						    				}
-					    				}
-					    				else {
-					    					damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this, you are to low level."));
-					    					if(i.getType().toString().contains("HELMET")) {
-							    				damager.getInventory().setHelmet(new ItemStack(Material.AIR));
-						    				}
-					    					else if(i.getType().toString().contains("CHESTPLATE")) {
-						    					damager.getInventory().setChestplate(new ItemStack(Material.AIR));
-						    				}
-					    					else if(i.getType().toString().contains("LEGGINGS")) {
-						    					damager.getInventory().setLeggings(new ItemStack(Material.AIR));
-						    				}
-					    					else if(i.getType().toString().contains("BOOTS")) {
-						    					damager.getInventory().setBoots(new ItemStack(Material.AIR));
-						    				}
-						    				if(damager.getInventory().firstEmpty() != -1) {
-						    					damager.getInventory().setItem(damager.getInventory().firstEmpty(), i);
-						    				}
-						    				else {
-						    					damager.getWorld().dropItemNaturally(damager.getLocation(), i);
-						    				}
-					    				}
-					    				//Weapon Data
-					    				sk.runDefense(damager);
-				    				}
-				    			}
-					    		else {
-					    			item.setInteger("XP", totalxpearned);
-					    			i = item.getItem();
-									ItemMeta im = i.getItemMeta();
-						    		ArrayList<String> lore = new ArrayList<String>(im.getLore());
-					    			lore.set(lore.size() - 4, new CCT().colorize("&7Upgrade Progress: " + "&a[&b&l" + (totalxpearned) + " &6/ " + "&b&l" + maxxp + "&a]"));
-					    			double barprogress = (double) totalxpearned / (double) maxxp * 100.0;
-					    			String loreString = "&7[&a";
-			    					boolean canStop = true;
-			    					for(double x = 0.00; x <= 100.00; x+=2.00) {
-			    						if(barprogress >= x) {
-			    							loreString = loreString + ":";
-			    						}
-			    						else if(canStop) {
-			    							loreString = loreString + "&7:";
-			    							canStop = false;
-			    						}
-			    						else {
-			    							loreString = loreString + ":";
-			    						}
-			    						if(x == 100) {
-			    							loreString = loreString + "&7] &a" + String.format("%.2f", barprogress) + "%";
-			    						}
-			    					}
-			    					lore.set(lore.size() - 3, new CCT().colorize(loreString));
-						    		im.setLore(lore);
-						    		i.setItemMeta(im);
-						    		if(i.getType().toString().contains("HELMET")) {
-					    				damager.getInventory().setHelmet(i);
-				    				}
-				    				if(i.getType().toString().contains("CHESTPLATE")) {
-				    					damager.getInventory().setChestplate(i);
-				    				}
-				    				if(i.getType().toString().contains("LEGGINGS")) {
-				    					damager.getInventory().setLeggings(i);
-				    				}
-				    				if(i.getType().toString().contains("BOOTS")) {
-				    					damager.getInventory().setBoots(i);
-				    				}
-					    		}
+
+							int itemLevel = item.getInteger("Level");
+		    				if(itemLevel != 15) {
+			    				if(i.getType().toString().contains("HELMET")) {
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.HEAD);
+			    					Bukkit.getPluginManager().callEvent(e);
+			    				}
+			    				else if(i.getType().toString().contains("CHESTPLATE")) {
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.CHEST);
+			    					Bukkit.getPluginManager().callEvent(e);
+			    				}
+			    				else if(i.getType().toString().contains("LEGGINGS")) {
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.LEGS);
+			    					Bukkit.getPluginManager().callEvent(e);
+			    				}
+			    				else if(i.getType().toString().contains("BOOTS")) {
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.FEET);
+			    					Bukkit.getPluginManager().callEvent(e);
+			    				}
 					    	}
 						}
 				    }

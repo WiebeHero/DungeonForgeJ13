@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -352,31 +353,31 @@ public class EffectSkills implements Listener{
 									}
 									int i = player.getInventory().getHeldItemSlot();
 									ItemStack item = player.getInventory().getItemInMainHand();
-									for(int i1 = 0; i1 < 8; i1++) {
-										if(i1 != i) {
-											if(player.getInventory().getItem(i1) != null) {
-												if(player.getInventory().getItem(i1).getType() == Material.BOW) {
-													continue;
-												}
-												else {
-													player.getInventory().setHeldItemSlot(i1);
-													player.updateInventory();
-													break;
-												}
-											}
-											else {
-												player.getInventory().setHeldItemSlot(i1);
-												player.updateInventory();
-												break;
-											}
-										}
-									}
-									new BukkitRunnable() {
-										public void run() {
-											player.getInventory().setHeldItemSlot(i);
-											player.updateInventory();
-										}
-									}.runTaskLater(CustomEnchantments.getInstance(), 2L);
+//									for(int i1 = 0; i1 < 8; i1++) {
+//										if(i1 != i) {
+//											if(player.getInventory().getItem(i1) != null) {
+//												if(player.getInventory().getItem(i1).getType() == Material.BOW) {
+//													continue;
+//												}
+//												else {
+//													player.getInventory().setHeldItemSlot(i1);
+//													player.updateInventory();
+//													break;
+//												}
+//											}
+//											else {
+//												player.getInventory().setHeldItemSlot(i1);
+//												player.updateInventory();
+//												break;
+//											}
+//										}
+//									}
+//									new BukkitRunnable() {
+//										public void run() {
+//											player.getInventory().setHeldItemSlot(i);
+//											player.updateInventory();
+//										}
+//									}.runTaskLater(CustomEnchantments.getInstance(), 2L);
 									Location loc = player.getLocation();
 									loc.add(0, 1.40, 0);
 									Vector direction = loc.getDirection();
@@ -389,8 +390,17 @@ public class EffectSkills implements Listener{
 										arrow.setCritical(true);
 									}
 									arrow.setShooter(player);
-									arrow.setCustomName(s.getAttackStrength(player) + "");
+									arrow.setMetadata("AttackStrength", new FixedMetadataValue(CustomEnchantments.getInstance(), s.getAttackStrength(player)));
 									arrowList.put(arrow.getUniqueId(), s.getAttackStrength(player));
+									player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+									this.attackSpeed(player);
+									EffectSkills sk = new EffectSkills();
+									new BukkitRunnable() {
+										public void run() {
+											player.getInventory().setItemInMainHand(item);
+											sk.attackSpeed(player);
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), 0L);
 									if(item.hasItemMeta()) {
 										ItemMeta meta = item.getItemMeta();
 										if(meta.hasLore()) {

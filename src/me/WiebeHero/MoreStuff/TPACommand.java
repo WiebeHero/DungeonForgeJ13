@@ -106,17 +106,25 @@ public class TPACommand implements Listener,CommandExecutor{
 											int count = 60;
 											int temp = 0;
 											public void run() {
-												if(loc.distance(p.getKey().getLocation()) == 0.00) {
-													if(temp == 0) {
-														temp = temp - 20;
-														if(count / 20 != 0) {
-															p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
+												if(!loc.getWorld().getName().equals(p.getKey().getWorld().getName())) {
+													if(loc.distance(p.getKey().getLocation()) == 0.00) {
+														if(temp == 0) {
+															temp = temp - 20;
+															if(count / 20 != 0) {
+																p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
+															}
+														}
+														if(count == 0) {
+															p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getKey().getName() + "Has teleported to your location!"));
+															p.getKey().teleport(player);
+															tpRequests.remove(p.getKey());
+															cancel();
 														}
 													}
-													if(count == 0) {
-														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
-														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getKey().getName() + "Has teleported to your location!"));
-														p.getKey().teleport(player);
+													else {
+														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cTeleportation was cancelled, you have to stand still."));
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cTeleportation was cancelled, &6" + player.getName() + " &cdidn't stand still."));
 														tpRequests.remove(p.getKey());
 														cancel();
 													}
@@ -144,18 +152,26 @@ public class TPACommand implements Listener,CommandExecutor{
 											int count = 60;
 											int temp = 0;
 											public void run() {
-												if(loc.distance(player.getLocation()) == 0.00) {
-													if(temp == 0) {
-														temp = temp - 20;
-														if(count / 20 != 0) {
-															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
+												if(!loc.getWorld().getName().equals(player.getWorld().getName())) {
+													if(loc.distance(player.getLocation()) == 0.00) {
+														if(temp == 0) {
+															temp = temp - 20;
+															if(count / 20 != 0) {
+																player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting in &b" + (count / 20) + " Seconds..."));
+															}
+														}
+														if(count == 0) {
+															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+															p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHas teleported to your location!"));
+															player.teleport(p.getKey());
+															tphereRequests.remove(p.getKey());
+															cancel();
 														}
 													}
-													if(count == 0) {
-														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
-														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHas teleported to your location!"));
-														player.teleport(p.getKey());
-														tphereRequests.remove(p.getKey());
+													else {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cTeleportation was cancelled, you have to stand still."));
+														p.getKey().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cTeleportation was cancelled, &6" + player.getName() + " &cdidn't stand still."));
+														tpRequests.remove(p.getKey());
 														cancel();
 													}
 												}

@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomEvents.DFShootBowEvent;
 
 public class SwordSwingProgress implements Listener{
 	public static ArrayList<String> names = new ArrayList<String>();
@@ -130,6 +131,26 @@ public class SwordSwingProgress implements Listener{
 	@EventHandler
 	public void joinEvent(PlayerJoinEvent event) {
 		Player player = (Player) event.getPlayer();
+		if(!(names.contains(player.getName()))) {
+			names.add(player.getName());
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					if(swordSwingProgress.get(player.getName()) == null) {
+						swordSwingProgress.put(player.getName(), (float) 0.0);
+					}
+					swordSwingProgress.put(player.getName(), getSwingProgress(player));
+					if(swordSwingProgress.get(player.getName()) == 1) {
+						cancel();
+						names.remove(player.getName());
+					}
+				}
+			}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+		}
+	}
+	@EventHandler
+	public void joinEvent(DFShootBowEvent event) {
+		Player player = (Player) event.getShooter();
 		if(!(names.contains(player.getName()))) {
 			names.add(player.getName());
 			new BukkitRunnable() {

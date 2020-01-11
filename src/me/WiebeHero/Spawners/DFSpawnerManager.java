@@ -36,11 +36,13 @@ import de.tr7zw.nbtinjector.NBTInjector;
 import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.MoreStuff.Disparitys;
 import me.WiebeHero.Skills.DFPlayer;
 import me.WiebeHero.Skills.EffectSkills;
 import me.WiebeHero.Skills.Enums.Classes;
 
 public class DFSpawnerManager {
+	private Disparitys disp = new Disparitys();
 	public HashMap<UUID, DFSpawner> spawnerList;
 	public HashMap<EntityType, Pair<ArrayList<ItemStack>, ArrayList<String>>> names = new HashMap<EntityType, Pair<ArrayList<ItemStack>, ArrayList<String>>>();
 	public DFPlayer method = new DFPlayer();
@@ -282,10 +284,7 @@ public class DFSpawnerManager {
 			zombie.setBaby(false);
 		}
 		mob.getEquipment().setHelmet(head);
-		int level = (new Random().nextInt(20) + 20 * (tier - 1));
-		if(level == 0) {
-			level++;
-		}
+		int level = disp.calculateDisparity(mob.getLocation());
 		Entity ent = NBTInjector.patchEntity(mob);
 		NBTCompound comp = NBTInjector.getNbtData(ent);
 		comp.setString("SpawnerUUID", spawner.getUUID().toString());
@@ -477,7 +476,7 @@ public class DFSpawnerManager {
 				break;
 			}
 		}
-		dfPlayer.setMove(0.2 + 0.01 * tier + 0.00035 * level);
+		dfPlayer.setMove(0.2 + 0.01 * tier + 0.0003 * level);
 		dfPlayer.resetCalculations();
 		sk.attackSpeed(mob);
 		sk.changeHealth(mob);
@@ -487,6 +486,7 @@ public class DFSpawnerManager {
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 10L);
 		sk.runDefense(mob);
+		mob.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1.5 * tier);
 		mob.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(0.2 * dfPlayer.getDf());
 		mob.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(0.1333 * dfPlayer.getDf());
 		mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(17.50);

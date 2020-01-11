@@ -27,6 +27,7 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
 import me.WiebeHero.MoreStuff.SwordSwingProgress;
+import me.WiebeHero.Skills.EffectSkills;
 
 public class EnchantmentHandler extends SwordSwingProgress{
 	Enchantment enchantment = CustomEnchantments.getInstance().enchant;
@@ -111,30 +112,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 							}
 						}
 					}
-					else if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.PROJECTILE) {
-						if(d == 1.0) {
-							if(damager.getEquipment().getItemInMainHand() != null) {
-								if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
-									if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
-										for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-											String enchant = ChatColor.stripColor(s1);
-											String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-											if(enchantment.getBowEnchantments().containsKey(check)) {
-												if(enchantment.getBowEnchantments().get(check).getKey() == Condition.ENTITY_DEATH_PROJECTILE) {
-													enchant = enchant.replaceAll("[^\\d.]", "");
-													int level = Integer.parseInt(enchant) - 1;
-													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
-													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
-													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
-													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
 				}
 			}
 		}
@@ -169,30 +146,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 													enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 													enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					else if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.PROJECTILE) {
-						if(d == 1.0) {
-							if(damager.getEquipment().getItemInMainHand() != null) {
-								if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
-									if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
-										for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-											String enchant = ChatColor.stripColor(s1);
-											String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-											if(enchantment.getBowEnchantments().containsKey(check)) {
-												if(enchantment.getBowEnchantments().get(check).getKey() == Condition.PLAYER_DEATH_PROJECTILE) {
-													enchant = enchant.replaceAll("[^\\d.]", "");
-													int level = Integer.parseInt(enchant) - 1;
-													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
-													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
-													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
-													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
 												}
 											}
 										}
@@ -330,16 +283,9 @@ public class EnchantmentHandler extends SwordSwingProgress{
 					if(!event.isCancelled()) {
 						LivingEntity damager = (LivingEntity) arrow.getShooter();
 						LivingEntity victim = (LivingEntity) event.getEntity();
-						double d = 0.0;
-						if(swordSwingProgress.containsKey(damager.getName())) {
-							d = swordSwingProgress.get(damager.getName());
-						}
-						else {
-							d = 1.0;
-						}
 						DamageCause damageCause = event.getCause();
 						if(damageCause != null && damageCause == DamageCause.PROJECTILE) {
-							if(d == 1.0) {
+							if(arrow.hasMetadata("AttackStrength") && arrow.getMetadata("AttackStrength").get(0).asDouble() == 1.00) {
 								if(damager.getEquipment().getItemInMainHand() != null) {
 									if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
 										if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
@@ -372,15 +318,8 @@ public class EnchantmentHandler extends SwordSwingProgress{
 		if(event.getShooter() instanceof LivingEntity){
 			if(!event.isCancelled()) {
 				LivingEntity damager = (LivingEntity) event.getShooter();
-				double d = 0.0;
-				if(swordSwingProgress.containsKey(damager.getName())) {
-					d = swordSwingProgress.get(damager.getName());
-				}
-				else {
-					d = 1.0;
-				}
 				ItemStack item = event.getBow();
-				if(d == 1.0) {
+				if(event.getProjectile().hasMetadata("AttackStrength") && event.getProjectile().getMetadata("AttackStrength").get(0).asDouble() == 1.00) {
 					if(item != null) {
 						if(item.hasItemMeta()) {
 							if(item.getItemMeta().hasLore()) {
@@ -409,18 +348,20 @@ public class EnchantmentHandler extends SwordSwingProgress{
 			Arrow arrow = (Arrow) event.getEntity();
 			if(arrow.getShooter() instanceof LivingEntity) {
 				LivingEntity damager = (LivingEntity) arrow.getShooter();
-				if(damager.getEquipment().getItemInMainHand() != null) {
-					if(damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
-						if(damager.getEquipment().getItemInMainHand().getItemMeta().getLore() != null) {
-							for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-								String enchant = ChatColor.stripColor(s1);
-								String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-								if(enchantment.getBowEnchantments().containsKey(check)) {
-									if(enchantment.getBowEnchantments().get(check).getKey() == Condition.PROJECTILE_LAND) {
-										enchant = enchant.replaceAll("[^\\d.]", "");
-										int level = Integer.parseInt(enchant) - 1;
-										enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
-										enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+				if(arrow.hasMetadata("AttackStrength") && arrow.getMetadata("AttackStrength").get(0).asDouble() == 1.00) {
+					if(damager.getEquipment().getItemInMainHand() != null) {
+						if(damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
+							if(damager.getEquipment().getItemInMainHand().getItemMeta().getLore() != null) {
+								for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+									String enchant = ChatColor.stripColor(s1);
+									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+									if(enchantment.getBowEnchantments().containsKey(check)) {
+										if(enchantment.getBowEnchantments().get(check).getKey() == Condition.PROJECTILE_LAND) {
+											enchant = enchant.replaceAll("[^\\d.]", "");
+											int level = Integer.parseInt(enchant) - 1;
+											enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
+											enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+										}
 									}
 								}
 							}

@@ -6,4 +6,19 @@ public class ProffesionPath {
 		COLLECTION_MINER,
 		LOOTING_MINER
 	}
+	public enum ProffesionPathLumber{
+		COMBAT_LUMBERJACK,
+		COLLECTION_LUMBERJACK,
+		LOOTING_LUMBERJACK
+	}
+	public enum ProffesionPathFarmer{
+		COMBAT_MINER,
+		COLLECTION_MINER,
+		LOOTING_MINER
+	}
+	public enum ProffesionPathDigger{
+		COMBAT_MINER,
+		COLLECTION_MINER,
+		LOOTING_MINER
+	}
 }

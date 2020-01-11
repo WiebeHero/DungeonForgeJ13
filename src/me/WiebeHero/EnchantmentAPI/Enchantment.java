@@ -1837,11 +1837,13 @@ public class Enchantment extends CommandFile implements Listener{
 				if(df.containsPlayer(damager)) {
 					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
 					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
-						dfPlayer.addMove(0.035 + 0.035 * level, 0);
-						list.put(dfPlayer.getUUID(), 0.035 + 0.035 * level);
+						dfPlayer.addMove(0.02 + 0.02 * level, 0);
+						damager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(dfPlayer.getMove());
+						list.put(dfPlayer.getUUID(), 0.02 + 0.02 * level);
 					}
 					else if(equiped == false && list.containsKey(damager.getUniqueId())) {
 						dfPlayer.removeMove(list.get(dfPlayer.getUUID()), 0);
+						damager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(dfPlayer.getMove());
 						list.remove(dfPlayer.getUUID());
 					}
 				}

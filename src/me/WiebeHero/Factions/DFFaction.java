@@ -39,7 +39,7 @@ public class DFFaction {
 		this.invitedList = new ArrayList<UUID>();
 		this.facName = facName;
 		this.facP = 0;
-		this.energy = 0.00;
+		this.energy = 2.00;
 	}
 	public DFFaction(String facName) {
 		this.memberList = new HashMap<UUID, Integer>();
@@ -49,7 +49,7 @@ public class DFFaction {
 		this.invitedList = new ArrayList<UUID>();
 		this.facName = facName;
 		this.facP = 0;
-		this.energy = 0.00;
+		this.energy = 2.00;
 	}
 	public DFFaction() {
 		//Empty Constructor
@@ -68,13 +68,13 @@ public class DFFaction {
 					if(count > 5) {
 						count = 5;
 					}
-					if(fac.getEnergy() + 0.01 * count <= 30.00) {
-						fac.addEnergy(0.01 * count);
+					if(fac.getEnergy() + 0.015 + 0.015 * count <= 30.00) {
+						fac.addEnergy(0.015 + 0.015 * count);
 						count = 0;
 					}
 				}
 			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 540L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 400L);
 	}
 	public void loadFactions() {
 		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");

@@ -33,7 +33,6 @@ public class ClassWrath implements Listener{
 		if(method.containsPlayer(player)) {
 			if(dfPlayer.getPlayerClass() == Classes.WRATH) {
 				if(dfPlayer.getUseable()) {
-					dfPlayer.setUseable(false);
 					int level = dfPlayer.getLevel();
 					double damage1 = 5 + level * 0.15;
 					double range = 4 + level * 0.06;
@@ -42,6 +41,7 @@ public class ClassWrath implements Listener{
 					ArrayList<Entity> ents = new ArrayList<Entity>(player.getNearbyEntities(range, range, range));
 					ents.remove(player);
 					if(!ents.isEmpty()) {
+						dfPlayer.setUseable(false);
 						for(Entity e : ents) {
 							if(e != null) {
 								if(e instanceof LivingEntity) {

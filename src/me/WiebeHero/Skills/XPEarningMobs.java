@@ -43,19 +43,19 @@ public class XPEarningMobs implements Listener{
 							i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
 						}
 						if(tier == 1) {
-							i1 = new Random().nextInt(100) + 100 + 2 * levelMob;
+							i1 = new Random().nextInt(25) + 75 + 5 * levelMob;
 						}
 						else if(tier == 2) {
-							i1 = new Random().nextInt(135) + 135 + 3 * levelMob;
+							i1 = new Random().nextInt(30) + 100 + 6 * levelMob;
 						}
 						else if(tier == 3) {
-							i1 = new Random().nextInt(170) + 170 + 4 * levelMob;
+							i1 = new Random().nextInt(60) + 350 + 7 * levelMob;
 						}
 						else if(tier == 4) {
-							i1 = new Random().nextInt(205) + 205 + 5 * levelMob;
+							i1 = new Random().nextInt(65) + 400 + 8 * levelMob;
 						}
 						else if(tier == 5) {
-							i1 = new Random().nextInt(240) + 240 + 6 * levelMob;
+							i1 = new Random().nextInt(70) + 450 + 9 * levelMob;
 						}
 						else {
 							i1 = new Random().nextInt(3) + 3 + 2 * levelMob;

@@ -42,6 +42,7 @@ import javafx.util.Pair;
 import me.WiebeHero.ArmoryPackage.DFArmorUpgrade;
 import me.WiebeHero.ArmoryPackage.DFShieldUpgrade;
 import me.WiebeHero.ArmoryPackage.DFWeaponUpgrade;
+import me.WiebeHero.ArmoryPackage.LevelRequired;
 import me.WiebeHero.ArmoryPackage.XPAddWeapons;
 import me.WiebeHero.Consumables.Consumable;
 import me.WiebeHero.Consumables.ConsumableHandler;
@@ -82,11 +83,11 @@ import me.WiebeHero.MoreStuff.Disparitys;
 import me.WiebeHero.MoreStuff.EnderPearlCooldown;
 import me.WiebeHero.MoreStuff.LevelRestrictions;
 import me.WiebeHero.MoreStuff.MOTDSetting;
-import me.WiebeHero.MoreStuff.MoneyCreation;
 import me.WiebeHero.MoreStuff.Portals;
 import me.WiebeHero.MoreStuff.PreventIllegalItems;
 import me.WiebeHero.MoreStuff.PreventPhantom;
 import me.WiebeHero.MoreStuff.RestrictInteractionWithBlocks;
+import me.WiebeHero.MoreStuff.RestrictItemInteraction;
 import me.WiebeHero.MoreStuff.SetHomeSystem;
 import me.WiebeHero.MoreStuff.SpawnCommand;
 import me.WiebeHero.MoreStuff.SwordSwingProgress;
@@ -258,8 +259,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 		//NeededStuff
 		getServer().getPluginManager().registerEvents(tpa, this);
-		getServer().getPluginManager().registerEvents(new MoneyCreation(), this);
 		getServer().getPluginManager().registerEvents(new CombatTag(), this);
+		getServer().getPluginManager().registerEvents(new LevelRequired(), this);
 		getServer().getPluginManager().registerEvents(new Chat(), this);
 		getServer().getPluginManager().registerEvents(new Portals(), this);
 		getServer().getPluginManager().registerEvents(new SwordSwingProgress(), this);
@@ -271,6 +272,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new MOTDSetting(), this);
 		getServer().getPluginManager().registerEvents(new DisableThings(), this);
 		getServer().getPluginManager().registerEvents(new ChatItem(), this);
+		getServer().getPluginManager().registerEvents(new RestrictItemInteraction(), this);
 		getServer().getPluginManager().registerEvents(new CancelJoinLeaveAdvancementMessages(), this);
 		//Shop
 		getServer().getPluginManager().registerEvents(new DFShop(), this);

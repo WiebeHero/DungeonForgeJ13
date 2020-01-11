@@ -832,7 +832,7 @@ public class SkillMenu {
 		i.setItem(27, empty());
 		i.setItem(28, empty());
 		i.setItem(29, empty());
-		i.setItem(30, empty());
+		i.setItem(30, resetButton());
 		i.setItem(31, empty());
 		i.setItem(32, empty());
 		i.setItem(33, empty());
@@ -855,6 +855,30 @@ public class SkillMenu {
 		meta.setDisplayName(new CCT().colorize("&7Skill Points: &6" + skillPoints));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new CCT().colorize("&7Here, you can view how many &6Skill Points &7you have."));
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	public ItemStack resetButton() {
+		ItemStack item = new ItemStack(Material.PAPER);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize("&cReset"));
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(new CCT().colorize("&7Click this to reset."));
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	public ItemStack warning() {
+		ItemStack item = new ItemStack(Material.RED_WOOL);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize("&l&cWARNING"));
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(new CCT().colorize("&7You are now in the reset menu."));
+		lore.add(new CCT().colorize("&7If you want to reset, meaning you reset you'r skills"));
+		lore.add(new CCT().colorize("&7to 0 and resetting your class to none. Then click &aYes."));
+		lore.add(new CCT().colorize("&7However, if you do not desire this, then click on &cNo"));
+		lore.add(new CCT().colorize("&7or exit the inventory."));
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

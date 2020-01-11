@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -11,6 +12,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.WorldType;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,11 +49,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.onarandombox.MultiverseCore.MultiverseCore;
+
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodLuck;
+import me.WiebeHero.CustomMethods.MethodMulti;
 import me.WiebeHero.LootChest.LootChest;
 import me.WiebeHero.LootChest.LootChestManager;
 import me.WiebeHero.Scoreboard.DFScoreboard;
@@ -66,6 +73,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	private DFSpawnerManager spManager = CustomEnchantments.getInstance().spawnerManager;
 	private LootChestManager lcManager = CustomEnchantments.getInstance().lootChestManager;
 	private ModerationGUI gui = new ModerationGUI();
+	private MethodMulti multi = new MethodMulti();
 	private MethodLuck luck = new MethodLuck();
 	private Methods m = new Methods();
 	private DFScoreboard board = new DFScoreboard();
@@ -589,13 +597,62 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										}
 									}.runTaskLater(CustomEnchantments.getInstance(), 100L);
 								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
+								}
 							}
 							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
 							}
 						}
-						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
+						else if(args[0].equalsIgnoreCase("hardreset")) {
+							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
+								Staff staff = sManager.get(player.getUniqueId());
+								if(staff.getRank() >= 8) {
+									CustomEnchantments.shutdown = true;
+									CustomEnchantments.maintenance = true;
+									for(Player p : Bukkit.getOnlinePlayers()) {
+										if(p != null) {
+											p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
+										}
+									}
+									for(OfflinePlayer temp : Bukkit.getOfflinePlayers()) {
+										Player p = m.convertOfflinePlayer(temp.getUniqueId());
+										if(p.getName() != null) {
+											p.getInventory().clear();
+											p.getEnderChest().clear();
+											p.saveData();
+										}
+									}
+									MultiverseCore mul = multi.getMultiverseCore();
+									if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") != null) {
+										mul.deleteWorld("FactionWorld-1");
+									}
+									if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") == null) {
+										long mapSeed = new Random().nextLong();
+										mul.getMVWorldManager().addWorld("FactionWorld-1", Environment.NORMAL, mapSeed + "", WorldType.NORMAL, false, "World");
+									}
+									World world = Bukkit.getWorld("FactionWorld-1");
+									world.getWorldBorder().setSize(5000.00);
+									CustomEnchantments.hardSave = true;
+									CustomEnchantments.getInstance().clearDfPlayers();
+									CustomEnchantments.getInstance().clearFactions();
+									
+									new BukkitRunnable() {
+										@Override
+										public void run() {
+											Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
+											Bukkit.getServer().shutdown();
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), 3000L);
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
+							}
 						}
 					}
 					else if(args.length == 2) {
@@ -637,6 +694,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											if(p != player) {
 												if(sManager.contains(p.getUniqueId()) && sManager.get(p.getUniqueId()).getRank() == 0) {
 													p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode was initiated, standby."));
+													
 												}
 											}
 										}

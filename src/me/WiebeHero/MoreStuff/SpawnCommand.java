@@ -32,24 +32,31 @@ public class SpawnCommand implements Listener,CommandExecutor{
 							int temp = 0;
 							@Override
 							public void run() {
-								if(loc.distance(player.getLocation()) == 0.00) {
-									if(temp == 0) {
-										temp = temp - 20;
-										if(count / 20 != 0) {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to spawn in " + (count / 20) + "..."));
+								if(!loc.getWorld().getName().equals(player.getWorld().getName())) {
+									if(loc.distance(player.getLocation()) == 0.00) {
+										if(temp == 0) {
+											temp = temp - 20;
+											if(count / 20 != 0) {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to spawn in " + (count / 20) + "..."));
+											}
+										}
+										if(count == 0) {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+											World world = Bukkit.getWorld("DFWarzone-1");
+											double x = Bukkit.getWorld("DFWarzone-1").getSpawnLocation().getX();
+											double y = Bukkit.getWorld("DFWarzone-1").getSpawnLocation().getY();
+											double z = Bukkit.getWorld("DFWarzone-1").getSpawnLocation().getZ();
+											Location loc = new Location(world, x, y, z, 180.00F, 00.00F);
+											player.teleport(loc);
+											count = 10;
+											spawning.remove(player.getUniqueId().toString());
+											cancel();
 										}
 									}
-									if(count == 0) {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
-										World world = Bukkit.getWorld("DFWarzone-1");
-										double x = Bukkit.getWorld("DFWarzone-1").getSpawnLocation().getX();
-										double y = Bukkit.getWorld("DFWarzone-1").getSpawnLocation().getY();
-										double z = Bukkit.getWorld("DFWarzone-1").getSpawnLocation().getZ();
-										Location loc = new Location(world, x, y, z, 180.00F, 00.00F);
-										player.teleport(loc);
-										count = 10;
-										spawning.remove(player.getUniqueId().toString());
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
 										cancel();
+										spawning.remove(player.getUniqueId().toString());
 									}
 								}
 								else {

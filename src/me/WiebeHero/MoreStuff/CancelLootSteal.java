@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -35,9 +35,8 @@ public class CancelLootSteal implements Listener{
 			}
 		}
 	}
-	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void cancelIllegalPickup(PlayerPickupItemEvent event) {
+	public void cancelIllegalPickup(PlayerAttemptPickupItemEvent event) {
 		Player player = event.getPlayer();
 		Item item = event.getItem();
 		if(item.hasMetadata("Prevent")) {

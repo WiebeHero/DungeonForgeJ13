@@ -18,73 +18,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.LootChest.LootRewards;
 
 public class DeathOfMob implements Listener {
+	private LootRewards rewards = new LootRewards();
 	@EventHandler
 	public void deathEvent(EntityDeathEvent event) {
 		if(event.getEntity().getKiller() instanceof Player) {
 			if(event.getEntity() instanceof LivingEntity) {
 				LivingEntity victim = event.getEntity();
-				//----------------------------------------------------------------------------------
-				//Common Crystal
-				//----------------------------------------------------------------------------------
-				ItemStack item1 = new ItemStack(Material.NETHER_STAR, 1);
-				ItemMeta itemmeta1 = item1.getItemMeta();
-				itemmeta1.setDisplayName(new CCT().colorize("&7Common Crystal"));
-				ArrayList<String> lore1 = new ArrayList<String>();
-				lore1.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore1.add(new CCT().colorize("&7a reward!"));
-				lore1.add(new CCT().colorize("&7Rarity: Common"));
-				itemmeta1.setLore(lore1);
-				item1.setItemMeta(itemmeta1);
-				//----------------------------------------------------------------------------------
-				//Rare Crystal
-				//----------------------------------------------------------------------------------
-				ItemStack item2 = new ItemStack(Material.NETHER_STAR, 1);
-				ItemMeta itemmeta2 = item2.getItemMeta();
-				itemmeta2.setDisplayName(new CCT().colorize("&aRare Crystal"));
-				ArrayList<String> lore2 = new ArrayList<String>();
-				lore2.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore2.add(new CCT().colorize("&7a reward!"));
-				lore2.add(new CCT().colorize("&7Rarity: &aRare"));
-				itemmeta2.setLore(lore2);
-				item2.setItemMeta(itemmeta2);
-				//----------------------------------------------------------------------------------
-				//Epic Crystal
-				//----------------------------------------------------------------------------------
-				ItemStack item3 = new ItemStack(Material.NETHER_STAR, 1);
-				ItemMeta itemmeta3 = item3.getItemMeta();
-				itemmeta3.setDisplayName(new CCT().colorize("&bEpic Crystal"));
-				ArrayList<String> lore3 = new ArrayList<String>();
-				lore3.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore3.add(new CCT().colorize("&7a reward!"));
-				lore3.add(new CCT().colorize("&7Rarity: &bEpic"));
-				itemmeta3.setLore(lore3);
-				item3.setItemMeta(itemmeta3);
-				//----------------------------------------------------------------------------------
-				//Legendary Crystal
-				//----------------------------------------------------------------------------------
-				ItemStack item4 = new ItemStack(Material.NETHER_STAR, 1);
-				ItemMeta itemmeta4 = item4.getItemMeta();
-				itemmeta4.setDisplayName(new CCT().colorize("&cLegendary Crystal"));
-				ArrayList<String> lore4 = new ArrayList<String>();
-				lore4.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore4.add(new CCT().colorize("&7a reward!"));
-				lore4.add(new CCT().colorize("&7Rarity: &cLegendary"));
-				itemmeta4.setLore(lore4);
-				item4.setItemMeta(itemmeta4);
-				//----------------------------------------------------------------------------------
-				//Mythic Crystal
-				//----------------------------------------------------------------------------------
-				ItemStack item5 = new ItemStack(Material.NETHER_STAR, 1);
-				ItemMeta itemmeta5 = item5.getItemMeta();
-				itemmeta5.setDisplayName(new CCT().colorize("&5Mythic Crystal"));
-				ArrayList<String> lore5 = new ArrayList<String>();
-				lore5.add(new CCT().colorize("&7Bring this to &6NOVIS &7to get"));
-				lore5.add(new CCT().colorize("&7a reward!"));
-				lore5.add(new CCT().colorize("&7Rarity: &5Mythic"));
-				itemmeta5.setLore(lore5);
-				item4.setItemMeta(itemmeta5);
+				ItemStack item1 = rewards.commonCrystal();
+				ItemStack item2 = rewards.rareCrystal();
+				ItemStack item3 = rewards.epicCrystal();
+				ItemStack item4 = rewards.legendaryCrystal();
+				ItemStack item5 = rewards.mythicCrystal();
 				Entity e = event.getEntity();
 	    		e = NBTInjector.patchEntity(e);
 	    		NBTCompound comp = NBTInjector.getNbtData(e);

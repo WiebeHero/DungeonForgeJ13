@@ -1155,24 +1155,20 @@ public class DFPlayer {
 	
 	public void setMove(double amount) {
 		this.move = amount;
-		this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
 	}
 	
 	public void addMove(double amount, long time) {
 		if(time != 0) {
 			this.move = this.move + amount;
 			DFPlayer p = this;
-			p.returnPlayer().getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
 			new BukkitRunnable() {
 				public void run() {
 					p.move = p.move - amount;
-					p.returnPlayer().getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(p.move);
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
 			this.move = this.move + amount;
-			this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
 		}
 		sk.runDefense(this.player);
 	}
@@ -1181,16 +1177,13 @@ public class DFPlayer {
 		if(time != 0) {
 			this.move = this.move - amount;
 			DFPlayer p = this;
-			p.returnPlayer().getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
 			new BukkitRunnable() {
 				public void run() {
 					p.move = p.move + amount;
-					p.returnPlayer().getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(p.move);
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
 			this.move = this.move - amount;
 		}
 		sk.runDefense(this.player);
