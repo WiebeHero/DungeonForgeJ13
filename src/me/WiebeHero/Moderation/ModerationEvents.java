@@ -551,13 +551,8 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
 										}
 									}
-									new BukkitRunnable() {
-										@Override
-										public void run() {
-											Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
-											Bukkit.getServer().shutdown();
-										}
-									}.runTaskLater(CustomEnchantments.getInstance(), 100L);
+									Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
+									Bukkit.getServer().shutdown();
 								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
