@@ -106,7 +106,7 @@ public class TPACommand implements Listener,CommandExecutor{
 											int count = 60;
 											int temp = 0;
 											public void run() {
-												if(!loc.getWorld().getName().equals(p.getKey().getWorld().getName())) {
+												if(loc.getWorld().getName().equals(p.getKey().getWorld().getName())) {
 													if(loc.distance(p.getKey().getLocation()) == 0.00) {
 														if(temp == 0) {
 															temp = temp - 20;
@@ -152,7 +152,7 @@ public class TPACommand implements Listener,CommandExecutor{
 											int count = 60;
 											int temp = 0;
 											public void run() {
-												if(!loc.getWorld().getName().equals(player.getWorld().getName())) {
+												if(loc.getWorld().getName().equals(player.getWorld().getName())) {
 													if(loc.distance(player.getLocation()) == 0.00) {
 														if(temp == 0) {
 															temp = temp - 20;

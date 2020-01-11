@@ -57,7 +57,7 @@ public class XPAddWeapons implements Listener{
 								int xpCursor = cursor.getInteger("XP") + 500;
 								int totalXpCursor = cursor.getInteger("TotalXP");
 								int total = xpItem + totalXpCursor + xpCursor;
-								DFItemXpGainEvent e = new DFItemXpGainEvent(player, i, c, total, event.getRawSlot());
+								DFItemXpGainEvent e = new DFItemXpGainEvent(player, i, c, total, event.getSlot());
 								Bukkit.getPluginManager().callEvent(e);
 								if(!e.isCancelled()) {
 									event.setCancelled(true);

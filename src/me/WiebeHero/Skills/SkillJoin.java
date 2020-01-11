@@ -189,7 +189,7 @@ public class SkillJoin implements Listener{
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
 		NBTItem item = new NBTItem(newItem);
 		item.setString("Upgradeable", "");
-		item.setString("ArmorKey", "Apprentice Helmet");
+		item.setString("ArmorKey", "Apprentice Chestplate");
 		item.setString("EnchantmentString", "Valor 4//Protection 1");
 		item.setInteger("Level", 1);
 		item.setInteger("XP", 0);
@@ -255,7 +255,7 @@ public class SkillJoin implements Listener{
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
 		NBTItem item = new NBTItem(newItem);
 		item.setString("Upgradeable", "");
-		item.setString("ArmorKey", "Apprentice Helmet");
+		item.setString("ArmorKey", "Apprentice Leggings");
 		item.setString("EnchantmentString", "Ignite 4//Enlightened 1");
 		item.setInteger("Level", 1);
 		item.setInteger("XP", 0);
@@ -321,7 +321,7 @@ public class SkillJoin implements Listener{
 		ItemStack newItem = CraftItemStack.asBukkitCopy(nmsStack1);
 		NBTItem item = new NBTItem(newItem);
 		item.setString("Upgradeable", "");
-		item.setString("ArmorKey", "Apprentice Helmet");
+		item.setString("ArmorKey", "Apprentice Boots");
 		item.setString("EnchantmentString", "Ignite 4//Enlightened 1");
 		item.setInteger("Level", 1);
 		item.setInteger("XP", 0);
