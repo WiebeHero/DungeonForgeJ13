@@ -32,7 +32,7 @@ public class SpawnCommand implements Listener,CommandExecutor{
 							int temp = 0;
 							@Override
 							public void run() {
-								if(!loc.getWorld().getName().equals(player.getWorld().getName())) {
+								if(loc.getWorld().getName().equals(player.getWorld().getName())) {
 									if(loc.distance(player.getLocation()) == 0.00) {
 										if(temp == 0) {
 											temp = temp - 20;

@@ -207,15 +207,15 @@ public class Disparitys implements Listener{
 		}
 	}
 	public int calculateDisparity(Location loc) {
-		int min = -1022;
+		int min = -1023;
 		int calc = 0;
 		if(loc.getZ() >= 0 && loc.getZ() <= 772) {
 			calc = Math.abs((int)loc.getZ() - 772);
 		}
 		else {
-			calc = min + 1022 + 772 + (int)Math.abs(loc.getZ());
+			calc = min + 1023 + 772 + (int)Math.abs(loc.getZ());
 		}
-		double disparity = (double)calc / 1795.00 * 100.00;
+		double disparity = (double)calc / 1796.00 * 100.00 + 1.0;
 		return (int)disparity;
 	}
 }
