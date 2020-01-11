@@ -68,9 +68,11 @@ public class DFFaction {
 					if(count > 5) {
 						count = 5;
 					}
-					if(fac.getEnergy() + 0.015 + 0.015 * count <= 30.00) {
-						fac.addEnergy(0.015 + 0.015 * count);
-						count = 0;
+					if(count != 0) {
+						if(fac.getEnergy() + 0.025 * count <= 30.00) {
+							fac.addEnergy(0.015 + 0.015 * count);
+							count = 0;
+						}
 					}
 				}
 			}
