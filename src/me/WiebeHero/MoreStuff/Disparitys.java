@@ -34,7 +34,7 @@ public class Disparitys implements Listener{
 		Player player = event.getPlayer();
 		BossBar bar = disparityList.get(player.getName());
 		if(player.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
-			if(player.getLocation().getZ() <= 773 && player.getLocation().getZ() >= -1022) {
+			if(player.getLocation().getZ() <= 772 && player.getLocation().getZ() >= -1023) {
 				if(!names.contains(player.getName())) {
 					names.add(player.getName());
 					if(bar != null) {
@@ -144,7 +144,7 @@ public class Disparitys implements Listener{
 					Player victim = (Player) event.getEntity();
 					if(damager.getShooter() instanceof Player) {
 						Player shooter = (Player) damager.getShooter();
-						if(shooter.getWorld().getName().equalsIgnoreCase("dfwn-1")) {
+						if(shooter.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
 							if(method.containsPlayer(victim) && method.containsPlayer(shooter)) {
 								DFPlayer dfPlayerD = new DFPlayer().getPlayer(shooter);
 								DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
@@ -215,7 +215,7 @@ public class Disparitys implements Listener{
 		else {
 			calc = min + 1023 + 772 + (int)Math.abs(loc.getZ());
 		}
-		double disparity = (double)calc / 1796.00 * 100.00 + 1.0;
+		double disparity = (double)calc / 1795.00 * 100.00 + 1.0;
 		return (int)disparity;
 	}
 }
