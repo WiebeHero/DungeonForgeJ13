@@ -20,6 +20,7 @@ import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Arrow;
@@ -1327,27 +1328,21 @@ public class Enchantment extends CommandFile implements Listener{
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_WOLF_HOWL, 2, (float) 1);
 					}
 					Wolf wolf = (Wolf) damager.getWorld().spawnEntity(victim.getLocation(), EntityType.WOLF);
-					wolf.setCustomName(new CCT().colorize("&a&lWolf &6[&aLv 1&6]"));
+					wolf.setCustomName(new CCT().colorize("&a&lWolf &6[&aLv " + (level + 1) + "&6]"));
 					wolf.setCustomNameVisible(true);
 					wolf.setOwner((AnimalTamer)damager);
 					wolf.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50.00 + level * 10.00);
 					wolf.setHealth(50.00 + level * 10.00);
 					wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0 + level));
+					wolf.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(5.0 + 5.0 * level);
+					wolf.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(2.0 + 2.0 * level);
+					wolf.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(3.0 + 3.0 * level);
 					list.put(wolf.getUniqueId(), level);
 					new BukkitRunnable() {
 						public void run() {
 							wolf.remove();
 						}
 					}.runTaskLater(CustomEnchantments.getInstance(), 600L + 50 * level);
-				}
-			}
-			@EventHandler
-			public void bruh(EntityDamageByEntityEvent event) {
-				if(list.containsKey(event.getDamager().getUniqueId())) {
-					event.setDamage(event.getDamage() + 1.5 + list.get(event.getDamager().getUniqueId()) * 1.5);
-				}
-				if(list.containsKey(event.getEntity().getUniqueId())) {
-					event.setDamage(event.getDamage() - 1.5 + list.get(event.getEntity().getUniqueId()) * 1.5);
 				}
 			}
 		}));
@@ -1375,12 +1370,12 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Integer> list = new HashMap<UUID, Integer>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
-				if(!list.containsKey(damager.getUniqueId())) {
-					list.put(damager.getUniqueId(), 0);
+				if(!list.containsKey(victim.getUniqueId())) {
+					list.put(victim.getUniqueId(), 0);
 				}
-				list.put(damager.getUniqueId(), list.get(damager.getUniqueId()) + 1);
-				if(list.get(damager.getUniqueId()) == 8 - level) {
-					EntityLiving l = ((CraftPlayer)damager).getHandle();
+				list.put(victim.getUniqueId(), list.get(victim.getUniqueId()) + 1);
+				if(list.get(victim.getUniqueId()) == 8 - level) {
+					EntityLiving l = ((CraftLivingEntity)victim).getHandle();
 					l.setAbsorptionHearts(3.00F + 1.50F * level);
 				}
 			}
@@ -1404,6 +1399,34 @@ public class Enchantment extends CommandFile implements Listener{
 				if(extraDamage.containsKey(event.getDamager().getUniqueId())) {
 					event.setDamage(event.getDamage() + extraDamage.get(event.getDamager().getUniqueId()));
 					extraDamage.remove(event.getDamager().getUniqueId());
+				}
+			}
+		}));
+		this.listArmor.put("Adrenaline Rush", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
+				float i = ThreadLocalRandom.current().nextFloat() * 100;
+				DFPlayer dfPlayer = df.getPlayer(victim);
+				if(dfPlayer.getHealth() <= dfPlayer.getMaxHealth() / 100 * 25) {
+					if(i <= 20 + 5 * level) {
+						Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
+						victim.getWorld().spawnParticle(Particle.CLOUD, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
+						for(Player victim1 : Bukkit.getOnlinePlayers()) {
+							((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_RABBIT_HURT, 2, (float) 1);
+						}
+						int amp = 2;
+						int durationAdd = 130 + 20 * level;
+						ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.JUMP, PotionEffectType.SPEED));
+						p.applyEffect(victim, types, amp, durationAdd);
+						dfPlayer.addSpdCal(4.0 + 4.0 * level, 130 + 20 * level);
+						cooldown.add(victim.getUniqueId());
+						new BukkitRunnable() {
+							public void run() {
+								cooldown.remove(victim.getUniqueId());
+							}
+						}.runTaskLater(CustomEnchantments.getInstance(), 1200L - 50L * level);
+					}
 				}
 			}
 		}));
@@ -2152,7 +2175,7 @@ public class Enchantment extends CommandFile implements Listener{
 		this.listBow = new HashMap<String, Pair<Condition, CommandFile>>();
 		this.listBow.put("Black Heart", new Pair<>(Condition.PROJECTILE_DAMAGE, new CommandFile() {
 			@Override
-			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, PlayerInteractEvent event) {
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
 				if(i <= 5 + level) {
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 2D, victim.getLocation().getZ() + 0D);
@@ -2220,7 +2243,7 @@ public class Enchantment extends CommandFile implements Listener{
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
 				if(i <= 12 + 2 * level) {
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 2D, victim.getLocation().getZ() + 0D);
-					damager.getWorld().spawnParticle(Particle.REDSTONE, locCF, 60, 0.15, 0.15, 0.15, 0.1); 
+					damager.getWorld().spawnParticle(Particle.REDSTONE, locCF, 60, 0.15, 0.15, 0.15, new DustOptions(Color.RED, 5)); 
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GHAST_HURT, 2, (float) 0.5);
 					}
@@ -2502,7 +2525,8 @@ public class Enchantment extends CommandFile implements Listener{
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
 				if(i <= 6 + level) {
 					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 2.5D, victim.getLocation().getZ() + 0D);
-					victim.getWorld().spawnParticle(Particle.FALLING_DUST, locCF1, 80, 0.15, 0.15, 0.15, 0); 
+					BlockData block = Material.COAL_BLOCK.createBlockData();
+					victim.getWorld().spawnParticle(Particle.FALLING_DUST, locCF1, 80, 0.15, 0.15, 0.15, 0, block); 
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_SKELETON_HURT, 2, (float) 1.1);
 					}

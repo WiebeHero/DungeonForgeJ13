@@ -37,6 +37,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent.Reason;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -945,6 +946,16 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	}
 	@EventHandler
 	public void cancelPlace(BlockPlaceEvent event) {
+		Player player = event.getPlayer();
+		if(sManager.contains(player.getUniqueId())) {
+			Staff staff = sManager.get(player.getUniqueId());
+			if(staff.getStaffMode() == true) {
+				event.setCancelled(true);
+			}
+		}
+	}
+	@EventHandler
+	public void cancelDrop(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 		if(sManager.contains(player.getUniqueId())) {
 			Staff staff = sManager.get(player.getUniqueId());

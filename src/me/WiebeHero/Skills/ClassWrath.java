@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodMovementSpeed;
+import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Skills.Enums.Classes;
 
 public class ClassWrath implements Listener{
@@ -33,6 +34,7 @@ public class ClassWrath implements Listener{
 		if(method.containsPlayer(player)) {
 			if(dfPlayer.getPlayerClass() == Classes.WRATH) {
 				if(dfPlayer.getUseable()) {
+					DFFaction fac = new DFFaction().getFaction(player.getUniqueId());
 					int level = dfPlayer.getLevel();
 					double damage1 = 5 + level * 0.15;
 					double range = 4 + level * 0.06;
@@ -40,6 +42,15 @@ public class ClassWrath implements Listener{
 					event.setCancelled(true);
 					ArrayList<Entity> ents = new ArrayList<Entity>(player.getNearbyEntities(range, range, range));
 					ents.remove(player);
+					for(Entity ent : ents) {
+						if(ent instanceof LivingEntity) {
+							if(fac != null) {
+								if(fac.isMember(ent.getUniqueId())) {
+									ents.remove(ent);
+								}
+							}
+						}
+					}
 					if(!ents.isEmpty()) {
 						dfPlayer.setUseable(false);
 						for(Entity e : ents) {

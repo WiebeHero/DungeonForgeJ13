@@ -7,8 +7,10 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
@@ -50,7 +52,7 @@ public class DFItemXpGainEvent extends Event{
 			NBTItem item = new NBTItem(this.getItemStack());
 			NBTItem cursor = new NBTItem(this.getCursorStack());
 			if(item.hasKey("Upgradeable") && cursor.hasKey("Upgradeable")) {
-				if(item.hasKey("Level") && cursor.hasKey("Upgradeable")) {
+				if(item.hasKey("Level") && cursor.hasKey("Level")) {
 					int levelItem = item.getInteger("Level");
 					int levelCursor = cursor.getInteger("Level");
 					if(levelItem >= 6 && levelCursor >= 6) {
@@ -59,7 +61,7 @@ public class DFItemXpGainEvent extends Event{
 						int levelRequired1 = loreRequired1 * 5;
 						int levelRequired2 = loreRequired2 * 5;
 						if(loreRequired1 > loreRequired2) {
-							return loreRequired1;
+							return levelRequired1;
 						}
 						else if(loreRequired2 > loreRequired1) {
 							return levelRequired2;
@@ -81,7 +83,7 @@ public class DFItemXpGainEvent extends Event{
 				}
 			}
 		}
-		else {
+		else if(this.getItemStack() != null){
 			NBTItem item = new NBTItem(this.getItemStack());
 			if(item.hasKey("Upgradeable")) {
 				if(item.hasKey("Level")) {
@@ -94,7 +96,19 @@ public class DFItemXpGainEvent extends Event{
 				}
 			}
 		}
-		
+		else if(this.getCursorStack() != null){
+			NBTItem item = new NBTItem(this.getCursorStack());
+			if(item.hasKey("Upgradeable")) {
+				if(item.hasKey("Level")) {
+					int level = item.getInteger("Level");
+					if(level >= 6) {
+						int loreRequired = level - 4;
+						int levelRequired = loreRequired * 5;
+						return levelRequired;
+					}
+				}
+			}
+		}
 		return 0;
 	}
 	
@@ -168,7 +182,7 @@ public class DFItemXpGainEvent extends Event{
 					i = item.getItem();
 					ItemMeta im = i.getItemMeta();
 		    		ArrayList<String> lore = new ArrayList<String>(im.getLore());
-					lore.set(lore.size() - 4, new CCT().colorize("&7Upgrade Progress: " + "&a[&b&l" + (xp) + " &6/ " + "&b&l" + maxxp + "&a]"));
+					lore.set(lore.size() - 4, new CCT().colorize("&7Upgrade Progress: " + "&a[&b&l" + (this.getXP()) + " &6/ " + "&b&l" + maxxp + "&a]"));
 					double barprogress = (double) xp / (double) maxxp * 100.0;
 					String loreString = "&7[&a";
 					boolean canStop = true;
@@ -214,8 +228,9 @@ public class DFItemXpGainEvent extends Event{
 		    		}
 		    		else {
 			    		this.getPlayer().playSound(this.getPlayer().getLocation(), Sound.BLOCK_ANVIL_USE, (float)2.00, (float)1.00);
-		    			this.getPlayer().getOpenInventory().getCursor().setAmount(this.getCursorStack().getAmount() - 1);
-			    		this.getPlayer().getOpenInventory().setItem(this.getClickedSlot(), i);
+		    			this.getPlayer().getItemOnCursor().setAmount(this.getCursorStack().getAmount() -1);
+			    		this.getPlayer().getInventory().setItem(this.getClickedSlot(), i);
+			    		this.getPlayer().updateInventory();
 		    		}
 				}
 			}

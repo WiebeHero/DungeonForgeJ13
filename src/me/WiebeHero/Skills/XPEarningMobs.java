@@ -40,22 +40,22 @@ public class XPEarningMobs implements Listener{
 						//-----------------------------------------------------------------------------------------------------------------------------------------
 						int i1 = 0;
 						if(tier == 0) {
-							i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
+							i1 = new Random().nextInt(3) + 3 + 3 * levelMob;
 						}
 						if(tier == 1) {
-							i1 = new Random().nextInt(25) + 75 + 5 * levelMob;
+							i1 = new Random().nextInt(25) + 75 + 2 * levelMob;
 						}
 						else if(tier == 2) {
-							i1 = new Random().nextInt(30) + 100 + 6 * levelMob;
+							i1 = new Random().nextInt(30) + 100 + 3 * levelMob;
 						}
 						else if(tier == 3) {
-							i1 = new Random().nextInt(60) + 350 + 7 * levelMob;
+							i1 = new Random().nextInt(60) + 125 + 4 * levelMob;
 						}
 						else if(tier == 4) {
-							i1 = new Random().nextInt(65) + 400 + 8 * levelMob;
+							i1 = new Random().nextInt(65) + 150 + 5 * levelMob;
 						}
 						else if(tier == 5) {
-							i1 = new Random().nextInt(70) + 450 + 9 * levelMob;
+							i1 = new Random().nextInt(70) + 175 + 6 * levelMob;
 						}
 						else {
 							i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
@@ -77,7 +77,7 @@ public class XPEarningMobs implements Listener{
 								finalXP = finalXP - maxxp;
 								maxxp = Math.abs(maxxp);
 								level++;
-								maxxp = (int)(double)(maxxp / 100.00 * 107.00);
+								maxxp = (int)(double)(maxxp / 100.00 * 120.00);
 								dfPlayer.addLevel(1);
 								dfPlayer.setExperience(finalXP);
 								dfPlayer.setMaxExperience(maxxp);

@@ -20,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
@@ -50,33 +51,51 @@ public class EffectSkills implements Listener{
 	public SwordSwingProgress s = new SwordSwingProgress();
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void nerfStrength(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof LivingEntity) {
-			LivingEntity damager = (LivingEntity) event.getDamager();
-			double damage = event.getDamage();
-			if(damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
-				int amp = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier();
-				damage = damage - ((amp + 1) * 2.25);
+		if(event.getCause() == DamageCause.ENTITY_ATTACK) {
+			if(event.getDamager() instanceof LivingEntity) {
+				LivingEntity damager = (LivingEntity) event.getDamager();
+				double damage = event.getDamage();
+				if(damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
+					int amp = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier();
+					damage = damage - ((amp + 1) * 2.25);
+				}
+				event.setDamage(damage);
 			}
-			event.setDamage(damage);
+		}
+		else if(event.getCause() == DamageCause.PROJECTILE) {
+			if(event.getDamager() instanceof Arrow) {
+				Arrow arrow = (Arrow) event.getDamager();
+				if(arrow.getShooter() instanceof LivingEntity) {
+					LivingEntity damager = (LivingEntity) arrow.getShooter();
+					double damage = event.getDamage();
+					if(damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
+						int amp = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier();
+						damage = damage - ((amp + 1) * 2.25);
+					}
+					event.setDamage(damage);
+				}
+			}
 		}
 	}
 	@EventHandler(priority = EventPriority.HIGH)
 	public void attackDamage(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof LivingEntity) {
-			LivingEntity damager = (LivingEntity) event.getDamager();
-			DFPlayer method = new DFPlayer();
-			double damage = event.getDamage();
-			if(method.containsPlayer(damager)) {
-				DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
-				if(damager.getEquipment().getItemInMainHand() != null) {
-					if(damager.getEquipment().getItemInMainHand().getType() != Material.BOW) {
-						if(event.getEntity() instanceof LivingEntity) {
-							event.setDamage((damage) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
+		if(event.getCause() == DamageCause.ENTITY_ATTACK) {
+			if(event.getDamager() instanceof LivingEntity) {
+				LivingEntity damager = (LivingEntity) event.getDamager();
+				DFPlayer method = new DFPlayer();
+				double damage = event.getDamage();
+				if(method.containsPlayer(damager)) {
+					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+					if(damager.getEquipment().getItemInMainHand() != null) {
+						if(damager.getEquipment().getItemInMainHand().getType() != Material.BOW) {
+							if(event.getEntity() instanceof LivingEntity) {
+								event.setDamage((damage) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
+							}
 						}
 					}
-				}
-				else {
-					event.setDamage((damage) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
+					else {
+						event.setDamage((damage) / 100.00 * (dfPlayer.getAtkCal() + 100.00));
+					}
 				}
 			}
 		}
@@ -467,17 +486,19 @@ public class EffectSkills implements Listener{
 	@EventHandler
 	public void rangedDamage(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
-			if(event.getDamager() instanceof Arrow) {
-				Arrow arrow = (Arrow) event.getDamager();
-				if(arrow.getShooter() != null && arrow.getShooter() instanceof LivingEntity && event.getEntity() instanceof LivingEntity) {
-					LivingEntity damager = (LivingEntity) arrow.getShooter();
-					DFPlayer df = new DFPlayer();
-					if(df.containsPlayer(damager)) {
-						DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
-						if(arrowList.containsKey(arrow.getUniqueId()) && arrowDamage.containsKey(arrow.getUniqueId())) {
-							double damage = arrowDamage.get(arrow.getUniqueId());
-							event.setDamage(damage / 100.00 * (dfPlayer.getRndCal() + 100.00) * arrowList.get(arrow.getUniqueId()));
-							arrowList.remove(arrow.getUniqueId());
+			if(event.getCause() == DamageCause.PROJECTILE) {
+				if(event.getDamager() instanceof Arrow) {
+					Arrow arrow = (Arrow) event.getDamager();
+					if(arrow.getShooter() != null && arrow.getShooter() instanceof LivingEntity && event.getEntity() instanceof LivingEntity) {
+						LivingEntity damager = (LivingEntity) arrow.getShooter();
+						DFPlayer df = new DFPlayer();
+						if(df.containsPlayer(damager)) {
+							DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+							if(arrowList.containsKey(arrow.getUniqueId()) && arrowDamage.containsKey(arrow.getUniqueId())) {
+								double damage = arrowDamage.get(arrow.getUniqueId());
+								event.setDamage(damage / 100.00 * (dfPlayer.getRndCal() + 100.00) * arrowList.get(arrow.getUniqueId()));
+								arrowList.remove(arrow.getUniqueId());
+							}
 						}
 					}
 				}

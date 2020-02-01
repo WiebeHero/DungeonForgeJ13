@@ -54,7 +54,7 @@ public class NovisRewards {
 			newLore.add(new CCT().colorize("&7Attack Damage: &6" + damageWeapon));
 			newLore.add(new CCT().colorize("&7Attack Speed: &6" + speedWeapon));
 			newLore.add(new CCT().colorize("&7-----------------------"));
-			newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
+			newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l5000&a]"));
 			newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 			newLore.add(new CCT().colorize("&7-----------------------"));
 			newLore.add(new CCT().colorize("&7Rarity: " + check));
@@ -96,7 +96,7 @@ public class NovisRewards {
 			tempItem.setString("EnchantmentString", enchantmentsString);
 			tempItem.setInteger("Level", 1);
 			tempItem.setInteger("XP", 0);
-			tempItem.setInteger("MAXXP", 3000);
+			tempItem.setInteger("MAXXP", 5000);
 			tempItem.setInteger("TotalXP", 0);
 			tempItem.setDouble("Base Attack Damage", damageWeapon);
 			tempItem.setDouble("Base Attack Speed", speedWeapon);
@@ -146,7 +146,7 @@ public class NovisRewards {
 			newLore.add(new CCT().colorize("&7Attack Damage: &6" + damageWeapon));
 			newLore.add(new CCT().colorize("&7Attack Speed: &6" + drawSpeedWeapon));
 			newLore.add(new CCT().colorize("&7-----------------------"));
-			newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
+			newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l5000&a]"));
 			newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 			newLore.add(new CCT().colorize("&7-----------------------"));
 			newLore.add(new CCT().colorize("&7Rarity: " + check));
@@ -163,7 +163,7 @@ public class NovisRewards {
 			tempItem.setString("EnchantmentString", enchantmentsString);
 			tempItem.setInteger("Level", 1);
 			tempItem.setInteger("XP", 0);
-			tempItem.setInteger("MAXXP", 3000);
+			tempItem.setInteger("MAXXP", 5000);
 			tempItem.setInteger("TotalXP", 0);
 			tempItem.setDouble("Base Attack Damage", damageWeapon);
 			tempItem.setDouble("Base Attack Speed", drawSpeedWeapon);
@@ -213,7 +213,7 @@ public class NovisRewards {
 			newLore.add(new CCT().colorize("&7Armor Toughness: &6" + damageWeapon));
 			newLore.add(new CCT().colorize("&7Cooldown: &b" + cooldown + " Seconds"));
 			newLore.add(new CCT().colorize("&7-----------------------"));
-			newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
+			newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l5000&a]"));
 			newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 			newLore.add(new CCT().colorize("&7-----------------------"));
 			newLore.add(new CCT().colorize("&7Rarity: " + check));
@@ -229,7 +229,7 @@ public class NovisRewards {
 			tempItem.setString("EnchantmentString", enchantmentsString);
 			tempItem.setInteger("Level", 1);
 			tempItem.setInteger("XP", 0);
-			tempItem.setInteger("MAXXP", 3000);
+			tempItem.setInteger("MAXXP", 5000);
 			tempItem.setInteger("TotalXP", 0);
 			tempItem.setDouble("Base Armor Toughness", damageWeapon);
 			tempItem.setDouble("Base Cooldown", cooldown);
@@ -288,7 +288,7 @@ public class NovisRewards {
 			newLore.add(new CCT().colorize("&7Armor Defense: &6" + armorDefense));
 			newLore.add(new CCT().colorize("&7Armor Toughness: &6" + armorToughness));
 			newLore.add(new CCT().colorize("&7-----------------------"));
-			newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
+			newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l5000&a]"));
 			newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 			newLore.add(new CCT().colorize("&7-----------------------"));
 			newLore.add(new CCT().colorize("&7Rarity: " + check));
@@ -357,7 +357,7 @@ public class NovisRewards {
 			tempItem.setInteger("Level", 1);
 			tempItem.setInteger("XP", 0);
 			tempItem.setInteger("TotalXP", 0);
-			tempItem.setInteger("MAXXP", 3000);
+			tempItem.setInteger("MAXXP", 5000);
 			tempItem.setDouble("Base Armor Defense", armorDefense);
 			tempItem.setDouble("Base Armor Toughness", armorToughness);
 			tempItem.setDouble("Inc Armor Defense", incArmorDefense);

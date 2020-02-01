@@ -44,6 +44,9 @@ import me.WiebeHero.ArmoryPackage.DFShieldUpgrade;
 import me.WiebeHero.ArmoryPackage.DFWeaponUpgrade;
 import me.WiebeHero.ArmoryPackage.LevelRequired;
 import me.WiebeHero.ArmoryPackage.XPAddWeapons;
+import me.WiebeHero.AuctionHouse.AHCommand;
+import me.WiebeHero.AuctionHouse.AHEvents;
+import me.WiebeHero.AuctionHouse.AHManager;
 import me.WiebeHero.Consumables.Consumable;
 import me.WiebeHero.Consumables.ConsumableHandler;
 import me.WiebeHero.Consumables.CustomDurability;
@@ -64,6 +67,9 @@ import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Factions.FactionsHandler;
 import me.WiebeHero.FishingLoot.ChangeFishDrops;
+import me.WiebeHero.GeneralCommands.MSGCommand;
+import me.WiebeHero.GeneralCommands.MSGEvents;
+import me.WiebeHero.GeneralCommands.MSGManager;
 import me.WiebeHero.LootChest.ChestEvents;
 import me.WiebeHero.LootChest.LootChestManager;
 import me.WiebeHero.LootChest.LootRewards;
@@ -94,6 +100,8 @@ import me.WiebeHero.MoreStuff.SwordSwingProgress;
 import me.WiebeHero.MoreStuff.TNTExplodeCovered;
 import me.WiebeHero.MoreStuff.TPACommand;
 import me.WiebeHero.Novis.NovisInventory;
+import me.WiebeHero.RankedPlayerPackage.RankedManager;
+import me.WiebeHero.RankedPlayerPackage.RankedPlayerListener;
 import me.WiebeHero.Scoreboard.DFScoreboard;
 import me.WiebeHero.SeasonalEvents.ChristmasInventoryEvents;
 import me.WiebeHero.Skills.ClassEnvy;
@@ -111,6 +119,7 @@ import me.WiebeHero.Skills.SkillCommand;
 import me.WiebeHero.Skills.SkillJoin;
 import me.WiebeHero.Skills.SkillMenuInteract;
 import me.WiebeHero.Skills.XPEarningMobs;
+import me.WiebeHero.Spawners.DFMobHealth;
 import me.WiebeHero.Spawners.DFSpawnerManager;
 import me.WiebeHero.Spawners.DeathOfMob;
 import me.WiebeHero.XpTrader.XPAddPlayers;
@@ -145,6 +154,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	public StaffManager staffManager = new StaffManager();
 	public DFSpawnerManager spawnerManager = new DFSpawnerManager();
 	public LootChestManager lootChestManager = new LootChestManager();
+	public MSGManager msgManager = new MSGManager();
+	public RankedManager rankedManager = new RankedManager();
+	public AHManager ahManager = new AHManager();
 	private MethodLuck luck = new MethodLuck();
 	int level;
 	public Scoreboard scoreboard;
@@ -158,6 +170,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		scoreboard = this.getServer().getScoreboardManager().getMainScoreboard();
 		//Enable Plugin Message
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "\n\nThe plugin CustomEnchantments has been enabled!\n\n");
+		AHCommand ahCommand = new AHCommand();
+		MSGCommand msgCommand = new MSGCommand();
+		loadConfigManager();
 		File f1 =  new File("plugins/CustomEnchantments/GeneralConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
 		try{
@@ -169,9 +184,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		ahManager.loadAuctionHouse();
 		maintenance = yml.getBoolean("General.Values.Maintenance");
+		ahManager.start();
 		//Config Manager
-		loadConfigManager();
 		ModerationEvents mod = new ModerationEvents();
 		//Custom Weapons
 		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(), this);
@@ -220,7 +236,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Stuff
 		getServer().getPluginManager().registerEvents(sethome, this);
 		getServer().getPluginManager().registerEvents(new DFPlayerRegister(), this);
+		getServer().getPluginManager().registerEvents(new MSGEvents(), this);
+		getServer().getPluginManager().registerEvents(new AHEvents(), this);
 		getServer().getPluginManager().registerEvents(new ConsumableHandler(), this);
+		getServer().getPluginManager().registerEvents(new RankedPlayerListener(), this);
+		getServer().getPluginManager().registerEvents(new DFMobHealth(), this);
 		//Seasonal Events
 		getServer().getPluginManager().registerEvents(new ChristmasInventoryEvents(), this);
 		method.loadFactions();
@@ -293,8 +313,12 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(tpa.tpahere).setExecutor(tpa);
 		getCommand(tpa.tpatoggle).setExecutor(tpa);
 		getCommand(tpa.tpdeny).setExecutor(tpa);
+		getCommand(tpa.tpdeny).setExecutor(tpa);
+		getCommand(msgCommand.msg).setExecutor(msgCommand);
+		getCommand(msgCommand.ignore).setExecutor(msgCommand);
 		getCommand(skillCommand.skill).setExecutor(skillCommand);
 		getCommand(skillCommand.skills).setExecutor(skillCommand);
+		getCommand(ahCommand.ah).setExecutor(ahCommand);
 		//Moderation
 		getCommand(mod.ban).setExecutor(mod);
 		getCommand(mod.unban).setExecutor(mod);
@@ -479,13 +503,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		sethome.saveHomes(yml5, f6);
-		
 		if(hardSave) {
 			pl.hardSavePlayers();
 			method.hardSaveFactions();
 			punishManager.savePunishList();
 			lootChestManager.saveLootChests();
 			spawnerManager.saveSpawners();
+			ahManager.saveAuctionHouse();
 		}
 		else {
 			pl.savePlayers();
@@ -493,14 +517,22 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			punishManager.savePunishList();
 			lootChestManager.saveLootChests();
 			spawnerManager.saveSpawners();
+			ahManager.saveAuctionHouse();
 		}
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {
 		cfgm = new ConfigManager();
-		cfgm.setUp();
-		cfgm.savePlayers();
-		cfgm.reloadPlayers();
+		cfgm.setUpConfiguration("playerskillsDF.yml", "Skills.Players");
+		cfgm.setUpConfiguration("spawnerConfig.yml", "Spawners.UUID");
+		cfgm.setUpConfiguration("lootConfig.yml", "Loot.Chests");
+		cfgm.setUpConfiguration("factionsConfig.yml", "Factions.List");
+		cfgm.setUpConfiguration("setHomeConfig.yml", "Homes");
+		cfgm.setUpConfiguration("shopConfig.yml", "Shop");
+		cfgm.setUpConfiguration("modConfig.yml", "Mod.Punishments");
+		cfgm.setUpConfiguration("dungeonConfig.yml", "Dungeons.Instances");
+		cfgm.setUpConfiguration("GeneralConfig.yml", "General.Values");
+		cfgm.setUpConfiguration("AuctionConfig.yml", "AuctionHouse.Items");
 	}
 	public void loadConfig() {
 		getConfig().options().copyDefaults(true);

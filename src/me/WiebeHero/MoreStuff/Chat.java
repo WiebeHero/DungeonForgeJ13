@@ -5,10 +5,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Factions.DFFaction;
+import me.WiebeHero.GeneralCommands.MSG;
+import me.WiebeHero.GeneralCommands.MSGManager;
 import me.WiebeHero.Skills.DFPlayer;
 
 public class Chat implements Listener{
+	private MSGManager msgManager = CustomEnchantments.getInstance().msgManager;
 	private DFFaction method = new DFFaction();
 	@EventHandler
 	public void chatFeature(AsyncPlayerChatEvent event) {
@@ -26,6 +30,16 @@ public class Chat implements Listener{
 		}
 		else {
 			event.setFormat("§7" + player.getName() + ": " + event.getMessage());
+		}
+		for(Player p : event.getRecipients()) {
+			if(p != null) {
+				MSG msg = msgManager.get(p.getUniqueId());
+				if(msg != null) {
+					if(msg.isInIgnore(player.getUniqueId())) {
+						event.getRecipients().remove(p);
+					}
+				}
+			}
 		}
 	}
 }

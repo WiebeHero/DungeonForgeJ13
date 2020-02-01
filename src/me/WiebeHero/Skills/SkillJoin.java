@@ -86,7 +86,7 @@ public class SkillJoin implements Listener{
 		lore1.add(new CCT().colorize("&7Armor Defense: &61.5"));
 		lore1.add(new CCT().colorize("&7Armor Toughness: &60.65"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
-		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
+		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l5000&a]"));
 		lore1.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
 		lore1.add(new CCT().colorize("&7Rarity: Common"));
@@ -128,7 +128,7 @@ public class SkillJoin implements Listener{
 		item.setInteger("Level", 1);
 		item.setInteger("XP", 0);
 		item.setInteger("TotalXP", 0);
-		item.setInteger("MAXXP", 3000);
+		item.setInteger("MAXXP", 5000);
 		item.setDouble("Base Armor Defense", 1.5);
 		item.setDouble("Base Armor Toughness", 0.65);
 		item.setDouble("Inc Armor Defense", 0.03);
@@ -152,7 +152,7 @@ public class SkillJoin implements Listener{
 		lore1.add(new CCT().colorize("&7Armor Defense: &61.5"));
 		lore1.add(new CCT().colorize("&7Armor Toughness: &60.65"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
-		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
+		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l5000&a]"));
 		lore1.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
 		lore1.add(new CCT().colorize("&7Rarity: Common"));
@@ -194,7 +194,7 @@ public class SkillJoin implements Listener{
 		item.setInteger("Level", 1);
 		item.setInteger("XP", 0);
 		item.setInteger("TotalXP", 0);
-		item.setInteger("MAXXP", 3000);
+		item.setInteger("MAXXP", 5000);
 		item.setDouble("Base Armor Defense", 1.5);
 		item.setDouble("Base Armor Toughness", 0.65);
 		item.setDouble("Inc Armor Defense", 0.03);
@@ -218,7 +218,7 @@ public class SkillJoin implements Listener{
 		lore1.add(new CCT().colorize("&7Armor Defense: &61.5"));
 		lore1.add(new CCT().colorize("&7Armor Toughness: &60.65"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
-		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
+		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l5000&a]"));
 		lore1.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
 		lore1.add(new CCT().colorize("&7Rarity: Common"));
@@ -260,7 +260,7 @@ public class SkillJoin implements Listener{
 		item.setInteger("Level", 1);
 		item.setInteger("XP", 0);
 		item.setInteger("TotalXP", 0);
-		item.setInteger("MAXXP", 3000);
+		item.setInteger("MAXXP", 5000);
 		item.setDouble("Base Armor Defense", 1.5);
 		item.setDouble("Base Armor Toughness", 0.65);
 		item.setDouble("Inc Armor Defense", 0.03);
@@ -284,7 +284,7 @@ public class SkillJoin implements Listener{
 		lore1.add(new CCT().colorize("&7Armor Defense: &61.5"));
 		lore1.add(new CCT().colorize("&7Armor Toughness: &60.65"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
-		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
+		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l5000&a]"));
 		lore1.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
 		lore1.add(new CCT().colorize("&7Rarity: Common"));
@@ -326,7 +326,7 @@ public class SkillJoin implements Listener{
 		item.setInteger("Level", 1);
 		item.setInteger("XP", 0);
 		item.setInteger("TotalXP", 0);
-		item.setInteger("MAXXP", 3000);
+		item.setInteger("MAXXP", 5000);
 		item.setDouble("Base Armor Defense", 1.5);
 		item.setDouble("Base Armor Toughness", 0.65);
 		item.setDouble("Inc Armor Defense", 0.03);
@@ -349,7 +349,7 @@ public class SkillJoin implements Listener{
 		lore1.add(new CCT().colorize("&7Attack Damage: &65.00"));
 		lore1.add(new CCT().colorize("&7Attack Speed: &60.80"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
-		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l3000&a]"));
+		lore1.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l0 &6/ &b&l5000&a]"));
 		lore1.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::] &a0%"));
 		lore1.add(new CCT().colorize("&7-----------------------"));
 		lore1.add(new CCT().colorize("&7Rarity: Common"));
@@ -389,7 +389,7 @@ public class SkillJoin implements Listener{
 		item.setString("EnchantmentString", "Weakness 4//Slow 1");
 		item.setInteger("Level", 1);
 		item.setInteger("XP", 0);
-		item.setInteger("MAXXP", 3000);
+		item.setInteger("MAXXP", 5000);
 		item.setInteger("TotalXP", 0);
 		item.setDouble("Base Attack Damage", 5.0);
 		item.setDouble("Base Attack Speed", 0.8);

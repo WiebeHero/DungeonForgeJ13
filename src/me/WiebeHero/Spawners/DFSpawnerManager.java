@@ -420,7 +420,7 @@ public class DFSpawnerManager {
 		method.addPlayer(mob);
 		DFPlayer dfPlayer = method.getPlayer(mob);
 		dfPlayer.setLevel(level);
-		int skills = level * 5;
+		int skills = level * 6;
 		int cl = new Random().nextInt(7) + 1;
 		switch(cl) {
 		case 1:

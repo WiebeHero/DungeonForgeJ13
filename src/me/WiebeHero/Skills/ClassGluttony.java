@@ -130,7 +130,7 @@ public class ClassGluttony implements Listener{
 						int cLevel = dfPlayer.getDfMod();
 						double inc = cLevel * 20;
 						double dur = cLevel * 3;
-						if(dfPlayer.getHP() < dfPlayer.getMaxHp() * 0.40) {
+						if(dfPlayer.getHealth() < dfPlayer.getMaxHealth() * 0.40) {
 							ironWall.put(dfPlayer.getUUID(), true);
 							dfPlayer.addDfCal(inc, (long)dur * 20);
 						}

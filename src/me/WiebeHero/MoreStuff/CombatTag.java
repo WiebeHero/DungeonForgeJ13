@@ -17,6 +17,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
@@ -24,7 +25,7 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 public class CombatTag implements Listener {
 	public ArrayList<UUID> activated = new ArrayList<UUID>();
 	public static HashMap<UUID, Integer> combatTag = new HashMap<UUID, Integer>();
-
+	public static HashMap<UUID, BukkitTask> combatRunnable = new HashMap<UUID, BukkitTask>();
 	@EventHandler
 	public void combatTagActivate(EntityDamageByEntityEvent event) {
 		if (!event.isCancelled()) {
@@ -35,7 +36,7 @@ public class CombatTag implements Listener {
 					if (!activated.contains(damager.getUniqueId())) {
 						damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 						activated.add(damager.getUniqueId());
-						new BukkitRunnable() {
+						BukkitTask run = new BukkitRunnable() {
 							@Override
 							public void run() {
 								int duration = combatTag.get(damager.getUniqueId());
@@ -49,6 +50,7 @@ public class CombatTag implements Listener {
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+						combatRunnable.put(damager.getUniqueId(), run);
 					}
 				}
 			} else if (event.getDamager() instanceof Monster) {
@@ -58,7 +60,7 @@ public class CombatTag implements Listener {
 					if (!activated.contains(victim.getUniqueId())) {
 						victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 						activated.add(victim.getUniqueId());
-						new BukkitRunnable() {
+						BukkitTask run = new BukkitRunnable() {
 							@Override
 							public void run() {
 								int duration = combatTag.get(victim.getUniqueId());
@@ -72,6 +74,7 @@ public class CombatTag implements Listener {
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+						combatRunnable.put(victim.getUniqueId(), run);
 					}
 				}
 			} else if (event.getDamager() instanceof Player) {
@@ -85,7 +88,7 @@ public class CombatTag implements Listener {
 						victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 						activated.add(damager.getUniqueId());
 						activated.add(victim.getUniqueId());
-						new BukkitRunnable() {
+						BukkitTask run1 = new BukkitRunnable() {
 							@Override
 							public void run() {
 								int duration = combatTag.get(damager.getUniqueId());
@@ -99,7 +102,7 @@ public class CombatTag implements Listener {
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-						new BukkitRunnable() {
+						BukkitTask run2 = new BukkitRunnable() {
 							@Override
 							public void run() {
 								int duration = combatTag.get(victim.getUniqueId());
@@ -113,6 +116,8 @@ public class CombatTag implements Listener {
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+						combatRunnable.put(damager.getUniqueId(), run1);
+						combatRunnable.put(victim.getUniqueId(), run2);
 					}
 				}
 			} else if (event.getDamager() instanceof Arrow) {
@@ -124,7 +129,7 @@ public class CombatTag implements Listener {
 						if (!activated.contains(damager.getUniqueId())) {
 							damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 							activated.add(damager.getUniqueId());
-							new BukkitRunnable() {
+							BukkitTask run = new BukkitRunnable() {
 								@Override
 								public void run() {
 									int duration = combatTag.get(damager.getUniqueId());
@@ -138,6 +143,7 @@ public class CombatTag implements Listener {
 									}
 								}
 							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+							combatRunnable.put(damager.getUniqueId(), run);
 						}
 					} else if (event.getEntity() instanceof Player) {
 						Player victim = (Player) event.getEntity();
@@ -148,7 +154,7 @@ public class CombatTag implements Listener {
 							victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 							activated.add(damager.getUniqueId());
 							activated.add(victim.getUniqueId());
-							new BukkitRunnable() {
+							BukkitTask run1 = new BukkitRunnable() {
 								@Override
 								public void run() {
 									int duration = combatTag.get(damager.getUniqueId());
@@ -162,7 +168,7 @@ public class CombatTag implements Listener {
 									}
 								}
 							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-							new BukkitRunnable() {
+							BukkitTask run2 = new BukkitRunnable() {
 								@Override
 								public void run() {
 									int duration = combatTag.get(victim.getUniqueId());
@@ -176,6 +182,8 @@ public class CombatTag implements Listener {
 									}
 								}
 							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+							combatRunnable.put(damager.getUniqueId(), run1);
+							combatRunnable.put(victim.getUniqueId(), run2);
 						}
 					}
 				} else {
@@ -186,7 +194,7 @@ public class CombatTag implements Listener {
 							if (!activated.contains(damager1.getUniqueId())) {
 								damager1.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 								activated.add(damager1.getUniqueId());
-								new BukkitRunnable() {
+								BukkitTask run = new BukkitRunnable() {
 									@Override
 									public void run() {
 										int duration = combatTag.get(damager1.getUniqueId());
@@ -200,6 +208,7 @@ public class CombatTag implements Listener {
 										}
 									}
 								}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+								combatRunnable.put(damager1.getUniqueId(), run);
 							}
 						} else if (event.getEntity() instanceof Player) {
 							Player victim = (Player) event.getEntity();
@@ -211,7 +220,7 @@ public class CombatTag implements Listener {
 								victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
 								activated.add(damager1.getUniqueId());
 								activated.add(victim.getUniqueId());
-								new BukkitRunnable() {
+								BukkitTask run1 = new BukkitRunnable() {
 									@Override
 									public void run() {
 										int duration = combatTag.get(damager1.getUniqueId());
@@ -225,7 +234,7 @@ public class CombatTag implements Listener {
 										}
 									}
 								}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-								new BukkitRunnable() {
+								BukkitTask run2 = new BukkitRunnable() {
 									@Override
 									public void run() {
 										int duration = combatTag.get(victim.getUniqueId());
@@ -239,6 +248,8 @@ public class CombatTag implements Listener {
 										}
 									}
 								}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+								combatRunnable.put(damager1.getUniqueId(), run1);
+								combatRunnable.put(victim.getUniqueId(), run2);
 							}
 						}
 					} else if (arrow.getShooter() instanceof LivingEntity) {
@@ -255,6 +266,7 @@ public class CombatTag implements Listener {
 		if (combatTag.containsKey(player.getUniqueId())) {
 			if (combatTag.get(player.getUniqueId()) != 0) {
 				player.setHealth(0.00);
+				combatRunnable.remove(player.getUniqueId());
 				combatTag.put(player.getUniqueId(), 0);
 			}
 		}
@@ -269,6 +281,7 @@ public class CombatTag implements Listener {
 				player.spigot().respawn();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+		combatRunnable.remove(player.getUniqueId());
 		combatTag.put(player.getUniqueId(), 0);
 	}
 

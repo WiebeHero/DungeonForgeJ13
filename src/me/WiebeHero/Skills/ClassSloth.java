@@ -85,11 +85,11 @@ public class ClassSloth implements Listener{
 							if(dfPlayer.getHp() > 0) {
 								int cLevel = dfPlayer.getHp();
 								double inc = cLevel * 0.5;
-								if(dfPlayer.getHP() + inc <= dfPlayer.getMaxHp()) {
-									dfPlayer.returnPlayer().setHealth(dfPlayer.getHP() + inc);
+								if(dfPlayer.getHealth() + inc <= dfPlayer.getMaxHealth()) {
+									dfPlayer.returnPlayer().setHealth(dfPlayer.getHealth() + inc);
 								}
 								else {
-									dfPlayer.returnPlayer().setHealth(dfPlayer.getMaxHp());
+									dfPlayer.returnPlayer().setHealth(dfPlayer.getMaxHealth());
 								}
 							}
 						}
@@ -108,7 +108,7 @@ public class ClassSloth implements Listener{
 					DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 					if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
 						if(dfPlayer.getCrtMod() > 0) {
-							if(dfPlayer.getHP() >= dfPlayer.getMaxHp() * 0.50) {
+							if(dfPlayer.getHealth() >= dfPlayer.getMaxHealth() * 0.50) {
 								dfPlayer.addCrtCal(25, 1);
 							}
 						}
@@ -127,7 +127,7 @@ public class ClassSloth implements Listener{
 					DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 					if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
 						if(dfPlayer.getCrtMod() > 0) {
-							if(dfPlayer.getHP() <= dfPlayer.getMaxHp() * 0.50) {
+							if(dfPlayer.getHealth() <= dfPlayer.getMaxHealth() * 0.50) {
 								dfPlayer.addDfCal(25, 1);
 							}
 						}

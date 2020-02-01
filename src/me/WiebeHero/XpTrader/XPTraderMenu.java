@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
@@ -103,147 +104,106 @@ public class XPTraderMenu implements Listener{
 			if(item != null) {
 				if(open.getType() == InventoryType.CHEST) {
 					if(action == ClickType.LEFT) {
-						if(item.hasItemMeta()) {
-							if(item.getItemMeta().hasDisplayName()) {
-								if(item.getItemMeta().hasLore()) {
-									String loreFinal = "";
-									for(String loreRequired : item.getItemMeta().getLore()) {
-										if(loreRequired.contains(ChatColor.stripColor("Common"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Rare"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Epic"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Legendary"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Mythic"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Heroic"))) {
-											loreFinal = loreRequired;
-										}
-									}
-									if(item.getItemMeta().getDisplayName().contains("Lv") || loreFinal.contains("Common") || loreFinal.contains("Rare") || loreFinal.contains("Epic") || loreFinal.contains("Legendary") || loreFinal.contains("Mythic") || loreFinal.contains("Heroic")) {
-										if(item.getItemMeta().hasLore()) {
-											Inventory invXPTrader = view.getTopInventory();
-											Inventory invPlayer = view.getBottomInventory();
-											invPlayer.addItem(item);
-											int slot = event.getSlot();
-											invXPTrader.clear(slot);
-											invXPTrader.clear(slot + 4);
-											player.updateInventory();
-											player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)0.5);
-										}
-									}
-									else if(item.getItemMeta().getDisplayName().contains("Accept?")) {
-										Inventory invXPTrader = view.getTopInventory(); 
-										ArrayList<ItemStack> importantSlots = new ArrayList<ItemStack>(Arrays.asList(invXPTrader.getItem(14), invXPTrader.getItem(15), invXPTrader.getItem(16), invXPTrader.getItem(23), invXPTrader.getItem(24), invXPTrader.getItem(25), invXPTrader.getItem(32), invXPTrader.getItem(33), invXPTrader.getItem(34), invXPTrader.getItem(41), invXPTrader.getItem(42), invXPTrader.getItem(43)));
-										ArrayList<Integer> slotNumber = new ArrayList<Integer>(Arrays.asList(10, 11, 12, 14, 15, 16, 19, 20, 21, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37, 38, 39, 41, 42, 43));
-										player.sendMessage(new CCT().colorize("&aTrade Accepted!"));
-										for(int i = 0; i < importantSlots.size(); i++) {
-											if(importantSlots.get(i) != null) {
-												if(title.contains("XP Trader")) {
-													ItemStack xpPot = importantSlots.get(i);
-													player.getInventory().addItem(xpPot);
-												}
-											}
-										}
-										for(int i = 0; i < slotNumber.size(); i++) {
-											int i1 = slotNumber.get(i);
-											invXPTrader.remove(view.getItem(i1));
-											player.updateInventory();
-										}
-										player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, (float)2, (float)1);
+						int level = 1;
+						int rarity = 0;
+						NBTItem it = new NBTItem(item);
+						if(it.hasKey("Level")) {
+							level = it.getInteger("Level");
+						}
+						if(it.hasKey("Rarity")) {
+							if(it.getString("Rarity").equals("&7Common")) {
+								rarity = 75;
+							}
+							if(it.getString("Rarity").equals("&aRare")) {
+								rarity = 150;
+							}
+							if(it.getString("Rarity").equals("&bEpic")) {
+								rarity = 300;
+							}
+							if(it.getString("Rarity").equals("&cLegendary")) {
+								rarity = 600;
+							}
+							if(it.getString("Rarity").equals("&5Mythic")) {
+								rarity = 1000;
+							}
+							if(it.getString("Rarity").equals("&eHeroic")) {
+								rarity = 1500;
+							}
+						}
+						if(item.getItemMeta().getDisplayName().contains("Accept?")) {
+							Inventory invXPTrader = view.getTopInventory(); 
+							ArrayList<ItemStack> importantSlots = new ArrayList<ItemStack>(Arrays.asList(invXPTrader.getItem(14), invXPTrader.getItem(15), invXPTrader.getItem(16), invXPTrader.getItem(23), invXPTrader.getItem(24), invXPTrader.getItem(25), invXPTrader.getItem(32), invXPTrader.getItem(33), invXPTrader.getItem(34), invXPTrader.getItem(41), invXPTrader.getItem(42), invXPTrader.getItem(43)));
+							ArrayList<Integer> slotNumber = new ArrayList<Integer>(Arrays.asList(10, 11, 12, 14, 15, 16, 19, 20, 21, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37, 38, 39, 41, 42, 43));
+							player.sendMessage(new CCT().colorize("&aTrade Accepted!"));
+							for(int i = 0; i < importantSlots.size(); i++) {
+								if(importantSlots.get(i) != null) {
+									if(title.contains("XP Trader")) {
+										ItemStack xpPot = importantSlots.get(i);
+										player.getInventory().addItem(xpPot);
 									}
 								}
 							}
+							for(int i = 0; i < slotNumber.size(); i++) {
+								int i1 = slotNumber.get(i);
+								invXPTrader.remove(view.getItem(i1));
+								player.updateInventory();
+							}
+							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, (float)2, (float)1);
+						}
+						else if(rarity != 0) {
+							Inventory invXPTrader = view.getTopInventory();
+							Inventory invPlayer = view.getBottomInventory();
+							invPlayer.addItem(item);
+							int slot = event.getSlot();
+							invXPTrader.clear(slot);
+							invXPTrader.clear(slot + 4);
+							player.updateInventory();
+							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)0.5);
 						}
 					}
 				}
 				else if(open.getType() == InventoryType.PLAYER) {
 					event.setCancelled(true);
 					if(action == ClickType.LEFT) {
-						if(item.hasItemMeta()) {
-							if(item.getItemMeta().hasDisplayName()) {
-								if(item.getItemMeta().hasLore()) {
-									String nameC = item.getItemMeta().getDisplayName();
-									String name = ChatColor.stripColor(nameC);
-									String loreFinal = "";
-									for(String loreRequired : item.getItemMeta().getLore()) {
-										if(loreRequired.contains(ChatColor.stripColor("Common"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Rare"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Epic"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Legendary"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Mythic"))) {
-											loreFinal = loreRequired;
-										}
-										else if(loreRequired.contains(ChatColor.stripColor("Heroic"))) {
-											loreFinal = loreRequired;
-										}
-									}
-									if(loreFinal.contains("Common") || loreFinal.contains("Rare") || loreFinal.contains("Epic") || loreFinal.contains("Legendary") || loreFinal.contains("Mythic") || loreFinal.contains("Heroic")) {
-										if(name.contains("Lv")) {
-											player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)1.5);
-											String finalNameL = "";
-											String levelS[] = name.split("\\[|\\]");
-											finalNameL = levelS[1];
-											int level = 0;
-											Matcher matcher = Pattern.compile("(\\d+)").matcher(finalNameL);
-											while(matcher.find()) {
-											    level = Integer.parseInt(matcher.group(0));
-											}
-											Inventory invXPTrader = view.getTopInventory();
-											Inventory invPlayer = view.getBottomInventory();
-											invPlayer.removeItem(invPlayer.getItem(event.getSlot()));
-											int slot = invXPTrader.firstEmpty();
-											invXPTrader.setItem(slot, item);
-											if(loreFinal.contains("Common")) {
-												invXPTrader.setItem(slot + 4, xpBottlePlayer(25 * level, item.getAmount()));
-											}
-											else if(loreFinal.contains("Rare")) {
-												invXPTrader.setItem(slot + 4, xpBottlePlayer(50 * level, item.getAmount()));
-											}
-											else if(loreFinal.contains("Epic")) {
-												invXPTrader.setItem(slot + 4, xpBottlePlayer(100 * level, item.getAmount()));
-											}
-											else if(loreFinal.contains("Legendary")) {
-												invXPTrader.setItem(slot + 4, xpBottlePlayer(250 * level, item.getAmount()));
-											}
-											else if(loreFinal.contains("Mythic")) {
-												invXPTrader.setItem(slot + 4, xpBottlePlayer(500 * level, item.getAmount()));
-											}
-											else if(loreFinal.contains("Heroic")) {
-												invXPTrader.setItem(slot + 4, xpBottlePlayer(1000 * level, item.getAmount()));
-											}
-											player.updateInventory();
-										}
-									}
-									else {
-										event.setCancelled(true);
-										player.sendMessage(new CCT().colorize("&cUnvalid Item."));
-									}
-								}
-								else {
-									event.setCancelled(true);
-									player.sendMessage(new CCT().colorize("&cUnvalid Item."));
-								}
+						NBTItem it = new NBTItem(item);
+						int level = 1;
+						int rarity = 0;
+						if(it.hasKey("Level")) {
+							level = it.getInteger("Level");
+						}
+						if(it.hasKey("Rarity")) {
+							if(it.getString("Rarity").equals("&7Common")) {
+								rarity = 75;
 							}
-							else {
-								event.setCancelled(true);
-								player.sendMessage(new CCT().colorize("&cUnvalid Item."));
+							if(it.getString("Rarity").equals("&aRare")) {
+								rarity = 150;
 							}
+							if(it.getString("Rarity").equals("&bEpic")) {
+								rarity = 300;
+							}
+							if(it.getString("Rarity").equals("&cLegendary")) {
+								rarity = 600;
+							}
+							if(it.getString("Rarity").equals("&5Mythic")) {
+								rarity = 1000;
+							}
+							if(it.getString("Rarity").equals("&eHeroic")) {
+								rarity = 1500;
+							}
+						}
+						if(rarity != 0) {
+							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)1.5);
+							Inventory invXPTrader = view.getTopInventory();
+							Inventory invPlayer = view.getBottomInventory();
+							invPlayer.removeItem(invPlayer.getItem(event.getSlot()));
+							int slot = invXPTrader.firstEmpty();
+							invXPTrader.setItem(slot, item);
+							invXPTrader.setItem(slot + 4, xpBottlePlayer(rarity * level, item.getAmount()));
+							player.updateInventory();
+						}
+						else {
+							event.setCancelled(true);
+							player.sendMessage(new CCT().colorize("&cUnvalid Item."));
 						}
 					}
 				}

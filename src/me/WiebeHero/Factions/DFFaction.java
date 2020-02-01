@@ -29,6 +29,7 @@ public class DFFaction {
 	public ArrayList<String> allyList;
 	public Location facHome;
 	public int facP;
+	public double bank;
 	public double energy;
 	public DFFaction(String facName, Player p) {
 		this.memberList = new HashMap<UUID, Integer>();
@@ -40,6 +41,7 @@ public class DFFaction {
 		this.facName = facName;
 		this.facP = 0;
 		this.energy = 2.00;
+		this.bank = 0.00;
 	}
 	public DFFaction(String facName) {
 		this.memberList = new HashMap<UUID, Integer>();
@@ -50,6 +52,7 @@ public class DFFaction {
 		this.facName = facName;
 		this.facP = 0;
 		this.energy = 2.00;
+		this.bank = 0.00;
 	}
 	public DFFaction() {
 		//Empty Constructor
@@ -116,6 +119,7 @@ public class DFFaction {
 					fac.facP = fPoints;
 				}
 				fac.setEnergy(yml.getDouble("Factions.List." + list.get(i) + ".Energy"));
+				fac.setEnergy(yml.getDouble("Factions.List." + list.get(i) + ".Bank"));
 				CustomEnchantments.getInstance().factionList.add(fac);
 			}
 		}
@@ -147,6 +151,7 @@ public class DFFaction {
 			yml.set("Factions.List." + fac.getName() + ".Faction Points", fac.facP);
 			yml.set("Factions.List." + fac.getName() + ".Allies", fac.getAllyList());
 			yml.set("Factions.List." + fac.getName() + ".Energy", fac.getEnergy());
+			yml.set("Factions.List." + fac.getName() + ".Bank", fac.getBank());
 		}
 		try{
 			yml.save(f1);
@@ -418,6 +423,19 @@ public class DFFaction {
 	}
 	public void removeFactionPoints(int facP) {
 		this.facP -= facP;
+	}
+
+	public double getBank() {
+		return this.bank;
+	}
+	public void setBank(double money) {
+		this.bank = money;
+	}
+	public void addBank(double money) {
+		this.bank += money;
+	}
+	public void removeBak(double money) {
+		this.bank -= money;
 	}
 	
 	public double getEnergy() {

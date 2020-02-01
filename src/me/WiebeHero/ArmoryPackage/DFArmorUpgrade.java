@@ -52,48 +52,32 @@ public class DFArmorUpgrade implements Listener{
 						if(item.hasKey("ArmorKey")) {
 							int xp = item.getInteger("XP");
 				    		int totalxpearned = 0;
-							DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
 				    		if(!(victim instanceof Player)) {
 								Entity ent = NBTInjector.patchEntity(victim);
 								NBTCompound comp = NBTInjector.getNbtData(ent);
 								if(comp.hasKey("SpawnerUUID")) {
+									int level = comp.getInteger("Level");
 									int tier = comp.getInteger("Tier");
-									int levelMob = comp.getInteger("Level");
+									if(tier == 0) {
+										totalxpearned = xp + 1;
+									}
+									else {
+										totalxpearned = xp + 5 + level;
+									}
 									//-----------------------------------------------------------------------------------------------------------------------------------------
 									//XP Adding
 									//-----------------------------------------------------------------------------------------------------------------------------------------
-									int i1 = 0;
-									if(tier == 0) {
-										i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
-									}
-									if(tier == 1) {
-										i1 = new Random().nextInt(50) + 50 + 2 * levelMob;
-									}
-									else if(tier == 2) {
-										i1 = new Random().nextInt(70) + 70 + 3 * levelMob;
-									}
-									else if(tier == 3) {
-										i1 = new Random().nextInt(90) + 90 + 4 * levelMob;
-									}
-									else if(tier == 4) {
-										i1 = new Random().nextInt(110) + 110 + 5 * levelMob;
-									}
-									else if(tier == 5) {
-										i1 = new Random().nextInt(130) + 130 + 6 * levelMob;
-									}
-									else {
-										i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
-									}
-									totalxpearned = i1 + xp;
+									
+								}
+								else {
+									totalxpearned = xp + 1;
 								}
 							}
 							else {
-								int level = dfPlayer.getLevel();
-								int i1 = 0;
-								i1 = new Random().nextInt(7 * level) + 4 * level;
-								totalxpearned = i1 + xp;
+								DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
+								int level = dfVictim.getLevel();
+								totalxpearned = level + xp;
 							}
-
 							int itemLevel = item.getInteger("Level");
 		    				if(itemLevel != 15) {
 			    				if(i.getType().toString().contains("HELMET")) {

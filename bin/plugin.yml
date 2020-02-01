@@ -1,6 +1,6 @@
 name: CustomEnchantments
 author: WiebeHero
-version: 0.22
+version: 0.31
 api-version: 1.13
 softdepend: [Multiverse-Core, WorldEdit, WorldGuard]
 main: me.WiebeHero.CustomEnchantments.CustomEnchantments
@@ -75,9 +75,19 @@ commands:
   warn:
     ussage: /<command>
     description: 'Command for warn'
+  msg:
+    ussage: /<command>
+    description: 'Command for msg'
+  ignore:
+    ussage: /<command>
+    description: 'Command for ignore'
   procedure:
     ussage: /<command>
     description: 'Command for initiating procedure'
+  ah:
+    ussage: /<command>
+    description: 'Command for initiating ah'
+    aliases: [auctionhouse]
   unwarn:
     ussage: /<command>
     description: 'Command for unwarn'

@@ -35,6 +35,7 @@ public class DFFactions implements Listener,CommandExecutor{
 							player.sendMessage(new CCT().colorize("&6)------------------=[&bHelp&6]=------------------("));
 							player.sendMessage(new CCT().colorize("&b/f create | Create a faction."));
 							player.sendMessage(new CCT().colorize("&b/f claim/unclaim | Claim/Unclaim a chunk of your faction"));
+							player.sendMessage(new CCT().colorize("&b/f unclaim all | Unclaim all chunks of your faction"));
 							player.sendMessage(new CCT().colorize("&b/f help | Shows faction commands."));
 							player.sendMessage(new CCT().colorize("&b/f top | Shows how many F points you have."));
 							player.sendMessage(new CCT().colorize("&b/f promote/demote (Player Name)| Promote or demote a player in you faction."));
@@ -258,44 +259,66 @@ public class DFFactions implements Listener,CommandExecutor{
 						}
 						else if(args[0].equalsIgnoreCase("unclaim")) {
 							if(args.length == 1) {
-								if(args.length == 1) {
+								if(player.getWorld().getName().equals("FactionWorld-1")) {
+									if(faction != null) {
+										int rank = faction.getRank(player.getUniqueId());
+										if(rank >= 3) {
+											if(faction.isInChunk(player)) {
+												faction.removeChunk(player.getChunk());
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have unclaimed this chunk!"));
+											}
+											else if(faction.isInAChunk(player)){
+												DFFaction fac = null;
+												for(DFFaction f : CustomEnchantments.getInstance().factionList) {
+													if(f.getChunkList().contains(player.getChunk())) {
+														fac = f;
+													}
+												}
+												if(fac != null) {
+													if(fac.getEnergy() < fac.getChunkList().size()) {
+														fac.removeChunk(player.getChunk());
+														for(UUID id : fac.getMemberList().keySet()) {
+															Player p = Bukkit.getPlayer(id);
+															if(p != null) {
+																p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cunclaimed 1 of your chunks!"));
+															}
+														}
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unclaimed 1 chunk of the faction &6" + fac.getName()));
+													}
+													else {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't unclaim this chunk of &6" + fac.getName() + " &cbecause they still have enough energy to keep this chunk!"));
+													}
+												}
+												else {
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction doesn't exist... wait a minute somethin's not right here."));
+												}
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis chunk is not claimed!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to unclaim chunks!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't unclaim here!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));
+								}
+							}
+							else if(args.length == 2) {
+								if(args[1].equalsIgnoreCase("all")) {
 									if(player.getWorld().getName().equals("FactionWorld-1")) {
 										if(faction != null) {
 											int rank = faction.getRank(player.getUniqueId());
 											if(rank >= 3) {
-												if(faction.isInChunk(player)) {
-													faction.removeChunk(player.getChunk());
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have unclaimed this chunk!"));
+												for(Chunk c : faction.getChunkList()) {
+													faction.removeChunk(c);
 												}
-												else if(faction.isInAChunk(player)){
-													DFFaction fac = null;
-													for(DFFaction f : CustomEnchantments.getInstance().factionList) {
-														if(f.getChunkList().contains(player.getChunk())) {
-															fac = f;
-														}
-													}
-													if(fac != null) {
-														if(fac.getEnergy() < fac.getChunkList().size()) {
-															fac.removeChunk(player.getChunk());
-															for(UUID id : fac.getMemberList().keySet()) {
-																Player p = Bukkit.getPlayer(id);
-																if(p != null) {
-																	p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cunclaimed 1 of your chunks!"));
-																}
-															}
-															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unclaimed 1 chunk of the faction &6" + fac.getName()));
-														}
-														else {
-															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't unclaim this chunk of &6" + fac.getName() + " &cbecause they still have enough energy to keep this chunk!"));
-														}
-													}
-													else {
-														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction doesn't exis... wait a minute somethin's not right here."));
-													}
-												}
-												else {
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis chunk is not claimed!"));
-												}
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have unclaimed all of your factions chunks!"));
 											}
 											else {
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to unclaim chunks!"));
@@ -312,6 +335,9 @@ public class DFFactions implements Listener,CommandExecutor{
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
 								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
 							}
 						}
 						else if(args[0].equalsIgnoreCase("power")) {

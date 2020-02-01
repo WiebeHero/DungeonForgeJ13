@@ -68,18 +68,18 @@ public class ClassLust implements Listener{
 							}
 						}
 						ArrayList<Player> others = new ArrayList<Player>();
-						if(healMe + dfPlayer.getHP() <= dfPlayer.getMaxHp()) {
+						if(healMe + dfPlayer.getHealth() <= dfPlayer.getMaxHealth()) {
 							dfPlayer.returnPlayer().setHealth(dfPlayer.getHp() + healMe);
 						}
 						else {
 							if(dfPlayer.getHpMod() > 0) {
 								int cLevel = dfPlayer.getHpMod();
-								double remaining = dfPlayer.getMaxHp() - (healMe + dfPlayer.getHP());
+								double remaining = dfPlayer.getMaxHealth() - (healMe + dfPlayer.getHealth());
 								int amp = (int) Math.round(remaining / 4);
 								int dur = cLevel * 5;
 								dfPlayer.returnPlayer().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, amp, dur * 20));
 							}
-							dfPlayer.returnPlayer().setHealth(dfPlayer.getMaxHp());
+							dfPlayer.returnPlayer().setHealth(dfPlayer.getMaxHealth());
 							
 						}
 						for(Entity e : player.getNearbyEntities(range, range, range)) {
@@ -145,13 +145,13 @@ public class ClassLust implements Listener{
 								if(dfPlayer.getRndMod() > 0) {
 									int cLevel = dfPlayer.getRndMod();
 									double inc = cLevel * 10;
-									double test = 1 - dfPlayer.getHp() / dfPlayer.getMaxHp();
+									double test = 1 - dfPlayer.getHp() / dfPlayer.getMaxHealth();
 									dfPlayer.addRndCal(inc * test, 1);
 								}
 								if(dfPlayer.getDfMod() > 0) {
 									int cLevel = dfPlayer.getDfMod();
 									double inc = cLevel * 10;
-									double test = 1 - dfPlayer.getHp() / dfPlayer.getMaxHp();
+									double test = 1 - dfPlayer.getHp() / dfPlayer.getMaxHealth();
 									dfPlayer.addDfCal(test * inc, 1);
 								}
 							}

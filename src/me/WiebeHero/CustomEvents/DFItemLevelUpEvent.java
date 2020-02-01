@@ -134,7 +134,7 @@ public class DFItemLevelUpEvent extends Event{
 						itemLevel = x;
 						this.setXP(this.getXP() - maxxp);
 						total = total + maxxp;
-						maxxp = maxxp / 100 * 120;
+						maxxp = maxxp / 100 * 135;
 					}
 					else {
 						break;
@@ -200,7 +200,7 @@ public class DFItemLevelUpEvent extends Event{
 						itemLevel = x;
 						this.setXP(this.getXP() - maxxp);
 						total = total + maxxp;
-						maxxp = maxxp / 100 * 120;
+						maxxp = maxxp / 100 * 135;
 					}
 					else {
 						break;
@@ -266,7 +266,7 @@ public class DFItemLevelUpEvent extends Event{
 						itemLevel = x;
 						this.setXP(this.getXP() - maxxp);
 						total = total + maxxp;
-						maxxp = maxxp / 100 * 120;
+						maxxp = maxxp / 100 * 135;
 					}
 					else {
 						break;
@@ -332,7 +332,7 @@ public class DFItemLevelUpEvent extends Event{
 						itemLevel = x;
 						this.setXP(this.getXP() - maxxp);
 						total = total + maxxp;
-						maxxp = maxxp / 100 * 120;
+						maxxp = maxxp / 100 * 135;
 					}
 					else {
 						break;
@@ -398,7 +398,7 @@ public class DFItemLevelUpEvent extends Event{
 						itemLevel = x;
 						this.setXP(this.getXP() - maxxp);
 						total = total + maxxp;
-						maxxp = maxxp / 100 * 120;
+						maxxp = maxxp / 100 * 135;
 					}
 					else {
 						break;
@@ -464,7 +464,7 @@ public class DFItemLevelUpEvent extends Event{
 						itemLevel = x;
 						this.setXP(this.getXP() - maxxp);
 						total = total + maxxp;
-						maxxp = maxxp / 100 * 120;
+						maxxp = maxxp / 100 * 135;
 					}
 					else {
 						break;
@@ -519,7 +519,7 @@ public class DFItemLevelUpEvent extends Event{
 				NBTItem cursor = new NBTItem(c);
 				int levelItem = item.getInteger("Level");
 				int xpItem = item.getInteger("XP");
-				int xpCursor = cursor.getInteger("XP") + 500;
+				int xpCursor = cursor.getInteger("XP") + 2500;
 				int maxxpItem = item.getInteger("MAXXP");
 				int totalXpItem = item.getInteger("TotalXP");
 				int totalXpCursor = cursor.getInteger("TotalXP");
@@ -557,7 +557,7 @@ public class DFItemLevelUpEvent extends Event{
 	            			total = total - maxxpItem;
 	            			levelItem = x;
 	            			addedOn = addedOn + maxxpItem;
-	            			maxxpItem = maxxpItem / 100 * 120;
+	            			maxxpItem = maxxpItem / 100 * 135;
 	            		}
 	            	}
 	            	item.setInteger("TotalXP", totalXpItem + addedOn);
@@ -638,8 +638,8 @@ public class DFItemLevelUpEvent extends Event{
 				newLore.add(new CCT().colorize("&7Rarity: " + rarity));
 				meta.setLore(newLore);
 				i.setItemMeta(meta);
-				player.getInventory().setItem(this.getClickedSlot(), i);
-				player.getOpenInventory().getCursor().setAmount(c.getAmount() - 1);
+				player.getItemOnCursor().setAmount(this.getCursorStack().getAmount() -1);
+	    		player.getInventory().setItem(this.getClickedSlot(), i);
 				player.updateInventory();
 			}
 		}

@@ -64,7 +64,7 @@ public class DFPlayer {
 			this.lvl = 1;
 			this.sk_pt = 3;
 			this.xp = 0;
-			this.maxxp = 1500;
+			this.maxxp = 750;
 			this.atk = 0;
 			this.spd = 0;
 			this.crt = 0;
@@ -1047,10 +1047,10 @@ public class DFPlayer {
 		}
 		sk.changeHealth(this.player);
 	}
-	public double getHP() {
+	public double getHealth() {
 		return this.player.getHealth();
 	}
-	public double getMaxHp() {
+	public double getMaxHealth() {
 		return this.player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 	}
 	//---------------------------------------------------------

@@ -159,9 +159,9 @@ public class LootRewards {
 		rewards1.add(enderPearl16());
 		rewards1.add(commonCrystal());
 		rewards1.add(rareCrystal());
-		rewards1.add(playerXPBottle25());
-		rewards1.add(playerXPBottle50());
-		rewards1.add(playerXPBottle100());
+		rewards1.add(playerXPBottle(75));
+		rewards1.add(playerXPBottle(150));
+		rewards1.add(playerXPBottle(300));
 		rewards1.add(moneyNote250());
 		//--------------------------------------------------------------------------------------------------------------------
 		//Tier 2
@@ -306,10 +306,10 @@ public class LootRewards {
 		rewards2.add(rareCrystal());
 		rewards2.add(rareCrystal());
 		rewards2.add(epicCrystal());
-		rewards2.add(playerXPBottle25());
-		rewards2.add(playerXPBottle50());
-		rewards2.add(playerXPBottle100());
-		rewards2.add(playerXPBottle250());
+		rewards2.add(playerXPBottle(75));
+		rewards2.add(playerXPBottle(150));
+		rewards2.add(playerXPBottle(300));
+		rewards2.add(playerXPBottle(600));
 		rewards2.add(moneyNote250());
 		rewards2.add(moneyNote500());
 		//--------------------------------------------------------------------------------------------------------------------
@@ -459,11 +459,11 @@ public class LootRewards {
 		rewards3.add(epicCrystal());
 		rewards3.add(epicCrystal());
 		rewards3.add(legendaryCrystal());
-		rewards3.add(playerXPBottle25());
-		rewards3.add(playerXPBottle50());
-		rewards3.add(playerXPBottle100());
-		rewards3.add(playerXPBottle250());
-		rewards3.add(playerXPBottle500());
+		rewards3.add(playerXPBottle(75));
+		rewards3.add(playerXPBottle(150));
+		rewards3.add(playerXPBottle(300));
+		rewards3.add(playerXPBottle(600));
+		rewards3.add(playerXPBottle(1000));
 		rewards3.add(moneyNote250());
 		rewards3.add(moneyNote500());
 		rewards3.add(moneyNote1000());
@@ -619,12 +619,12 @@ public class LootRewards {
 		rewards4.add(legendaryCrystal());
 		rewards4.add(legendaryCrystal());
 		rewards4.add(mythicCrystal());
-		rewards4.add(playerXPBottle25());
-		rewards4.add(playerXPBottle50());
-		rewards4.add(playerXPBottle100());
-		rewards4.add(playerXPBottle250());
-		rewards4.add(playerXPBottle500());
-		rewards4.add(playerXPBottle1000());
+		rewards4.add(playerXPBottle(75));
+		rewards4.add(playerXPBottle(150));
+		rewards4.add(playerXPBottle(300));
+		rewards4.add(playerXPBottle(600));
+		rewards4.add(playerXPBottle(1000));
+		rewards4.add(playerXPBottle(1500));
 		rewards4.add(moneyNote250());
 		rewards4.add(moneyNote500());
 		rewards4.add(moneyNote1000());
@@ -789,24 +789,24 @@ public class LootRewards {
 		item1.setItemMeta(meta1);
 		return item1;
 	}
+	public ItemStack moneyNote1500() {
+		ItemStack item1 = new ItemStack(Material.PAPER, 1);
+		ItemMeta meta1 = item1.getItemMeta();	
+		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $1500"));
+		item1.setItemMeta(meta1);
+		return item1;
+	}
+	public ItemStack moneyNote2000() {
+		ItemStack item1 = new ItemStack(Material.PAPER, 1);
+		ItemMeta meta1 = item1.getItemMeta();	
+		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $2000"));
+		item1.setItemMeta(meta1);
+		return item1;
+	}
 	public ItemStack moneyNote2500() {
 		ItemStack item1 = new ItemStack(Material.PAPER, 1);
 		ItemMeta meta1 = item1.getItemMeta();	
 		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $2500"));
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack moneyNote5000() {
-		ItemStack item1 = new ItemStack(Material.PAPER, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $5000"));
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack moneyNote10000() {
-		ItemStack item1 = new ItemStack(Material.PAPER, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $10000"));
 		item1.setItemMeta(meta1);
 		return item1;
 	}
@@ -822,7 +822,7 @@ public class LootRewards {
 		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(item1);
 		item.setString("CrystalObject", "");
-		item.setString("Rarity", "Common");
+		item.setString("Rarity", "&7Common");
 		item1 = item.getItem();
 		return item1;
 	}
@@ -838,7 +838,7 @@ public class LootRewards {
 		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(item1);
 		item.setString("CrystalObject", "");
-		item.setString("Rarity", "Rare");
+		item.setString("Rarity", "&aRare");
 		item1 = item.getItem();
 		return item1;
 	}
@@ -854,7 +854,7 @@ public class LootRewards {
 		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(item1);
 		item.setString("CrystalObject", "");
-		item.setString("Rarity", "Epic");
+		item.setString("Rarity", "&bEpic");
 		item1 = item.getItem();
 		return item1;
 	}
@@ -870,7 +870,7 @@ public class LootRewards {
 		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(item1);
 		item.setString("CrystalObject", "");
-		item.setString("Rarity", "Legendary");
+		item.setString("Rarity", "&cLegendary");
 		item1 = item.getItem();
 		return item1;
 	}
@@ -886,7 +886,7 @@ public class LootRewards {
 		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(item1);
 		item.setString("CrystalObject", "");
-		item.setString("Rarity", "Mythic");
+		item.setString("Rarity", "&5Mythic");
 		item1 = item.getItem();
 		return item1;
 	}
@@ -902,219 +902,20 @@ public class LootRewards {
 		item1.setItemMeta(meta1);
 		NBTItem item = new NBTItem(item1);
 		item.setString("CrystalObject", "");
-		item.setString("Rarity", "Heroic");
+		item.setString("Rarity", "&eHeroic");
 		item1 = item.getItem();
 		return item1;
 	}
-	public ItemStack trickyFish() {
-		ItemStack item1 = new ItemStack(Material.COD, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&7Tricky Fish"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you will gain 15 seconds of Invisibility I."));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack seasonedCarrot() {
-		ItemStack item1 = new ItemStack(Material.GOLDEN_CARROT, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&7Seasoned Carrot"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you will gain 5 seconds of Resistance I."));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack chocolateChippedCookie() {
-		ItemStack item1 = new ItemStack(Material.COOKIE, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aChocolate Chipped Cookie"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you will gain 4 seconds of Speed II."));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack bunnyPotion() {
-		ItemStack item1 = new ItemStack(Material.POTION, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aBunny Potion"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you drink this, you will gain 15 seconds of Speed I and Jump II."));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack faceSteak() {
-		ItemStack item1 = new ItemStack(Material.COOKED_BEEF, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&bFace Steak"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you will gain 15 seconds of Fire Resistance I."));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack skyFish() {
-		ItemStack item1 = new ItemStack(Material.COD, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&bSky Fish"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you will gain 12.5 seconds of Levitation I."));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack legendaryHero() {
-		ItemStack item1 = new ItemStack(Material.BREAD, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&cLegendary Hero"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you regen 5% of your max HP"));
-		lore1.add(new CCT().colorize("&7And you will deal 10% more damage for 10 seconds."));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack menJerky() {
-		ItemStack item1 = new ItemStack(Material.BEEF, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&5Men Jerky"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you regen 2 HP"));
-		lore1.add(new CCT().colorize("&7And you will gain 5 second of Strength I"));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack purifiedSpiderEye() {
-		ItemStack item1 = new ItemStack(Material.SPIDER_EYE, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&5Purified Spider Eye"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you regen 2% of you're MAX HP"));
-		lore1.add(new CCT().colorize("&7And it will cleanse you from any poison effect."));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack fusgel() {
-		ItemStack item1 = new ItemStack(Material.YELLOW_WOOL);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&6Fusgel"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you will gain 15 seconds of Regeneration II."));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack holyPotato() {
-		ItemStack item1 = new ItemStack(Material.POTATO, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&6Holy Potato"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you will gain 10 seconds of Regeneration II."));
-		lore1.add(new CCT().colorize("&7You will also gain 20 seconds of Absorption IV"));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack butterScotchPie() {
-		ItemStack item1 = new ItemStack(Material.PUMPKIN_PIE, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&6Butterscotch Pie"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you eat this, you heal 20% of you're MAX HP"));
-		meta1.setLore(lore1);
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack playerXPBottle25() {
+	public ItemStack playerXPBottle(int xp) {
 		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
 		ItemMeta itemmeta = item.getItemMeta();
 		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
 		ArrayList<String> lore1 = new ArrayList<String>();
 		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
 		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&6XP Amount: 25"));
+		lore1.add(new CCT().colorize("&7XP Amount: " + xp));
 		itemmeta.setLore(lore1);
 		item.setItemMeta(itemmeta);
-		return item;
-	}
-	public ItemStack playerXPBottle50() {
-		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&6XP Amount: 50"));
-		itemmeta.setLore(lore1);
-		item.setItemMeta(itemmeta);
-		return item;
-	}
-	public ItemStack playerXPBottle100() {
-		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&6XP Amount: 100"));
-		itemmeta.setLore(lore1);
-		item.setItemMeta(itemmeta);
-		return item;
-	}
-	public ItemStack playerXPBottle250() {
-		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&6XP Amount: 250"));
-		itemmeta.setLore(lore1);
-		item.setItemMeta(itemmeta);
-		return item;
-	}
-	public ItemStack playerXPBottle500() {
-		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&6XP Amount: 500"));
-		itemmeta.setLore(lore1);
-		item.setItemMeta(itemmeta);
-		return item;
-	}
-	public ItemStack playerXPBottle1000() {
-		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&6XP Amount: 1000"));
-		itemmeta.setLore(lore1);
-		item.setItemMeta(itemmeta);
-		return item;
-	}
-	public ItemStack santaCoal() {
-		ItemStack item = new ItemStack(Material.CHARCOAL);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize("&2L&cu&2m&cp &2o&cf &2C&co&2a&cl"));
-		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new CCT().colorize("&7A lump of coal? Are you kidding me?"));
-		lore.add(new CCT().colorize("&7But ive been a good boy this year!"));
-		lore.add(new CCT().colorize("&7You know that, i don't need that"));
-		lore.add(new CCT().colorize("&7fat bald bastard to bring me presents!"));
-		lore.add(new CCT().colorize("&7I could try to trade the coal with that guy"));
-		lore.add(new CCT().colorize("&7nearby the X-Mas tree in spawn."));
-		meta.setLore(lore);
-		item.setItemMeta(meta);
 		return item;
 	}
 	public static ArrayList<ItemStack> getTier1List(){
