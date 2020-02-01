@@ -626,7 +626,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										long mapSeed = new Random().nextLong();
 										mul.getMVWorldManager().addWorld("FactionWorld-1", Environment.NORMAL, mapSeed + "", WorldType.NORMAL, false, "World");
 									}
-									if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") == null) {
+									else if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") == null) {
 										long mapSeed = new Random().nextLong();
 										mul.getMVWorldManager().addWorld("FactionWorld-1", Environment.NORMAL, mapSeed + "", WorldType.NORMAL, false, "World");
 									}
