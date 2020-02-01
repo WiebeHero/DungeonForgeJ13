@@ -623,6 +623,8 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									MultiverseCore mul = multi.getMultiverseCore();
 									if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") != null) {
 										mul.deleteWorld("FactionWorld-1");
+										long mapSeed = new Random().nextLong();
+										mul.getMVWorldManager().addWorld("FactionWorld-1", Environment.NORMAL, mapSeed + "", WorldType.NORMAL, false, "World");
 									}
 									if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") == null) {
 										long mapSeed = new Random().nextLong();
