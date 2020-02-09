@@ -282,7 +282,7 @@ public class DFPlayer {
 				this.hp_c = this.hp * (5.00 * multiplier);
 			}
 			else if(state.getKey() == SkillState.DF) {
-				this.df_c = this.df * (1.00 * multiplier);
+				this.df_c = this.df * (1.50 * multiplier);
 			}
 		}
 	}

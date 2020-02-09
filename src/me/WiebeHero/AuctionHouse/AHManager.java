@@ -145,12 +145,7 @@ public class AHManager {
 		return false;
 	}
 	public void addToBin(UUID uuid, ItemStack item) {
-		if(!this.ahCollectionBin.containsKey(uuid)) {
-			this.ahCollectionBin.put(uuid, new ArrayList<ItemStack>(Arrays.asList(item)));
-		}
-		else {
-			this.ahCollectionBin.get(uuid).add(item);
-		}
+		this.ahCollectionBin.get(uuid).add(item);
 	}
 	public void removeFromBin(UUID uuidSeller, UUID uuidItem) {
 		Pair<Boolean, ItemStack> pair = this.isInAh(uuidItem);
@@ -160,6 +155,12 @@ public class AHManager {
 	}
 	public boolean isInBin(UUID uuid, ItemStack item) {
 		if(this.ahCollectionBin.get(uuid).contains(item)) {
+			return true;
+		}
+		return false;
+	}
+	public boolean isInBin(UUID uuid) {
+		if(this.ahCollectionBin.containsKey(uuid)) {
 			return true;
 		}
 		return false;

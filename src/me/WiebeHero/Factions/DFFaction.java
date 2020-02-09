@@ -434,7 +434,7 @@ public class DFFaction {
 	public void addBank(double money) {
 		this.bank += money;
 	}
-	public void removeBak(double money) {
+	public void removeBank(double money) {
 		this.bank -= money;
 	}
 	

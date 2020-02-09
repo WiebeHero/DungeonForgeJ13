@@ -5,6 +5,7 @@ public class EnchantmentCondition {
 		FALL,
 		FIRE,
 		DROWNING,
+		ENTITY_DAMAGE,
 		ENTITY_DAMAGE_BY_ENTITY,
 		ENTITY_EXPLOSION,
 		BLOCK_EXPLOSION,

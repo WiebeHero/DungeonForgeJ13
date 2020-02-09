@@ -11,11 +11,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.Skills.EnumSkills.SkillState;
 import me.WiebeHero.Skills.Enums.Classes;
 import me.WiebeHero.Skills.State.States;
 
 public class SkillMenu {
+	private ItemStackBuilder builder = new ItemStackBuilder();
 	SkillJoin join = new SkillJoin();
 	ClassMenu menu = new ClassMenu();
 	public void SkillMenuInv(Player player) {
@@ -832,8 +834,16 @@ public class SkillMenu {
 		i.setItem(27, empty());
 		i.setItem(28, empty());
 		i.setItem(29, empty());
-		i.setItem(30, resetButton());
-		i.setItem(31, empty());
+		i.setItem(30, empty());
+		i.setItem(31, builder.constructItem(
+				Material.PAPER,
+				"&cReset",
+				new ArrayList<String>(Arrays.asList(
+					"&cClick this to reset your character.",
+					"&cThis requires level 10."
+				)),
+				"Reset"
+		));
 		i.setItem(32, empty());
 		i.setItem(33, empty());
 		i.setItem(34, empty());
@@ -1063,13 +1073,13 @@ public class SkillMenu {
 		double calcNow = dfPlayer.getDfCal();
 		double calcNext = dfPlayer.getDfCal();
 		if(dfPlayer.getSkillState(SkillState.DF) == States.UP) {
-			calcNext = calcNext + 1.50;
+			calcNext = calcNext + 2.25;
 		}
 		else if(dfPlayer.getSkillState(SkillState.DF) == States.DW) {
-			calcNext = calcNext + 0.50;
+			calcNext = calcNext + 0.75;
 		}
 		else if(dfPlayer.getSkillState(SkillState.DF) == States.NM){
-			calcNext = calcNext + 1.00;
+			calcNext = calcNext + 1.50;
 		}
 		meta.setDisplayName(new CCT().colorize("&8Defense: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();

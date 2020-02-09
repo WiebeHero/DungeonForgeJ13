@@ -19,6 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.MoreStuff.CombatTag;
+import me.WiebeHero.Skills.DFPlayer;
 
 public class DFFactions implements Listener,CommandExecutor{
 	String idNew = "";
@@ -168,6 +169,66 @@ public class DFFactions implements Listener,CommandExecutor{
 			    				}
 			    				else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));
+								}
+							}
+						}
+						else if(args[0].equalsIgnoreCase("bank")) {
+							if(args.length == 3) {
+								if(args[1].equalsIgnoreCase("deposit")) {
+									if(faction.getRank(player.getUniqueId()) >= 2) {
+										DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+										double money = 0.00;
+										try {
+											money = Double.parseDouble(args[1]);
+										}
+										catch(NumberFormatException ex){
+											System.out.print(ex);
+										}
+										if(money <= 0.00) {
+											if(dfPlayer.getMoney() >= money) {
+												dfPlayer.removeMoney(money);
+												faction.addBank(money);
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have deposited " + money + "$!"));
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid amount of money."));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to perform this action!"));
+									}
+								}
+								else if(args[1].equalsIgnoreCase("withdraw")) {
+									if(faction.getRank(player.getUniqueId()) >= 2) {
+										DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+										double money = 0.00;
+										try {
+											money = Double.parseDouble(args[1]);
+										}
+										catch(NumberFormatException ex){
+											System.out.print(ex);
+										}
+										if(money <= 0.00) {
+											if(faction.getBank() >= money) {
+												dfPlayer.addMoney(money);
+												faction.removeBank(money);
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have deposited " + money + "$!"));
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid amount of money."));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to perform this action!"));
+									}
 								}
 							}
 						}
@@ -396,7 +457,7 @@ public class DFFactions implements Listener,CommandExecutor{
 											@Override
 											public void run() {
 												if(player.getLocation().getX() == locX && player.getLocation().getZ() == locZ) {
-													player.sendMessage(new CCT().colorize("&aTeleporting to faction home in &b" + count + "..."));
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting to faction home in &b" + count + "..."));
 													count--;
 													if(count == 0) {
 														player.teleport(faction.getFactionHome());
@@ -404,14 +465,14 @@ public class DFFactions implements Listener,CommandExecutor{
 													}
 												}
 												else {
-													player.sendMessage(new CCT().colorize("&cCancelled teleporting because of you moving."));
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
 													cancel();
 												}
 											}
 										}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to set a home for your faction"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to teleport to your faction home!"));
 									}
 								}
 								else {

@@ -81,6 +81,9 @@ commands:
   ignore:
     ussage: /<command>
     description: 'Command for ignore'
+  checkstaff:
+    ussage: /<command>
+    description: 'Command for checkstaff'
   procedure:
     ussage: /<command>
     description: 'Command for initiating procedure'

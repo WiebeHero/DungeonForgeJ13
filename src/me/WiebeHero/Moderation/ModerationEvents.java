@@ -60,6 +60,8 @@ import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.CustomMethods.MethodMulti;
 import me.WiebeHero.LootChest.LootChest;
 import me.WiebeHero.LootChest.LootChestManager;
+import me.WiebeHero.RankedPlayerPackage.RankedManager;
+import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
 import me.WiebeHero.Scoreboard.DFScoreboard;
 import me.WiebeHero.Spawners.DFSpawner;
 import me.WiebeHero.Spawners.DFSpawnerManager;
@@ -69,6 +71,7 @@ import net.luckperms.api.model.user.User;
 
 public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public boolean joinCooldown = false;
+	private RankedManager rManager = CustomEnchantments.getInstance().rankedManager;
 	private PunishManager pManager = CustomEnchantments.getInstance().punishManager;
 	private StaffManager sManager = CustomEnchantments.getInstance().staffManager;
 	private DFSpawnerManager spManager = CustomEnchantments.getInstance().spawnerManager;
@@ -93,6 +96,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public String unmute = "unmute";
 	public String staffmode = "staffmode";
 	public String staff = "staff";
+	public String checkstaff = "checkstaff";
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
@@ -304,6 +308,17 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						else {
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 						}
+					}
+				}
+			}
+			if(cmd.getName().equalsIgnoreCase(checkstaff)) {
+				if(args.length == 1) {
+					RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
+					if(rPlayer.getModRank().rank > 0) {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player is staff. Rank: " + rPlayer.getRankStyle()));
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not staff! If he is impersonating staff, please consider reporting him!"));
 					}
 				}
 			}

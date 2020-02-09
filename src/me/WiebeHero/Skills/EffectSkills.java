@@ -70,7 +70,7 @@ public class EffectSkills implements Listener{
 					double damage = event.getDamage();
 					if(damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
 						int amp = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier();
-						damage = damage - ((amp + 1) * 2.25);
+						damage = damage + 0.75 * (amp + 1);
 					}
 					event.setDamage(damage);
 				}

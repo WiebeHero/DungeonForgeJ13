@@ -1932,9 +1932,9 @@ public class Enchantment extends CommandFile implements Listener{
 				}
 			}
 		}));
-		this.listArmor.put("Protection", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+		this.listArmor.put("Protection", new Pair<>(Condition.ENTITY_DAMAGE, new CommandFile() {
 			@Override
-			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
+			public void activateEnchantment(LivingEntity victim, int level, EntityDamageEvent event) {
 				event.setDamage(event.getDamage() / 100 * (100 - level * 2));
 			}
 		}));

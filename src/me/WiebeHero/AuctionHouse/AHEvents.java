@@ -1,16 +1,18 @@
 package me.WiebeHero.AuctionHouse;
 
+import java.util.ArrayList;
+
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import de.tr7zw.nbtapi.NBTItem;
-import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Skills.DFPlayer;
@@ -240,6 +242,13 @@ public class AHEvents implements Listener{
 					}
 				}
 			}
+		}
+	}
+	@EventHandler
+	public void registerBin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if(!ahManager.isInBin(player.getUniqueId())) {
+			ahManager.ahCollectionBin.put(player.getUniqueId(), new ArrayList<ItemStack>());
 		}
 	}
 }

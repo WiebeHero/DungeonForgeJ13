@@ -326,6 +326,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(mod.unmute).setExecutor(mod);
 		getCommand(mod.staffmode).setExecutor(mod);
 		getCommand(mod.protocol).setExecutor(mod);
+		getCommand(mod.checkstaff).setExecutor(mod);
 		//Dungeon Parties
 		getCommand(party.comParty).setExecutor(party);
 		getServer().getPluginManager().registerEvents(mod, this);

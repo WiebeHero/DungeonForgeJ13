@@ -514,6 +514,36 @@ public class EnchantmentHandler extends SwordSwingProgress{
 		}
 	}
 	@EventHandler
+	public void normalDamageEnchantmentHandler(EntityDamageEvent event) {
+		if(event.getEntity() instanceof LivingEntity) {
+			LivingEntity victim = (LivingEntity) event.getEntity();
+			if(victim.getEquipment().getArmorContents() != null && victim.getEquipment().getItemInOffHand() != null) {
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getEquipment().getArmorContents()));
+				items.add(victim.getEquipment().getItemInOffHand());
+				for(ItemStack item : items) {
+					if(item != null) {
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().hasLore()) {
+								for(String s1 : item.getItemMeta().getLore()){
+									String enchant = ChatColor.stripColor(s1);
+									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+									if(enchantment.getArmorEnchantments().containsKey(check)) {
+										if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.ENTITY_DAMAGE) {
+											enchant = enchant.replaceAll("[^\\d.]", "");
+											int level = Integer.parseInt(enchant) - 1;
+											enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
+											enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
 	public void armorChangeListener(PlayerArmorChangeEvent event) {
 		Player p = event.getPlayer();
 		ItemStack armorNew = event.getNewItem();

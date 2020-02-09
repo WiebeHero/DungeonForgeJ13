@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 
 public class SkillMenuInteract implements Listener{
@@ -25,6 +26,7 @@ public class SkillMenuInteract implements Listener{
 				return;
 			}
 			else {
+				NBTItem i = new NBTItem(item);
 				String skillName = item.getItemMeta().getDisplayName();
 				if(skillName.contains("Attack Damage")) {
 					if(dfPlayer.getSkillPoints() > 0) {
@@ -292,6 +294,9 @@ public class SkillMenuInteract implements Listener{
 					else {
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
+				}
+				else if(i.hasKey("Reset")) {
+					
 				}
 			}
 		}

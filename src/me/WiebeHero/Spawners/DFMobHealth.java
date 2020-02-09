@@ -23,51 +23,57 @@ public class DFMobHealth implements Listener{
 		if(!event.isCancelled()) {
 			if(event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player)) {
 				LivingEntity ent = (LivingEntity) event.getEntity();
-				if(new DFPlayer().containsPlayer(ent)) {
-					DFPlayer nEnt = new DFPlayer().getPlayer(ent);
-					if(!oldName.containsKey(ent.getUniqueId())) {
-						oldName.put(ent.getUniqueId(), ent.getCustomName());
-					}
-					double barprogress = (double) nEnt.getHealth() / (double) nEnt.getMaxHealth() * 100.0;
-					String loreString = "&7[&a";
-					boolean canStop = true;
-					for(double x = 0.00; x <= 100.00; x+= 2.50) {
-						if(barprogress >= x) {
-							loreString = loreString + ":";
+				if(!ent.isDead()) {
+					if(new DFPlayer().containsPlayer(ent)) {
+						DFPlayer nEnt = new DFPlayer().getPlayer(ent);
+						if(!oldName.containsKey(ent.getUniqueId())) {
+							oldName.put(ent.getUniqueId(), ent.getCustomName());
 						}
-						else if(canStop) {
-							loreString = loreString + "&c:";
-							canStop = false;
-						}
-						else {
-							loreString = loreString + ":";
-						}
-						if(x == 100) {
-							loreString = loreString + "&7]";
-						}
-					}
-					ent.setCustomName(new CCT().colorize(loreString));
-					BukkitTask task = null;
-					if(!runnable.containsKey(ent.getUniqueId())) {
-						task = new BukkitRunnable() {
+						new BukkitRunnable() {
 							public void run() {
-								ent.setCustomName(oldName.get(ent.getUniqueId()));
-								oldName.remove(ent.getUniqueId());
-								runnable.remove(ent.getUniqueId());
+								double barprogress = (double) nEnt.getHealth() / (double) nEnt.getMaxHealth() * 100.0;
+								String loreString = "&7[&a";
+								boolean canStop = true;
+								for(double x = 0.00; x <= 100.00; x+= 2.50) {
+									if(barprogress >= x) {
+										loreString = loreString + ":";
+									}
+									else if(canStop) {
+										loreString = loreString + "&c:";
+										canStop = false;
+									}
+									else {
+										loreString = loreString + ":";
+									}
+									if(x == 100) {
+										loreString = loreString + "&7]";
+									}
+								}
+								ent.setCustomName(new CCT().colorize(loreString));
+								BukkitTask task = null;
+								if(!runnable.containsKey(ent.getUniqueId())) {
+									task = new BukkitRunnable() {
+										public void run() {
+											ent.setCustomName(oldName.get(ent.getUniqueId()));
+											oldName.remove(ent.getUniqueId());
+											runnable.remove(ent.getUniqueId());
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), 100L);
+									runnable.put(ent.getUniqueId(), task);
+								}
+								else {
+									runnable.get(ent.getUniqueId()).cancel();
+									task = new BukkitRunnable() {
+										public void run() {
+											ent.setCustomName(oldName.get(ent.getUniqueId()));
+											oldName.remove(ent.getUniqueId());
+											runnable.remove(ent.getUniqueId());
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), 100L);
+									runnable.put(ent.getUniqueId(), task);
+								}
 							}
-						}.runTaskLater(CustomEnchantments.getInstance(), 100L);
-						runnable.put(ent.getUniqueId(), task);
-					}
-					else {
-						runnable.get(ent.getUniqueId()).cancel();
-						task = new BukkitRunnable() {
-							public void run() {
-								ent.setCustomName(oldName.get(ent.getUniqueId()));
-								oldName.remove(ent.getUniqueId());
-								runnable.remove(ent.getUniqueId());
-							}
-						}.runTaskLater(CustomEnchantments.getInstance(), 100L);
-						runnable.put(ent.getUniqueId(), task);
+						}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 					}
 				}
 			}

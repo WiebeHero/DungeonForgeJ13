@@ -32,7 +32,7 @@ public class MSGCommand implements CommandExecutor{
 							if(p != null) {
 								MSG msg = msgManager.get(p.getUniqueId());
 								if(msg != null) {
-									if(msg.isInIgnore(p.getUniqueId())) {
+									if(!msg.isInIgnore(p.getUniqueId())) {
 										String message = "";
 										for(int i = 1; i < args.length; i++) {
 											message = message + args[i];

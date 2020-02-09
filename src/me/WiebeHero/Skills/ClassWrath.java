@@ -42,11 +42,13 @@ public class ClassWrath implements Listener{
 					event.setCancelled(true);
 					ArrayList<Entity> ents = new ArrayList<Entity>(player.getNearbyEntities(range, range, range));
 					ents.remove(player);
-					for(Entity ent : ents) {
-						if(ent instanceof LivingEntity) {
-							if(fac != null) {
-								if(fac.isMember(ent.getUniqueId())) {
-									ents.remove(ent);
+					if(!ents.isEmpty()) {
+						for(Entity ent : ents) {
+							if(ent instanceof LivingEntity) {
+								if(fac != null) {
+									if(fac.isMember(ent.getUniqueId())) {
+										ents.remove(ent);
+									}
 								}
 							}
 						}
