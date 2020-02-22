@@ -15,13 +15,19 @@ import org.bukkit.metadata.FixedMetadataValue;
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import net.md_5.bungee.api.ChatColor;
 
 public class AHEvents implements Listener{
-	private AHInventory ahInv = new AHInventory();
-	private AHManager ahManager = CustomEnchantments.getInstance().ahManager;
-	private DFPlayer df = new DFPlayer();
+	private AHInventory ahInv;
+	private AHManager ahManager;
+	private DFPlayerManager dfManager;
+	public AHEvents(AHInventory ahInv, AHManager ahManager, DFPlayerManager dfManager) {
+		this.ahInv = ahInv;
+		this.ahManager = ahManager;
+		this.dfManager = dfManager;
+	}
 	@EventHandler
 	public void cancelAHClick(InventoryClickEvent event) {
 		if(event.getWhoClicked() instanceof Player) {
@@ -49,9 +55,9 @@ public class AHEvents implements Listener{
 							long timeLeft = ah.getTimeLeft();
 							if(!ah.getSellerUuid().equals(player.getUniqueId())) {
 								if(timeLeft > 0) {
-									if(df.containsPlayer(player)) {
+									if(dfManager.contains(player)) {
 										double price = ah.getPrice();
-										DFPlayer dfBuyer = new DFPlayer().getPlayer(player);
+										DFPlayer dfBuyer = dfManager.getEntity(player);
 										if(dfBuyer.getMoney() >= price) {
 											if(ahManager.isInAhSimple(ah.getKey())) {
 												ahInv.AuctionHouseConfirm(player, event.getCurrentItem());
@@ -204,14 +210,14 @@ public class AHEvents implements Listener{
 								NBTItem pur = new NBTItem(purchasedItem);
 								if(pur.hasKey("AHItem")) {
 									AHItem ah = pur.getObject("AHItem", AHItem.class);
-									DFPlayer dfBuyer = new DFPlayer().getPlayer(player.getUniqueId());
+									DFPlayer dfBuyer = dfManager.getEntity(player);
 									double price = ah.getPrice();
 									if(dfBuyer.getMoney() >= ah.getPrice()) {
 										if(ahManager.isInAhSimple(ah.getKey())) {
 											if(player.getInventory().firstEmpty() != -1) {
 												player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_TRADE, 2.0F, 1.0F);
 												ahManager.removeFromAh(ah.getKey());
-												DFPlayer dfSeller = new DFPlayer().getPlayer(ah.getSellerUuid());
+												DFPlayer dfSeller = dfManager.getEntity(ah.getSellerUuid());
 												dfBuyer.removeMoney(price);
 												dfSeller.addMoney(price);
 												ItemStack finalItem = ahManager.deconstructAHItem(purchasedItem);

@@ -41,15 +41,23 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.NewAttribute;
 import me.WiebeHero.CustomMethods.PotionM;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFaction;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.Factions.DFFactionManager;
+import me.WiebeHero.Factions.DFFactionPlayer;
+import me.WiebeHero.Factions.DFFactionPlayerManager;
 
 public class Consumable {
-	private PotionM p = new PotionM();
-	private DFFaction fac = new DFFaction();
-	private DFPlayer df = new DFPlayer();
-	public Consumable() {
-		
+	private PotionM p;
+	private DFFactionManager facManager;
+	private DFFactionPlayerManager facPlayerManager;
+	private DFPlayerManager dfManager;
+	public Consumable(DFPlayerManager dfManager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, PotionM p) {
+		this.facManager = facManager;
+		this.dfManager = dfManager;
+		this.facPlayerManager = facPlayerManager;
+		this.p = p;
 	}
 	
 	private NewAttribute attr = new NewAttribute();
@@ -58,18 +66,22 @@ public class Consumable {
 	public ArrayList<Recipe> instantUnlock = new ArrayList<Recipe>();
 	
 	public void loadConsumables() {
+		Consumable con = this;
 		this.listRecipes = new ArrayList<Pair<ArrayList<UnlockCraftCondition>, Recipe>>();
 		this.listConsumables = new HashMap<String, Pair<Condition, CommandFile>>();
 		this.listConsumables.put("Santa's_Cookie", new Pair<>(Condition.CONSUME, new CommandFile() {
 			@Override
 			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
 				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 2.0F, 1.0F);
-				df.addAtkCal(3.0, 350);
-				df.addSpdCal(1.0, 350);
-				df.addCrtCal(1.0, 350);
-				df.addRndCal(4.0, 350);
-				df.addHpCal(10.0, 350);
-				df.addDfCal(2.0, 350);
+				if(dfManager.contains(eaten)) {
+					DFPlayer df = dfManager.getEntity(eaten);
+					df.addAtkCal(3.0, 350);
+					df.addSpdCal(1.0, 350);
+					df.addCrtCal(1.0, 350);
+					df.addRndCal(4.0, 350);
+					df.addHpCal(10.0, 350);
+					df.addDfCal(2.0, 350);
+				}
 			}
 		}));
 		this.listConsumables.put("Smooth_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
@@ -97,7 +109,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 60L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -129,23 +140,28 @@ public class Consumable {
 					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
 					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_GHAST_SHOOT, 2.0F, 0.5F);
 					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					DFFaction faction = fac.getFaction(eaten.getUniqueId());
 					p.applyEffect(eaten, PotionEffectType.SPEED, 0, 150);
 					if(eaten instanceof Player) {
 						Player p = (Player) eaten;
 						p.setFoodLevel(p.getFoodLevel() + 2);
 					}
-					for(Entity e : eaten.getNearbyEntities(5.0, 5.0, 5.0)) {
-						if(e != eaten) {
-							if(e instanceof LivingEntity) {
-								LivingEntity ent = (LivingEntity) e;
-								if(faction != null) {
-									if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
-										p.applyEffect(ent, PotionEffectType.BLINDNESS, 0, 150);
+					if(facPlayerManager.contains(eaten.getUniqueId())) {
+						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(eaten);
+						if(facPlayer.getFaction() != null) {
+							DFFaction faction = facPlayer.getFaction();
+							for(Entity e : eaten.getNearbyEntities(5.0, 5.0, 5.0)) {
+								if(e != eaten) {
+									if(e instanceof LivingEntity) {
+										LivingEntity ent = (LivingEntity) e;
+										if(faction != null) {
+											if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
+												p.applyEffect(ent, PotionEffectType.BLINDNESS, 0, 150);
+											}
+										}
+										else {
+											p.applyEffect(ent, PotionEffectType.BLINDNESS, 0, 150);
+										}
 									}
-								}
-								else {
-									p.applyEffect(ent, PotionEffectType.BLINDNESS, 0, 150);
 								}
 							}
 						}
@@ -157,7 +173,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 150L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -214,7 +229,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 200L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -276,7 +290,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 200L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -322,7 +335,6 @@ public class Consumable {
 					eaten.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
 					eaten.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.0, 0), 20, 0.2, 0.2, 0.2);
 					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					DFFaction faction = fac.getFaction(eaten.getUniqueId());
 					p.applyEffect(eaten, PotionEffectType.REGENERATION, 0, 180);
 					if(eaten instanceof Player) {
 						Player p = (Player) eaten;
@@ -334,31 +346,37 @@ public class Consumable {
 					else {
 						eaten.setHealth(eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 					}
-					for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
-						if(e != eaten) {
-							if(e instanceof LivingEntity) {
-								LivingEntity ent = (LivingEntity) e;
-								if(faction != null) {
-									if(faction.isMember(ent.getUniqueId())) {
-										ent.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
-										ent.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.2, 0), 20, 0.2, 0.2, 0.2);
-										p.applyEffect(eaten, PotionEffectType.REGENERATION, 1, 90);
-										if(ent.getHealth() + 5.0 <= ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-											ent.setHealth(ent.getHealth() + 5.0);
-										}
-										else {
-											ent.setHealth(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-										}
-									}
-									else if(faction.isAlly(ent.getUniqueId())) {
-										ent.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
-										ent.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.2, 0), 20, 0.2, 0.2, 0.2);
-										p.applyEffect(eaten, PotionEffectType.REGENERATION, 0, 180);
-										if(ent.getHealth() + 2.5 <= ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-											ent.setHealth(ent.getHealth() + 2.5);
-										}
-										else {
-											ent.setHealth(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+					if(facPlayerManager.contains(eaten)) {
+						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(eaten);
+						if(facPlayer.getFaction() != null) {
+							DFFaction faction = facPlayer.getFaction();
+							for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
+								if(e != eaten) {
+									if(e instanceof LivingEntity) {
+										LivingEntity ent = (LivingEntity) e;
+										if(faction != null) {
+											if(faction.isMember(ent.getUniqueId())) {
+												ent.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
+												ent.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.2, 0), 20, 0.2, 0.2, 0.2);
+												p.applyEffect(eaten, PotionEffectType.REGENERATION, 1, 90);
+												if(ent.getHealth() + 5.0 <= ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+													ent.setHealth(ent.getHealth() + 5.0);
+												}
+												else {
+													ent.setHealth(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+												}
+											}
+											else if(faction.isAlly(ent.getUniqueId())) {
+												ent.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
+												ent.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.2, 0), 20, 0.2, 0.2, 0.2);
+												p.applyEffect(eaten, PotionEffectType.REGENERATION, 0, 180);
+												if(ent.getHealth() + 2.5 <= ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+													ent.setHealth(ent.getHealth() + 2.5);
+												}
+												else {
+													ent.setHealth(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+												}
+											}
 										}
 									}
 								}
@@ -372,7 +390,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 300L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -446,7 +463,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 500L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -503,7 +519,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 300L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -548,25 +563,30 @@ public class Consumable {
 					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
 					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_HUSK_AMBIENT, 2.0F, 0.5F);
 					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					DFFaction faction = fac.getFaction(eaten.getUniqueId());
-					for(Entity e : eaten.getNearbyEntities(6.0, 6.0, 6.0)) {
-						if(e != eaten) {
-							if(e instanceof LivingEntity) {
-								LivingEntity ent = (LivingEntity) e;
-								if(faction != null) {
-									if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
-										p.applyEffect(ent, PotionEffectType.SLOW, 1, 100);
-									}
-								}
-								else {
-									p.applyEffect(ent, PotionEffectType.SLOW, 1, 100);
-								}
-							}
-						}
-					}
 					if(eaten instanceof Player) {
 						Player p = (Player) eaten;
 						p.setFoodLevel(p.getFoodLevel() + 3);
+					}
+					if(facPlayerManager.contains(eaten)) {
+						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(eaten);
+						if(facPlayer.getFaction() != null) {
+							DFFaction faction = facPlayer.getFaction();
+							for(Entity e : eaten.getNearbyEntities(6.0, 6.0, 6.0)) {
+								if(e != eaten) {
+									if(e instanceof LivingEntity) {
+										LivingEntity ent = (LivingEntity) e;
+										if(faction != null) {
+											if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
+												p.applyEffect(ent, PotionEffectType.SLOW, 1, 100);
+											}
+										}
+										else {
+											p.applyEffect(ent, PotionEffectType.SLOW, 1, 100);
+										}
+									}
+								}
+							}
+						}
 					}
 					new BukkitRunnable() {
 						public void run() {
@@ -575,7 +595,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 300L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -656,7 +675,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 350L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -712,7 +730,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 250L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -756,18 +773,23 @@ public class Consumable {
 					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
 					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT, 2.0F, 0.5F);
 					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					DFFaction faction = fac.getFaction(eaten.getUniqueId());
-					for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
-						if(e != eaten) {
-							if(e instanceof LivingEntity) {
-								LivingEntity ent = (LivingEntity) e;
-								if(faction != null) {
-									if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
-										p.applyEffect(ent, PotionEffectType.CONFUSION, 1, 250);
+					if(facPlayerManager.contains(eaten)) {
+						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(eaten);
+						if(facPlayer.getFaction() != null) {
+							DFFaction faction = facPlayer.getFaction();
+							for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
+								if(e != eaten) {
+									if(e instanceof LivingEntity) {
+										LivingEntity ent = (LivingEntity) e;
+										if(faction != null) {
+											if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
+												p.applyEffect(ent, PotionEffectType.CONFUSION, 1, 250);
+											}
+										}
+										else {
+											p.applyEffect(ent, PotionEffectType.CONFUSION, 1, 250);
+										}
 									}
-								}
-								else {
-									p.applyEffect(ent, PotionEffectType.CONFUSION, 1, 250);
 								}
 							}
 						}
@@ -779,7 +801,6 @@ public class Consumable {
 					}.runTaskLater(CustomEnchantments.getInstance(), 250L);
 				}
 			}
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack item = con.item(
@@ -815,7 +836,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Bark Hearts", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@SuppressWarnings("deprecation")
 			@Override
 			public void registerRecipe() {
@@ -857,7 +877,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Wooden Pickaxes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Bark", Material.OAK_LOG);
@@ -874,7 +893,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Wooden Axes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Bark", Material.OAK_LOG);
@@ -891,7 +909,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Wooden Shovels", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Bark", Material.OAK_LOG);
@@ -908,7 +925,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Wooden Hoes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Bark", Material.OAK_LOG);
@@ -925,7 +941,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Gold Hearts", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Gold", Material.GOLD_INGOT);
@@ -953,7 +968,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Gold Pickaxes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Gold", Material.GOLD_INGOT);
@@ -984,7 +998,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Gold Axes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Gold", Material.GOLD_INGOT);
@@ -1015,7 +1028,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Gold Shovels", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Gold", Material.GOLD_INGOT);
@@ -1046,7 +1058,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Gold Hoes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Gold", Material.GOLD_INGOT);
@@ -1075,7 +1086,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Cobblestone Hearts", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Cobblestone", Material.COBBLESTONE);
@@ -1106,7 +1116,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Stone Pickaxes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Cobblestone", Material.COBBLESTONE);
@@ -1135,7 +1144,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Stone Axes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Cobblestone", Material.COBBLESTONE);
@@ -1164,7 +1172,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Stone Shovels", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Cobblestone", Material.COBBLESTONE);
@@ -1193,7 +1200,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Stone Hoes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Cobblestone", Material.COBBLESTONE);
@@ -1221,7 +1227,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Iron Hearts", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Iron", Material.IRON_INGOT);
@@ -1252,7 +1257,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Iron Pickaxes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Iron", Material.IRON_INGOT);
@@ -1294,7 +1298,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Iron Axes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Iron", Material.IRON_INGOT);
@@ -1336,7 +1339,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Iron Shovels", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Iron", Material.IRON_INGOT);
@@ -1378,7 +1380,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Iron Hoes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Iron", Material.IRON_INGOT);
@@ -1417,7 +1418,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Diamond Hearts", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Diamond", Material.DIAMOND);
@@ -1447,7 +1447,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Diamond Pickaxes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Diamond", Material.DIAMOND);
@@ -1502,7 +1501,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Diamond Axes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Diamond", Material.DIAMOND);
@@ -1557,7 +1555,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Diamond Shovels", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Diamond", Material.DIAMOND);
@@ -1612,7 +1609,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Diamond Hoes", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Diamond", Material.DIAMOND);
@@ -1662,7 +1658,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Stone Armor", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				//-----------------------------------------------------------------------------------
@@ -1738,7 +1733,6 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Chainmail Armor", new Pair<>(Condition.NONE, new CommandFile() {
-			Consumable con = new Consumable();
 			@Override
 			public void registerRecipe() {
 				//-----------------------------------------------------------------------------------
@@ -1798,7 +1792,7 @@ public class Consumable {
 	}
 	
 	public void registerRecipes() {
-		Consumable con = new Consumable();
+		Consumable con = this;
 		ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
 		Iterator<Recipe> iter = Bukkit.recipeIterator();
 		iter.forEachRemaining(recipeList::add); 

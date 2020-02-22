@@ -13,17 +13,23 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Scoreboard.DFScoreboard;
 
 public class XPEarningMobs implements Listener{
-	DFScoreboard board = new DFScoreboard();
-	SkillJoin join = new SkillJoin();
+	private DFScoreboard board;
+	private DFPlayerManager dfManager;
+	public XPEarningMobs(DFPlayerManager manager, DFScoreboard board) {
+		this.dfManager = manager;
+		this.board = board;
+	}
 	@EventHandler
 	public void xpEarnMobs10(EntityDeathEvent event) {
 		if(event.getEntity().getKiller() != null && event.getEntity().getKiller() instanceof Player) {
 			if(event.getEntity() instanceof LivingEntity) {
 				Player player = event.getEntity().getKiller();
-				DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+				DFPlayer dfPlayer = dfManager.getEntity(player);
 				LivingEntity victim = event.getEntity();
 				int level = dfPlayer.getLevel();
 				int xp = dfPlayer.getExperience();
@@ -64,7 +70,7 @@ public class XPEarningMobs implements Listener{
 					}
 				}
 				else {
-					DFPlayer df = new DFPlayer().getPlayer(victim);
+					DFPlayer df = dfManager.getEntity(victim);
 					int otherLevel = df.getLevel();
 					int i1 = 0;
 					i1 = new Random().nextInt(7 * otherLevel) + 4 * otherLevel;

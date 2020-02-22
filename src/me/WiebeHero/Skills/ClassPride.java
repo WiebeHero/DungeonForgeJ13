@@ -16,17 +16,20 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.Enums.Classes;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 
 public class ClassPride implements Listener{
-	SkillJoin join = new SkillJoin();
-	EffectSkills sk = new EffectSkills();
+	private DFPlayerManager dfManager;
+	public ClassPride(DFPlayerManager manager) {
+		this.dfManager = manager;
+	}
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-		DFPlayer method = new DFPlayer();
-		if(method.containsPlayer(player)) {
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.PRIDE) {
 				if(dfPlayer.getUseable()) {
 					dfPlayer.setUseable(false);
@@ -82,7 +85,6 @@ public class ClassPride implements Listener{
 			if(event.getEntity() instanceof LivingEntity) {
 				if(event.getDamager() instanceof Arrow || event.getDamager() instanceof Player) {
 					Player player = null;
-					LivingEntity victim = (LivingEntity) event.getEntity();
 					if(event.getDamager() instanceof Player) {
 						player = (Player)event.getDamager();
 					}
@@ -93,9 +95,8 @@ public class ClassPride implements Listener{
 						}
 					}
 					if(player != null) {
-						DFPlayer method = new DFPlayer();
-						if(method.containsPlayer(player)) {
-							DFPlayer dfPlayer = new DFPlayer().getPlayer(victim);
+						if(dfManager.contains(player)) {
+							DFPlayer dfPlayer = dfManager.getEntity(player);
 							if(dfPlayer != null) {
 								if(dfPlayer.getPlayerClass() == Classes.PRIDE) {
 									int level = dfPlayer.getLevel();
@@ -122,9 +123,8 @@ public class ClassPride implements Listener{
 					Arrow arrow = (Arrow) event.getDamager();
 					if(arrow.getShooter() instanceof Player) {
 						Player player = (Player) arrow.getShooter();
-						if(new DFPlayer().containsPlayer(victim) && new DFPlayer().containsPlayer(player)) {
-							DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-							DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
+						if(dfManager.contains(victim) && dfManager.contains(player)) {
+							DFPlayer dfPlayer = dfManager.getEntity(player), dfVictim = dfManager.getEntity(victim);
 							if(dfVictim.getPlayerClass() != null) {
 								if(dfVictim.getPlayerClass() == Classes.PRIDE) {
 									if(dfVictim.getRndMod() > 0) {

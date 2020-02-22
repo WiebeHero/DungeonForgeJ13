@@ -10,12 +10,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 
 public class PayCommand implements Listener,CommandExecutor{
 	public String command = "pay";
 	public String balance = "balance";
 	public String money = "money";
+	private DFPlayerManager dfManager;
+	public PayCommand(DFPlayerManager dfManager) {
+		this.dfManager = dfManager;
+	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
@@ -35,8 +40,8 @@ public class PayCommand implements Listener,CommandExecutor{
 							}
 						}
 						if(uuid2 != null) {
-							DFPlayer dfPlayerMe = new DFPlayer().getPlayer(uuid1);
-							DFPlayer dfPlayerThem = new DFPlayer().getPlayer(uuid2);
+							DFPlayer dfPlayerMe = dfManager.getEntity(uuid1);
+							DFPlayer dfPlayerThem = dfManager.getEntity(uuid2);
 							double moneyMe = dfPlayerMe.getMoney();
 							double moneyThem = dfPlayerThem.getMoney();
 							String sAmount = args[1];
@@ -73,7 +78,7 @@ public class PayCommand implements Listener,CommandExecutor{
 			else if(cmd.getName().equalsIgnoreCase(balance) || cmd.getName().equalsIgnoreCase(money)) {
 				if(args.length == 0) {
 					UUID uuid1 = player.getUniqueId();
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(uuid1);
+					DFPlayer dfPlayer = dfManager.getEntity(uuid1);
 					double moneyMe = dfPlayer.getMoney();
 					player.sendMessage(new CCT().colorize("&aYou're balance is: &6" + moneyMe + "$"));
 				}
@@ -81,9 +86,9 @@ public class PayCommand implements Listener,CommandExecutor{
 					Player target = Bukkit.getPlayer(args[0]);
 					if(target != null) {
 						UUID uuid1 = target.getUniqueId();
-						DFPlayer dfPlayer = new DFPlayer().getPlayer(uuid1);
+						DFPlayer dfPlayer = dfManager.getEntity(uuid1);
 						double moneyMe = dfPlayer.getMoney();
-						player.sendMessage(new CCT().colorize("&a" + target.getName() + " balance is: &6" + moneyMe + "$"));
+						player.sendMessage(new CCT().colorize("&a" + target.getName() + "'s balance is: &6" + moneyMe + "$"));
 					}
 					else {
 						player.sendMessage(new CCT().colorize("&cThis player has not logged online, or is offline!"));

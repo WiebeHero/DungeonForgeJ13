@@ -21,13 +21,17 @@ import org.bukkit.inventory.ShapelessRecipe;
 import javafx.util.Pair;
 import me.WiebeHero.Consumables.ConsumableCondition.Condition;
 import me.WiebeHero.Consumables.Unlock.UnlockCraftCondition;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFPlayerLevelUpEvent;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 
 public class ConsumableHandler implements Listener{
-	Consumable con = CustomEnchantments.getInstance().con;
-	DFPlayer df = new DFPlayer();
+	private Consumable con;
+	private DFPlayerManager dfManager;
+	public ConsumableHandler(DFPlayerManager dfManager, Consumable con) {
+		this.dfManager = dfManager;
+		this.con = con;
+	}
 	@EventHandler
 	public void consumeHandler(PlayerItemConsumeEvent event) {
 		Player p = event.getPlayer();
@@ -154,8 +158,8 @@ public class ConsumableHandler implements Listener{
 	@EventHandler
 	public void discoverRecipeLevel(DFPlayerLevelUpEvent event) {
 		Player player = event.getPlayer();
-		if(df.containsPlayer(player)) {
-			DFPlayer dfPlayer = df.getPlayer(player);
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			int level = dfPlayer.getLevel();
 		}
 	}

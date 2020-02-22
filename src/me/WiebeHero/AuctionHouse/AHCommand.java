@@ -18,9 +18,14 @@ import me.WiebeHero.RankedPlayerPackage.RankedManager;
 import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
 
 public class AHCommand implements CommandExecutor{
-	private AHManager ahManager = CustomEnchantments.getInstance().ahManager;
-	private RankedManager rManager = CustomEnchantments.getInstance().rankedManager;
-	private AHInventory ahInv = new AHInventory();
+	private AHManager ahManager;
+	private RankedManager rManager;
+	private AHInventory ahInv;
+	public AHCommand(AHManager ahManager, RankedManager rManager, AHInventory ahInv) {
+		this.ahManager = ahManager;
+		this.rManager = rManager;
+		this.ahInv = ahInv;
+	}
 	public String ah = "ah";
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {

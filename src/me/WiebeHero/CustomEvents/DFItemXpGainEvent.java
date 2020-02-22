@@ -15,8 +15,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.DFPlayerPackage.EffectSkills;
+import me.WiebeHero.Novis.NovisEnchantmentGetting;
 
 public class DFItemXpGainEvent extends Event{
+	private NovisEnchantmentGetting enchant;
+	private EffectSkills sk;
+	
 	private static final HandlerList handlers = new HandlerList();
 	private Player player;
 	private boolean isCancelled;
@@ -26,21 +31,25 @@ public class DFItemXpGainEvent extends Event{
 	private int slotR;
 	private EquipmentSlot slot;
 	
-	public DFItemXpGainEvent(Player player, ItemStack item, int xp, EquipmentSlot slot){
+	public DFItemXpGainEvent(Player player, ItemStack item, int xp, EquipmentSlot slot, EffectSkills sk, NovisEnchantmentGetting enchant){
         this.player = player;
         this.isCancelled = false;
         this.xp = xp;
         this.item = item;
         this.slot = slot;
+        this.enchant = enchant;
+        this.sk = sk;
     }
 	
-	public DFItemXpGainEvent(Player player, ItemStack item, ItemStack cursor, int xp, int slot){
+	public DFItemXpGainEvent(Player player, ItemStack item, ItemStack cursor, int xp, int slot, EffectSkills sk, NovisEnchantmentGetting enchant){
         this.player = player;
         this.isCancelled = false;
         this.xp = xp;
         this.item = item;
         this.cursor = cursor;
         this.slotR = slot;
+        this.enchant = enchant;
+        this.sk = sk;
     }
 	
 	public Player getPlayer() {
@@ -169,11 +178,11 @@ public class DFItemXpGainEvent extends Event{
 				int maxxp = item.getInteger("MAXXP");
 				if(xp >= maxxp) {
 					if(this.getEquipmentSlot() != null) {
-						DFItemLevelUpEvent e = new DFItemLevelUpEvent(this.getPlayer(), i, xp, this.getEquipmentSlot());
+						DFItemLevelUpEvent e = new DFItemLevelUpEvent(this.getPlayer(), i, xp, this.getEquipmentSlot(), sk, enchant);
 						Bukkit.getPluginManager().callEvent(e);
 					}
 					else {
-						DFItemLevelUpEvent e = new DFItemLevelUpEvent(this.getPlayer(), i, this.getCursorStack(), xp, this.getClickedSlot());
+						DFItemLevelUpEvent e = new DFItemLevelUpEvent(this.getPlayer(), i, this.getCursorStack(), xp, this.getClickedSlot(), sk, enchant);
 						Bukkit.getPluginManager().callEvent(e);
 					}
 				}

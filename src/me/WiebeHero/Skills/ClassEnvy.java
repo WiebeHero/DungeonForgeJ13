@@ -18,16 +18,20 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.Enums.Classes;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 
 public class ClassEnvy implements Listener{
-	DFPlayer method = new DFPlayer();
-	SkillJoin join = new SkillJoin();
+	private DFPlayerManager dfManager;
+	public ClassEnvy(DFPlayerManager dfManager) {
+		this.dfManager = dfManager;
+	}
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(method.containsPlayer(player)) {
-			DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.ENVY) {
 				if(dfPlayer.getUseable() == true) {
 					dfPlayer.setActivation(true);
@@ -82,8 +86,8 @@ public class ClassEnvy implements Listener{
 						}
 					}
 					if(player != null) {
-						if(method.containsPlayer(player)) {
-							DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+						if(dfManager.contains(player)) {
+							DFPlayer dfPlayer = dfManager.getEntity(player);
 							if(dfPlayer.getPlayerClass() == Classes.ENVY) {
 								if(dfPlayer.getActivation() == true) {
 									dfPlayer.setActivation(false);
@@ -103,7 +107,7 @@ public class ClassEnvy implements Listener{
 										}
 									}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 									LivingEntity p = (LivingEntity) event.getEntity();
-									DFPlayer dfPlay = new DFPlayer().getPlayer(p);
+									DFPlayer dfPlay = dfManager.getEntity(p);
 									if(dfPlayer.getAtkMod() > 0) {
 										int cLevel = dfPlayer.getAtkMod();
 										double weak = cLevel * 5;

@@ -5,10 +5,7 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-
 public class DFSpawner {
-	private DFSpawnerManager spManager = CustomEnchantments.getInstance().spawnerManager;
 	public UUID uuid;
 	public int tier;
 	public Location loc;
@@ -20,7 +17,6 @@ public class DFSpawner {
 		this.tier = tier;
 		this.loc = loc;
 		this.canSpawn = true;
-		spManager.add(uuid, this);
 	}
 	public DFSpawner(Location loc, EntityType type, int tier) {
 		this.uuid = UUID.randomUUID();
@@ -28,7 +24,6 @@ public class DFSpawner {
 		this.tier = tier;
 		this.loc = loc;
 		this.canSpawn = true;
-		spManager.add(this.uuid, this);
 	}
 	public DFSpawner() {
 		//Method to execute other methods

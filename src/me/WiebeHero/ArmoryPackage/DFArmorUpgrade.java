@@ -1,7 +1,5 @@
 package me.WiebeHero.ArmoryPackage;
 
-import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -18,25 +16,20 @@ import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
-import me.WiebeHero.Skills.DFPlayer;
-import me.WiebeHero.Skills.EffectSkills;
 
 public class DFArmorUpgrade implements Listener{
-	public NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
-	public String colorize(String msg)
-    {
-        String coloredMsg = "";
-        for(int i = 0; i < msg.length(); i++)
-        {
-            if(msg.charAt(i) == '&')
-                coloredMsg += '§';
-            else
-                coloredMsg += msg.charAt(i);
-        }
-        return coloredMsg;
-    }
-	EffectSkills sk = new EffectSkills();
+	private NovisEnchantmentGetting enchant;
+	private EffectSkills sk;
+	private DFPlayerManager dfManager;
+	public DFArmorUpgrade(DFPlayerManager dfManager, NovisEnchantmentGetting enchant, EffectSkills sk) {
+		this.dfManager = dfManager;
+		this.enchant = enchant;
+		this.sk = sk;
+	}
 	@EventHandler
 	public void weapons(EntityDeathEvent event) {
 		LivingEntity victim = (LivingEntity) event.getEntity();
@@ -64,36 +57,32 @@ public class DFArmorUpgrade implements Listener{
 									else {
 										totalxpearned = xp + 5 + level;
 									}
-									//-----------------------------------------------------------------------------------------------------------------------------------------
-									//XP Adding
-									//-----------------------------------------------------------------------------------------------------------------------------------------
-									
 								}
 								else {
 									totalxpearned = xp + 1;
 								}
 							}
 							else {
-								DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
+								DFPlayer dfVictim = dfManager.getEntity(victim);
 								int level = dfVictim.getLevel();
 								totalxpearned = level + xp;
 							}
 							int itemLevel = item.getInteger("Level");
 		    				if(itemLevel != 15) {
 			    				if(i.getType().toString().contains("HELMET")) {
-			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.HEAD);
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.HEAD, sk, enchant);
 			    					Bukkit.getPluginManager().callEvent(e);
 			    				}
 			    				else if(i.getType().toString().contains("CHESTPLATE")) {
-			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.CHEST);
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.CHEST, sk, enchant);
 			    					Bukkit.getPluginManager().callEvent(e);
 			    				}
 			    				else if(i.getType().toString().contains("LEGGINGS")) {
-			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.LEGS);
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.LEGS, sk, enchant);
 			    					Bukkit.getPluginManager().callEvent(e);
 			    				}
 			    				else if(i.getType().toString().contains("BOOTS")) {
-			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.FEET);
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.FEET, sk, enchant);
 			    					Bukkit.getPluginManager().callEvent(e);
 			    				}
 					    	}

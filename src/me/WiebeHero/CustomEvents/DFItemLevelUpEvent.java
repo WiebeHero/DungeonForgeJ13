@@ -2,7 +2,6 @@ package me.WiebeHero.CustomEvents;
 
 import java.util.ArrayList;
 
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -13,12 +12,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
-import me.WiebeHero.Skills.EffectSkills;
 
 public class DFItemLevelUpEvent extends Event{
-	private NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
-	private EffectSkills sk = new EffectSkills();
+	private NovisEnchantmentGetting enchant;
+	private EffectSkills sk;
 	
 	private static final HandlerList handlers = new HandlerList();
 	private Player player;
@@ -29,21 +28,25 @@ public class DFItemLevelUpEvent extends Event{
 	private int slotR;
 	private EquipmentSlot slot;
 	
-	public DFItemLevelUpEvent(Player player, ItemStack item, int xp, EquipmentSlot slot){
+	public DFItemLevelUpEvent(Player player, ItemStack item, int xp, EquipmentSlot slot, EffectSkills sk, NovisEnchantmentGetting enchant){
         this.player = player;
         this.isCancelled = false;
         this.xp = xp;
         this.item = item;
         this.slot = slot;
+        this.sk = sk;
+        this.enchant = enchant;
     }
 	
-	public DFItemLevelUpEvent(Player player, ItemStack item, ItemStack cursor, int xp, int slot){
+	public DFItemLevelUpEvent(Player player, ItemStack item, ItemStack cursor, int xp, int slot, EffectSkills sk, NovisEnchantmentGetting enchant){
         this.player = player;
         this.isCancelled = false;
         this.xp = xp;
         this.item = item;
         this.cursor = cursor;
         this.slotR = slot;
+        this.sk = sk;
+        this.enchant = enchant;
     }
 	
 	public Player getPlayer() {

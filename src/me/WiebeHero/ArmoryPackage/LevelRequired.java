@@ -6,14 +6,19 @@ import org.bukkit.event.Listener;
 
 import me.WiebeHero.CustomEvents.DFItemLevelUpEvent;
 import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 
 public class LevelRequired implements Listener{
+	private DFPlayerManager dfManager;
+	public LevelRequired(DFPlayerManager dfManager) {
+		this.dfManager = dfManager;
+	}
 	@EventHandler
 	public void cancelLevelUp(DFItemLevelUpEvent event) {
 		Player p = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
-		if(dfPlayer.getLevel() < event.getLevelRequired()) {
+		DFPlayer dfPlayer = dfManager.getEntity(p);
+		if(event.getLevelRequired() > dfPlayer.getLevel()) {
 			event.setCancelled(true);
 		}
 		event.activate();
@@ -21,8 +26,8 @@ public class LevelRequired implements Listener{
 	@EventHandler
 	public void cancelLevelUp(DFItemXpGainEvent event) {
 		Player p = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
-		if(dfPlayer.getLevel() < event.getLevelRequired()) {
+		DFPlayer dfPlayer = dfManager.getEntity(p);
+		if(event.getLevelRequired() > dfPlayer.getLevel()) {
 			event.setCancelled(true);
 		}
 		event.activate();

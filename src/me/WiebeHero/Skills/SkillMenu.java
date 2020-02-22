@@ -12,17 +12,24 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
-import me.WiebeHero.Skills.EnumSkills.SkillState;
-import me.WiebeHero.Skills.Enums.Classes;
-import me.WiebeHero.Skills.State.States;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.EnumSkills.SkillState;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
+import me.WiebeHero.DFPlayerPackage.State.States;
 
 public class SkillMenu {
-	private ItemStackBuilder builder = new ItemStackBuilder();
-	SkillJoin join = new SkillJoin();
-	ClassMenu menu = new ClassMenu();
+	private DFPlayerManager dfManager;
+	private ItemStackBuilder builder;
+	private ClassMenu menu;
+	public SkillMenu(DFPlayerManager manager, ItemStackBuilder builder, ClassMenu menu) {
+		this.dfManager = manager;
+		this.builder = builder;
+		this.menu = menu;
+	}
 	public void SkillMenuInv(Player player) {
 		Inventory i = Bukkit.getServer().createInventory(null, 36, new CCT().colorize("&7Skills of: &6" + player.getName()));
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		DFPlayer dfPlayer = dfManager.getEntity(player);
 		dfPlayer.resetCalculations();
 		i.setItem(0, skillBook(player));
 		i.setItem(1, empty());
@@ -858,7 +865,7 @@ public class SkillMenu {
 		return item;
 	}
 	public ItemStack skillBook(Player p) {
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+		DFPlayer dfPlayer = dfManager.getEntity(p);
 		ItemStack item = new ItemStack(Material.BOOK);
 		int skillPoints = dfPlayer.getSkillPoints();
 		ItemMeta meta = item.getItemMeta();
@@ -906,7 +913,7 @@ public class SkillMenu {
 		return item;
 	}
 	public ItemStack progression(Player p) {
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+		DFPlayer dfPlayer = dfManager.getEntity(p);
 		ItemStack item = new ItemStack(Material.ENCHANTING_TABLE);
 		int level = dfPlayer.getLevel();
 		int xp = dfPlayer.getExperience();
@@ -921,7 +928,7 @@ public class SkillMenu {
 		return item;
 	}
 	public ItemStack ad(Player p) {
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+		DFPlayer dfPlayer = dfManager.getEntity(p);
 		ItemStack item = new ItemStack(Material.IRON_SWORD);
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getAtk();
@@ -950,7 +957,7 @@ public class SkillMenu {
 		return item;
 	}
 	public ItemStack as(Player p) {
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+		DFPlayer dfPlayer = dfManager.getEntity(p);
 		ItemStack item = new ItemStack(Material.FEATHER);
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getSpd();
@@ -979,7 +986,7 @@ public class SkillMenu {
 		return item;
 	}
 	public ItemStack cc(Player p) {
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+		DFPlayer dfPlayer = dfManager.getEntity(p);
 		ItemStack item = new ItemStack(Material.BLAZE_POWDER);
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getCrt();
@@ -1008,7 +1015,7 @@ public class SkillMenu {
 		return item;
 	}
 	public ItemStack rd(Player p) {
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+		DFPlayer dfPlayer = dfManager.getEntity(p);
 		ItemStack item = new ItemStack(Material.BOW);
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getRnd();
@@ -1037,7 +1044,7 @@ public class SkillMenu {
 		return item;
 	}
 	public ItemStack hh(Player p) {
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+		DFPlayer dfPlayer = dfManager.getEntity(p);
 		ItemStack item = new ItemStack(Material.APPLE);
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getHp();
@@ -1066,7 +1073,7 @@ public class SkillMenu {
 		return item;
 	}
 	public ItemStack df(Player p) {
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+		DFPlayer dfPlayer = dfManager.getEntity(p);
 		ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getDf();

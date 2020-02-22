@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class LootChest {
-	private LootChestManager lcManager = CustomEnchantments.getInstance().lootChestManager;
 	public UUID uuid;
 	public int tier;
 	public int radius;
@@ -17,14 +16,12 @@ public class LootChest {
 		this.radius = radius;
 		this.tier = tier;
 		this.loc = loc;
-		lcManager.add(uuid, this);
 	}
 	public LootChest(Location loc, int tier, int radius) {
 		this.uuid = UUID.randomUUID();
 		this.radius = radius;
 		this.tier = tier;
 		this.loc = loc;
-		lcManager.add(this.uuid, this);
 	}
 	public LootChest() {
 		//Method to execute other methods

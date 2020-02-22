@@ -15,17 +15,22 @@ import org.bukkit.util.Vector;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.Enums.Classes;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.EffectSkills;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 
 public class ClassSloth implements Listener{
-	public ArrayList<UUID> arrowList = new ArrayList<UUID>();
-	public EffectSkills sk = new EffectSkills();
+	private DFPlayerManager dfManager;
+	private ArrayList<UUID> arrowList = new ArrayList<UUID>();
+	public ClassSloth(DFPlayerManager manager) {
+		this.dfManager = manager;
+	}
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer method = new DFPlayer();
-		if(method.containsPlayer(player)) {
-			DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
 				if(dfPlayer.getUseable()) {
 					dfPlayer.setUseable(false);
@@ -78,10 +83,9 @@ public class ClassSloth implements Listener{
 				Arrow arrow = (Arrow) event.getDamager();
 				if(arrow.getShooter() instanceof Player) {
 					Player player = (Player) arrow.getShooter();
-					DFPlayer method = new DFPlayer();
-					if(method.containsPlayer(player)) {
+					if(dfManager.contains(player)) {
 						if(arrowList.contains(arrow.getUniqueId())) {
-							DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+							DFPlayer dfPlayer = dfManager.getEntity(player);
 							if(dfPlayer.getHp() > 0) {
 								int cLevel = dfPlayer.getHp();
 								double inc = cLevel * 0.5;
@@ -103,9 +107,8 @@ public class ClassSloth implements Listener{
 		if(!event.isCancelled()) {
 			if(event.getDamager() instanceof Player) {
 				Player player = (Player) event.getDamager();
-				DFPlayer method = new DFPlayer();
-				if(method.containsPlayer(player)) {
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+				if(dfManager.contains(player)) {
+					DFPlayer dfPlayer = dfManager.getEntity(player);
 					if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
 						if(dfPlayer.getCrtMod() > 0) {
 							if(dfPlayer.getHealth() >= dfPlayer.getMaxHealth() * 0.50) {
@@ -122,9 +125,8 @@ public class ClassSloth implements Listener{
 		if(!event.isCancelled()) {
 			if(event.getEntity() instanceof Player) {
 				Player player = (Player) event.getEntity();
-				DFPlayer method = new DFPlayer();
-				if(method.containsPlayer(player)) {
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+				if(dfManager.contains(player)) {
+					DFPlayer dfPlayer = dfManager.getEntity(player);
 					if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
 						if(dfPlayer.getCrtMod() > 0) {
 							if(dfPlayer.getHealth() <= dfPlayer.getMaxHealth() * 0.50) {

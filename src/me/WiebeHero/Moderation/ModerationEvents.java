@@ -58,6 +58,8 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.CustomMethods.MethodMulti;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.LootChest.LootChest;
 import me.WiebeHero.LootChest.LootChestManager;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
@@ -71,16 +73,18 @@ import net.luckperms.api.model.user.User;
 
 public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public boolean joinCooldown = false;
-	private RankedManager rManager = CustomEnchantments.getInstance().rankedManager;
-	private PunishManager pManager = CustomEnchantments.getInstance().punishManager;
-	private StaffManager sManager = CustomEnchantments.getInstance().staffManager;
-	private DFSpawnerManager spManager = CustomEnchantments.getInstance().spawnerManager;
-	private LootChestManager lcManager = CustomEnchantments.getInstance().lootChestManager;
-	private ModerationGUI gui = new ModerationGUI();
-	private MethodMulti multi = new MethodMulti();
-	private MethodLuck luck = new MethodLuck();
-	private Methods m = new Methods();
-	private DFScoreboard board = new DFScoreboard();
+	private RankedManager rManager;
+	private DFFactionManager facManager;
+	private DFPlayerManager dfManager;
+	private PunishManager pManager;
+	private StaffManager sManager;
+	private DFSpawnerManager spManager;
+	private LootChestManager lcManager;
+	private ModerationGUI gui;
+	private MethodMulti multi;
+	private MethodLuck luck;
+	private Methods m;
+	private DFScoreboard board;
 	private HashMap<UUID, UUID> target = new HashMap<UUID, UUID>();
 	private HashMap<UUID, String> reason = new HashMap<UUID, String>();
 	private HashMap<UUID, EntityType> spawnerType = new HashMap<UUID, EntityType>();
@@ -97,6 +101,22 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public String staffmode = "staffmode";
 	public String staff = "staff";
 	public String checkstaff = "checkstaff";
+	
+	public ModerationEvents(DFFactionManager facManager, DFPlayerManager dfManager, RankedManager rManager, PunishManager pManager, StaffManager sManager, DFSpawnerManager spManager, LootChestManager lcManager, ModerationGUI gui, MethodMulti multi, MethodLuck luck, Methods m, DFScoreboard board) {
+		this.facManager = facManager;
+		this.dfManager = dfManager;
+		this.rManager = rManager;
+		this.pManager = pManager;
+		this.sManager = sManager;
+		this.spManager = spManager;
+		this.lcManager = lcManager;
+		this.gui = gui;
+		this.multi = multi;
+		this.luck = luck;
+		this.m = m;
+		this.board = board;
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
@@ -597,9 +617,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											p.saveData();
 										}
 									}
-									CustomEnchantments.hardSave = true;
-									CustomEnchantments.getInstance().clearDfPlayers();
-									CustomEnchantments.getInstance().clearFactions();
 									new BukkitRunnable() {
 										@Override
 										public void run() {
@@ -647,9 +664,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									}
 									World world = Bukkit.getWorld("FactionWorld-1");
 									world.getWorldBorder().setSize(5000.00);
-									CustomEnchantments.hardSave = true;
-									CustomEnchantments.getInstance().clearDfPlayers();
-									CustomEnchantments.getInstance().clearFactions();
 									
 									new BukkitRunnable() {
 										@Override
@@ -729,6 +743,31 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							}
 						}
 					}
+					else if(args.length == 3) {
+						if(args[0].equalsIgnoreCase("profile")) {
+							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
+								Staff staff = sManager.get(player.getUniqueId());
+								if(staff.getRank() >= 7) {
+									Player p = m.convertOfflinePlayer(args[1]);
+									if(p.getName() != null) {
+										if(args[2].equalsIgnoreCase("reset")) {
+											dfManager.resetEntity(p);
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have reset &6" + p.getName() + "!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
+							}
+						}
+					}
 				}
 			}
 		}
@@ -738,7 +777,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
         if(command.getName().equalsIgnoreCase("procedure")) { 
             if(sender instanceof Player) { 
             	if(args.length == 1) {
-            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset");
+            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset", "hardreset", "resetplayerprofile");
             	}
             	else if(args.length == 2) {
             		if(args[0].equalsIgnoreCase("maintenance")) {
@@ -895,43 +934,46 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	}
 	public void punishJoin(Player p) {
 		if(!pManager.contains(p.getUniqueId())) {
-			new Punish(p.getUniqueId());
+			Punish pu = new Punish(p.getUniqueId());
+			pManager.add(p.getUniqueId(), pu);
 		}
 		User user = luck.loadUser(p.getUniqueId());
 		if(user != null) {
+			Staff s = null;
 			if(luck.containsParrent(user, "owner")) {
-				new Staff(p.getUniqueId(), 10);
+				s = new Staff(p.getUniqueId(), 10);
 			}
 			else if(luck.containsParrent(user, "manager")) {
-				new Staff(p.getUniqueId(), 9);
+				s = new Staff(p.getUniqueId(), 9);
 			}
 			else if(luck.containsParrent(user, "headadmin")) {
-				new Staff(p.getUniqueId(), 8);
+				s = new Staff(p.getUniqueId(), 8);
 			}
 			else if(luck.containsParrent(user, "admin")) {
-				new Staff(p.getUniqueId(), 7);
+				s = new Staff(p.getUniqueId(), 7);
 			}
 			else if(luck.containsParrent(user, "headmod")) {
-				new Staff(p.getUniqueId(), 6);
+				s = new Staff(p.getUniqueId(), 6);
 			}
 			else if(luck.containsParrent(user, "moderator")) {
-				new Staff(p.getUniqueId(), 5);
+				s = new Staff(p.getUniqueId(), 5);
 			}
 			else if(luck.containsParrent(user, "helper+")) {
-				new Staff(p.getUniqueId(), 4);
+				s = new Staff(p.getUniqueId(), 4);
 			}
 			else if(luck.containsParrent(user, "helper")) {
-				new Staff(p.getUniqueId(), 3);
+				s = new Staff(p.getUniqueId(), 3);
 			}
 			else if(luck.containsParrent(user, "qualityassuranceadmin")) {
-				new Staff(p.getUniqueId(), 2);
+				s = new Staff(p.getUniqueId(), 2);
 			}
 			else if(luck.containsParrent(user, "qualityassurance")) {
-				new Staff(p.getUniqueId(), 1);
+				s = new Staff(p.getUniqueId(), 1);
 			}
 			else {
-				new Staff(p.getUniqueId(), 0);
+				s = new Staff(p.getUniqueId(), 0);
 			}
+			sManager.add(p.getUniqueId(), s);
 		}
 	}
 	@EventHandler
@@ -1869,7 +1911,8 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							Location loc = event.getClickedBlock().getLocation().add(0.5, 0.5, 0.5);
 							EntityType type = item.getObject("EntityTypeItem", EntityType.class);
 							int tier = item.getInteger("Tier");
-							new DFSpawner(loc, type, tier);
+							DFSpawner dfSpawner = new DFSpawner(loc, type, tier);
+							spManager.add(UUID.randomUUID(), dfSpawner);
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSpawner placed!"));
 						}
 						else {
@@ -2032,7 +2075,8 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						Location loc = event.getBlock().getLocation().add(0.5, 0.5, 0.5);
 						int radius = item.getInteger("RadiusItem");
 						int tier = item.getInteger("Tier");
-						new LootChest(loc, tier, radius);
+						LootChest chest = new LootChest(loc, tier, radius);
+						lcManager.add(chest.getUUID(), chest);
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aLoot Chest placed!"));
 					}
 				}

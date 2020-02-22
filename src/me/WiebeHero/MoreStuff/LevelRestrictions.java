@@ -18,7 +18,7 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent.SlotType;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
 
 public class LevelRestrictions implements Listener{
 //	public void levelRestrictWeapons(EntityDamageByEntityEvent event) {

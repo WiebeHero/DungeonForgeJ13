@@ -8,10 +8,12 @@ import org.bukkit.entity.Player;
 import me.WiebeHero.CustomEnchantments.CCT;
 
 public class SkillCommand implements CommandExecutor{
-	SkillMenu menu = new SkillMenu();
-	SkillJoin join = new SkillJoin();
+	private SkillMenu menu;
 	public String skill = "skill";
 	public String skills = "skills";
+	public SkillCommand(SkillMenu menu) {
+		this.menu = menu;
+	}
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;

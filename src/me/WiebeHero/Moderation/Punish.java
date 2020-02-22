@@ -3,10 +3,7 @@ package me.WiebeHero.Moderation;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-
 public class Punish {
-	private PunishManager manager = CustomEnchantments.getInstance().punishManager;
 	public UUID uuid;
 	public ArrayList<String> banReason;
 	public ArrayList<String> muteReason;
@@ -29,10 +26,6 @@ public class Punish {
 		this.muteTime = 0L;
 		this.banPerm = false;
 		this.mutePerm = false;
-		manager.add(uuid, this);
-	}
-	public Punish() {
-		
 	}
 	/*
 	 * UUID Methods

@@ -6,15 +6,18 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.ModRank;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.PayRank;
 import net.luckperms.api.model.user.User;
 
 public class RankedPlayerListener implements Listener{
-	private MethodLuck luck = new MethodLuck();
-	private RankedManager rManager = CustomEnchantments.getInstance().rankedManager;
+	private MethodLuck luck;
+	private RankedManager rManager;
+	public RankedPlayerListener(RankedManager rManager, MethodLuck luck) {
+		this.luck = luck;
+		this.rManager = rManager;
+	}
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void joinRank(PlayerJoinEvent event) {
 		Player player = event.getPlayer();

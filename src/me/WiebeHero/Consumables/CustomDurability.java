@@ -21,7 +21,6 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 
 public class CustomDurability implements Listener{
-	Consumable con = new Consumable();
 	@EventHandler
 	public void removeDuraBreakBlock(BlockBreakEvent event) {
 		Player player = event.getPlayer();

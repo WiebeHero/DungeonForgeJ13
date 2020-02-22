@@ -20,20 +20,30 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
-import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodLuck;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFaction;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.Factions.DFFactionManager;
+import me.WiebeHero.Factions.DFFactionPlayer;
+import me.WiebeHero.Factions.DFFactionPlayerManager;
 import net.luckperms.api.model.user.User;
 
 public class DFScoreboard implements Listener{
-	DFFaction method = new DFFaction();
-	DFPlayer def = new DFPlayer();
-	Methods m = new Methods();
-	MethodLuck luck = new MethodLuck();
-	WGMethods wg = new WGMethods();
+	private DFFactionManager facManager;
+	private DFFactionPlayerManager facPlayerManager;
+	private DFPlayerManager dfManager;
+	private MethodLuck luck;
+	private WGMethods wg;
+	public DFScoreboard(DFPlayerManager dfManager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, MethodLuck luck, WGMethods wg) {
+		this.dfManager = dfManager;
+		this.facManager = facManager;
+		this.luck = luck;
+		this.wg = wg;
+		this.facPlayerManager = facPlayerManager;
+	}
 	public HashMap<UUID, Chunk> delay = new HashMap<UUID, Chunk>();
 	public HashMap<UUID, Scoreboard> scoreboards = new HashMap<UUID, Scoreboard>();
 	public HashMap<UUID, Team> teams = new HashMap<UUID, Team>();
@@ -61,7 +71,7 @@ public class DFScoreboard implements Listener{
 	}
 	public void updateScoreboard(Player player) {
 		if(player.getScoreboard() != null) {
-			DFPlayer df = new DFPlayer().getPlayer(player);
+			DFPlayer df = dfManager.getEntity(player);
 			Scoreboard scoreboard = player.getScoreboard();
 			Objective score = scoreboard.getObjective("score");
 			//--------------------------------------------------------------------------------------
@@ -69,7 +79,8 @@ public class DFScoreboard implements Listener{
 			//--------------------------------------------------------------------------------------
 			score.setDisplayName(new CCT().colorize("&2&lDungeonForge"));
 			score.setDisplaySlot(DisplaySlot.SIDEBAR);
-			DFFaction faction = method.getFaction(player.getUniqueId());
+			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
+			DFFaction faction = facPlayer.getFaction();
 			//--------------------------------------------------------------------------------------
 			//Blank Scores
 			//--------------------------------------------------------------------------------------
@@ -80,43 +91,34 @@ public class DFScoreboard implements Listener{
 			//Faction setting
 			//--------------------------------------------------------------------------------------
 			String facN = "&7None";
-			String territory = "";
+			String territory = "&7Wilderness";
 			if(faction != null) {
 				facN = "&6" + faction.getName();
 				if(faction.isInChunk(player)) {
 					territory = "&a&l" + faction.getName();
 				}
-				else if(wg.isInZone(player, "warzone")) {
-					territory = "&c&lWarzone";
-				}
-				else if(wg.isInZone(player, "spawn")) {
-					territory = "&a&lSpawn";
-				}
 			}
-			else if(method.isInAChunk(player)) {
-				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
+			else if(facManager.isInAChunk(player)) {
+				for(DFFaction fac : facManager.getFactionMap().values()) {
 					if(fac.getChunkList().contains(player.getLocation().getChunk())) {
 						territory = "&c&l" + fac.getName();
 					}
 				}
 			}
-			else if(wg.isInZone(player, "warzone")) {
+			if(wg.isInZone(player, "warzone")) {
 				territory = "&c&lWarzone";
 			}
 			else if(wg.isInZone(player, "spawn")) {
 				territory = "&a&lSpawn";
 			}
-			else {
-				territory = "&7Wilderness";
-			}
 			Score facLine = score.getScore(new CCT().colorize("&7Faction: " + facN));
 			Score facTeritory = score.getScore(new CCT().colorize("&7Territory: " + territory));
 			Score rank = score.getScore(new CCT().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
-			Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + def.getPlayer(player).getLevel()));
+			Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + dfManager.getEntity(player).getLevel()));
 			Score adress = score.getScore(new CCT().colorize("    &2&lplay.dungeonforge.eu"));
 			Score cash = score.getScore(new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
 			for(Player p : Bukkit.getOnlinePlayers()) {
-				DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+				DFPlayer dfPlayer = dfManager.getEntity(player);
 				Team t = null;
 				if(scoreboard.getTeam(p.getName()) == null) {
 					t = scoreboard.registerNewTeam(p.getName());
@@ -154,7 +156,7 @@ public class DFScoreboard implements Listener{
 		}
 	}
 	public void generateScoreboard(Player player) {
-		DFPlayer df = new DFPlayer().getPlayer(player);
+		DFPlayer df = dfManager.getEntity(player);
 		scoreboards.put(player.getUniqueId(), null);
 		Scoreboard scoreboard = CustomEnchantments.getInstance().getServer().getScoreboardManager().getNewScoreboard();
 		//--------------------------------------------------------------------------------------
@@ -169,7 +171,8 @@ public class DFScoreboard implements Listener{
 		Objective score = scoreboard.registerNewObjective("score", "", "");
 		score.setDisplayName(new CCT().colorize("&2&lDungeonForge"));
 		score.setDisplaySlot(DisplaySlot.SIDEBAR);
-		DFFaction faction = method.getFaction(player.getUniqueId());
+		DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
+		DFFaction faction = facPlayer.getFaction();
 		//--------------------------------------------------------------------------------------
 		//Blank Scores
 		//--------------------------------------------------------------------------------------
@@ -180,43 +183,36 @@ public class DFScoreboard implements Listener{
 		//Faction setting
 		//--------------------------------------------------------------------------------------
 		String facN = "&7None";
-		String territory = "";
+		String territory = "&7Wilderness";
 		if(faction != null) {
 			facN = "&6" + faction.getName();
+			Bukkit.broadcastMessage(faction.isInChunk(player.getLocation()) + "");
+			Bukkit.broadcastMessage(faction.isInChunk(player) + "");
 			if(faction.isInChunk(player)) {
 				territory = "&a&l" + faction.getName();
 			}
-			else if(wg.isInZone(player, "warzone")) {
-				territory = "&c&lWarzone";
-			}
-			else if(wg.isInZone(player, "spawn")) {
-				territory = "&a&lSpawn";
-			}
 		}
-		else if(method.isInAChunk(player)) {
-			for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
+		else if(facManager.isInAChunk(player)) {
+			for(DFFaction fac : facManager.getFactionMap().values()) {
 				if(fac.getChunkList().contains(player.getLocation().getChunk())) {
 					territory = "&c&l" + fac.getName();
 				}
 			}
 		}
-		else if(wg.isInZone(player, "warzone")) {
+		if(wg.isInZone(player, "warzone")) {
 			territory = "&c&lWarzone";
 		}
 		else if(wg.isInZone(player, "spawn")) {
 			territory = "&a&lSpawn";
 		}
-		else {
-			territory = "&7Wilderness";
-		}
 		Score facLine = score.getScore(new CCT().colorize("&7Faction: " + facN));
 		Score facTeritory = score.getScore(new CCT().colorize("&7Territory: " + territory));
 		Score rank = score.getScore(new CCT().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
-		Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + def.getPlayer(player).getLevel()));
+		Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + dfManager.getEntity(player).getLevel()));
 		Score adress = score.getScore(new CCT().colorize("    &2&lplay.dungeonforge.eu"));
 		Score cash = score.getScore(new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
 		for(Player p : Bukkit.getOnlinePlayers()) {
-			DFPlayer dfPlayer = new DFPlayer().getPlayer(p);
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			Team t = null;
 			if(scoreboard.getTeam(p.getName()) == null) {
 				t = scoreboard.registerNewTeam(p.getName());

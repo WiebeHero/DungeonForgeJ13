@@ -5,10 +5,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-
 public class MSGEvents implements Listener{
-	private MSGManager msgManager = CustomEnchantments.getInstance().msgManager;
+	private MSGManager msgManager;
+	public MSGEvents(MSGManager msgManager) {
+		this.msgManager = msgManager;
+	}
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();

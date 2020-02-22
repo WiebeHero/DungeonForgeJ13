@@ -19,6 +19,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.NBTTagDouble;
 import net.minecraft.server.v1_13_R2.NBTTagInt;
@@ -26,52 +29,62 @@ import net.minecraft.server.v1_13_R2.NBTTagList;
 import net.minecraft.server.v1_13_R2.NBTTagString;
 
 public class SkillJoin implements Listener{
-	public ClassMenu classMenu = new ClassMenu();
-	public EffectSkills es = new EffectSkills();
+	private DFPlayerManager dfManager;
+	private ClassMenu classMenu;
+	private EffectSkills es;
+	public SkillJoin(DFPlayerManager manager, ClassMenu menu, EffectSkills es) {
+		this.dfManager = manager;
+		this.classMenu = menu;
+		this.es = es;
+	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void skillJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
 		player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
-		if(!dfPlayer.hasPlayerClass()) {
-			new BukkitRunnable() {
-				public void run() {
-					classMenu.ClassSelect(player);
-				}
-			}.runTaskLater(CustomEnchantments.getInstance(), 10L);
-			new BukkitRunnable() {
-				public void run() {
-					player.getInventory().addItem(apprenticeSword());
-					player.getInventory().addItem(divineH());
-					player.getInventory().addItem(divineC());
-					player.getInventory().addItem(divineL());
-					player.getInventory().addItem(divineB());
-					player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 16));
-					player.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 4));
-					player.getInventory().addItem(new ItemStack(Material.TORCH, 16));
-					player.getInventory().addItem(new ItemStack(Material.OAK_LOG, 64));
-					player.getInventory().addItem(new ItemStack(Material.STONE, 64));
-					player.getInventory().addItem(new ItemStack(Material.BUCKET, 2));
-				}
-			}.runTaskLater(CustomEnchantments.getInstance(), 1L);
-		}
-		else {
-			dfPlayer.resetCalculations();
-			es.changeHealth(player);
-			es.attackSpeed(player);
-			es.runDefense(player);
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
+			if(!dfPlayer.hasPlayerClass()) {
+				new BukkitRunnable() {
+					public void run() {
+						classMenu.ClassSelect(player);
+					}
+				}.runTaskLater(CustomEnchantments.getInstance(), 10L);
+				new BukkitRunnable() {
+					public void run() {
+						player.getInventory().addItem(apprenticeSword());
+						player.getInventory().addItem(divineH());
+						player.getInventory().addItem(divineC());
+						player.getInventory().addItem(divineL());
+						player.getInventory().addItem(divineB());
+						player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 16));
+						player.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 4));
+						player.getInventory().addItem(new ItemStack(Material.TORCH, 16));
+						player.getInventory().addItem(new ItemStack(Material.OAK_LOG, 64));
+						player.getInventory().addItem(new ItemStack(Material.STONE, 64));
+						player.getInventory().addItem(new ItemStack(Material.BUCKET, 2));
+					}
+				}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+			}
+			else {
+				dfPlayer.resetCalculations();
+				es.changeHealth(player);
+				es.attackSpeed(player);
+				es.runDefense(player);
+			}
 		}
 	}
 	@EventHandler
 	public void respawnActivate(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-		if(!dfPlayer.hasPlayerClass()) {
-			new BukkitRunnable() {
-				public void run() {
-					classMenu.ClassSelect(player);
-				}
-			}.runTaskLater(CustomEnchantments.getInstance(), 10L);
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
+			if(!dfPlayer.hasPlayerClass()) {
+				new BukkitRunnable() {
+					public void run() {
+						classMenu.ClassSelect(player);
+					}
+				}.runTaskLater(CustomEnchantments.getInstance(), 10L);
+			}
 		}
 	}
 	//--------------------------------------------------------------------------------------------------------------------

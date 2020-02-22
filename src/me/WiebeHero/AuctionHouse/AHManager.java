@@ -3,14 +3,10 @@ package me.WiebeHero.AuctionHouse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,19 +19,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTItem;
 import javafx.util.Pair;
-import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Factions.DFFaction;
-import me.WiebeHero.Skills.Enums.Classes;
 
 public class AHManager {
-	private Methods method = new Methods();
+	private ArrayList<Integer> availableSlots;
 	public HashMap<UUID, ArrayList<ItemStack>> ahCollectionBin = new HashMap<UUID, ArrayList<ItemStack>>();
 	public ArrayList<ItemStack> ahList = new ArrayList<ItemStack>();
-	public AHManager() {
+	public AHManager(ArrayList<Integer> availableSlots) {
 		this.ahList = new ArrayList<ItemStack>();
 		this.ahCollectionBin = new HashMap<UUID, ArrayList<ItemStack>>();
+		this.availableSlots = availableSlots;
 	}
 	public void start() {
 		AHManager manager = this;
@@ -284,12 +278,11 @@ public class AHManager {
 	}
 	public void refreshAHItems(Player player) {
 		if(!this.ahList.isEmpty()) {
-			AHInventory ahInv = new AHInventory();
 			ArrayList<ItemStack> newList = this.ahList;
 			InventoryView view = player.getOpenInventory();
 			int page = player.getMetadata("AHPage").get(0).asInt();
 			Inventory i = view.getTopInventory();
-			ArrayList<Integer> availableSlots = ahInv.getAvailableList();
+			ArrayList<Integer> availableSlots = this.availableSlots;
 			int sizeAv = availableSlots.size();
 			int ahSize = newList.size();
 			int currentPage = (page - 1) * availableSlots.size();
@@ -305,11 +298,10 @@ public class AHManager {
 	}
 	public void refreshYourItems(Player player) {
 		if(!this.ahList.isEmpty()) {
-			AHInventory ahInv = new AHInventory();
 			ArrayList<ItemStack> newList = this.ahList;
 			InventoryView view = player.getOpenInventory();
 			Inventory i = view.getTopInventory();
-			ArrayList<Integer> availableSlots = ahInv.getAvailableList();
+			ArrayList<Integer> availableSlots = this.availableSlots;
 			int count = 0;
 			if(!newList.isEmpty()) {
 				for(int x = 0; x < newList.size(); x++) {

@@ -4,10 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.inventory.ItemStack;
 
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-
-public class Staff {
-	private StaffManager manager = CustomEnchantments.getInstance().staffManager;
+public class Staff {;
 	public UUID uuid;
 	public boolean staff;
 	public boolean spawner;
@@ -23,10 +20,6 @@ public class Staff {
 		this.loot = false;
 		this.vanish = false;
 		this.staffRank = rank;
-		manager.add(uuid, this);
-	}
-	public Staff() {
-		
 	}
 	
 	public void switchStaffMode(boolean s) {

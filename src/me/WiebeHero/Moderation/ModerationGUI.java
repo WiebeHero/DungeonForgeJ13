@@ -19,10 +19,14 @@ import org.bukkit.inventory.meta.SkullMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 
 public class ModerationGUI implements Listener{
-	DFPlayer method = new DFPlayer();
+	private DFPlayerManager dfManager;
+	public ModerationGUI(DFPlayerManager dfManager) {
+		this.dfManager = dfManager;
+	}
 	public HashMap<UUID, Integer> offenseList = new HashMap<UUID, Integer>();
 	public HashMap<UUID, Integer> reasonList = new HashMap<UUID, Integer>();
 	public void PunishMenu(Player reporter, Player offender) {
@@ -880,7 +884,7 @@ public class ModerationGUI implements Listener{
 		clicker.openInventory(i);
 	}
 	public ItemStack dfPlayerItem(Player p) {
-		DFPlayer dfPlayer = method.getPlayer(p);
+		DFPlayer dfPlayer = dfManager.getEntity(p);
 		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta meta = (SkullMeta) item.getItemMeta();
 		meta.setOwningPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()));

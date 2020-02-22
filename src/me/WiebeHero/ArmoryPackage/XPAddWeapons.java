@@ -1,7 +1,5 @@
 package me.WiebeHero.ArmoryPackage;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -13,11 +11,16 @@ import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
+import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 
 public class XPAddWeapons implements Listener{
-	public NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
-	public ArrayList<String> nameList = new ArrayList<String>();
+	private NovisEnchantmentGetting enchant;
+	private EffectSkills sk;
+	public XPAddWeapons(NovisEnchantmentGetting enchant, EffectSkills sk) {
+		this.enchant = enchant;
+		this.sk = sk;
+	}
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();
@@ -57,7 +60,7 @@ public class XPAddWeapons implements Listener{
 								int xpCursor = cursor.getInteger("XP") + 2500;
 								int totalXpCursor = cursor.getInteger("TotalXP");
 								int total = xpItem + totalXpCursor + xpCursor;
-								DFItemXpGainEvent e = new DFItemXpGainEvent(player, i, c, total, event.getSlot());
+								DFItemXpGainEvent e = new DFItemXpGainEvent(player, i, c, total, event.getSlot(), sk, enchant);
 								Bukkit.getPluginManager().callEvent(e);
 								if(!e.isCancelled()) {
 									event.setCancelled(true);

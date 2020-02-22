@@ -18,16 +18,21 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.Enums.Classes;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 
 public class ClassGluttony implements Listener{
-	DFPlayer method = new DFPlayer();
-	public HashMap<UUID, Double> recover = new HashMap<UUID, Double>();
+	private DFPlayerManager dfManager;
+	public ClassGluttony(DFPlayerManager manager) {
+		this.dfManager = manager;
+	}
+	private HashMap<UUID, Double> recover = new HashMap<UUID, Double>();
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		if(method.containsPlayer(player)) {
-			DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.GLUTTONY) {
 				if(dfPlayer.getUseable() == true) {
 					dfPlayer.setUseable(false);
@@ -83,9 +88,8 @@ public class ClassGluttony implements Listener{
 		if(event.getDamager() instanceof Player && event.getEntity() instanceof LivingEntity) {
 			Player attacker = (Player) event.getDamager();
 			LivingEntity player = (LivingEntity) event.getEntity();
-			if(method.containsPlayer(attacker) && method.containsPlayer(player)) {
-				DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-				DFPlayer aDFPlayer = new DFPlayer().getPlayer(attacker);
+			if(dfManager.contains(attacker) && dfManager.contains(player)) {
+				DFPlayer dfPlayer = dfManager.getEntity(player), aDFPlayer = dfManager.getEntity(attacker);
 				if(dfPlayer.getPlayerClass() == Classes.GLUTTONY) {
 					if(dfPlayer.getActivation() == true) {
 						if(dfPlayer.getCrtMod() > 0) {
@@ -120,8 +124,8 @@ public class ClassGluttony implements Listener{
 	public void ironWall(EntityDamageByEntityEvent event) {
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
-			if(method.containsPlayer(player)) {
-				DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+			if(dfManager.contains(player)) {
+				DFPlayer dfPlayer = dfManager.getEntity(player);
 				if(!ironWall.containsKey(dfPlayer.getUUID())) {
 					ironWall.put(dfPlayer.getUUID(), false);
 				}

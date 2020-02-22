@@ -17,16 +17,20 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.Enums.Classes;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 
 public class ClassGreed implements Listener{
-	EffectSkills sk = new EffectSkills();
+	private DFPlayerManager dfManager;
+	public ClassGreed(DFPlayerManager manager) {
+		this.dfManager = manager;
+	}
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer method = new DFPlayer();
-		if(method.containsPlayer(player)) {
-			DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.GREED) {
 				if(dfPlayer.getUseable() == true) {
 					dfPlayer.setUseable(false);
@@ -68,15 +72,14 @@ public class ClassGreed implements Listener{
 					Arrow arrow = (Arrow) event.getDamager();
 					if(arrow.getShooter() instanceof Player) {
 						Player shooter = (Player) arrow.getShooter();
-						DFPlayer method = new DFPlayer();
-						if(method.containsPlayer(shooter)) {
-							DFPlayer dfShooter = new DFPlayer().getPlayer(shooter);
+						if(dfManager.contains(shooter)) {
+							DFPlayer dfShooter = dfManager.getEntity(shooter);
 							if(dfShooter.getPlayerClass() == Classes.GREED) {
 								if(dfShooter.getActivation() == true) {
 									double decrease = 50 + dfShooter.getLevel() * 0.50;
 									long duration = 130 + dfShooter.getLevel();
-									if(method.containsPlayer(p)) {
-										DFPlayer victim = new DFPlayer().getPlayer(p);
+									if(dfManager.contains(p)) {
+										DFPlayer victim = dfManager.getEntity(p);
 										victim.removeDfCal(decrease, duration);
 										if(dfShooter.getAtkMod() > 0) {
 											int cLevel = dfShooter.getAtkMod();

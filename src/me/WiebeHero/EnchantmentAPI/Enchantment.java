@@ -59,19 +59,31 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.CustomMethods.PotionM;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
 import me.WiebeHero.Factions.DFFaction;
-import me.WiebeHero.Skills.DFPlayer;
-import me.WiebeHero.Skills.Enums.Classes;
+import me.WiebeHero.Factions.DFFactionManager;
+import me.WiebeHero.Factions.DFFactionPlayer;
+import me.WiebeHero.Factions.DFFactionPlayerManager;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.PacketPlayOutWorldParticles;
 
 public class Enchantment extends CommandFile implements Listener{
 	//Empty Constructor
-	DFPlayer df = new DFPlayer();
-	DFFaction fac = new DFFaction();
-	PotionM p = new PotionM();
-	ParticleAPI pApi = new ParticleAPI();
+	private DFPlayerManager dfManager;
+	private DFFactionManager facManager;
+	private DFFactionPlayerManager facPlayerManager;
+	private PotionM p;
+	private ParticleAPI pApi;
+	public Enchantment(DFPlayerManager dfManager, DFFactionManager facManager, PotionM p, ParticleAPI pApi, DFFactionPlayerManager facPlayerManager) {
+		this.dfManager = dfManager;
+		this.facManager = facManager;
+		this.p = p;
+		this.pApi = pApi;
+		this.facPlayerManager = facPlayerManager;
+	}
 	//Enchantment Functionality List
 	public HashMap<String, Pair<Condition, CommandFile>> listMelee;
 	public HashMap<String, Pair<Condition, CommandFile>> listArmor;
@@ -89,8 +101,8 @@ public class Enchantment extends CommandFile implements Listener{
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 2D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 2, (float) 1.2);
-					if(df.containsPlayer(damager)) {
-						DFPlayer dfPlayer = df.getPlayer(damager);
+					if(dfManager.contains(damager)) {
+						DFPlayer dfPlayer = dfManager.getEntity(damager);
 						dfPlayer.addAtkCal(200.0 + 50.0 * level, 1);
 						new BukkitRunnable() {
 							public void run() {
@@ -201,8 +213,8 @@ public class Enchantment extends CommandFile implements Listener{
 					if(event.getDamager() instanceof LivingEntity) {
 						if(brandList.containsKey(ent.getUniqueId())) {
 							LivingEntity damager = (LivingEntity) event.getDamager();
-							if(df.containsPlayer(damager)) {
-								DFPlayer dfPlayer = new DFPlayer(damager);
+							if(dfManager.contains(damager)) {
+								DFPlayer dfPlayer = dfManager.getEntity(damager);
 								dfPlayer.addAtkCal(12.5 * brandList.get(ent.getUniqueId()), 1);
 							}
 						}
@@ -212,9 +224,9 @@ public class Enchantment extends CommandFile implements Listener{
 							Arrow arrow = (Arrow) event.getDamager();
 							if(arrow.getShooter() instanceof LivingEntity) {
 								LivingEntity shooter = (LivingEntity) arrow.getShooter();
-								if(df.containsPlayer(shooter)) {
+								if(dfManager.contains(shooter)) {
 									LivingEntity damager = (LivingEntity) shooter;
-									DFPlayer dfPlayer = new DFPlayer(damager);
+									DFPlayer dfPlayer = dfManager.getEntity(damager);
 									dfPlayer.addRndCal(12.5 * brandList.get(ent.getUniqueId()), 1);
 								}
 							}
@@ -247,7 +259,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF1, 80, 0.15, 0.15, 0.15, 0, Material.ANVIL.createBlockData()); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.BLOCK_ANVIL_PLACE, 2, (float) 1.0);
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(victim);
+					DFPlayer dfPlayer = dfManager.getEntity(victim);
 					dfPlayer.removeDfCal(3.0 * level, 140 + (level * 20));
 				}
 			}
@@ -502,7 +514,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.8D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, locCF1, 80, 0.15, 0.15, 0.15, 0); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_EVOKER_CAST_SPELL, 2, (float) 1.0);
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(victim);
+					DFPlayer dfPlayer = dfManager.getEntity(victim);
 					dfPlayer.removeSpdCal(1.5 * level, 140 + (level * 20));
 				}
 			}
@@ -562,7 +574,8 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
 				if(!cooldown.contains(damager.getUniqueId())) {
-					DFFaction fac = new DFFaction().getFaction(damager.getUniqueId());
+					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
+					DFFaction fac = facPlayer.getFaction();
 					if(fac != null) {
 						double range = 5.00 + level * 1.25;
 						for(Entity e : damager.getNearbyEntities(range, range, range)) {
@@ -635,7 +648,7 @@ public class Enchantment extends CommandFile implements Listener{
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
 				if(i <= 4 + level) {
-					DFPlayer player = new DFPlayer().getPlayer(victim);
+					DFPlayer player = dfManager.getEntity(victim);
 					if(player.getPlayerClass() == Classes.WRATH) {
 						Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
 						victim.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, locCF, 50, 0, 0, 0, 4);
@@ -712,7 +725,7 @@ public class Enchantment extends CommandFile implements Listener{
 				 	for(Player victim1 : Bukkit.getOnlinePlayers()) {
 				 		((Player) victim1).playSound(victim.getLocation(), Sound.BLOCK_ANVIL_PLACE, 2, (float) 1);
 				 	}
-			 		DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+			 		DFPlayer dfPlayer = dfManager.getEntity(damager);
 			 		dfPlayer.addAtkCal(150 + level * 50, 1);
 				}
 			}
@@ -873,7 +886,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.8D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF1, 80, 0.15, 0.15, 0.15, 0, Material.PINK_WOOL.createBlockData()); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_ARROW_SHOOT, 2, (float) 0.5);
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(victim);
+					DFPlayer dfPlayer = dfManager.getEntity(victim);
 					dfPlayer.removeRndCal(10.0 * level, 140 + (level * 40));
 				}
 			}
@@ -971,8 +984,8 @@ public class Enchantment extends CommandFile implements Listener{
 						for(Player victim1 : Bukkit.getOnlinePlayers()) {
 							((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, (float) 1.25);
 						}
-						DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
-						DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
+						DFPlayer dfPlayer = dfManager.getEntity(damager);
+						DFPlayer dfVictim = dfManager.getEntity(victim);
 						double tempMoney = (double) (dfVictim.getMoney() * (0.01 + 0.01 * level));
 						dfPlayer.addMoney(tempMoney);
 						dfVictim.removeMoney(tempMoney);
@@ -1202,7 +1215,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.8D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, locCF1, 80, 0.15, 0.15, 0.15, 0); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_COW_HURT, 2, (float) 0.5);
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(victim);
+					DFPlayer dfPlayer = dfManager.getEntity(victim);
 					dfPlayer.removeHpCal(12.5 * level, 140 + (level * 20));
 				}
 			}
@@ -1215,7 +1228,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.8D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.CRIT_MAGIC, locCF1, 80, 0.15, 0.15, 0.15, 0); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT, 2, (float) 0.5);
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(victim);
+					DFPlayer dfPlayer = dfManager.getEntity(victim);
 					dfPlayer.removeCrtCal(3.0 * level, 100 + (level * 20));
 				}
 			}
@@ -1265,7 +1278,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Location locCF1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.8D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF1, 80, 0.15, 0.15, 0.15, 0, Material.BLACK_WOOL.createBlockData()); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_EVOKER_CAST_SPELL, 2, (float) 1.0);
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(victim);
+					DFPlayer dfPlayer = dfManager.getEntity(victim);
 					dfPlayer.removeAtkCal(4.5 + 4.5 * level, 140 + (level * 20));
 				}
 			}
@@ -1407,7 +1420,7 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				DFPlayer dfPlayer = df.getPlayer(victim);
+				DFPlayer dfPlayer = dfManager.getEntity(victim);
 				if(dfPlayer.getHealth() <= dfPlayer.getMaxHealth() / 100 * 25) {
 					if(i <= 20 + 5 * level) {
 						Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
@@ -1456,8 +1469,8 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
-				if(df.containsPlayer(damager)) {
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+				if(dfManager.contains(damager)) {
+					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
 						dfPlayer.addRndCal(6.0 + 6.0 * level, 0);
 						list.put(dfPlayer.getUUID(), 6.0 + 6.0 * level);
@@ -1581,8 +1594,8 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
-				if(df.containsPlayer(damager)) {
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+				if(dfManager.contains(damager)) {
+					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
 						dfPlayer.addAtkCal(4.50 + 4.50 * level, 0);
 						list.put(dfPlayer.getUUID(), 4.50 + 4.50 * level);
@@ -1725,8 +1738,8 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
-				if(df.containsPlayer(damager)) {
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+				if(dfManager.contains(damager)) {
+					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
 						dfPlayer.addSpdCal(1.5 + 1.5 * level, 0);
 						list.put(dfPlayer.getUUID(), 1.5 + 1.5 * level);
@@ -1857,8 +1870,8 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
-				if(df.containsPlayer(damager)) {
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+				if(dfManager.contains(damager)) {
+					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
 						dfPlayer.addMove(0.02 + 0.02 * level, 0);
 						damager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(dfPlayer.getMove());
@@ -1876,8 +1889,8 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
-				if(df.containsPlayer(damager)) {
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+				if(dfManager.contains(damager)) {
+					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
 						dfPlayer.addCrtCal(0.75 + 0.75 * level, 0);
 						list.put(dfPlayer.getUUID(), 0.75 + 0.75 * level);
@@ -1919,8 +1932,8 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
-				if(df.containsPlayer(damager)) {
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+				if(dfManager.contains(damager)) {
+					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
 						dfPlayer.addHpCal(12.5 + 12.5 * level, 0);
 						list.put(dfPlayer.getUUID(), 12.5 + 12.5 * level);
@@ -2126,8 +2139,8 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
-				if(df.containsPlayer(damager)) {
-					DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
+				if(dfManager.contains(damager)) {
+					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
 						dfPlayer.addDfCal(1.5 + 1.5 * level, 0);
 						list.put(dfPlayer.getUUID(), 1.5 + 1.5 * level);
@@ -2186,7 +2199,8 @@ public class Enchantment extends CommandFile implements Listener{
 					final double range = 5.00; 
 					final double damage = 2.50 + 0.75 * level;
 					final int count = 3 + level;
-					DFFaction faction = fac.getFaction(damager.getUniqueId());
+					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
+					DFFaction faction = facPlayer.getFaction();
 					new BukkitRunnable() {
 						int c = 0;
 						public void run() {
@@ -2194,14 +2208,17 @@ public class Enchantment extends CommandFile implements Listener{
 								for(Entity e : victim.getNearbyEntities(range, range, range)) {
 									if(e instanceof LivingEntity) {
 										LivingEntity ent = (LivingEntity) e;
-										DFFaction other = fac.getFaction(ent.getUniqueId());
-										if(faction != null && other != null) {
-											if(!faction.isAlly(other.getName()) || !faction.isMember(ent.getUniqueId())) {
+										if(facPlayerManager.contains(ent.getUniqueId())) {
+											DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(ent);
+											DFFaction other = facPlayer.getFaction();
+											if(faction != null && other != null) {
+												if(!faction.isAlly(other.getName()) || !faction.isMember(ent.getUniqueId())) {
+													ent.damage(damage);
+												}
+											}
+											else {
 												ent.damage(damage);
 											}
-										}
-										else {
-											ent.damage(damage);
 										}
 									}
 								}
@@ -2414,8 +2431,8 @@ public class Enchantment extends CommandFile implements Listener{
 						for(Player victim1 : Bukkit.getOnlinePlayers()) {
 							((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, (float) 1.25);
 						}
-						DFPlayer dfPlayer = new DFPlayer().getPlayer(damager);
-						DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
+						DFPlayer dfPlayer = dfManager.getEntity(damager);
+						DFPlayer dfVictim = dfManager.getEntity(victim);
 						double tempMoney = (double) (dfVictim.getMoney() * (0.01 + 0.01 * level));
 						dfPlayer.addMoney(tempMoney);
 						dfVictim.removeMoney(tempMoney);

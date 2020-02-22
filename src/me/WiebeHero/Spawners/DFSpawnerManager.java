@@ -36,19 +36,21 @@ import de.tr7zw.nbtinjector.NBTInjector;
 import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.EffectSkills;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 import me.WiebeHero.MoreStuff.Disparitys;
-import me.WiebeHero.Skills.DFPlayer;
-import me.WiebeHero.Skills.EffectSkills;
-import me.WiebeHero.Skills.Enums.Classes;
 
 public class DFSpawnerManager {
-	private Disparitys disp = new Disparitys();
+	private DFPlayerManager dfManager;
+	private Disparitys disp;
 	public HashMap<UUID, DFSpawner> spawnerList;
 	public HashMap<EntityType, Pair<ArrayList<ItemStack>, ArrayList<String>>> names = new HashMap<EntityType, Pair<ArrayList<ItemStack>, ArrayList<String>>>();
-	public DFPlayer method = new DFPlayer();
-	public EffectSkills sk = new EffectSkills();
-	public DFSpawnerManager() {
+	public DFSpawnerManager(DFPlayerManager dfManager, Disparitys disp) {
 		this.addNames();
+		this.dfManager = dfManager;
+		this.disp = disp;
 		this.spawnerList = new HashMap<UUID, DFSpawner>();
 	}
 	//---------------------------------------------------------
@@ -74,7 +76,8 @@ public class DFSpawnerManager {
 				int tier = yml.getInt("Spawners.UUID." + list.get(i) + ".Tier");
 				EntityType type = EntityType.valueOf(yml.getString("Spawners.UUID." + list.get(i) + ".EntityType"));
 				Location loc = (Location) yml.get("Spawners.UUID." + list.get(i) + ".Location");
-				new DFSpawner(uuid, loc, tier, type);
+				DFSpawner df = new DFSpawner(uuid, loc, tier, type);
+				this.spawnerList.put(df.getUUID(), df);
 			}
 		}
 	}
@@ -180,7 +183,6 @@ public class DFSpawnerManager {
 				}
 			}
 		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 3600L);
-		DFSpawnerManager manager = new DFSpawnerManager();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -217,7 +219,7 @@ public class DFSpawnerManager {
 						if(confirmed == true) {
 							int max = 1;
 							for(int current = count; current <= max; current++) {
-								manager.spawnMob(spawner);
+								spawnMob(spawner);
 							}
 							spawner.setCanSpawn(false);
 						}
@@ -417,8 +419,8 @@ public class DFSpawnerManager {
 				mob.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_SHOVEL));
 			}
 		}
-		method.addPlayer(mob);
-		DFPlayer dfPlayer = method.getPlayer(mob);
+		dfManager.addEntity(ent.getUniqueId());
+		DFPlayer dfPlayer = dfManager.getEntity(ent.getUniqueId());
 		dfPlayer.setLevel(level);
 		int skills = level * 6;
 		int cl = new Random().nextInt(7) + 1;
@@ -478,14 +480,15 @@ public class DFSpawnerManager {
 		}
 		dfPlayer.setMove(0.2 + 0.01 * tier + 0.0003 * level);
 		dfPlayer.resetCalculations();
-		sk.attackSpeed(mob);
-		sk.changeHealth(mob);
+		double newHealth = 25.00 / 100.00 * (dfPlayer.getHpCal() + 100.00);
+		double roundOff1 = (double) Math.round(newHealth * 100.00) / 100.00;
+		mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
+		mob.setHealth(roundOff1);
 		new BukkitRunnable() {
 			public void run() {
 				mob.setHealth(mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 10L);
-		sk.runDefense(mob);
 		mob.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1.5 * tier);
 		mob.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(0.2 * dfPlayer.getDf());
 		mob.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(0.1333 * dfPlayer.getDf());

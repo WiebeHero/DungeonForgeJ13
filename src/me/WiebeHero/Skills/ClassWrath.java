@@ -2,8 +2,6 @@
 package me.WiebeHero.Skills;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -16,25 +14,32 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.CustomMethods.MethodMovementSpeed;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.EffectSkills;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 import me.WiebeHero.Factions.DFFaction;
-import me.WiebeHero.Skills.Enums.Classes;
+import me.WiebeHero.Factions.DFFactionManager;
+import me.WiebeHero.Factions.DFFactionPlayer;
+import me.WiebeHero.Factions.DFFactionPlayerManager;
 
 public class ClassWrath implements Listener{
-	DFPlayer method = new DFPlayer();
-	MethodMovementSpeed move = new MethodMovementSpeed();
-	public HashMap<UUID, Integer> activated = new HashMap<UUID, Integer>();
-	public HashMap<UUID, Integer> temp = new HashMap<UUID, Integer>();
-	public ArrayList<UUID> wrathCooldown = new ArrayList<UUID>();
-	public HashMap<UUID, Integer> wrathExtra = new HashMap<UUID, Integer>();
+	private DFPlayerManager dfManager;
+	private DFFactionPlayerManager facPlayerManager;
+	private DFFactionManager facManager;
+	public ClassWrath(DFPlayerManager manager, DFFactionPlayerManager facPlayerManager) {
+		this.dfManager = manager;
+		this.facPlayerManager = facPlayerManager;
+	}
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-		if(method.containsPlayer(player)) {
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.WRATH) {
 				if(dfPlayer.getUseable()) {
-					DFFaction fac = new DFFaction().getFaction(player.getUniqueId());
+					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
+					DFFaction fac = facPlayer.getFaction();
 					int level = dfPlayer.getLevel();
 					double damage1 = 5 + level * 0.15;
 					double range = 4 + level * 0.06;
@@ -111,8 +116,8 @@ public class ClassWrath implements Listener{
 			if(event.getDamager() instanceof Player) {
 				if(event.getEntity() instanceof LivingEntity) {
 					Player player = (Player) event.getDamager();
-					if(method.containsPlayer(player)) {
-						DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+					if(dfManager.contains(player)) {
+						DFPlayer dfPlayer = dfManager.getEntity(player);
 						if(dfPlayer.getPlayerClass() == Classes.WRATH) {
 							if(dfPlayer.getSpdMod() > 0) {
 								int cLevel = dfPlayer.getSpdMod();

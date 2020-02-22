@@ -91,6 +91,7 @@ public class LootChestManager {
         }
 	}
 	public void startLootSpawning() {
+		LootChestManager manager = this;
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -152,7 +153,7 @@ public class LootChestManager {
 					  			}
 				  			}
 			  				else {
-		  						Block temp = CustomEnchantments.getInstance().lootChestManager.checkChest(loot.getLocation().getBlock(), (double)loot.getRadius());
+		  						Block temp = manager.checkChest(loot.getLocation().getBlock(), (double)loot.getRadius());
 		  						if(temp != null) {
 			  						Chest chest = (Chest) temp.getState();
 					  				Inventory inv = chest.getBlockInventory();

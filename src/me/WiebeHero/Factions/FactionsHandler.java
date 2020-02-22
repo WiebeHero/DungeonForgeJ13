@@ -10,6 +10,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -17,6 +18,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
@@ -26,7 +28,12 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import me.WiebeHero.CustomEnchantments.CCT;
 
 public class FactionsHandler implements Listener{
-	private DFFaction method = new DFFaction();
+	private DFFactionManager facManager;
+	private DFFactionPlayerManager facPlayerManager;
+	public FactionsHandler(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager) {
+		this.facManager = facManager;
+		this.facPlayerManager = facPlayerManager;
+	}
 	private ArrayList<Material> blockAcces = new ArrayList<Material>(Arrays.asList(Material.CHEST, Material.FURNACE, Material.MINECART, Material.CHEST_MINECART, Material.HOPPER_MINECART, Material.FURNACE_MINECART, Material.CRAFTING_TABLE, Material.ENDER_CHEST, Material.DISPENSER, Material.DROPPER, Material.HOPPER, Material.SHULKER_BOX, Material.JUKEBOX, Material.BREWING_STAND));
 	private ArrayList<Material> plates = new ArrayList<Material>(Arrays.asList(Material.ACACIA_PRESSURE_PLATE, Material.BIRCH_PRESSURE_PLATE, Material.DARK_OAK_PRESSURE_PLATE, Material.HEAVY_WEIGHTED_PRESSURE_PLATE, Material.JUNGLE_PRESSURE_PLATE, Material.LIGHT_WEIGHTED_PRESSURE_PLATE, Material.OAK_PRESSURE_PLATE, Material.SPRUCE_PRESSURE_PLATE, Material.STONE_PRESSURE_PLATE));
 	private ArrayList<Material> beds = new ArrayList<Material>(Arrays.asList(Material.BLACK_BED, Material.BLUE_BED, Material.BROWN_BED, Material.CYAN_BED, Material.GRAY_BED, Material.GREEN_BED, Material.LIGHT_BLUE_BED, Material.LIGHT_GRAY_BED, Material.LIME_BED, Material.MAGENTA_BED, Material.ORANGE_BED, Material.PINK_BED, Material.PURPLE_BED, Material.RED_BED, Material.WHITE_BED, Material.YELLOW_BED));
@@ -36,7 +43,8 @@ public class FactionsHandler implements Listener{
 			Player player = event.getPlayer();
 			Block block = event.getClickedBlock();
 			String fName = "";
-			DFFaction faction = method.getFaction(player.getUniqueId());
+			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
+			DFFaction faction = facPlayer.getFaction();
 			if(faction != null) {
 				fName = faction.getName();
 			}
@@ -52,7 +60,7 @@ public class FactionsHandler implements Listener{
 						}
 						
 					}
-					else if(faction.isInAChunk(player, block.getLocation())) {
+					else if(facManager.isInAChunk(block.getLocation())) {
 						if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 							Block b = event.getClickedBlock();
 							if(!blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
@@ -77,7 +85,8 @@ public class FactionsHandler implements Listener{
 			Player player = event.getPlayer();
 			Block block = event.getBlock();
 			String fName = "";
-			DFFaction faction = method.getFaction(player.getUniqueId());
+			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
+			DFFaction faction = facPlayer.getFaction();
 			if(faction != null) {
 				fName = faction.getName();
 			}
@@ -89,7 +98,7 @@ public class FactionsHandler implements Listener{
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
 					}
 				}
-				else if(faction.isInAChunk(player, block.getLocation())) {
+				else if(facManager.isInAChunk(block.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
@@ -102,7 +111,8 @@ public class FactionsHandler implements Listener{
 			Player player = event.getPlayer();
 			Block block = event.getBlock();
 			String fName = "";
-			DFFaction faction = method.getFaction(player.getUniqueId());
+			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
+			DFFaction faction = facPlayer.getFaction();
 			if(faction != null) {
 				fName = faction.getName();
 			}
@@ -114,7 +124,7 @@ public class FactionsHandler implements Listener{
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
 					}
 				}
-				else if(faction.isInAChunk(player, block.getLocation())) {
+				else if(facManager.isInAChunk(block.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
@@ -128,7 +138,8 @@ public class FactionsHandler implements Listener{
 				Player damager = (Player) event.getDamager();
 				Player victim = (Player) event.getEntity();
 				String fName = "";
-				DFFaction faction = method.getFaction(damager.getUniqueId());
+				DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
+				DFFaction faction = facPlayer.getFaction();
 				if(faction != null) {
 					fName = faction.getName();
 				}
@@ -147,7 +158,8 @@ public class FactionsHandler implements Listener{
 					Player damager = (Player) arrow.getShooter();
 					Player victim = (Player) event.getEntity();
 					String fName = "";
-					DFFaction faction = method.getFaction(damager.getUniqueId());
+					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
+					DFFaction faction = facPlayer.getFaction();
 					if(faction != null) {
 						fName = faction.getName();
 					}
@@ -210,11 +222,20 @@ public class FactionsHandler implements Listener{
 			}
 		}
 	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void newFacPlayer(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if(!facPlayerManager.contains(player.getUniqueId())) {
+			facPlayerManager.add(player.getUniqueId());
+		}
+	}
 	@EventHandler
 	public void losePower(PlayerDeathEvent event) {
-		DFFaction fac = method.getFaction(event.getEntity().getUniqueId());
-		if(fac != null) {
-			fac.removeEnergy(2.0);
+		DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(event.getEntity());
+		DFFaction faction = facPlayer.getFaction();
+		if(faction != null) {
+			faction.removeEnergy(2.0);
 			event.getEntity().sendMessage("&2&l[DungeonForge]: &cYou have died and your faction has lost 2 power!");
 		}
 	}

@@ -1,7 +1,6 @@
 package me.WiebeHero.RankedPlayerPackage;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.ModRank;

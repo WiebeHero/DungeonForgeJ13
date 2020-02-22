@@ -23,14 +23,15 @@ import org.bukkit.inventory.ItemStack;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
 import me.WiebeHero.MoreStuff.SwordSwingProgress;
-import me.WiebeHero.Skills.EffectSkills;
 
 public class EnchantmentHandler extends SwordSwingProgress{
-	Enchantment enchantment = CustomEnchantments.getInstance().enchant;
+	private Enchantment enchantment;
+	public EnchantmentHandler(Enchantment enchantment) {
+		this.enchantment = enchantment;
+	}
 	@EventHandler
 	public void meleeEnchantmentHandler(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof LivingEntity){

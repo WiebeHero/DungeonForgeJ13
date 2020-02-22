@@ -16,9 +16,13 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
 
 public class AHInventory {
-	private AHManager ahManager = CustomEnchantments.getInstance().ahManager;
-	private ItemStackBuilder builder = new ItemStackBuilder();
+	private AHManager ahManager;
+	private ItemStackBuilder builder;
 	private ArrayList<Integer> availableSlots = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35));
+	public AHInventory(AHManager ahManager, ItemStackBuilder builder) {
+		this.ahManager = ahManager;
+		this.builder = builder;
+	}
 	public void AHInv(Player player, int page) {
 		Inventory i = Bukkit.getServer().createInventory(null, 54, new CCT().colorize("&6Auction House"));
 		int currentPage = (page - 1) * availableSlots.size();

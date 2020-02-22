@@ -13,9 +13,11 @@ import org.bukkit.scheduler.BukkitTask;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 
 public class DFMobHealth implements Listener{
+	private DFPlayerManager dfManager = new DFPlayerManager();
 	private HashMap<UUID, String> oldName = new HashMap<UUID, String>();
 	private HashMap<UUID, BukkitTask> runnable = new HashMap<UUID, BukkitTask>();
 	@EventHandler
@@ -24,8 +26,8 @@ public class DFMobHealth implements Listener{
 			if(event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player)) {
 				LivingEntity ent = (LivingEntity) event.getEntity();
 				if(!ent.isDead()) {
-					if(new DFPlayer().containsPlayer(ent)) {
-						DFPlayer nEnt = new DFPlayer().getPlayer(ent);
+					if(dfManager.contains(ent)) {
+						DFPlayer nEnt = dfManager.getEntity(ent);
 						if(!oldName.containsKey(ent.getUniqueId())) {
 							oldName.put(ent.getUniqueId(), ent.getCustomName());
 						}

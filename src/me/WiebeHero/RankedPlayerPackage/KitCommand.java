@@ -9,14 +9,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.MoreStuff.CombatTag;
 
 public class KitCommand {
-	private ItemStackBuilder builder = new ItemStackBuilder();
+	private ItemStackBuilder builder;
 	public String kit = "kit";
-	private RankedManager rManager = CustomEnchantments.getInstance().rankedManager;
+	private RankedManager rManager;
+	public KitCommand(ItemStackBuilder builder, RankedManager rManager) {
+		this.builder = builder;
+		this.rManager = rManager;
+	}
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;

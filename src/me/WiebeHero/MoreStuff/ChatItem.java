@@ -11,8 +11,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFaction;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.Factions.DFFactionPlayer;
+import me.WiebeHero.Factions.DFFactionPlayerManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -22,7 +25,12 @@ import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.PacketPlayOutChat;
 
 public class ChatItem implements Listener{
-	DFFaction method = new DFFaction();
+	private DFFactionPlayerManager facPlayerManager;
+	private DFPlayerManager dfManager;
+	public ChatItem(DFPlayerManager dfManager, DFFactionPlayerManager facPlayerManager) {
+		this.dfManager = dfManager;
+		this.facPlayerManager = facPlayerManager;
+	}
 	@EventHandler
 	public void chatItemEvent(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
@@ -32,7 +40,7 @@ public class ChatItem implements Listener{
 			if(item1 != null) {
 				if(item1.hasItemMeta()) {
 					if(item1.getItemMeta().hasLore()) {
-						DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+						DFPlayer dfPlayer = dfManager.getEntity(player);
 						event.setCancelled(true);
 						String split[] = message.split(Pattern.quote("[i]"));
 						String textBefore = null;
@@ -45,7 +53,8 @@ public class ChatItem implements Listener{
 						}
 						int level = dfPlayer.getLevel();
 						String facN = "";
-						DFFaction faction = method.getFaction(player.getUniqueId());
+						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
+						DFFaction faction = facPlayer.getFaction();
 						if(faction != null) {
 							facN = faction.getName();
 						}

@@ -1,7 +1,6 @@
 package me.WiebeHero.Skills;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -21,19 +20,20 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Factions.DFFactions;
-import me.WiebeHero.Skills.Enums.Classes;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 
 public class ClassLust implements Listener{
-	DFPlayer method = new DFPlayer();
-	SkillJoin join = new SkillJoin();
-	DFFactions fac = new DFFactions();
-	ArrayList<UUID> cooldownLust = new ArrayList<UUID>();
+	private DFPlayerManager dfManager;
+	public ClassLust(DFPlayerManager manager) {
+		this.dfManager = manager;
+	}
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-		if(method.containsPlayer(player)) {
+		if(dfManager.contains(player)) {
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.LUST) {
 				if(dfPlayer.getUseable()) {
 					int level = dfPlayer.getLevel();
@@ -132,9 +132,8 @@ public class ClassLust implements Listener{
 						}
 					}
 					if(player != null) {
-						if(method.containsPlayer(player) && method.containsPlayer(victim)) {
-							DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
-							DFPlayer dfVictim = new DFPlayer().getPlayer(victim);
+						if(dfManager.contains(player) && dfManager.contains(victim)) {
+							DFPlayer dfPlayer = dfManager.getEntity(player), dfVictim = dfManager.getEntity(victim);
 							if(dfPlayer.getPlayerClass() == Classes.LUST) {
 								if(dfPlayer.getCrtMod() > 0) {
 									int cLevel = dfPlayer.getCrtMod();

@@ -10,15 +10,24 @@ import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.EffectSkills;
 
 public class SkillMenuInteract implements Listener{
-	SkillMenu menu = new SkillMenu();
-	EffectSkills sk = new EffectSkills();
+	DFPlayerManager dfManager;
+	SkillMenu menu;
+	EffectSkills sk;
+	public SkillMenuInteract(DFPlayerManager manager, SkillMenu menu, EffectSkills sk) {
+		this.menu = menu;
+		this.sk = sk;
+		this.dfManager = manager;
+	}
 	@EventHandler
 	public void skillMenuClick(InventoryClickEvent event) {
 		ItemStack item = event.getCurrentItem();
 		Player player = (Player) event.getWhoClicked();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		DFPlayer dfPlayer = dfManager.getEntity(player);
 		InventoryView current = player.getOpenInventory();
 		if(current.getTitle().contains("Skills of:")) {
 			event.setCancelled(true);

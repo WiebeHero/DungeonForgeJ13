@@ -15,17 +15,24 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.Enums.Classes;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 import net.md_5.bungee.api.ChatColor;
 
 public class ClassMenuSelection implements Listener{
-	ArrayList<UUID> activated = new ArrayList<UUID>();
-	ClassMenu menu = new ClassMenu();
+	private DFPlayerManager dfManager;
+	private ArrayList<UUID> activated = new ArrayList<UUID>();
+	private ClassMenu menu;
+	public ClassMenuSelection(DFPlayerManager manager, ClassMenu menu) {
+		this.dfManager = manager;
+		this.menu = menu;
+	}
 	@EventHandler
 	public void clickInInv(InventoryClickEvent event) {
 		ItemStack item = event.getCurrentItem();
 		Player player = (Player) event.getWhoClicked();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		DFPlayer dfPlayer = dfManager.getEntity(player);
 		InventoryView current = player.getOpenInventory();
 		if(current.getTitle().contains("Class Selection")) {
 			event.setCancelled(true);
@@ -69,7 +76,7 @@ public class ClassMenuSelection implements Listener{
 	@EventHandler
 	public void closeInvClass(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		DFPlayer dfPlayer = dfManager.getEntity(player);
 		InventoryView current = event.getView();
 		if(!dfPlayer.hasPlayerClass()) {
 			if(current.getTitle().contains("Class Selection")) {

@@ -1,286 +1,126 @@
 package me.WiebeHero.Factions;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import me.WiebeHero.CustomClasses.Methods;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class DFFaction {
-	Methods method;
+	private UUID facId;
+	private DFFactionManager facManager;
+	private DFFactionPlayerManager memberManager;
 	public String facName;
-	public HashMap<UUID, Integer> memberList;
 	public ArrayList<Chunk> chunkList;
 	public ArrayList<UUID> invitedList;
-	public ArrayList<String> invitedAllyList;
-	public ArrayList<String> allyList;
+	public ArrayList<UUID> invitedAllyList;
+	public ArrayList<UUID> allyList;
 	public Location facHome;
 	public int facP;
 	public double bank;
 	public double energy;
-	public DFFaction(String facName, Player p) {
-		this.memberList = new HashMap<UUID, Integer>();
-		this.memberList.put(p.getUniqueId(), 4);
+	public DFFaction(String facName, Player p, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
+		this.facId = UUID.randomUUID();
 		this.chunkList = new ArrayList<Chunk>();
-		this.allyList = new ArrayList<String>();
-		this.invitedAllyList = new ArrayList<String>();
+		this.allyList = new ArrayList<UUID>();
+		this.invitedAllyList = new ArrayList<UUID>();
 		this.invitedList = new ArrayList<UUID>();
 		this.facName = facName;
 		this.facP = 0;
 		this.energy = 2.00;
 		this.bank = 0.00;
+		this.facManager = facManager;
+		this.memberManager = memberManager;
+		DFFactionPlayer df = memberManager.getFactionPlayer(p.getUniqueId());
+		df.setFactionId(this.getFactionId());
+		df.setRank(4);
 	}
-	public DFFaction(String facName) {
-		this.memberList = new HashMap<UUID, Integer>();
+	public DFFaction(String facName, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
+		this.facId = UUID.randomUUID();
 		this.chunkList = new ArrayList<Chunk>();
-		this.allyList = new ArrayList<String>();
-		this.invitedAllyList = new ArrayList<String>();
+		this.allyList = new ArrayList<UUID>();
+		this.invitedAllyList = new ArrayList<UUID>();
 		this.invitedList = new ArrayList<UUID>();
 		this.facName = facName;
 		this.facP = 0;
 		this.energy = 2.00;
 		this.bank = 0.00;
+		this.facManager = facManager;
+		this.memberManager = memberManager;
 	}
-	public DFFaction() {
-		//Empty Constructor
-	}
-	public void activeEnergyTimer() {
-		new BukkitRunnable() {
-			public void run() {
-				for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-					int count = 0;
-					for(UUID uuid : fac.getMemberList().keySet()) {
-						Player player = Bukkit.getPlayer(uuid);
-						if(player != null) {
-							count++;
-						}
-					}
-					if(count > 5) {
-						count = 5;
-					}
-					if(count != 0) {
-						if(fac.getEnergy() + 0.025 * count <= 30.00) {
-							fac.addEnergy(0.015 + 0.015 * count);
-							count = 0;
-						}
-					}
-				}
-			}
-		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 400L);
-	}
-	public void loadFactions() {
-		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
-		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
-		try{
-			yml.load(f1);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		if(yml.getConfigurationSection("Factions.List") != null) {
-			Set<String> l = yml.getConfigurationSection("Factions.List").getKeys(false);
-			ArrayList<String> list = new ArrayList<String>(l);
-			for(int i = 0; i < list.size(); i++) {
-				DFFaction fac = new DFFaction(list.get(i));
-				Set<String> chec = yml.getConfigurationSection("Factions.List." + list.get(i) + ".Members").getKeys(false);
-				ArrayList<String> facMembers = new ArrayList<String>(chec);
-				for(int i1 = 0; i1 < facMembers.size(); i1++) {
-					UUID uuid = UUID.fromString(facMembers.get(i1));
-					int rank = yml.getInt("Factions.List." + list.get(i) + ".Members." + uuid + ".Rank");
-					fac.memberList.put(uuid, rank);
-				}
-				Location loc = (Location) yml.get("Factions.List." + list.get(i) + ".Faction Home");
-				fac.facHome = loc;
-				ArrayList<String> chunks = new ArrayList<String>(yml.getStringList("Factions.List." + list.get(i) + ".Chunks List"));
-				for(int i1 = 0; i1 < chunks.size(); i1++) {
-					Chunk chunk = Bukkit.getWorld("FactionWorld-1").getChunkAt(Long.parseLong(chunks.get(i1)));
-					fac.chunkList.add(chunk);
-				}
-				ArrayList<String> fAllyList = new ArrayList<String>(yml.getStringList("Factions.List." + list.get(i) + ".Allies"));
-				fac.allyList = fAllyList;
-				for(int i1 = 0; i1 < list.size(); i1++) {
-					int fPoints = yml.getInt("Factions.List." + list.get(i) + ".Faction Points");
-					fac.facP = fPoints;
-				}
-				fac.setEnergy(yml.getDouble("Factions.List." + list.get(i) + ".Energy"));
-				fac.setEnergy(yml.getDouble("Factions.List." + list.get(i) + ".Bank"));
-				CustomEnchantments.getInstance().factionList.add(fac);
-			}
-		}
-	}
-	public void saveFactions() {
-		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
-		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
-		try{
-			yml.load(f1);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-			yml.createSection("Factions.List." + fac.getName());
-			for(Entry<UUID, Integer> entry : fac.getMemberList().entrySet()) {
-				yml.set("Factions.List." + fac.getName() + ".Members." + entry.getKey() + ".Rank", entry.getValue());
-				yml.set("Factions.List." + fac.getName() + ".Members." + entry.getKey() + ".Name", Bukkit.getOfflinePlayer(entry.getKey()).getName());
-			}
-			ArrayList<Long> list = new ArrayList<Long>();
-			for(Chunk c : fac.getChunkList()) {
-				list.add(c.getChunkKey());
-			}
-			yml.set("Factions.List." + fac.getName() + ".Faction Home", fac.getFactionHome());
-			yml.set("Factions.List." + fac.getName() + ".Chunks List", list);
-			yml.set("Factions.List." + fac.getName() + ".Faction Points", fac.facP);
-			yml.set("Factions.List." + fac.getName() + ".Allies", fac.getAllyList());
-			yml.set("Factions.List." + fac.getName() + ".Energy", fac.getEnergy());
-			yml.set("Factions.List." + fac.getName() + ".Bank", fac.getBank());
-		}
-		try{
-			yml.save(f1);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-	}
-	public void hardSaveFactions() {
-		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
-		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
-		try{
-			yml.load(f1);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		yml.set("Factions.List", null);
-		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-			yml.createSection("Factions.List." + fac.getName());
-			for(Entry<UUID, Integer> entry : fac.getMemberList().entrySet()) {
-				yml.set("Factions.List." + fac.getName() + ".Members." + entry.getKey() + ".Rank", entry.getValue());
-				yml.set("Factions.List." + fac.getName() + ".Members." + entry.getKey() + ".Name", Bukkit.getOfflinePlayer(entry.getKey()).getName());
-			}
-			ArrayList<Long> list = new ArrayList<Long>();
-			for(Chunk c : fac.getChunkList()) {
-				list.add(c.getChunkKey());
-			}
-			yml.set("Factions.List." + fac.getName() + ".Faction Home", fac.getFactionHome());
-			yml.set("Factions.List." + fac.getName() + ".Chunks List", list);
-			yml.set("Factions.List." + fac.getName() + ".Faction Points", fac.facP);
-			yml.set("Factions.List." + fac.getName() + ".Allies", fac.getAllyList());
-			yml.set("Factions.List." + fac.getName() + ".Energy", fac.getEnergy());
-		}
-		try{
-			yml.save(f1);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-	}
-	public DFFaction getFaction(UUID uuid) {
-		Player player = Bukkit.getPlayer(uuid);
-		if(player != null) {
-			for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-				if(fac.getMemberList().containsKey(uuid)) {
-					return fac;
-				}
-			}
-		}
-		return null;
-	}
-	public DFFaction getFaction(String name) {
-		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-			if(fac.getName().equals(name)) {
-				return fac;
-			}
-		}
-		return null;
-	}
-	public void deleteFaction(UUID uuid) {
-		Player player = Bukkit.getPlayer(uuid);
-		if(player != null) {
-			for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-				if(fac.getMemberList().containsKey(uuid)) {
-					CustomEnchantments.getInstance().factionList.remove(fac);
-					break;
-				}
-			}
-		}
-	}
-	public void deleteFaction(String name) {
-		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-			if(fac.getName().equals(name)) {
-				CustomEnchantments.getInstance().factionList.remove(fac);
-				break;
-			}
-		}
-	}
-	
-	public boolean isNameAvailable(String name) {
-		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-			if(fac.getName().equals(name)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public HashMap<UUID, Integer> getMemberList(){
-		return this.memberList;
-	}
-	public Player getMember(UUID uuid) {
-		if(this.getMemberList().containsKey(uuid)) {
-			Player p = method.convertOfflinePlayer(uuid);
-			if(p.getName() != null) {
-				return p;
-			}
-		}
-		return null;
+	public DFFaction(String facName, UUID facId, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
+		this.facId = facId;
+		this.chunkList = new ArrayList<Chunk>();
+		this.allyList = new ArrayList<UUID>();
+		this.invitedAllyList = new ArrayList<UUID>();
+		this.invitedList = new ArrayList<UUID>();
+		this.facName = facName;
+		this.facP = 0;
+		this.energy = 2.00;
+		this.bank = 0.00;
+		this.facManager = facManager;
+		this.memberManager = memberManager;
 	}
 	public void addMember(Player player) {
-		this.getMemberList().put(player.getUniqueId(), 1);
+		if(!memberManager.contains(player.getUniqueId())){
+			DFFactionPlayer df = memberManager.getFactionPlayer(player.getUniqueId());
+			df.setFactionId(this.getFactionId());
+			df.setRank(1);
+		}
+	}
+	public void addMember(UUID uuid) {
+		if(!memberManager.contains(uuid)){
+			DFFactionPlayer df = memberManager.getFactionPlayer(uuid);
+			df.setFactionId(this.getFactionId());
+			df.setRank(1);
+		}
+	}
+	public void addMember(UUID uuid, DFFactionPlayer facP) {
+		if(!memberManager.contains(uuid)){
+			DFFactionPlayer df = facP;
+			df.setFactionId(this.getFactionId());
+		}
 	}
 	public void removeMember(Player player) {
-		this.getMemberList().remove(player.getUniqueId());
+		if(memberManager.contains(player.getUniqueId())){
+			DFFactionPlayer df = memberManager.getFactionPlayer(player.getUniqueId());
+			df.setFactionId(null);
+			df.setRank(1);
+		}
+	}
+	public void removeMember(UUID uuid) {
+		if(memberManager.contains(uuid)){
+			DFFactionPlayer df = memberManager.getFactionPlayer(uuid);
+			df.setFactionId(null);
+			df.setRank(1);
+		}
 	}
 	
 	public int getRank(UUID uuid) {
-		if(this.getMemberList().containsKey(uuid)) {
-			return this.getMemberList().get(uuid);
+		if(this.memberManager.contains(uuid)) {
+			return this.memberManager.getFactionPlayer(uuid).getRank();
 		}
 		return 1;
 	}
 	public void promoteMember(UUID uuid) {
-		this.getMemberList().put(uuid, this.getRank(uuid) + 1);
+		DFFactionPlayer df = this.memberManager.getFactionPlayer(uuid);
+		df.setRank(df.getRank() + 1);
 	}
 	public void demoteMember(UUID uuid) {
-		this.getMemberList().put(uuid, this.getRank(uuid) - 1);
+		DFFactionPlayer df = this.memberManager.getFactionPlayer(uuid);
+		df.setRank(df.getRank() - 1);
+	}
+	
+	public UUID getFactionId() {
+		return this.facId;
 	}
 	
 	public ArrayList<Chunk> getChunkList(){
 		return this.chunkList;
 	}
 	
-	public ArrayList<String> getAllyList() {
+	public ArrayList<UUID> getAllyList() {
 		return this.allyList;
 	}
 	
@@ -296,17 +136,10 @@ public class DFFaction {
 	}
 	
 	public boolean isMember(UUID uuid) {
-		if(this.memberList.containsKey(uuid)) {
-			return true;
-		}
-		return false;
-	}
-	public boolean isAMember(UUID uuid) {
-		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-			if(!this.getMemberList().containsKey(uuid)) {
-				if(fac.getMemberList().containsKey(uuid)) {
-					return true;
-				}
+		if(this.memberManager.contains(uuid)) {
+			DFFactionPlayer df = this.memberManager.getFactionPlayer(uuid);
+			if(df.getFactionId().equals(this.getFactionId())) {
+				return true;
 			}
 		}
 		return false;
@@ -338,17 +171,6 @@ public class DFFaction {
 	public void removeChunk(Chunk c) {
 		this.chunkList.remove(c);
 	}
-	public boolean isInAChunk(Player player) {
-		Chunk c = player.getLocation().getChunk();
-		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-			if(!fac.getMemberList().containsKey(player.getUniqueId())) {
-				if(fac.getChunkList().contains(c)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 	public boolean isInChunk(Player player) {
 		Chunk c = player.getChunk();
 		if(this.getChunkList().contains(c)) {
@@ -356,17 +178,7 @@ public class DFFaction {
 		}
 		return false;
 	}
-	public boolean isInAChunk(Player player, Location loc) {
-		Chunk c = loc.getChunk();
-		for(DFFaction fac : CustomEnchantments.getInstance().factionList) {
-			if(!fac.getMemberList().containsKey(player.getUniqueId())) {
-				if(fac.getChunkList().contains(c)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	
 	public boolean isInChunk(Location loc) {
 		Chunk c = loc.getChunk();
 		if(this.getChunkList().contains(c)) {
@@ -376,40 +188,31 @@ public class DFFaction {
 	}
 	
 	public boolean isAlly(String fac) {
-		if(this.allyList.contains(fac)) {
-			return true;
-		}
-		return false;
+		DFFaction faction = facManager.getFaction(fac);
+		return this.allyList.contains(faction.getFactionId());
 	}
 	
 	public boolean isAlly(UUID uuid) {
-		for(int i = 0; i < this.allyList.size(); i++) {
-			for(Entry<UUID, Integer> entry : this.getFaction(this.allyList.get(i)).getMemberList().entrySet()) {
-				if(entry.getKey().equals(uuid)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return this.allyList.contains(uuid);
 	}
 	
-	public void addAlly(String fac) {
-		this.allyList.add(fac);
+	public void addAlly(UUID uuid) {
+		this.allyList.add(uuid);
 	}
-	public void removeAlly(String fac) {
-		this.allyList.remove(fac);
+	public void removeAlly(UUID uuid) {
+		this.allyList.remove(uuid);
 	}
-	public boolean isInvitedAlly(String fac) {
-		if(this.invitedAllyList.contains(fac)) {
+	public boolean isInvitedAlly(UUID uuid) {
+		if(this.invitedAllyList.contains(uuid)) {
 			return true;
 		}
 		return false;
 	}
-	public void addInvitedAlly(String fac) {
-		this.invitedAllyList.add(fac);
+	public void addInvitedAlly(UUID uuid) {
+		this.invitedAllyList.add(uuid);
 	}
-	public void removeInvitedAlly(String fac) {
-		this.invitedAllyList.remove(fac);
+	public void removeInvitedAlly(UUID uuid) {
+		this.invitedAllyList.remove(uuid);
 	}
 	
 	public int getFactionPoints() {

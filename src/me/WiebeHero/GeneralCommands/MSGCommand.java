@@ -11,12 +11,15 @@ import org.bukkit.entity.Player;
 
 import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.MoreStuff.CombatTag;
 
 public class MSGCommand implements CommandExecutor{
-	private MSGManager msgManager = CustomEnchantments.getInstance().msgManager;
-	private Methods method = new Methods();
+	private MSGManager msgManager;
+	private Methods method;
+	public MSGCommand(MSGManager msgManager, Methods method) {
+		this.msgManager = msgManager;
+		this.method = method;
+	}
 	public String msg = "msg";
 	public String ignore = "ignore";
 	@Override

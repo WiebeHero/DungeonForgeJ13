@@ -13,11 +13,17 @@ import org.bukkit.inventory.ItemStack;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEvents.DFPlayerLevelUpEvent;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Scoreboard.DFScoreboard;
-import me.WiebeHero.Skills.DFPlayer;
 
 public class XPAddPlayers implements Listener {
-	DFScoreboard board = new DFScoreboard();
+	private DFScoreboard board;
+	private DFPlayerManager dfManager;
+	public XPAddPlayers(DFPlayerManager dfManager, DFScoreboard board) {
+		this.board = board;
+		this.dfManager = dfManager;
+	}
 	@EventHandler
 	public void xpAddPlayer(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -26,7 +32,7 @@ public class XPAddPlayers implements Listener {
 				if(player.getInventory().getItemInMainHand().getType() == Material.EXPERIENCE_BOTTLE) {
 					if(player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
 						if(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(ChatColor.stripColor("XP Bottle (Player)"))) {
-							DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+							DFPlayer dfPlayer = dfManager.getEntity(player);
 							ItemStack item = player.getInventory().getItemInMainHand();
 							String xpAmount = "";
 				    		for(String s : item.getItemMeta().getLore()) {
@@ -45,7 +51,7 @@ public class XPAddPlayers implements Listener {
 								if(finalXP >= maxxp) {
 									level++;
 									xp = finalXP - maxxp;
-									int maxxpFinal = (int)(double)(maxxp / 100.00 * 107.00);
+									int maxxpFinal = (int)(double)(maxxp / 100.00 * 120.00);
 									dfPlayer.addLevel(1);
 									dfPlayer.setMaxExperience(maxxpFinal);
 									dfPlayer.setExperience(xp);

@@ -7,10 +7,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.Scoreboard.DFScoreboard;
 
 public class MoneyNotes implements Listener{
+	private DFPlayerManager dfManager;
+	private DFScoreboard score;
+	public MoneyNotes(DFPlayerManager dfManager, DFScoreboard score) {
+		this.dfManager = dfManager;
+		this.score = score;
+	}
 	@EventHandler
 	public void moneyGain(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -23,9 +30,9 @@ public class MoneyNotes implements Listener{
 								String name = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
 								name = name.replaceAll("[^\\d.]", "");
 								int money = Integer.parseInt(name);
-								DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+								DFPlayer dfPlayer = dfManager.getEntity(player);
 								dfPlayer.addMoney(money);
-								CustomEnchantments.getInstance().score.updateScoreboard(player);
+								score.updateScoreboard(player);
 								player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 							}
 						}

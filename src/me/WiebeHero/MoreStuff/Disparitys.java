@@ -22,13 +22,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 
 public class Disparitys implements Listener{
-	DFPlayer method = new DFPlayer();
+	private DFPlayerManager dfManager;
 	public static HashMap<String, BossBar> disparityList = new HashMap<String, BossBar>();
 	public static HashMap<String, Integer> listPlayers = new HashMap<String, Integer>();
 	public static ArrayList<String> names = new ArrayList<String>();
+	public Disparitys(DFPlayerManager dfManager) {
+		this.dfManager = dfManager;
+	}
 	@EventHandler
 	public void onWalk(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
@@ -110,11 +114,9 @@ public class Disparitys implements Listener{
 					Player damager = (Player) event.getDamager();
 					Player victim = (Player) event.getEntity();
 					if(damager.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
-						if(method.containsPlayer(victim) && method.containsPlayer(damager)) {
-							DFPlayer dfPlayerD = new DFPlayer().getPlayer(damager);
-							DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
-							int levelD = dfPlayerD.getLevel();
-							int levelV = dfPlayerV.getLevel();
+						if(dfManager.contains(victim) && dfManager.contains(damager)) {
+							DFPlayer dfPlayerD = dfManager.getEntity(damager), dfPlayerV = dfManager.getEntity(victim);
+							int levelD = dfPlayerD.getLevel(), levelV = dfPlayerV.getLevel();
 							int disparity = 0;
 							if(listPlayers.containsKey(victim.getName())) {
 								disparity = listPlayers.get(victim.getName());
@@ -145,11 +147,9 @@ public class Disparitys implements Listener{
 					if(damager.getShooter() instanceof Player) {
 						Player shooter = (Player) damager.getShooter();
 						if(shooter.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
-							if(method.containsPlayer(victim) && method.containsPlayer(shooter)) {
-								DFPlayer dfPlayerD = new DFPlayer().getPlayer(shooter);
-								DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
-								int levelD = dfPlayerD.getLevel();
-								int levelV = dfPlayerV.getLevel();
+							if(dfManager.contains(victim) && dfManager.contains(shooter)) {
+								DFPlayer dfPlayerD = dfManager.getEntity(shooter), dfPlayerV = dfManager.getEntity(victim);
+								int levelD = dfPlayerD.getLevel(), levelV = dfPlayerV.getLevel();
 								int disparity = 0;
 								if(listPlayers.containsKey(victim.getName())) {
 									disparity = listPlayers.get(victim.getName());
@@ -180,11 +180,9 @@ public class Disparitys implements Listener{
 						Player damager = (Player) event.getEntity().getShooter();
 						Player victim = (Player) livingEntities;
 						if(damager.getWorld().getName().equalsIgnoreCase("DFWarzone-1")) {
-							if(method.containsPlayer(victim) && method.containsPlayer(damager)) {
-								DFPlayer dfPlayerD = new DFPlayer().getPlayer(damager);
-								DFPlayer dfPlayerV = new DFPlayer().getPlayer(victim);
-								int levelD = dfPlayerD.getLevel();
-								int levelV = dfPlayerV.getLevel();
+							if(dfManager.contains(victim) && dfManager.contains(damager)) {
+								DFPlayer dfPlayerD = dfManager.getEntity(damager), dfPlayerV = dfManager.getEntity(victim);
+								int levelD = dfPlayerD.getLevel(), levelV = dfPlayerV.getLevel();
 								int disparity = 0;
 								if(listPlayers.containsKey(victim.getName())) {
 									disparity = listPlayers.get(victim.getName());

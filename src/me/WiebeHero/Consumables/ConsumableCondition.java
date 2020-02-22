@@ -5,6 +5,7 @@ public class ConsumableCondition {
 		RIGHT_CLICK,
 		LEFT_CLICK,
 		CONSUME,
+		LEVEL_UP,
 		NONE
 	}
 }

@@ -5,22 +5,31 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFaction;
+import me.WiebeHero.Factions.DFFactionPlayer;
+import me.WiebeHero.Factions.DFFactionPlayerManager;
 import me.WiebeHero.GeneralCommands.MSG;
 import me.WiebeHero.GeneralCommands.MSGManager;
-import me.WiebeHero.Skills.DFPlayer;
 
 public class Chat implements Listener{
-	private MSGManager msgManager = CustomEnchantments.getInstance().msgManager;
-	private DFFaction method = new DFFaction();
+	private MSGManager msgManager;
+	private DFPlayerManager dfManager;
+	private DFFactionPlayerManager facPlayerManager;
+	public Chat(DFPlayerManager dfManager, MSGManager msgManager, DFFactionPlayerManager facPlayerManager) {
+		this.dfManager = dfManager;
+		this.msgManager = msgManager;
+		this.facPlayerManager = facPlayerManager;
+	}
 	@EventHandler
 	public void chatFeature(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		DFPlayer dfPlayer = dfManager.getEntity(player);
 		if(player.getWorld().getName().equalsIgnoreCase("DFWarzone-1") || player.getWorld().getName().equalsIgnoreCase("factionworld-1")) {
 			int level = dfPlayer.getLevel();
-			DFFaction faction = method.getFaction(player.getUniqueId());
+			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
+			DFFaction faction = facPlayer.getFaction();
 			if(faction != null) {
 				event.setFormat("§6" + faction.getName() + " §a| §b§l"  + level + "§a | §7" + player.getName() + ": " + event.getMessage());
 			}

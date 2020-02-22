@@ -32,16 +32,22 @@ import org.bukkit.plugin.Plugin;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Skills.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import me.WiebeHero.Scoreboard.DFScoreboard;
 
 public class DFShop implements Listener{
 	public Set<String> check = new HashSet<String>();
 	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
-	File f =  new File("plugins/CustomEnchantments/shopConfig.yml");
-	YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
 	public String getLast(Set<String> set) {
         return set.stream().skip(set.stream().count() - 1).findFirst().get();
     }
+	private DFPlayerManager dfManager;
+	private DFScoreboard board;
+	public DFShop(DFPlayerManager dfManager, DFScoreboard board) {
+		this.dfManager = dfManager;
+		this.board = board;
+	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//Main Page Shop
 	//--------------------------------------------------------------------------------------------------------------------
@@ -86,6 +92,8 @@ public class DFShop implements Listener{
 		i.setItem(53, emptyVoid());
 	}
 	public void EveryOtherShop(Player player, String name, int pageNumber) {
+		File f =  new File("plugins/CustomEnchantments/shopConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
 		try{
 			yml.load(f);
 	    }
@@ -259,7 +267,7 @@ public class DFShop implements Listener{
 		File f1 =  new File("plugins/CustomEnchantments/shopConfig.yml");
 		YamlConfiguration yml1 = YamlConfiguration.loadConfiguration(f1);
 		Player player = (Player) event.getWhoClicked();
-		DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+		DFPlayer dfPlayer = dfManager.getEntity(player);
 		ItemStack item = event.getCurrentItem();
 		Inventory open = event.getClickedInventory();
 		InventoryView view = player.getOpenInventory();
@@ -315,7 +323,7 @@ public class DFShop implements Listener{
 				  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a for " + cost + "$!"));
 				  					player.getInventory().addItem(new ItemStack(item.getType(), amount));
 				  					dfPlayer.removeMoney(cost);
-				  					CustomEnchantments.getInstance().score.updateScoreboard(player);
+				  					board.updateScoreboard(player);
 			  					}
 			  					else {
 			  						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have bought " + amount + " " + item.getItemMeta().getDisplayName() + "&a foraa " + cost + "$!"));
@@ -325,7 +333,7 @@ public class DFShop implements Listener{
 			  						item1.setItemMeta(itemmeta);
 			  						player.getInventory().addItem(item1);
 			  						dfPlayer.removeMoney(cost);
-				  					CustomEnchantments.getInstance().score.updateScoreboard(player);
+			  						board.updateScoreboard(player);
 			  					}
 			  				}
 			  				else {
@@ -358,7 +366,7 @@ public class DFShop implements Listener{
 			  					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have sold " + amount + " " + item.getItemMeta().getDisplayName() + "&a" + " for " + sell + "$!"));
 			  					player.getInventory().removeItem(new ItemStack(item.getType(), amount));
 			  					dfPlayer.addMoney(sell);
-			  					CustomEnchantments.getInstance().score.updateScoreboard(player);
+			  					board.updateScoreboard(player);
 		  					}
 		  					else {
 		  						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough items!"));
@@ -393,12 +401,6 @@ public class DFShop implements Listener{
 				}
 			}
 		}
-		try{
-			yml.save(f);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//Activate Shop
@@ -443,7 +445,7 @@ public class DFShop implements Listener{
 	public void onDeath(PlayerDeathEvent event) {
 		if(!event.isCancelled()) {
 			Player player = event.getEntity();
-			DFPlayer dfPlayer = new DFPlayer().getPlayer(player);
+			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getMoney() >= 10000) {
 				dfPlayer.removeMoney(dfPlayer.getMoney() / 100 * 5);
 				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou lost 10% of your current balance due to punishment of death."));
