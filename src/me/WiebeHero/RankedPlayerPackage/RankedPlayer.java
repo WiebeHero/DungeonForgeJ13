@@ -101,4 +101,14 @@ public class RankedPlayer {
 	public int getHomeCount() {
 		return this.homeCount;
 	}
+	public void loadKits() {
+		if(!this.getKitCooldownList().containsKey(Kit.USER)) {
+			for(Kit kit : Kit.values()) {
+				this.addKitCooldown(kit, 0L);
+				if(kit.rank >= 100) {
+					this.setKitUnlock(kit, false);
+				}
+			}
+		}
+	}
 }

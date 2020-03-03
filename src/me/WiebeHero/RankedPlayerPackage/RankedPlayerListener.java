@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import me.WiebeHero.CustomMethods.MethodLuck;
+import me.WiebeHero.RankedPlayerPackage.RankEnum.Kit;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Rank;
 import net.luckperms.api.model.user.User;
 
@@ -263,15 +264,18 @@ public class RankedPlayerListener implements Listener{
 		}
 		if(mod == false && pay == false) {
 			RankedPlayer r = new RankedPlayer(Rank.USER, "&7User", 1, 1);
+			r.loadKits();
 			rManager.add(player.getUniqueId(), r);
 		}
 		else if(mod == false && pay == true) {
 			RankedPlayer r = rManager.getRankedPlayer(player.getUniqueId());
 			r.addRank(Rank.USER);
+			r.loadKits();
 		}
 		else if(mod == true && pay == false) {
 			RankedPlayer r = rManager.getRankedPlayer(player.getUniqueId());
 			r.addRank(Rank.USER);
+			r.loadKits();
 		}
 	}
 }

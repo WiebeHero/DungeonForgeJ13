@@ -58,13 +58,13 @@ public class RankEnum {
 		return Enums.getIfPresent(Kit.class, name).orNull();
 	}
 	public enum Kit{
-		USER("&7User", 86400000L){
+		USER("&7User", 0, 86400000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		BRONZE("&6Bronze", 259200000L){
+		BRONZE("&6Bronze", 1, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -88,7 +88,7 @@ public class RankEnum {
 				}
 			}
 		},
-		SILVER("&7Silver", 259200000L){
+		SILVER("&7Silver", 2, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -113,7 +113,7 @@ public class RankEnum {
 				}
 			}
 		},
-		GOLD("&eGold", 259200000L){
+		GOLD("&eGold", 3, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -139,7 +139,7 @@ public class RankEnum {
 				}
 			}
 		},
-		PLATINUM("&3Platinum", 259200000L){
+		PLATINUM("&3Platinum", 4, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -166,7 +166,7 @@ public class RankEnum {
 				}
 			}
 		},
-		DIAMOND("&bDiamond", 259200000L){
+		DIAMOND("&bDiamond", 5, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -195,7 +195,7 @@ public class RankEnum {
 				}
 			}
 		},
-		EMERALD("&aEmerald", 259200000L){
+		EMERALD("&aEmerald", 6, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -224,7 +224,7 @@ public class RankEnum {
 				}
 			}
 		},
-		YOUTUBER("&cY&fo&cu&ft&cu&fb&ce&fr", 259200000L){
+		YOUTUBER("&cY&fo&cu&ft&cu&fb&ce&fr", 7, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -253,7 +253,7 @@ public class RankEnum {
 				}
 			}
 		},
-		QA("&bQA", 259200000L){
+		QA("&bQA", 8, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -270,7 +270,7 @@ public class RankEnum {
 				}
 			}
 		},
-		QA_ADMIN("&cQA Admin", 259200000L){
+		QA_ADMIN("&cQA Admin", 9, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -288,7 +288,7 @@ public class RankEnum {
 				}
 			}
 		},
-		HELPER("&aHelper", 259200000L){
+		HELPER("&aHelper", 10, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -305,7 +305,7 @@ public class RankEnum {
 				}
 			}
 		},
-		HELPER_PLUS("&aHelper+", 259200000L){
+		HELPER_PLUS("&aHelper+", 11, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -324,7 +324,7 @@ public class RankEnum {
 				}
 			}
 		},
-		MOD("&9Mod", 259200000L){
+		MOD("&9Mod", 12, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -343,7 +343,7 @@ public class RankEnum {
 				}
 			}
 		},
-		HEAD_MOD("&1Head Mod", 259200000L){
+		HEAD_MOD("&1Head Mod", 13, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -363,61 +363,61 @@ public class RankEnum {
 				}
 			}
 		},
-		ADMIN("&4Admin", 259200000L){
+		ADMIN("&4Admin", 14, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		HEAD_ADMIN("&4Head Admin", 259200000L){
+		HEAD_ADMIN("&4Head Admin", 15, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		MANAGER("&5Manager", 259200000L){
+		MANAGER("&5Manager", 16, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		OWNER("&2Owner", 259200000L){
+		OWNER("&2Owner", 17, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		RAID("&6Raid", 259200000L){
+		RAID("&6Raid", 100, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		POTION("&6Potion", 259200000L){
+		POTION("&6Potion", 101, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		CRYSTAL("&6Crystal", 259200000L){
+		CRYSTAL("&6Crystal", 102, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		BUILD("&6Build", 259200000L){
+		BUILD("&6Build", 103, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		FLIGHT("&6Flight", 259200000L){
+		FLIGHT("&6Flight", 104, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
 				
 			}
 		},
-		SUPPLIER("&6Supplier", 259200000L)
+		SUPPLIER("&6Supplier", 105, 259200000L)
 		{
 			@Override
 			public void recieveKit(Player p) {
@@ -426,10 +426,12 @@ public class RankEnum {
 		};
 		public final String display;
 		public final Long cooldown;
+		public final int rank;
 		
-		private Kit(String display, Long cooldown) {
+		private Kit(String display, int rank, Long cooldown) {
 			this.display = new CCT().colorize(display);
 			this.cooldown = cooldown;
+			this.rank = rank;
 		}
 		public void recieveKit(Player p) {};
 	}

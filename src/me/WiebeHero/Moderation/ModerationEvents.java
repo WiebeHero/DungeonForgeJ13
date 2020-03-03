@@ -762,11 +762,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										if(args[2].equalsIgnoreCase("reset")) {
 											if(dfManager.contains(p.getUniqueId())) {
 												Player p1 = (Player) p;
-												dfManager.resetEntity(p.getUniqueId());
-												player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
-												player.closeInventory();
-												menu.ClassSelect(player);
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have reset &6" + p.getName() + "!"));
+												dfManager.resetEntity(p1.getUniqueId());
+												p1.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
+												p1.closeInventory();
+												menu.ClassSelect(p1);
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have reset &6" + p1.getName() + "!"));
 												p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas reset your player profile!"));
 											}
 											else {
