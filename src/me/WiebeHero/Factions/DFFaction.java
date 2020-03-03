@@ -63,21 +63,21 @@ public class DFFaction {
 		this.memberManager = memberManager;
 	}
 	public void addMember(Player player) {
-		if(!memberManager.contains(player.getUniqueId())){
+		if(memberManager.contains(player.getUniqueId())){
 			DFFactionPlayer df = memberManager.getFactionPlayer(player.getUniqueId());
 			df.setFactionId(this.getFactionId());
 			df.setRank(1);
 		}
 	}
 	public void addMember(UUID uuid) {
-		if(!memberManager.contains(uuid)){
+		if(memberManager.contains(uuid)){
 			DFFactionPlayer df = memberManager.getFactionPlayer(uuid);
 			df.setFactionId(this.getFactionId());
 			df.setRank(1);
 		}
 	}
 	public void addMember(UUID uuid, DFFactionPlayer facP) {
-		if(!memberManager.contains(uuid)){
+		if(memberManager.contains(uuid)){
 			DFFactionPlayer df = facP;
 			df.setFactionId(this.getFactionId());
 		}
@@ -131,8 +131,10 @@ public class DFFaction {
 	public boolean isMember(UUID uuid) {
 		if(this.memberManager.contains(uuid)) {
 			DFFactionPlayer df = this.memberManager.getFactionPlayer(uuid);
-			if(df.getFactionId().equals(this.getFactionId())) {
-				return true;
+			if(df.getFactionId() != null) {
+				if(df.getFactionId().equals(this.getFactionId())) {
+					return true;
+				}
 			}
 		}
 		return false;

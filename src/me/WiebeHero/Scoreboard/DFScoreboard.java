@@ -108,7 +108,8 @@ public class DFScoreboard implements Listener{
 				territory = "&a&lSpawn";
 			}
 			for(Player p : Bukkit.getOnlinePlayers()) {
-				DFPlayer dfPlayer = dfManager.getEntity(player);
+				DFPlayer dfPlayer = dfManager.getEntity(p);
+				RankedPlayer rp = rManager.getRankedPlayer(p.getUniqueId());
 				Team t = null;
 				if(scoreboard.getTeam(p.getName()) == null) {
 					t = scoreboard.registerNewTeam(p.getName());
@@ -120,7 +121,7 @@ public class DFScoreboard implements Listener{
 				String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
 				String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
 				t.setSuffix(new CCT().colorize(" &6" + now));
-				p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rPlayer.getHighestRank().display));
+				p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rp.getHighestRank().display));
 				t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 				t.addEntry(p.getName());
 			}
