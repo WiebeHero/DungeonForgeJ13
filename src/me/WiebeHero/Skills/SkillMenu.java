@@ -6,11 +6,13 @@ import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
@@ -855,6 +857,44 @@ public class SkillMenu {
 		i.setItem(33, empty());
 		i.setItem(34, empty());
 		i.setItem(35, empty());
+		player.openInventory(i);
+	}
+	public void ResetSure(Player player) {
+		Inventory i = Bukkit.getServer().createInventory(null, InventoryType.HOPPER, new CCT().colorize("&7Reset Profile: &6" + player.getName()));
+		i.setItem(0, builder.constructItem(
+				Material.LIME_STAINED_GLASS_PANE,
+				"&aConfirm resetting your profile",
+				new ArrayList<String>(Arrays.asList(
+						"&7By pressing this button, you agree",
+						"&7to reset your player profile.",
+						"&4&lWARNING, this will:",
+						"  &cSet your level to 1",
+						"  &cReset your class",
+						"  &cSet all of your skills to 0"
+				)),
+				"Confirm"
+		));
+		i.setItem(1, builder.constructItem(
+				Material.GRAY_STAINED_GLASS_PANE,
+				" "
+		));
+		i.setItem(2, builder.constructItem(
+				Material.GRAY_STAINED_GLASS_PANE,
+				" "
+		));
+		i.setItem(3, builder.constructItem(
+				Material.GRAY_STAINED_GLASS_PANE,
+				" "
+		));
+		i.setItem(4, builder.constructItem(
+				Material.RED_STAINED_GLASS_PANE,
+				"&aCancel resetting your profile",
+				new ArrayList<String>(Arrays.asList(
+						"&7By pressing this button, you cancel",
+						"&7resetting your profile."
+				)),
+				"Cancel"
+		));
 		player.openInventory(i);
 	}
 	public ItemStack empty() {

@@ -76,6 +76,7 @@ public class PunishManager {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		yml.set("Mod.Punishments", null);
 		for(Entry<UUID, Punish> entry : this.punishList.entrySet()) {
 			if(entry != null && entry.getKey() != null && entry.getValue() != null && this.contains(entry.getKey())) {
 				UUID uuid = entry.getKey();

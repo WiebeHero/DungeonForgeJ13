@@ -86,10 +86,10 @@ public class DFFactionManager {
 	}
 	
 	public boolean isAMember(DFFactionPlayer p) {
-		return p.getFaction() != null;
+		return p.getFactionId() != null;
 	}
 	public boolean isAMember(UUID uuid) {
-		return this.facPlayerManager.getFactionPlayer(uuid).getFaction() != null;
+		return this.facPlayerManager.getFactionPlayer(uuid).getFactionId() != null;
 	}
 	
 	public boolean isNameAvailable(String name) {
@@ -110,7 +110,7 @@ public class DFFactionManager {
 			public void run() {
 				for(DFFaction fac : factionList.values()) {
 					int count = 0;
-					for(UUID uuid : fac.getMemberList().keySet()) {
+					for(UUID uuid : facPlayerManager.getFactionPlayerMap().keySet()) {
 						Player player = Bukkit.getPlayer(uuid);
 						if(player != null) {
 							count++;
@@ -156,7 +156,12 @@ public class DFFactionManager {
 					Chunk chunk = Bukkit.getWorld("FactionWorld-1").getChunkAt(Long.parseLong(chunks.get(i1)));
 					fac.addChunk(chunk);
 				}
-				ArrayList<String> fAllyList = new ArrayList<String>(yml.getStringList("Factions.List." + list.get(i) + ".Allies"));
+				ArrayList<String> tempfAllyList = new ArrayList<String>(yml.getStringList("Factions.List." + list.get(i) + ".Allies"));
+				ArrayList<UUID> fAllyList = new ArrayList<UUID>();
+				for(int i1 = 0; i1 < tempfAllyList.size(); i1++) {
+					UUID uuid = UUID.fromString(tempfAllyList.get(i1));
+					fAllyList.add(uuid);
+				}
 				fac.allyList = fAllyList;
 				int fPoints = yml.getInt("Factions.List." + list.get(i) + ".Faction Points");
 				fac.setFactionPoints(fPoints);
@@ -189,9 +194,11 @@ public class DFFactionManager {
 		yml.set("Factions.List", null);
 		for(DFFaction fac : this.factionList.values()) {
 			yml.createSection("Factions.List." + fac.getFactionId());
-			for(Entry<UUID, DFFactionPlayer> entry : fac.getMemberList().entrySet()) {
-				yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Rank", entry.getValue().getRank());
-				yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Name", Bukkit.getOfflinePlayer(entry.getKey()).getName());
+			for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
+				if(entry.getValue().getFactionId().equals(fac.getFactionId())) {
+					yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Rank", entry.getValue().getRank());
+					yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Name", Bukkit.getOfflinePlayer(entry.getKey()).getName());
+				}
 			}
 			ArrayList<Long> list = new ArrayList<Long>();
 			for(Chunk c : fac.getChunkList()) {

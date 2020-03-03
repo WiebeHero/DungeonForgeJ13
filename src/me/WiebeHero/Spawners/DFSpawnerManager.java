@@ -94,6 +94,7 @@ public class DFSpawnerManager {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		yml.set("Spawners.UUID", null);
 		if(!this.spawnerList.isEmpty()) {
 			for(DFSpawner spawner : this.spawnerList.values()) {
 				if(spawner != null) {

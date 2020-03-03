@@ -229,7 +229,9 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 			outerList.put(id, locList);
 		}
 	}
-	public void saveHomes(YamlConfiguration yml, File f) {
+	public void saveHomes() {
+		File f =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
 		try{
 			yml.load(f);
         }

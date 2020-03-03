@@ -96,13 +96,6 @@ public class DFFaction {
 			df.setRank(1);
 		}
 	}
-	
-	public int getRank(UUID uuid) {
-		if(this.memberManager.contains(uuid)) {
-			return this.memberManager.getFactionPlayer(uuid).getRank();
-		}
-		return 1;
-	}
 	public void promoteMember(UUID uuid) {
 		DFFactionPlayer df = this.memberManager.getFactionPlayer(uuid);
 		df.setRank(df.getRank() + 1);

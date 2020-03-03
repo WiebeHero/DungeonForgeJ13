@@ -87,9 +87,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 					i.setItem(24, emptyVoid(player));
 					i.setItem(25, emptyVoid(player));
 					i.setItem(26, emptyVoid(player));
-					for(Player victim1 : Bukkit.getOnlinePlayers()) {
-						((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.4);
-					}
+					player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 0.4F);
 					if(!(counter <= 1)) {
 						count++;
 					}
@@ -128,9 +126,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									i.setItem(24, emptyVoid(player));
 									i.setItem(25, emptyVoid(player));
 									i.setItem(26, emptyVoid(player));
-									for(Player victim1 : Bukkit.getOnlinePlayers()) {
-										((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.6);
-									}
+									player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 0.6F);
 									if(!(counter <= 1)) {
 										count++;
 									}
@@ -169,9 +165,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 													i.setItem(24, emptyVoid(player));
 													i.setItem(25, emptyVoid(player));
 													i.setItem(26, emptyVoid(player));
-													for(Player victim1 : Bukkit.getOnlinePlayers()) {
-														((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 0.8);
-													}
+													player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 0.8F);
 													if(!(counter <= 1)) {
 														count++;
 													}
@@ -208,9 +202,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 																i.setItem(24, emptyVoid(player));
 																i.setItem(25, emptyVoid(player));
 																i.setItem(26, emptyVoid(player));
-																for(Player victim1 : Bukkit.getOnlinePlayers()) {
-																	((Player) victim1).playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1);
-																}
+																player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 1.0F);
 																cancel();
 																if(player.getInventory().firstEmpty() != -1) {
 																	player.getInventory().setItem(player.getInventory().firstEmpty(), finalReward);

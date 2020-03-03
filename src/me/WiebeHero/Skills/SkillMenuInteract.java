@@ -1,5 +1,6 @@
 package me.WiebeHero.Skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,15 +14,20 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.DFPlayerPackage.EffectSkills;
+import me.WiebeHero.Scoreboard.DFScoreboard;
 
 public class SkillMenuInteract implements Listener{
-	DFPlayerManager dfManager;
-	SkillMenu menu;
-	EffectSkills sk;
-	public SkillMenuInteract(DFPlayerManager manager, SkillMenu menu, EffectSkills sk) {
+	private DFPlayerManager dfManager;
+	private SkillMenu menu;
+	private EffectSkills sk;
+	private ClassMenu cMenu;
+	private DFScoreboard score;
+	public SkillMenuInteract(DFPlayerManager manager, SkillMenu menu, EffectSkills sk, ClassMenu cMenu, DFScoreboard board) {
 		this.menu = menu;
 		this.sk = sk;
 		this.dfManager = manager;
+		this.cMenu = cMenu;
+		this.score = board;
 	}
 	@EventHandler
 	public void skillMenuClick(InventoryClickEvent event) {
@@ -29,7 +35,36 @@ public class SkillMenuInteract implements Listener{
 		Player player = (Player) event.getWhoClicked();
 		DFPlayer dfPlayer = dfManager.getEntity(player);
 		InventoryView current = player.getOpenInventory();
-		if(current.getTitle().contains("Skills of:")) {
+		if(current.getTitle().contains("Reset Profile:")) {
+			event.setCancelled(true);
+			if(item == null || !item.hasItemMeta()) {
+				return;
+			}
+			else {
+				NBTItem i = new NBTItem(item);
+				if(i.hasKey("Confirm")) {
+					if(dfPlayer.getLevel() >= 10 && dfPlayer.getMoney() >= 10000) {
+						dfManager.resetEntity(player);
+						player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
+						player.closeInventory();
+						cMenu.ClassSelect(player);
+						score.updateScoreboard(player);
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have reset your player profile!"));
+					}
+					else if(dfPlayer.getLevel() < 10){
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal level requirement to reset your profile!"));
+					}
+					else if(dfPlayer.getMoney() < 10000){
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't meet the minimal money requirement to reset your profile!"));
+					}
+				}
+				else if(i.hasKey("Cancel")) {
+					player.closeInventory();
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have decided to not reset your player profile."));
+				}
+			}
+		}
+		else if(current.getTitle().contains("Skills of:")) {
 			event.setCancelled(true);
 			if(item == null || !item.hasItemMeta()) {
 				return;
@@ -37,7 +72,10 @@ public class SkillMenuInteract implements Listener{
 			else {
 				NBTItem i = new NBTItem(item);
 				String skillName = item.getItemMeta().getDisplayName();
-				if(skillName.contains("Attack Damage")) {
+				if(i.hasKey("Reset")) {
+					menu.ResetSure(player);
+				}
+				else if(skillName.contains("Attack Damage")) {
 					if(dfPlayer.getSkillPoints() > 0) {
 						if(dfPlayer.getAtk() < 100) {
 							dfPlayer.addAtk(1);
@@ -303,9 +341,6 @@ public class SkillMenuInteract implements Listener{
 					else {
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis Ability Modifier is already maxed!"));
 					}
-				}
-				else if(i.hasKey("Reset")) {
-					
 				}
 			}
 		}

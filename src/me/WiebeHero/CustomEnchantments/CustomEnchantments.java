@@ -111,6 +111,10 @@ import me.WiebeHero.MoreStuff.TNTExplodeCovered;
 import me.WiebeHero.MoreStuff.TPACommand;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import me.WiebeHero.Novis.NovisInventory;
+import me.WiebeHero.RankedPlayerPackage.KitCommand;
+import me.WiebeHero.RankedPlayerPackage.KitListener;
+import me.WiebeHero.RankedPlayerPackage.KitMenu;
+import me.WiebeHero.RankedPlayerPackage.RankEnum;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
 import me.WiebeHero.RankedPlayerPackage.RankedPlayerListener;
 import me.WiebeHero.Scoreboard.DFScoreboard;
@@ -174,7 +178,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ItemStackBuilder builder = new ItemStackBuilder();
 	private SkillMenu skill = new SkillMenu(dfManager, builder, classMenu);
 	private SkillCommand skillCommand = new SkillCommand(skill);
-	private DFScoreboard score = new DFScoreboard(dfManager, facManager, facPlayerManager, luck, wg);
+	private DFScoreboard score = new DFScoreboard(dfManager, facManager, facPlayerManager, luck, rankedManager, wg);
 	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager);
 	private AHManager ahManager = new AHManager(availableSlots);
 	private AHInventory ahInv = new AHInventory(ahManager, builder);
@@ -185,6 +189,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ModerationGUI gui = new ModerationGUI(dfManager);
 	private MethodMulti multi = new MethodMulti();
 	private NovisEnchantmentGetting nEnchant = new NovisEnchantmentGetting();
+	private RankEnum rEnum = new RankEnum(builder, con);
+	private KitMenu menu = new KitMenu(builder, rankedManager, rEnum);
+	private KitCommand kitCommand = new KitCommand(rankedManager, rEnum, menu);
 	
 	// General Variables
 	public static boolean hardSave = false;
@@ -210,6 +217,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		rankedManager.loadKitCooldowns();
 		facPlayerManager.loadPlayers();
 		facManager.loadFactions();
 		facManager.activeEnergyTimer();
@@ -217,7 +225,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		maintenance = yml.getBoolean("General.Values.Maintenance");
 		ahManager.start();
 		//Config Manager
-		ModerationEvents mod = new ModerationEvents(facManager, dfManager, rankedManager, punishManager, staffManager, spawnerManager, lootChestManager, gui, multi, luck, method, score);
+		ModerationEvents mod = new ModerationEvents(facManager, dfManager, rankedManager, punishManager, staffManager, spawnerManager, lootChestManager, gui, multi, luck, method, score, classMenu);
 		//Custom Weapons
 		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(dfManager, nEnchant, sk), this);
 		//Custom Armor
@@ -225,18 +233,19 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new DFShieldUpgrade(dfManager, nEnchant, sk), this);
 		//Custom Shields
 		//Skills
-		getServer().getPluginManager().registerEvents(new SkillMenuInteract(dfManager, skill, sk), this);
+		getServer().getPluginManager().registerEvents(new SkillMenuInteract(dfManager, skill, sk, classMenu, score), this);
 		getServer().getPluginManager().registerEvents(new SkillJoin(dfManager, classMenu, sk), this);
 		getServer().getPluginManager().registerEvents(new ClassMenuSelection(dfManager, classMenu), this);
 		getServer().getPluginManager().registerEvents(new XPEarningMobs(dfManager, score), this);
 		getServer().getPluginManager().registerEvents(new EffectSkills(dfManager, sword), this);
-		getServer().getPluginManager().registerEvents(new ClassWrath(dfManager, facPlayerManager), this);
+		getServer().getPluginManager().registerEvents(new ClassWrath(dfManager, facManager, facPlayerManager), this);
 		getServer().getPluginManager().registerEvents(new ClassLust(dfManager), this);
 		getServer().getPluginManager().registerEvents(new ClassGluttony(dfManager), this);
 		getServer().getPluginManager().registerEvents(new ClassGreed(dfManager), this);
 		getServer().getPluginManager().registerEvents(new ClassSloth(dfManager), this);
 		getServer().getPluginManager().registerEvents(new ClassEnvy(dfManager), this);
 		getServer().getPluginManager().registerEvents(new ClassPride(dfManager), this);
+		getServer().getPluginManager().registerEvents(new KitListener(menu, rankedManager), this);
 		//Spawners
 		getServer().getPluginManager().registerEvents(new DeathOfMob(), this);
 		getServer().getPluginManager().registerEvents(new CustomDurability(), this);
@@ -309,7 +318,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(tpa, this);
 		getServer().getPluginManager().registerEvents(new CombatTag(), this);
 		getServer().getPluginManager().registerEvents(new LevelRequired(dfManager), this);
-		getServer().getPluginManager().registerEvents(new Chat(dfManager, msgManager, facPlayerManager), this);
+		getServer().getPluginManager().registerEvents(new Chat(dfManager, msgManager, facManager, facPlayerManager), this);
 		getServer().getPluginManager().registerEvents(new Portals(), this);
 		getServer().getPluginManager().registerEvents(new SwordSwingProgress(), this);
 		getServer().getPluginManager().registerEvents(new PreventIllegalItems(), this);
@@ -319,7 +328,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new EnderPearlCooldown(), this);
 		getServer().getPluginManager().registerEvents(new MOTDSetting(), this);
 		getServer().getPluginManager().registerEvents(new DisableThings(), this);
-		getServer().getPluginManager().registerEvents(new ChatItem(dfManager, facPlayerManager), this);
+		getServer().getPluginManager().registerEvents(new ChatItem(dfManager, facManager, facPlayerManager), this);
 		getServer().getPluginManager().registerEvents(new RestrictItemInteraction(), this);
 		getServer().getPluginManager().registerEvents(new CancelJoinLeaveAdvancementMessages(), this);
 		//Shop
@@ -357,6 +366,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(mod.checkstaff).setExecutor(mod);
 		//Dungeon Parties
 		getCommand(party.comParty).setExecutor(party);
+		//
+		getCommand(kitCommand.kit).setExecutor(kitCommand);
+		getCommand(kitCommand.kits).setExecutor(kitCommand);
 		getServer().getPluginManager().registerEvents(mod, this);
 		getServer().getPluginManager().registerEvents(new ModerationGUI(dfManager), this);
 		//Glowing Drops
@@ -482,24 +494,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				e.remove();
 			}
 		}
-		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
-		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
-		try{
-			yml5.load(f6);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        } 
-		catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		sethome.saveHomes(yml5, f6);
-		dfManager.hardSavePlayers();
+		rankedManager.saveKitCooldowns();
+		sethome.saveHomes();
+		dfManager.savePlayers();
 		facManager.saveFactions();
 		punishManager.savePunishList();
 		lootChestManager.saveLootChests();
 		spawnerManager.saveSpawners();
-		ahManager.saveAuctionHouse();
 		ahManager.saveAuctionHouse();
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
@@ -515,6 +516,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		cfgm.setUpConfiguration("dungeonConfig.yml", "Dungeons.Instances");
 		cfgm.setUpConfiguration("GeneralConfig.yml", "General.Values");
 		cfgm.setUpConfiguration("AuctionConfig.yml", "AuctionHouse.Items");
+		cfgm.setUpConfiguration("KitCooldowns.yml", "Kits.Cooldowns");
 	}
 	public void loadConfig() {
 		getConfig().options().copyDefaults(true);

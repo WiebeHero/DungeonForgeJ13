@@ -27,9 +27,10 @@ public class ClassWrath implements Listener{
 	private DFPlayerManager dfManager;
 	private DFFactionPlayerManager facPlayerManager;
 	private DFFactionManager facManager;
-	public ClassWrath(DFPlayerManager manager, DFFactionPlayerManager facPlayerManager) {
+	public ClassWrath(DFPlayerManager manager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager) {
 		this.dfManager = manager;
 		this.facPlayerManager = facPlayerManager;
+		this.facManager = facManager;
 	}
 	@EventHandler
 	public void activateAbility(PlayerSwapHandItemsEvent event) {
@@ -39,7 +40,7 @@ public class ClassWrath implements Listener{
 			if(dfPlayer.getPlayerClass() == Classes.WRATH) {
 				if(dfPlayer.getUseable()) {
 					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-					DFFaction fac = facPlayer.getFaction();
+					DFFaction fac = facManager.getFaction(facPlayer.getFactionId());
 					int level = dfPlayer.getLevel();
 					double damage1 = 5 + level * 0.15;
 					double range = 4 + level * 0.06;

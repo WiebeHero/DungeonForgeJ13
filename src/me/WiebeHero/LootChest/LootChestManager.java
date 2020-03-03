@@ -58,24 +58,7 @@ public class LootChestManager {
 	public void saveLootChests() {
 		File f =  new File("plugins/CustomEnchantments/lootConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-		if(!this.getLootList().isEmpty()) {
-			for(LootChest loot : this.getLootList().values()) {
-				yml.set("Loot.Chests." + loot.getUUID() + ".Location", loot.getLocation());
-				yml.set("Loot.Chests." + loot.getUUID() + ".Tier", loot.getTier());
-				yml.set("Loot.Chests." + loot.getUUID() + ".Radius", loot.getRadius());
-			}
-		}
-		try{
-			yml.save(f);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-	}
-	public void hardSaveLootChests() {
-		File f =  new File("plugins/CustomEnchantments/lootConfig.yml");
-		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
-		yml.createSection("Loot.Chests");
+		yml.set("Loot.Chests", null);
 		if(!this.getLootList().isEmpty()) {
 			for(LootChest loot : this.getLootList().values()) {
 				yml.set("Loot.Chests." + loot.getUUID() + ".Location", loot.getLocation());

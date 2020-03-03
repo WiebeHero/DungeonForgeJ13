@@ -1,64 +1,93 @@
 package me.WiebeHero.RankedPlayerPackage;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
-import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.RankedPlayerPackage.RankEnum.ModRank;
-import me.WiebeHero.RankedPlayerPackage.RankEnum.PayRank;
+import me.WiebeHero.RankedPlayerPackage.RankEnum.Kit;
+import me.WiebeHero.RankedPlayerPackage.RankEnum.Rank;
 
 public class RankedPlayer {
-	public PayRank payRank;
-	public ModRank modRank;
-	public String rankStyle;
+	public ArrayList<Rank> ranks;
 	public int ahCount;
 	public int homeCount;
-	public HashMap<PayRank, Long> kitCooldown;
-	public HashMap<ModRank, Long> kitCooldownStaff;
-	public RankedPlayer(ModRank rank, String rankStyle, int ahCount, int homeCount) {
-		this.modRank = rank;
-		this.rankStyle = new CCT().colorize(rankStyle);
+	public HashMap<Kit, Long> kitCooldown;
+	public HashMap<Kit, Boolean> kitUnlock;
+	public RankedPlayer(Rank rank, String rankStyle, int ahCount, int homeCount) {
+		this.ranks = new ArrayList<Rank>();
+		this.ranks.add(rank);
 		this.ahCount = ahCount;
 		this.homeCount = homeCount;
-		this.kitCooldown = new HashMap<PayRank, Long>();
-		this.kitCooldownStaff = new HashMap<ModRank, Long>();
-		this.setUpKitCooldowns();
+		this.kitCooldown = new HashMap<Kit, Long>();
+		this.kitUnlock = new HashMap<Kit, Boolean>();
 	}
-	public RankedPlayer(PayRank rank, String rankStyle, int ahCount, int homeCount) {
-		this.payRank = rank;
-		this.rankStyle = new CCT().colorize(rankStyle);
+	public RankedPlayer(ArrayList<Rank> rank, String rankStyle, int ahCount, int homeCount) {
+		this.ranks = rank;
 		this.ahCount = ahCount;
 		this.homeCount = homeCount;
-		this.kitCooldown = new HashMap<PayRank, Long>();
-		this.kitCooldownStaff = new HashMap<ModRank, Long>();
-		this.setUpKitCooldowns();
+		this.kitCooldown = new HashMap<Kit, Long>();
+		this.kitUnlock = new HashMap<Kit, Boolean>();
 	}
-	public RankedPlayer(ModRank rank1, PayRank rank2, String rankStyle, int ahCount, int homeCount) {
-		this.modRank = rank1;
-		this.payRank = rank2;
-		this.rankStyle = new CCT().colorize(rankStyle);
-		this.ahCount = ahCount;
-		this.homeCount = homeCount;
-		this.kitCooldown = new HashMap<PayRank, Long>();
-		this.kitCooldownStaff = new HashMap<ModRank, Long>();
-		this.setUpKitCooldowns();
+	public RankedPlayer() {
+		this.ranks = new ArrayList<Rank>();
+		this.kitCooldown = new HashMap<Kit, Long>();
+		this.kitUnlock = new HashMap<Kit, Boolean>();
 	}
-	public void setModRank(ModRank rank) {
-		this.modRank = rank;
+	public Long getKitCooldown(Kit kit) {
+		return this.kitCooldown.get(kit);
 	}
-	public ModRank getModRank() {
-		return this.modRank;
+	public void addKitCooldown(Kit kit, Long cooldown) {
+		this.kitCooldown.put(kit, cooldown);
 	}
-	public void setPayRank(PayRank rank) {
-		this.payRank = rank;
+	public void removeKitCooldown(Kit kit, Long cooldown) {
+		this.kitCooldown.remove(kit);
 	}
-	public PayRank getPayRank() {
-		return this.payRank;
+	public HashMap<Kit, Long> getKitCooldownList(){
+		return this.kitCooldown;
 	}
-	public void setRankStyle(String s) {
-		this.rankStyle = new CCT().colorize(s);
+	public boolean hasRank(Rank rank) {
+		return this.ranks.contains(rank);
 	}
-	public String getRankStyle() {
-		return this.rankStyle;
+	public ArrayList<Rank> getRanks(){
+		return this.ranks;
+	}
+	public HashMap<Kit, Boolean> getKitUnlockList(){
+		return this.kitUnlock;
+	}
+	public Rank getRank(int rank) {
+		Rank ranks1[] = Rank.values();
+		for(int i = 0; i < ranks1.length; i++) {
+			if(rank == ranks1[i].rank) {
+				return ranks1[i];
+			}
+		}
+		return Rank.USER;
+	}
+	public Rank getHighestRank() {
+		ArrayList<Integer> ints = new ArrayList<Integer>();
+		for(int i = 0; i < this.ranks.size(); i++) {
+			ints.add(this.ranks.get(i).rank);
+		}
+		Collections.sort(ints);
+		return this.getRank(ints.get(ints.size() - 1));
+	}
+	public boolean isStaff() {
+		return (this.getHighestRank().rank >= 7);
+	}
+	public void setKitUnlock(Kit rank, boolean bool) {
+		this.kitUnlock.put(rank, bool);
+	}
+	public boolean containsKitUnlock(Kit rank) {
+		return this.kitUnlock.containsKey(rank);
+	}
+	public boolean getKitUnlock(Kit rank) {
+		return this.kitUnlock.get(rank);
+	}
+	public void removeKitUnlock(Kit rank) {
+		this.kitUnlock.remove(rank);
+	}
+	public void addRank(Rank rank) {
+		this.ranks.add(rank);
 	}
 	public void setAHCount(int count) {
 		this.ahCount = count;
@@ -71,23 +100,5 @@ public class RankedPlayer {
 	}
 	public int getHomeCount() {
 		return this.homeCount;
-	}
-	public void setUpKitCooldowns() {
-		this.kitCooldown.put(PayRank.BRONZE, 0L);
-		this.kitCooldown.put(PayRank.SILVER, 0L);
-		this.kitCooldown.put(PayRank.GOLD, 0L);
-		this.kitCooldown.put(PayRank.PLATINUM, 0L);
-		this.kitCooldown.put(PayRank.DIAMOND, 0L);
-		this.kitCooldown.put(PayRank.EMERALD, 0L);
-		this.kitCooldownStaff.put(ModRank.QA, 0L);
-		this.kitCooldownStaff.put(ModRank.QA_ADMIN, 0L);
-		this.kitCooldownStaff.put(ModRank.HELPER, 0L);
-		this.kitCooldownStaff.put(ModRank.HELPER_PLUS, 0L);
-		this.kitCooldownStaff.put(ModRank.MOD, 0L);
-		this.kitCooldownStaff.put(ModRank.HEAD_MOD, 0L);
-		this.kitCooldownStaff.put(ModRank.ADMIN, 0L);
-		this.kitCooldownStaff.put(ModRank.HEAD_ADMIN, 0L);
-		this.kitCooldownStaff.put(ModRank.MANAGER, 0L);
-		this.kitCooldownStaff.put(ModRank.OWNER, 0L);
 	}
 }

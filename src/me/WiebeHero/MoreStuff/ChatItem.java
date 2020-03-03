@@ -14,6 +14,7 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFaction;
+import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.Factions.DFFactionPlayer;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
 import net.md_5.bungee.api.ChatColor;
@@ -27,9 +28,11 @@ import net.minecraft.server.v1_13_R2.PacketPlayOutChat;
 public class ChatItem implements Listener{
 	private DFFactionPlayerManager facPlayerManager;
 	private DFPlayerManager dfManager;
-	public ChatItem(DFPlayerManager dfManager, DFFactionPlayerManager facPlayerManager) {
+	private DFFactionManager facManager;
+	public ChatItem(DFPlayerManager dfManager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager) {
 		this.dfManager = dfManager;
 		this.facPlayerManager = facPlayerManager;
+		this.facManager = facManager;
 	}
 	@EventHandler
 	public void chatItemEvent(AsyncPlayerChatEvent event) {
@@ -54,7 +57,7 @@ public class ChatItem implements Listener{
 						int level = dfPlayer.getLevel();
 						String facN = "";
 						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-						DFFaction faction = facPlayer.getFaction();
+						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 						if(faction != null) {
 							facN = faction.getName();
 						}

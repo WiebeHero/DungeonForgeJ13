@@ -65,6 +65,7 @@ import me.WiebeHero.LootChest.LootChestManager;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
 import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
 import me.WiebeHero.Scoreboard.DFScoreboard;
+import me.WiebeHero.Skills.ClassMenu;
 import me.WiebeHero.Spawners.DFSpawner;
 import me.WiebeHero.Spawners.DFSpawnerManager;
 import net.luckperms.api.LuckPerms;
@@ -85,6 +86,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	private MethodLuck luck;
 	private Methods m;
 	private DFScoreboard board;
+	private ClassMenu menu;
 	private HashMap<UUID, UUID> target = new HashMap<UUID, UUID>();
 	private HashMap<UUID, String> reason = new HashMap<UUID, String>();
 	private HashMap<UUID, EntityType> spawnerType = new HashMap<UUID, EntityType>();
@@ -102,7 +104,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public String staff = "staff";
 	public String checkstaff = "checkstaff";
 	
-	public ModerationEvents(DFFactionManager facManager, DFPlayerManager dfManager, RankedManager rManager, PunishManager pManager, StaffManager sManager, DFSpawnerManager spManager, LootChestManager lcManager, ModerationGUI gui, MethodMulti multi, MethodLuck luck, Methods m, DFScoreboard board) {
+	public ModerationEvents(DFFactionManager facManager, DFPlayerManager dfManager, RankedManager rManager, PunishManager pManager, StaffManager sManager, DFSpawnerManager spManager, LootChestManager lcManager, ModerationGUI gui, MethodMulti multi, MethodLuck luck, Methods m, DFScoreboard board, ClassMenu menu) {
 		this.facManager = facManager;
 		this.dfManager = dfManager;
 		this.rManager = rManager;
@@ -115,6 +117,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		this.luck = luck;
 		this.m = m;
 		this.board = board;
+		this.menu = menu;	
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -197,7 +200,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 												else {
 													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player can't be promoted to a higher rank!"));
 												}
-												board.registerRank(p);
 												board.updateScoreboard(p);
 												this.punishJoin(p);
 											}
@@ -301,7 +303,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 												else {
 													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player can't be demoted to a lower rank!"));
 												}
-												board.registerRank(p);
 												board.updateScoreboard(p);
 												this.punishJoin(p);
 											}
@@ -333,12 +334,19 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			}
 			if(cmd.getName().equalsIgnoreCase(checkstaff)) {
 				if(args.length == 1) {
-					RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
-					if(rPlayer.getModRank().rank > 0) {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player is staff. Rank: " + rPlayer.getRankStyle()));
+					@SuppressWarnings("deprecation")
+					OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
+					if(p.getName() != null) {
+						RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
+						if(rPlayer.isStaff()) {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player is staff. Rank: " + rPlayer.getHighestRank().display));
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not staff! If he is impersonating staff, please consider reporting him!"));
+						}
 					}
 					else {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not staff! If he is impersonating staff, please consider reporting him!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
 					}
 				}
 			}
@@ -748,11 +756,25 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
 								Staff staff = sManager.get(player.getUniqueId());
 								if(staff.getRank() >= 7) {
-									Player p = m.convertOfflinePlayer(args[1]);
+									@SuppressWarnings("deprecation")
+									OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
 									if(p.getName() != null) {
 										if(args[2].equalsIgnoreCase("reset")) {
-											dfManager.resetEntity(p);
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have reset &6" + p.getName() + "!"));
+											if(dfManager.contains(p.getUniqueId())) {
+												Player p1 = (Player) p;
+												dfManager.resetEntity(p.getUniqueId());
+												player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
+												player.closeInventory();
+												menu.ClassSelect(player);
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have reset &6" + p.getName() + "!"));
+												p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas reset your player profile!"));
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cprofile could not be reset!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /procedure profile (Player Name) reset"));
 										}
 									}
 									else {

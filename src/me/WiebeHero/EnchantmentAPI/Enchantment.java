@@ -575,7 +575,7 @@ public class Enchantment extends CommandFile implements Listener{
 			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
 				if(!cooldown.contains(damager.getUniqueId())) {
 					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
-					DFFaction fac = facPlayer.getFaction();
+					DFFaction fac = facManager.getFaction(facPlayer.getFactionId());
 					if(fac != null) {
 						double range = 5.00 + level * 1.25;
 						for(Entity e : damager.getNearbyEntities(range, range, range)) {
@@ -2200,7 +2200,7 @@ public class Enchantment extends CommandFile implements Listener{
 					final double damage = 2.50 + 0.75 * level;
 					final int count = 3 + level;
 					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
-					DFFaction faction = facPlayer.getFaction();
+					DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 					new BukkitRunnable() {
 						int c = 0;
 						public void run() {
@@ -2210,7 +2210,7 @@ public class Enchantment extends CommandFile implements Listener{
 										LivingEntity ent = (LivingEntity) e;
 										if(facPlayerManager.contains(ent.getUniqueId())) {
 											DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(ent);
-											DFFaction other = facPlayer.getFaction();
+											DFFaction other = facManager.getFaction(facPlayer.getFactionId());
 											if(faction != null && other != null) {
 												if(!faction.isAlly(other.getName()) || !faction.isMember(ent.getUniqueId())) {
 													ent.damage(damage);

@@ -22,6 +22,7 @@ import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.DFPlayerPackage.EffectSkills;
+import me.WiebeHero.RankedPlayerPackage.RankEnum;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.NBTTagDouble;
 import net.minecraft.server.v1_13_R2.NBTTagInt;
@@ -32,6 +33,7 @@ public class SkillJoin implements Listener{
 	private DFPlayerManager dfManager;
 	private ClassMenu classMenu;
 	private EffectSkills es;
+	private RankEnum rEnum;
 	public SkillJoin(DFPlayerManager manager, ClassMenu menu, EffectSkills es) {
 		this.dfManager = manager;
 		this.classMenu = menu;
@@ -51,6 +53,7 @@ public class SkillJoin implements Listener{
 				}.runTaskLater(CustomEnchantments.getInstance(), 10L);
 				new BukkitRunnable() {
 					public void run() {
+						rEnum.getIfPresentKit("USER").recieveKit(player);
 						player.getInventory().addItem(apprenticeSword());
 						player.getInventory().addItem(divineH());
 						player.getInventory().addItem(divineC());

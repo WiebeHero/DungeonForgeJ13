@@ -98,3 +98,9 @@ commands:
     ussage: /<command>
     aliases: [p]
     description: 'Command for party'
+  kit:
+    ussage: /<command>
+    description: 'Command for kit'
+  kits:
+    ussage: /<command>
+    description: 'Command for kit'

@@ -44,7 +44,7 @@ public class FactionsHandler implements Listener{
 			Block block = event.getClickedBlock();
 			String fName = "";
 			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-			DFFaction faction = facPlayer.getFaction();
+			DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 			if(faction != null) {
 				fName = faction.getName();
 			}
@@ -52,7 +52,7 @@ public class FactionsHandler implements Listener{
 				if(block != null) {
 					if(faction.isInChunk(block.getLocation())) {
 						if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-							int rank = faction.getRank(player.getUniqueId());
+							int rank = facPlayer.getRank();
 							if(rank < 2) {
 								event.setCancelled(true);
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to interact in your claimed territory!"));
@@ -86,13 +86,13 @@ public class FactionsHandler implements Listener{
 			Block block = event.getBlock();
 			String fName = "";
 			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-			DFFaction faction = facPlayer.getFaction();
+			DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 			if(faction != null) {
 				fName = faction.getName();
 			}
 			if(!fName.equals("")) {
 				if(faction.isInChunk(block.getLocation())) {
-					int rank = faction.getRank(player.getUniqueId());
+					int rank = facPlayer.getRank();
 					if(rank < 2) {
 						event.setCancelled(true);
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
@@ -112,13 +112,13 @@ public class FactionsHandler implements Listener{
 			Block block = event.getBlock();
 			String fName = "";
 			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-			DFFaction faction = facPlayer.getFaction();
+			DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 			if(faction != null) {
 				fName = faction.getName();
 			}
 			if(!fName.equals("")) {
 				if(faction.isInChunk(block.getLocation())) {
-					int rank = faction.getRank(player.getUniqueId());
+					int rank = facPlayer.getRank();
 					if(rank < 2) {
 						event.setCancelled(true);
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
@@ -139,7 +139,7 @@ public class FactionsHandler implements Listener{
 				Player victim = (Player) event.getEntity();
 				String fName = "";
 				DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
-				DFFaction faction = facPlayer.getFaction();
+				DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 				if(faction != null) {
 					fName = faction.getName();
 				}
@@ -159,7 +159,7 @@ public class FactionsHandler implements Listener{
 					Player victim = (Player) event.getEntity();
 					String fName = "";
 					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
-					DFFaction faction = facPlayer.getFaction();
+					DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 					if(faction != null) {
 						fName = faction.getName();
 					}
@@ -233,7 +233,7 @@ public class FactionsHandler implements Listener{
 	@EventHandler
 	public void losePower(PlayerDeathEvent event) {
 		DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(event.getEntity());
-		DFFaction faction = facPlayer.getFaction();
+		DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 		if(faction != null) {
 			faction.removeEnergy(2.0);
 			event.getEntity().sendMessage("&2&l[DungeonForge]: &cYou have died and your faction has lost 2 power!");

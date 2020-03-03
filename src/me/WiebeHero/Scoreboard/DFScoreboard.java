@@ -29,29 +29,30 @@ import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.Factions.DFFactionPlayer;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
+import me.WiebeHero.RankedPlayerPackage.RankedManager;
+import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
 import net.luckperms.api.model.user.User;
 
 public class DFScoreboard implements Listener{
 	private DFFactionManager facManager;
 	private DFFactionPlayerManager facPlayerManager;
 	private DFPlayerManager dfManager;
+	private RankedManager rManager;
 	private MethodLuck luck;
 	private WGMethods wg;
-	public DFScoreboard(DFPlayerManager dfManager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, MethodLuck luck, WGMethods wg) {
+	public DFScoreboard(DFPlayerManager dfManager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, MethodLuck luck, RankedManager rManager, WGMethods wg) {
 		this.dfManager = dfManager;
 		this.facManager = facManager;
 		this.luck = luck;
 		this.wg = wg;
 		this.facPlayerManager = facPlayerManager;
+		this.rManager = rManager;
 	}
 	public HashMap<UUID, Chunk> delay = new HashMap<UUID, Chunk>();
 	public HashMap<UUID, Scoreboard> scoreboards = new HashMap<UUID, Scoreboard>();
 	public HashMap<UUID, Team> teams = new HashMap<UUID, Team>();
-	public HashMap<UUID, String> ranks = new HashMap<UUID, String>();
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-		this.registerRank(player);
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			this.generateScoreboard(p);
 		}
@@ -72,6 +73,7 @@ public class DFScoreboard implements Listener{
 	public void updateScoreboard(Player player) {
 		if(player.getScoreboard() != null) {
 			DFPlayer df = dfManager.getEntity(player);
+			RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
 			Scoreboard scoreboard = player.getScoreboard();
 			Objective score = scoreboard.getObjective("score");
 			//--------------------------------------------------------------------------------------
@@ -80,13 +82,7 @@ public class DFScoreboard implements Listener{
 			score.setDisplayName(new CCT().colorize("&2&lDungeonForge"));
 			score.setDisplaySlot(DisplaySlot.SIDEBAR);
 			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-			DFFaction faction = facPlayer.getFaction();
-			//--------------------------------------------------------------------------------------
-			//Blank Scores
-			//--------------------------------------------------------------------------------------
-			Score blank1 = score.getScore("");
-			Score blank2 = score.getScore(" ");
-			Score blank3 = score.getScore("  ");
+			DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 			//--------------------------------------------------------------------------------------
 			//Faction setting
 			//--------------------------------------------------------------------------------------
@@ -111,12 +107,6 @@ public class DFScoreboard implements Listener{
 			else if(wg.isInZone(player, "spawn")) {
 				territory = "&a&lSpawn";
 			}
-			Score facLine = score.getScore(new CCT().colorize("&7Faction: " + facN));
-			Score facTeritory = score.getScore(new CCT().colorize("&7Territory: " + territory));
-			Score rank = score.getScore(new CCT().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
-			Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + dfManager.getEntity(player).getLevel()));
-			Score adress = score.getScore(new CCT().colorize("    &2&lplay.dungeonforge.eu"));
-			Score cash = score.getScore(new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
 			for(Player p : Bukkit.getOnlinePlayers()) {
 				DFPlayer dfPlayer = dfManager.getEntity(player);
 				Team t = null;
@@ -130,24 +120,19 @@ public class DFScoreboard implements Listener{
 				String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
 				String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
 				t.setSuffix(new CCT().colorize(" &6" + now));
-				p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + ranks.get(p.getUniqueId())));
+				p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rPlayer.getHighestRank().display));
 				t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 				t.addEntry(p.getName());
 			}
-			Set<String> entries;
-	        entries = scoreboard.getEntries();
-	        for(String entry : entries){
-	        	scoreboard.resetScores(entry);
-	        }
-			blank1.setScore(9);
-			facLine.setScore(8);
-			facTeritory.setScore(7);
-			cash.setScore(6);
-			blank2.setScore(5);
-			rank.setScore(4);
-			level.setScore(3);
-			blank3.setScore(2);
-			adress.setScore(1);
+	        this.replaceScore(score, 9, "");
+	        this.replaceScore(score, 8, new CCT().colorize("&7Faction: " + facN));
+	        this.replaceScore(score, 7, new CCT().colorize("&7Territory: " + territory));
+	        this.replaceScore(score, 6, new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
+	        this.replaceScore(score, 5, " ");
+	        this.replaceScore(score, 4, new CCT().colorize("&7Rank: " + rPlayer.getHighestRank().display));
+	        this.replaceScore(score, 3, new CCT().colorize("&7Level: &b&l" + dfManager.getEntity(player).getLevel()));
+	        this.replaceScore(score, 2, "  ");
+	        this.replaceScore(score, 1, new CCT().colorize("    &2&lplay.dungeonforge.eu"));
 			scoreboards.put(player.getUniqueId(), scoreboard);
 			player.setScoreboard(scoreboard);
 		}
@@ -157,6 +142,7 @@ public class DFScoreboard implements Listener{
 	}
 	public void generateScoreboard(Player player) {
 		DFPlayer df = dfManager.getEntity(player);
+		RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
 		scoreboards.put(player.getUniqueId(), null);
 		Scoreboard scoreboard = CustomEnchantments.getInstance().getServer().getScoreboardManager().getNewScoreboard();
 		//--------------------------------------------------------------------------------------
@@ -172,7 +158,7 @@ public class DFScoreboard implements Listener{
 		score.setDisplayName(new CCT().colorize("&2&lDungeonForge"));
 		score.setDisplaySlot(DisplaySlot.SIDEBAR);
 		DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-		DFFaction faction = facPlayer.getFaction();
+		DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 		//--------------------------------------------------------------------------------------
 		//Blank Scores
 		//--------------------------------------------------------------------------------------
@@ -207,7 +193,7 @@ public class DFScoreboard implements Listener{
 		}
 		Score facLine = score.getScore(new CCT().colorize("&7Faction: " + facN));
 		Score facTeritory = score.getScore(new CCT().colorize("&7Territory: " + territory));
-		Score rank = score.getScore(new CCT().colorize("&7Rank: " + ranks.get(player.getUniqueId())));
+		Score rank = score.getScore(new CCT().colorize("&7Rank: " + rPlayer.getHighestRank().display));
 		Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + dfManager.getEntity(player).getLevel()));
 		Score adress = score.getScore(new CCT().colorize("    &2&lplay.dungeonforge.eu"));
 		Score cash = score.getScore(new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
@@ -224,7 +210,7 @@ public class DFScoreboard implements Listener{
 			String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
 			String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
 			t.setSuffix(new CCT().colorize(" &6" + now));
-			p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + ranks.get(p.getUniqueId())));
+			p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rPlayer.getHighestRank().display));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(p.getName());
 		}
@@ -265,61 +251,27 @@ public class DFScoreboard implements Listener{
 		scoreboards.put(player.getUniqueId(), scoreboard);
 		player.setScoreboard(scoreboard);
 	}
-	public void registerRank(Player player) {
-		User user = luck.loadUser(player.getUniqueId());
-		if(luck.containsParrent(user, "owner")) {
-			ranks.put(player.getUniqueId(), "&2Owner");
-		}
-		else if(luck.containsParrent(user, "manager")) {
-			ranks.put(player.getUniqueId(), "&5Manager");
-		}
-		else if(luck.containsParrent(user, "headadmin")) {
-			ranks.put(player.getUniqueId(), "&4Head Admin");
-		}
-		else if(luck.containsParrent(user, "admin")) {
-			ranks.put(player.getUniqueId(), "&cAdmin");
-		}
-		else if(luck.containsParrent(user, "headmod")) {
-			ranks.put(player.getUniqueId(), "&1Head Mod");
-		}
-		else if(luck.containsParrent(user, "moderator")) {
-			ranks.put(player.getUniqueId(), "&9Mod");
-		}
-		else if(luck.containsParrent(user, "helper+")) {
-			ranks.put(player.getUniqueId(), "&aHelper+");
-		}
-		else if(luck.containsParrent(user, "helper")) {
-			ranks.put(player.getUniqueId(), "&aHelper");
-		}
-		else if(luck.containsParrent(user, "qualityassuranceadmin")) {
-			ranks.put(player.getUniqueId(), "&cQA Admin");
-		}
-		else if(luck.containsParrent(user, "qualityassurance")) {
-			ranks.put(player.getUniqueId(), "&bQA");
-		}
-		else if(luck.containsParrent(user, "youtuber")) {
-			ranks.put(player.getUniqueId(), "&dYoutuber");
-		}
-		else if(luck.containsParrent(user, "bronze")) {
-			ranks.put(player.getUniqueId(), "&6Bronze");
-		}
-		else if(luck.containsParrent(user, "silver")) {
-			ranks.put(player.getUniqueId(), "&7Silver");
-		}
-		else if(luck.containsParrent(user, "gold")) {
-			ranks.put(player.getUniqueId(), "&eGold");
-		}
-		else if(luck.containsParrent(user, "platinum")) {
-			ranks.put(player.getUniqueId(), "&3Platinum");
-		}
-		else if(luck.containsParrent(user, "diamond")) {
-			ranks.put(player.getUniqueId(), "&bDiamond");
-		}
-		else if(luck.containsParrent(user, "emerald")) {
-			ranks.put(player.getUniqueId(), "&aEmerald");
-		}
-		else {
-			ranks.put(player.getUniqueId(), "&7User");
-		}
+	public String getEntryFromScore(Objective o, int score) {
+	    if(o == null) return null;
+	    if(!this.hasScoreTaken(o, score)) return null;
+	    for (String s : o.getScoreboard().getEntries()) {
+	        if(o.getScore(s).getScore() == score) return o.getScore(s).getEntry();
+	    }
+	    return null;
+	}
+
+	public boolean hasScoreTaken(Objective o, int score) {
+	    for (String s : o.getScoreboard().getEntries()) {
+	        if(o.getScore(s).getScore() == score) return true;
+	    }
+	    return false;
+	}
+
+	public void replaceScore(Objective o, int score, String name) {
+	    if(hasScoreTaken(o, score)) {
+	        if(this.getEntryFromScore(o, score).equalsIgnoreCase(name)) return;
+	        if(!(this.getEntryFromScore(o, score).equalsIgnoreCase(name))) o.getScoreboard().resetScores(this.getEntryFromScore(o, score));
+	    }
+	    o.getScore(name).setScore(score);
 	}
 }

@@ -3,6 +3,8 @@ package me.WiebeHero.Consumables;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -11,6 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -135,6 +139,119 @@ public class CustomDurability implements Listener{
 		}
 		else {
 			return null;
+		}
+	}
+	public ItemStack repairDurability(Player p, ItemStack i, int amount) {
+		NBTItem item = new NBTItem(i);
+		if(item.hasKey("Durability") && item.hasKey("MaxDurability")) {
+			int dura = item.getInteger("Durability");
+			int maxDura = item.getInteger("MaxDurability");
+			if(dura != maxDura) {
+				dura += amount;
+				if(dura > maxDura) {
+					dura = maxDura;
+				}
+				item.setInteger("Durability", dura);
+				i = item.getItem();
+				double totalLost = 1.00 - (double)dura / (double)maxDura;
+				Damageable dam = (Damageable) i.getItemMeta();
+				dam.setDamage((int)(i.getType().getMaxDurability() * totalLost));
+				i.setItemMeta((ItemMeta)dam);
+				ItemMeta meta = i.getItemMeta();
+				if(meta.hasLore()) {
+					ArrayList<String> lore = new ArrayList<String>(meta.getLore());
+					for(int x = 0; x < lore.size(); x++) {
+						if(lore.get(x).contains("Durability")) {
+							lore.set(x, new CCT().colorize("&7Durability: &6" + dura + " &7/ &6" + maxDura));
+						}
+					}
+					meta.setLore(lore);
+				}
+				i.setItemMeta(meta);
+				if(dura <= 0) {
+					p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 2.0F, 1.0F);
+					return new ItemStack(Material.AIR, 1);
+				}
+				else {
+					return i;
+				}
+			}
+			else {
+				return null;
+			}
+		}
+		else {
+			return null;
+		}
+	}
+	@EventHandler
+	public void repairItem(InventoryClickEvent event) {
+		Player player = (Player) event.getWhoClicked();
+		ItemStack item = event.getCurrentItem();
+		ItemStack cursor = event.getCursor();
+		if(event.getClickedInventory() != null) {
+			if(event.getClickedInventory().getType() == InventoryType.PLAYER && player.getGameMode().equals(GameMode.SURVIVAL) && event.getSlot() != 36 && event.getSlot() != 37 && event.getSlot() != 38 && event.getSlot() != 39) {
+				if(item != null && cursor != null) {
+					NBTItem i = new NBTItem(item);
+					if(i.hasKey("ItemKey")) {
+						int slot = event.getSlot();
+						if(i.getString("ItemKey").contains("Wooden") && (cursor.getType() == Material.OAK_PLANKS || cursor.getType() == Material.BIRCH_PLANKS || cursor.getType() == Material.SPRUCE_PLANKS || cursor.getType() == Material.JUNGLE_LOG || cursor.getType() == Material.DARK_OAK_LOG || cursor.getType() == Material.ACACIA_LOG)) {
+							ItemStack newItem = this.repairDurability(player, item, 30);
+							if(newItem != null) {
+								event.setCancelled(true);
+								player.getInventory().setItem(slot, newItem);
+								player.getOpenInventory().getCursor().setAmount(event.getCursor().getAmount() - 1);
+								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 2.0F, 1.0F);
+							}
+						}
+						else if(i.getString("ItemKey").contains("Stone") && cursor.getType() == Material.COBBLESTONE) {
+							ItemStack newItem = this.repairDurability(player, item, 35);
+							if(newItem != null) {
+								event.setCancelled(true);
+								player.getInventory().setItem(slot, newItem);
+								player.getOpenInventory().getCursor().setAmount(event.getCursor().getAmount() - 1);
+								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 2.0F, 1.0F);
+							}
+						}
+						else if(i.getString("ItemKey").contains("Chain") && cursor.getType() == Material.IRON_INGOT) {
+							ItemStack newItem = this.repairDurability(player, item, 40);
+							if(newItem != null) {
+								event.setCancelled(true);
+								player.getInventory().setItem(slot, newItem);
+								player.getOpenInventory().getCursor().setAmount(event.getCursor().getAmount() - 1);
+								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 2.0F, 1.0F);
+							}
+						}
+						else if(i.getString("ItemKey").contains("Iron") && cursor.getType() == Material.IRON_INGOT) {
+							ItemStack newItem = this.repairDurability(player, item, 40);
+							if(newItem != null) {
+								event.setCancelled(true);
+								player.getInventory().setItem(slot, newItem);
+								player.getOpenInventory().getCursor().setAmount(event.getCursor().getAmount() - 1);
+								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 2.0F, 1.0F);
+							}
+						}
+						else if(i.getString("ItemKey").contains("Golden") && cursor.getType() == Material.GOLD_INGOT) {
+							ItemStack newItem = this.repairDurability(player, item, 45);
+							if(newItem != null) {
+								event.setCancelled(true);
+								player.getInventory().setItem(slot, newItem);
+								player.getOpenInventory().getCursor().setAmount(event.getCursor().getAmount() - 1);
+								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 2.0F, 1.0F);
+							}
+						}
+						else if(i.getString("ItemKey").contains("Diamond") && cursor.getType() == Material.DIAMOND) {
+							ItemStack newItem = this.repairDurability(player, item, 50);
+							if(newItem != null) {
+								event.setCancelled(true);
+								player.getInventory().setItem(slot, newItem);
+								player.getOpenInventory().getCursor().setAmount(event.getCursor().getAmount() - 1);
+								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 2.0F, 1.0F);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

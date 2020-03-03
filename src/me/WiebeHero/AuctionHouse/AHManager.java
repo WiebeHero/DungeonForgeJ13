@@ -73,6 +73,7 @@ public class AHManager {
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		yml.set("AuctionHouse.Items", null);
 		for(ItemStack item : this.ahList) {
 			NBTItem i = new NBTItem(item);
 			AHItem ah = i.getObject("AHItem", AHItem.class);

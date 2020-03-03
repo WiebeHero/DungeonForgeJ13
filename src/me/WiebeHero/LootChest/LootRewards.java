@@ -162,7 +162,7 @@ public class LootRewards {
 		rewards1.add(playerXPBottle(75));
 		rewards1.add(playerXPBottle(150));
 		rewards1.add(playerXPBottle(300));
-		rewards1.add(moneyNote250());
+		rewards1.add(moneyNote(250));
 		//--------------------------------------------------------------------------------------------------------------------
 		//Tier 2
 		//--------------------------------------------------------------------------------------------------------------------
@@ -310,8 +310,8 @@ public class LootRewards {
 		rewards2.add(playerXPBottle(150));
 		rewards2.add(playerXPBottle(300));
 		rewards2.add(playerXPBottle(600));
-		rewards2.add(moneyNote250());
-		rewards2.add(moneyNote500());
+		rewards2.add(moneyNote(250));
+		rewards2.add(moneyNote(500));
 		//--------------------------------------------------------------------------------------------------------------------
 		//Tier 3
 		//--------------------------------------------------------------------------------------------------------------------
@@ -464,9 +464,9 @@ public class LootRewards {
 		rewards3.add(playerXPBottle(300));
 		rewards3.add(playerXPBottle(600));
 		rewards3.add(playerXPBottle(1000));
-		rewards3.add(moneyNote250());
-		rewards3.add(moneyNote500());
-		rewards3.add(moneyNote1000());
+		rewards3.add(moneyNote(250));
+		rewards3.add(moneyNote(500));
+		rewards3.add(moneyNote(1000));
 		//--------------------------------------------------------------------------------------------------------------------
 		//Tier 4
 		//--------------------------------------------------------------------------------------------------------------------
@@ -625,10 +625,10 @@ public class LootRewards {
 		rewards4.add(playerXPBottle(600));
 		rewards4.add(playerXPBottle(1000));
 		rewards4.add(playerXPBottle(1500));
-		rewards4.add(moneyNote250());
-		rewards4.add(moneyNote500());
-		rewards4.add(moneyNote1000());
-		rewards4.add(moneyNote2500());
+		rewards4.add(moneyNote(250));
+		rewards4.add(moneyNote(500));
+		rewards4.add(moneyNote(1000));
+		rewards4.add(moneyNote(2500));
 	}
 	public ItemStack steak8() {
 		ItemStack item1 = new ItemStack(Material.COOKED_BEEF, 8);
@@ -768,45 +768,13 @@ public class LootRewards {
 		ItemStack item1 = new ItemStack(Material.OCELOT_SPAWN_EGG, 1);
 		return item1;
 	}
-	public ItemStack moneyNote250() {
+	public ItemStack moneyNote(int money) {
 		ItemStack item1 = new ItemStack(Material.PAPER, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $250"));
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack moneyNote500() {
-		ItemStack item1 = new ItemStack(Material.PAPER, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $500"));
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack moneyNote1000() {
-		ItemStack item1 = new ItemStack(Material.PAPER, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $1000"));
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack moneyNote1500() {
-		ItemStack item1 = new ItemStack(Material.PAPER, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $1500"));
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack moneyNote2000() {
-		ItemStack item1 = new ItemStack(Material.PAPER, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $2000"));
-		item1.setItemMeta(meta1);
-		return item1;
-	}
-	public ItemStack moneyNote2500() {
-		ItemStack item1 = new ItemStack(Material.PAPER, 1);
-		ItemMeta meta1 = item1.getItemMeta();	
-		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $2500"));
+		NBTItem i = new NBTItem(item1);
+		i.setInteger("Money", money);
+		item1 = i.getItem();
+		ItemMeta meta1 = item1.getItemMeta();
+		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $" + i.getInteger("Money")));
 		item1.setItemMeta(meta1);
 		return item1;
 	}

@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.RankedPlayerPackage.RankEnum.Kit;
 
 public class ItemStackBuilder {
 	public ItemStack constructItem(Material mat) {
@@ -66,6 +67,49 @@ public class ItemStackBuilder {
 		item.setItemMeta(meta);
 		NBTItem i = new NBTItem(item);
 		i.setString(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key, Kit value) {
+		ItemStack item = new ItemStack(mat, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setObject(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, ArrayList<String> key, ArrayList<String> value) {
+		ItemStack item = new ItemStack(mat, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		for(int i1 = 0; i1 < key.size(); i1++) {
+			i.setString(key.get(i1), value.get(i1));
+		}
+		return i.getItem();
+	}
+	public ItemStack constructItem(Material mat, int amount, String display, ArrayList<String> lore, ArrayList<String> key, ArrayList<String> value) {
+		ItemStack item = new ItemStack(mat, amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		for(int i1 = 0; i1 < key.size(); i1++) {
+			i.setString(key.get(i1), value.get(i1));
+		}
 		return i.getItem();
 	}
 	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key, int value) {

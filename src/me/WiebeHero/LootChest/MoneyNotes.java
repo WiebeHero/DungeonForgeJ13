@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Scoreboard.DFScoreboard;
@@ -23,20 +24,13 @@ public class MoneyNotes implements Listener{
 		Player player = event.getPlayer();
 		if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if(player.getInventory().getItemInMainHand() != null) {
-				if(player.getInventory().getItemInMainHand().getType() == Material.PAPER) {
-					if(player.getInventory().getItemInMainHand().hasItemMeta()) {
-						if(player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
-							if(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains("Money Note:")) {
-								String name = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
-								name = name.replaceAll("[^\\d.]", "");
-								int money = Integer.parseInt(name);
-								DFPlayer dfPlayer = dfManager.getEntity(player);
-								dfPlayer.addMoney(money);
-								score.updateScoreboard(player);
-								player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-							}
-						}
-					}
+				NBTItem i = new NBTItem(player.getInventory().getItemInMainHand());
+				if(i.hasKey("Money")) {
+					int money = i.getInteger("Money");
+					DFPlayer dfPlayer = dfManager.getEntity(player);
+					dfPlayer.addMoney(money);
+					score.updateScoreboard(player);
+					player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 				}
 			}
 		}
