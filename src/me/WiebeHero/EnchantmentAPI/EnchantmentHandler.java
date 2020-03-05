@@ -556,11 +556,8 @@ public class EnchantmentHandler extends SwordSwingProgress{
 					for(String s1 : armorNew.getItemMeta().getLore()){
 						String enchant = ChatColor.stripColor(s1);
 						String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-						Bukkit.broadcastMessage("1");
 						if(enchantment.getArmorEnchantments().containsKey(check)) {
-							Bukkit.broadcastMessage("2");
 							if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.ARMOR_CHANGE) {
-								Bukkit.broadcastMessage("3");
 								enchant = enchant.replaceAll("[^\\d.]", "");
 								int level = Integer.parseInt(enchant) - 1;
 								enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(p, level, true);
