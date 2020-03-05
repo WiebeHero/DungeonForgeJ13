@@ -173,8 +173,6 @@ public class DFScoreboard implements Listener{
 		String territory = "&7Wilderness";
 		if(faction != null) {
 			facN = "&6" + faction.getName();
-			Bukkit.broadcastMessage(faction.isInChunk(player.getLocation()) + "");
-			Bukkit.broadcastMessage(faction.isInChunk(player) + "");
 			if(faction.isInChunk(player)) {
 				territory = "&a&l" + faction.getName();
 			}

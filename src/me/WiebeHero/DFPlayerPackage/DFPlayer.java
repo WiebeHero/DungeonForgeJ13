@@ -42,7 +42,7 @@ public class DFPlayer {
 	public double rnd_c;
 	public double hp_c;
 	public double df_c;
-	public double move;
+	public float move;
 	public boolean active;
 	public boolean use;
 	public double atk_ct;
@@ -74,7 +74,7 @@ public class DFPlayer {
 			this.df_m = 0;
 			this.active = false;
 			this.use = true;
-			this.move = 0.2;
+			this.move = 0.2F;
 			this.money = 1000.00;
 			this.atk_ct = 0.00;
 			this.spd_ct = 0.00;
@@ -105,7 +105,7 @@ public class DFPlayer {
 		this.df_m = 0;
 		this.active = false;
 		this.use = true;
-		this.move = 0.2;
+		this.move = 0.2F;
 		this.money = 1000.00;
 		this.atk_ct = 0.00;
 		this.spd_ct = 0.00;
@@ -590,7 +590,7 @@ public class DFPlayer {
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.atk_ct += amount;
+			this.atk_ct -= amount;
 		}
 	}
 	//---------------------------------------------------------
@@ -630,7 +630,7 @@ public class DFPlayer {
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.spd_ct += amount;
+			this.spd_ct -= amount;
 		}
 	}
 	//---------------------------------------------------------
@@ -670,7 +670,7 @@ public class DFPlayer {
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.crt_ct += amount;
+			this.crt_ct -= amount;
 		}
 	}
 	//---------------------------------------------------------
@@ -710,7 +710,7 @@ public class DFPlayer {
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.rnd_ct += amount;
+			this.rnd_ct -= amount;
 		}
 	}
 	//---------------------------------------------------------
@@ -750,7 +750,7 @@ public class DFPlayer {
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.hp_ct += amount;
+			this.hp_ct -= amount;
 		}
 	}
 	//---------------------------------------------------------
@@ -790,7 +790,7 @@ public class DFPlayer {
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.df_ct += amount;
+			this.df_ct -= amount;
 		}
 	}
 	//---------------------------------------------------------
@@ -814,41 +814,106 @@ public class DFPlayer {
 	//---------------------------------------------------------
 	//Armor Defene Calculated Handler
 	//---------------------------------------------------------
-	public double getMove() {
+	public float getMove() {
 		return this.move;
 	}
 	
-	public void setMove(double amount) {
+	public void setMove(float amount) {
 		this.move = amount;
+		Entity entity = Bukkit.getEntity(this.id);
+		if(entity != null) {
+			if(entity instanceof LivingEntity) {
+				LivingEntity lEnt = (LivingEntity) entity;
+				if(lEnt instanceof Player) {
+					Player p = (Player) lEnt;
+					p.setWalkSpeed(this.move);
+				}
+				else {
+					lEnt.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
+				}
+			}
+		}
 	}
 	
-	public void addMove(double amount, long time) {
+	public void addMove(float amount, long time) {
 		if(time != 0) {
 			this.move = this.move + amount;
+			Entity entity = Bukkit.getEntity(this.id);
+			if(entity != null) {
+				if(entity instanceof LivingEntity) {
+					LivingEntity lEnt = (LivingEntity) entity;
+					if(lEnt instanceof Player) {
+						Player p = (Player) lEnt;
+						p.setWalkSpeed(this.move);
+					}
+					else {
+						lEnt.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
+					}
+				}
+			}
 			DFPlayer p = this;
 			new BukkitRunnable() {
 				public void run() {
 					p.move = p.move - amount;
+					Entity entity = Bukkit.getEntity(p.id);
+					if(entity != null) {
+						if(entity instanceof LivingEntity) {
+							LivingEntity lEnt = (LivingEntity) entity;
+							if(lEnt instanceof Player) {
+								Player pl = (Player) lEnt;
+								pl.setWalkSpeed(p.move);
+							}
+							else {
+								lEnt.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(p.move);
+							}
+						}
+					}
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.move = this.move + amount;
+			this.move += amount;
 		}
 	}
 	
-	public void removeMove(double amount, long time) {
+	public void removeMove(float amount, long time) {
 		if(time != 0) {
 			this.move = this.move - amount;
 			DFPlayer p = this;
 			new BukkitRunnable() {
 				public void run() {
 					p.move = p.move + amount;
+					Entity entity = Bukkit.getEntity(p.id);
+					if(entity != null) {
+						if(entity instanceof LivingEntity) {
+							LivingEntity lEnt = (LivingEntity) entity;
+							if(lEnt instanceof Player) {
+								Player pl = (Player) lEnt;
+								pl.setWalkSpeed(p.move);
+							}
+							else {
+								lEnt.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(p.move);
+							}
+						}
+					}
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
-			this.move = this.move - amount;
+			this.move -= amount;
+			Entity entity = Bukkit.getEntity(this.id);
+			if(entity != null) {
+				if(entity instanceof LivingEntity) {
+					LivingEntity lEnt = (LivingEntity) entity;
+					if(lEnt instanceof Player) {
+						Player p = (Player) lEnt;
+						p.setWalkSpeed(this.move);
+					}
+					else {
+						lEnt.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
+					}
+				}
+			}
 		}
 	}
 	public double getHealth() {

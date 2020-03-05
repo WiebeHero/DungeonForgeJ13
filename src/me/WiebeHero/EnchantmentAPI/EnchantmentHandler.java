@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -555,8 +556,11 @@ public class EnchantmentHandler extends SwordSwingProgress{
 					for(String s1 : armorNew.getItemMeta().getLore()){
 						String enchant = ChatColor.stripColor(s1);
 						String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+						Bukkit.broadcastMessage("1");
 						if(enchantment.getArmorEnchantments().containsKey(check)) {
+							Bukkit.broadcastMessage("2");
 							if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.ARMOR_CHANGE) {
+								Bukkit.broadcastMessage("3");
 								enchant = enchant.replaceAll("[^\\d.]", "");
 								int level = Integer.parseInt(enchant) - 1;
 								enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(p, level, true);
@@ -569,9 +573,9 @@ public class EnchantmentHandler extends SwordSwingProgress{
 			}
 		}
 		if(armorOld != null) {
-			if(armorNew.hasItemMeta()) {
-				if(armorNew.getItemMeta().hasLore()) {
-					for(String s1 : armorNew.getItemMeta().getLore()){
+			if(armorOld.hasItemMeta()) {
+				if(armorOld.getItemMeta().hasLore()) {
+					for(String s1 : armorOld.getItemMeta().getLore()){
 						String enchant = ChatColor.stripColor(s1);
 						String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
 						if(enchantment.getArmorEnchantments().containsKey(check)) {

@@ -118,7 +118,7 @@ public class DFPlayerManager {
 					dfPlayer.money = yml.getDouble("Skills.Players." + uuid + ".Money");
 					dfPlayer.active = false;
 					dfPlayer.use = true;
-					dfPlayer.move = 0.2;
+					dfPlayer.move = 0.2F;
 					dfPlayer.atk_ct = 0.00;
 					dfPlayer.spd_ct = 0.00;
 					dfPlayer.crt_ct = 0.00;

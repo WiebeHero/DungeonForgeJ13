@@ -883,7 +883,7 @@ public class Consumable {
 			public void registerRecipe() {
 				ItemStack heart = con.heart("Small Bark", Material.OAK_LOG);
 				//-----------------------------------------------------------------------------------
-				//Stone Armor
+				//Wooden Armor
 				//-----------------------------------------------------------------------------------
 				HashMap<String, Integer> tier1 = new HashMap<String, Integer>();
 				tier1.put("Protection", 1);
@@ -958,7 +958,7 @@ public class Consumable {
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("X X", "X X", "   ");
 				recipe.setIngredient('X', new RecipeChoice.ExactChoice(new ItemStack(Material.OAK_PLANKS, 1), new ItemStack(Material.DARK_OAK_PLANKS, 1), new ItemStack(Material.ACACIA_PLANKS, 1), new ItemStack(Material.SPRUCE_PLANKS, 1), new ItemStack(Material.JUNGLE_PLANKS, 1), new ItemStack(Material.BIRCH_PLANKS, 1)));
-				recipe.setGroup("Wooden Boots");
+				recipe.setGroup("Wooden Boot");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
@@ -981,6 +981,22 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 
+			}
+		}));
+		this.listConsumables.put("Wooden Swords", new Pair<>(Condition.NONE, new CommandFile() {
+			@Override
+			public void registerRecipe() {
+				ItemStack heart = con.heart("Small Bark", Material.OAK_LOG);
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Sword_1");
+				HashMap<String, Integer> tier1 = new HashMap<String, Integer>();
+				tier1.put("Sharpness", 1);
+				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.WOODEN_SWORD, "&7Wooden Sword", EquipmentSlot.HAND, 2.7, 0.8, 100, tier1));
+				recipe.shape(" X ", "XYX", " X ");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.WOODEN_SWORD, "&7Wooden Sword", EquipmentSlot.HAND, 2.7, 0.8, 80, null));
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				recipe.setGroup("Wooden Swords");
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 			}
 		}));
 		this.listConsumables.put("Wooden Pickaxes", new Pair<>(Condition.NONE, new CommandFile() {
@@ -1027,7 +1043,7 @@ public class Consumable {
 				recipe.setIngredient('X', heart);
 				recipe.setIngredient('Y', con.equipment(Material.WOODEN_SHOVEL, "&7Wooden Shovel", EquipmentSlot.HAND, 2.3, 0.94, 80, null));
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
-				recipe.setGroup("Wooden Pickaxes");
+				recipe.setGroup("Wooden Shovels");
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 			}
 		}));
@@ -1043,7 +1059,7 @@ public class Consumable {
 				recipe.setIngredient('X', heart);
 				recipe.setIngredient('Y', con.equipment(Material.WOODEN_HOE, "&7Wooden Hoe", EquipmentSlot.HAND, 1.5, 1.2, 80, null));
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
-				recipe.setGroup("Wooden Pickaxes");
+				recipe.setGroup("Wooden Hoes");
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 			}
 		}));
@@ -1090,7 +1106,7 @@ public class Consumable {
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
 				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.HEAD, 0.7, 1.0, 40, null));
-				recipe.setGroup("Golden Helmet");
+				recipe.setGroup("Golden Helmets");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
@@ -1099,7 +1115,7 @@ public class Consumable {
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
 				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.CHEST, 0.7, 1.0, 50, tier1));
-				recipe.setGroup("Golden Helmet");
+				recipe.setGroup("Golden Helmets");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
@@ -1108,7 +1124,7 @@ public class Consumable {
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
 				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 0.7, 1.0, 40, null));
-				recipe.setGroup("Golden Chestplate");
+				recipe.setGroup("Golden Chestplates");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
@@ -1117,7 +1133,7 @@ public class Consumable {
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
 				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 0.7, 1.0, 50, tier1));
-				recipe.setGroup("Golden Chestplate");
+				recipe.setGroup("Golden Chestplates");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
@@ -1154,6 +1170,36 @@ public class Consumable {
 				recipe.setIngredient('X', heart);
 				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 0.7, 1.0, 50, tier1));
 				recipe.setGroup("Golden Boots");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+				
+			}
+		}));
+		this.listConsumables.put("Gold Swords", new Pair<>(Condition.NONE, new CommandFile() {
+			@Override
+			public void registerRecipe() {
+				ItemStack heart = con.heart("Small Gold", Material.GOLD_INGOT);
+				HashMap<String, Integer> tier1 = new HashMap<String, Integer>();
+				tier1.put("Sharpness", 2);
+				tier1.put("Unbreaking", 1);
+				HashMap<String, Integer> tier2 = new HashMap<String, Integer>();
+				tier2.put("Sharpness", 5);
+				tier2.put("Unbreaking", 2);
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Sword_1");
+				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_SWORD, "&7Golden Sword", EquipmentSlot.HAND, 2.4, 1.1, 50, tier1));
+				recipe.shape(" X ", "XYX", " X ");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_SWORD, "&7Golden Sword", EquipmentSlot.HAND, 2.4, 1.1, 40, null));
+				recipe.setGroup("Golden Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+				heart = con.heart("Small Gold", Material.GOLD_INGOT);
+				key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Sword_2");
+				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_SWORD, "&7Golden Sword", EquipmentSlot.HAND, 2.4, 1.1, 60, tier2));
+				recipe.shape("XXX", "XYX", "XXX");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_SWORD, "&7Golden Sword", EquipmentSlot.HAND, 2.4, 1.1, 50, tier1));
+				recipe.setGroup("Golden Swords");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
@@ -1324,7 +1370,7 @@ public class Consumable {
 				ShapedRecipe recipe = new ShapedRecipe(key, item);
 				recipe.shape("XXX", "X X", "   ");
 				recipe.setIngredient('X', new ItemStack(Material.COBBLESTONE, 1));
-				recipe.setGroup("Stone Helmets");
+				recipe.setGroup("Stone Helmet");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
@@ -1434,26 +1480,54 @@ public class Consumable {
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
-				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.LEGS, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Boots_1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.LEGS, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.LEGS, 1.15, 0.58, 150, tier2, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 150, tier2, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Boots_2");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("YYY", "YXY", "YYY");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.LEGS, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
+			}
+		}));
+		this.listConsumables.put("Stone Swords", new Pair<>(Condition.NONE, new CommandFile() {
+			@Override
+			public void registerRecipe() {
+				ItemStack heart = con.heart("Small Cobblestone", Material.COBBLESTONE);
+				HashMap<String, Integer> tier1 = new HashMap<String, Integer>();
+				tier1.put("Sharpness", 1);
+				HashMap<String, Integer> tier2 = new HashMap<String, Integer>();
+				tier2.put("Sharpness", 2);
+				tier2.put("Unbreaking", 1);
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Sword_1");
+				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.STONE_SWORD, "&7Stone Sword", EquipmentSlot.HAND, 3.0, 0.83, 145, tier1));
+				recipe.shape(" X ", "XYX", " X ");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.STONE_SWORD, "&7Stone Sword", EquipmentSlot.HAND, 3.0, 0.83, 120, null));
+				recipe.setGroup("Stone Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+				heart = con.heart("Small Cobblestone", Material.COBBLESTONE);
+				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Sword_2");
+				recipe = new ShapedRecipe(key, con.equipment(Material.STONE_SWORD, "&7Stone Sword", EquipmentSlot.HAND, 3.0, 0.83, 170, tier2));
+				recipe.shape("XXX", "XYX", "XXX");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.STONE_SWORD, "&7Stone Sword", EquipmentSlot.HAND, 3.0, 0.83, 145, tier1));
+				recipe.setGroup("Stone Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 			}
 		}));
 		this.listConsumables.put("Stone Pickaxes", new Pair<>(Condition.NONE, new CommandFile() {
@@ -1718,6 +1792,46 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
+			}
+		}));
+		this.listConsumables.put("Iron Swords", new Pair<>(Condition.NONE, new CommandFile() {
+			@Override
+			public void registerRecipe() {
+				ItemStack heart = con.heart("Small Iron", Material.IRON_INGOT);
+				HashMap<String, Integer> tier1 = new HashMap<String, Integer>();
+				tier1.put("Sharpness", 1);
+				HashMap<String, Integer> tier2 = new HashMap<String, Integer>();
+				tier2.put("Sharpness", 2);
+				tier2.put("Unbreaking", 1);
+				HashMap<String, Integer> tier3 = new HashMap<String, Integer>();
+				tier3.put("Sharpness", 3);
+				tier3.put("Unbreaking", 1);
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Sword_1");
+				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.IRON_SWORD, "&7Iron Sword", EquipmentSlot.HAND, 3.3, 0.86, 190, tier1));
+				recipe.shape(" X ", "XYX", " X ");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.IRON_SWORD, "&7Iron Sword", EquipmentSlot.HAND, 3.3, 0.86, 160, null));
+				recipe.setGroup("Iron Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+				heart = con.heart("Small Iron", Material.IRON_INGOT);
+				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Sword_2");
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_SWORD, "&7Iron Sword", EquipmentSlot.HAND, 3.3, 0.86, 220, tier2));
+				recipe.shape("XXX", "XYX", "XXX");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.IRON_SWORD, "&7Iron Sword", EquipmentSlot.HAND, 3.3, 0.86, 190, tier1));
+				recipe.setGroup("Iron Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+				heart = con.heart("Iron", Material.IRON_INGOT);
+				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Sword_3");
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_SWORD, "&7Iron Sword", EquipmentSlot.HAND, 3.3, 0.86, 250, tier3));
+				recipe.shape(" X ", "XYX", " X ");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.IRON_SWORD, "&7Iron Sword", EquipmentSlot.HAND, 3.3, 0.86, 220, tier2));
+				recipe.setGroup("Iron Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 			}
 		}));
 		this.listConsumables.put("Iron Pickaxes", new Pair<>(Condition.NONE, new CommandFile() {
@@ -2071,6 +2185,58 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
+			}
+		}));
+		this.listConsumables.put("Diamond Swords", new Pair<>(Condition.NONE, new CommandFile() {
+			@Override
+			public void registerRecipe() {
+				ItemStack heart = con.heart("Small Diamond", Material.DIAMOND);
+				HashMap<String, Integer> tier1 = new HashMap<String, Integer>();
+				tier1.put("Sharpness", 1);
+				HashMap<String, Integer> tier2 = new HashMap<String, Integer>();
+				tier2.put("Sharpness", 2);
+				tier2.put("Unbreaking", 1);
+				HashMap<String, Integer> tier3 = new HashMap<String, Integer>();
+				tier3.put("Sharpness", 3);
+				tier3.put("Unbreaking", 1);
+				HashMap<String, Integer> tier4 = new HashMap<String, Integer>();
+				tier4.put("Sharpness", 4);
+				tier4.put("Unbreaking", 2);
+				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Sword_1");
+				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_SWORD, "&7Diamond Sword", EquipmentSlot.HAND, 3.9, 0.92, 235, tier1));
+				recipe.shape(" X ", "XYX", " X ");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_SWORD, "&7Diamond Sword", EquipmentSlot.HAND, 3.9, 0.92, 200, null));
+				recipe.setGroup("Diamond Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+				heart = con.heart("Small Diamond", Material.DIAMOND);
+				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Sword_2");
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_SWORD, "&7Diamond Sword", EquipmentSlot.HAND, 3.9, 0.92, 270, tier2));
+				recipe.shape("XXX", "XYX", "XXX");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_SWORD, "&7Diamond Sword", EquipmentSlot.HAND, 3.9, 0.92, 235, tier1));
+				recipe.setGroup("Diamond Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+				heart = con.heart("Diamond", Material.DIAMOND);
+				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Sword_3");
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_SWORD, "&7Diamond Sword", EquipmentSlot.HAND, 3.9, 0.92, 305, tier3));
+				recipe.shape(" X ", "XYX", " X ");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_SWORD, "&7Diamond Sword", EquipmentSlot.HAND, 3.9, 0.92, 270, tier2));
+				recipe.setGroup("Diamond Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
+				heart = con.heart("Diamond", Material.DIAMOND);
+				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Sword_4");
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_SWORD, "&7Diamond Sword", EquipmentSlot.HAND, 3.9, 0.92, 340, tier4));
+				recipe.shape("XXX", "XYX", "XXX");
+				recipe.setIngredient('X', heart);
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_SWORD, "&7Diamond Sword", EquipmentSlot.HAND, 3.9, 0.92, 305, tier3));
+				recipe.setGroup("Diamond Swords");
+				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 			}
 		}));
 		this.listConsumables.put("Diamond Pickaxes", new Pair<>(Condition.NONE, new CommandFile() {

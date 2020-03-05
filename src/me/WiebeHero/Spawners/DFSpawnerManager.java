@@ -479,10 +479,11 @@ public class DFSpawnerManager {
 				break;
 			}
 		}
-		dfPlayer.setMove(0.2 + 0.01 * tier + 0.0003 * level);
+		dfPlayer.setMove(0.2F + 0.01F * tier + 0.0003F * level);
 		dfPlayer.resetCalculations();
 		double newHealth = 25.00 / 100.00 * (dfPlayer.getHpCal() + 100.00);
 		double roundOff1 = (double) Math.round(newHealth * 100.00) / 100.00;
+		mob.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(dfPlayer.getMove());
 		mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
 		mob.setHealth(roundOff1);
 		new BukkitRunnable() {

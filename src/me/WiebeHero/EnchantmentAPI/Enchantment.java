@@ -730,6 +730,25 @@ public class Enchantment extends CommandFile implements Listener{
 				}
 			}
 		}));
+		this.listMelee.put("Hit and Run", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+			ArrayList<UUID> list = new ArrayList<UUID>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, PlayerDeathEvent event) {
+				if(!list.contains(damager.getUniqueId())) {
+					Location loc1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 0.25D, victim.getLocation().getZ() + 0D);
+					damager.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc1, 60, 0, 0.3, 0, 0);
+					damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, 2.0F, 1.0F);
+					DFPlayer dfPlayer = dfManager.getEntity(damager);
+					dfPlayer.addMove(dfPlayer.getMove() / 100F * 10F + 2 * level, 80L + 20 * level);
+					list.add(damager.getUniqueId());
+					new BukkitRunnable() {
+						public void run() {
+							list.remove(damager.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 600L - 33L * level);
+				}
+			}
+		}));
 		this.listMelee.put("Large Fireball", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
 			ArrayList<UUID> playerStuff = new ArrayList<UUID>();
 			@Override
@@ -1422,7 +1441,7 @@ public class Enchantment extends CommandFile implements Listener{
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
 				DFPlayer dfPlayer = dfManager.getEntity(victim);
 				if(dfPlayer.getHealth() <= dfPlayer.getMaxHealth() / 100 * 25) {
-					if(i <= 20 + 5 * level) {
+					if(i <= 15 + 5 * level) {
 						Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
 						victim.getWorld().spawnParticle(Particle.CLOUD, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
 						for(Player victim1 : Bukkit.getOnlinePlayers()) {
@@ -1465,7 +1484,7 @@ public class Enchantment extends CommandFile implements Listener{
 				}
 			}
 		}));
-		this.listArmor.put("Archery", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+		this.listArmor.put("Archery", new Pair<>(Condition.ARMOR_CHANGE, new CommandFile() {
 			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
@@ -1557,6 +1576,18 @@ public class Enchantment extends CommandFile implements Listener{
 				}
 			}
 		}));
+		this.listArmor.put("Dodge", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+			@Override
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
+				float i = ThreadLocalRandom.current().nextFloat() * 100;
+				if(i <= 1 + 1 * level) {
+					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
+					victim.getWorld().spawnParticle(Particle.CLOUD, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
+					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2, (float) 1.5);
+					event.setCancelled(true);
+				}
+			}
+		}));
 		this.listArmor.put("Full Counter", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
@@ -1569,6 +1600,24 @@ public class Enchantment extends CommandFile implements Listener{
 					}
 					double damage = event.getDamage();
 					damager.damage(damage);
+				}
+			}
+		}));
+		this.listArmor.put("Falling Absorption", new Pair<>(Condition.ENTITY_DAMAGE, new CommandFile() {
+			@Override
+			public void activateEnchantment(LivingEntity victim, int level, EntityDamageEvent event) {
+				Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
+				victim.getWorld().spawnParticle(Particle.END_ROD, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
+				for(Player victim1 : Bukkit.getOnlinePlayers()) {
+					((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GENERIC_HURT, 2, (float) 1.5);
+				}
+				EntityLiving l = ((CraftLivingEntity)victim).getHandle();
+				float newHearts = l.getAbsorptionHearts() + (float) event.getDamage() / 100F * (10F + 5F * level);
+				if(newHearts <= 40) {
+					l.setAbsorptionHearts(newHearts);
+				}
+				else {
+					l.setAbsorptionHearts(40F);
 				}
 			}
 		}));
@@ -1867,20 +1916,27 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Lightweight", new Pair<>(Condition.ARMOR_CHANGE, new CommandFile() {
-			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
+			HashMap<UUID, Float> list = new HashMap<UUID, Float>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
-					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
-						dfPlayer.addMove(0.02 + 0.02 * level, 0);
-						damager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(dfPlayer.getMove());
-						list.put(dfPlayer.getUUID(), 0.02 + 0.02 * level);
-					}
-					else if(equiped == false && list.containsKey(damager.getUniqueId())) {
-						dfPlayer.removeMove(list.get(dfPlayer.getUUID()), 0);
-						damager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(dfPlayer.getMove());
-						list.remove(dfPlayer.getUUID());
+					if(damager instanceof Player) {
+						Player player = (Player) damager;
+						if(equiped == true && !list.containsKey(damager.getUniqueId())) {
+							dfPlayer.addMove(0.008F + 0.008F * level, 0);
+							player.setWalkSpeed(dfPlayer.getMove());
+							Bukkit.broadcastMessage(dfPlayer.getMove() + "");
+							Bukkit.broadcastMessage(damager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue() + "");
+							list.put(dfPlayer.getUUID(), 0.008F + 0.008F * level);
+						}
+						else if(equiped == false && list.containsKey(damager.getUniqueId())) {
+							dfPlayer.removeMove(list.get(dfPlayer.getUUID()), 0);
+							player.setWalkSpeed((float) dfPlayer.getMove());
+							Bukkit.broadcastMessage(dfPlayer.getMove() + "");
+							Bukkit.broadcastMessage(damager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue() + "");
+							list.remove(dfPlayer.getUUID());
+						}
 					}
 				}
 			}

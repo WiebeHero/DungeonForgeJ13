@@ -50,7 +50,7 @@ public class RankedManager {
 				rPlayer.addKitCooldown(Kit.HEAD_ADMIN, yml.getLong("Kits.Cooldowns." + uuid + ".Head_Admin"));
 				rPlayer.addKitCooldown(Kit.MANAGER, yml.getLong("Kits.Cooldowns." + uuid + ".Manager"));
 				rPlayer.addKitCooldown(Kit.OWNER, yml.getLong("Kits.Cooldowns." + uuid + ".Owner"));
-				rPlayer.addKitCooldown(Kit.USER, yml.getLong("Kits.Cooldowns." + uuid + ".User.Cooldown"));
+				rPlayer.addKitCooldown(Kit.USER, yml.getLong("Kits.Cooldowns." + uuid + ".User"));
 				rPlayer.addKitCooldown(Kit.RAID, yml.getLong("Kits.Cooldowns." + uuid + ".Raid.Cooldown"));
 				rPlayer.setKitUnlock(Kit.RAID, yml.getBoolean("Kits.Cooldowns." + uuid + ".Raid.Unlock"));
 				rPlayer.addKitCooldown(Kit.POTION, yml.getLong("Kits.Cooldowns." + uuid + ".Potion.Cooldown"));

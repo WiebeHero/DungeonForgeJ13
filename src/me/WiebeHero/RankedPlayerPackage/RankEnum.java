@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -58,10 +59,38 @@ public class RankEnum {
 		return Enums.getIfPresent(Kit.class, name).orNull();
 	}
 	public enum Kit{
-		USER("&7User", 0, 86400000L){
+		USER("&7User", 0, 10800000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				HashMap<String, Integer> tierT = new HashMap<String, Integer>();
+				tierT.put("Efficiency", 1);
+				HashMap<String, Integer> tierH = new HashMap<String, Integer>();
+				tierH.put("Unbreaking", 1);
+				HashMap<String, Integer> tierA = new HashMap<String, Integer>();
+				tierA.put("Protection", 1);
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(con.equipment(Material.WOODEN_AXE, "&7Wooden Axe", EquipmentSlot.HAND, 5.0, 0.32, 100, tierT));
+				items.add(con.equipment(Material.WOODEN_PICKAXE, "&7Wooden Pickaxe", EquipmentSlot.HAND, 1.8, 0.8, 100, tierT));
+				items.add(con.equipment(Material.WOODEN_SHOVEL, "&7Wooden Shovel", EquipmentSlot.HAND, 2.3, 0.94, 100, tierT));
+				items.add(con.equipment(Material.WOODEN_HOE, "&7Wooden Hoe", EquipmentSlot.HAND, 1.5, 1.2, 100, tierH));
+				items.add(con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.0, 0.5, 100, tierA, Color.fromRGB(145, 95, 33)));
+				items.add(con.equipment(Material.LEATHER_CHESTPLATE, "&7Wooden Chestplate", EquipmentSlot.CHEST, 1.0, 0.5, 100, tierA, Color.fromRGB(145, 95, 33)));
+				items.add(con.equipment(Material.LEATHER_LEGGINGS, "&7Wooden Leggings", EquipmentSlot.LEGS, 1.0, 0.5, 100, tierA, Color.fromRGB(145, 95, 33)));
+				items.add(con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.0, 0.5, 100, tierA, Color.fromRGB(145, 95, 33)));
+				items.add(builder.constructItem(Material.OAK_LOG, 32));
+				items.add(builder.constructItem(Material.STONE, 32));
+				items.add(builder.constructItem(Material.ENDER_PEARL, 8));
+				items.add(builder.constructItem(Material.TORCH, 16));
+				items.add(builder.constructItem(Material.WATER_BUCKET));
+				items.add(builder.constructItem(Material.LAVA_BUCKET));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
 		BRONZE("&6Bronze", 1, 259200000L){

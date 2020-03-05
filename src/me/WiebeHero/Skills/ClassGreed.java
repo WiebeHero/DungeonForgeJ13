@@ -88,12 +88,12 @@ public class ClassGreed implements Listener{
 										}
 										if(dfShooter.getSpdMod() > 0) {
 											int cLevel = dfShooter.getSpdMod();
-											double inc = cLevel * 0.08;
+											float inc = cLevel * 0.08F;
 											dfShooter.addMove(inc, duration);
 										}
 										if(dfShooter.getCrtMod() > 0) {
 											int cLevel = dfShooter.getCrtMod();
-											double inc = cLevel * 0.08;
+											float inc = cLevel * 0.08F;
 											victim.removeMove(inc, duration);
 											victim.returnPlayer().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, (int) duration, 1));
 										}
@@ -104,7 +104,7 @@ public class ClassGreed implements Listener{
 									long duration = 130 + dfShooter.getLevel();
 									int cLevel = dfShooter.getLevel();
 									double inc = cLevel * 1;
-									double speed = cLevel * 0.001;
+									float speed = cLevel * 0.001F;
 									dfShooter.addRndCal(inc, duration);
 									dfShooter.addMove(speed, duration);
 								}
