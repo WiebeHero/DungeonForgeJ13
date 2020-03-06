@@ -182,7 +182,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager);
 	private AHManager ahManager = new AHManager(availableSlots);
 	private AHInventory ahInv = new AHInventory(ahManager, builder);
-	private Enchantment enchant = new Enchantment(dfManager, facManager, potionM, pApi, facPlayerManager);
+	private Enchantment enchant = new Enchantment(dfManager, facManager, potionM, pApi, facPlayerManager, builder);
 	private Consumable con = new Consumable(dfManager, facManager, facPlayerManager, potionM);
 	private PayCommand pay = new PayCommand(dfManager);
 	private DFSpawnerManager spawnerManager = new DFSpawnerManager(dfManager, disp);

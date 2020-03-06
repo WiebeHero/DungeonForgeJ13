@@ -204,8 +204,8 @@ public class DFPlayer {
 			states.put(SkillState.ATK, States.NM);
 			states.put(SkillState.SPD, States.DW);
 			states.put(SkillState.CRT, States.UP);
-			states.put(SkillState.RND, States.NM);
-			states.put(SkillState.HP, States.DW);
+			states.put(SkillState.RND, States.DW);
+			states.put(SkillState.HP, States.NM);
 			states.put(SkillState.DF, States.UP);
 			return states;
 		}

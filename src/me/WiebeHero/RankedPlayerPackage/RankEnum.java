@@ -28,6 +28,9 @@ public class RankEnum {
 	public Rank getIfPresent(String name) {
 		return Enums.getIfPresent(Rank.class, name).orNull();
 	}
+	public Rank getIfPresent(Kit kit) {
+		return Enums.getIfPresent(Rank.class, kit.toString()).orNull();
+	}
 	public enum Rank{
 		USER(0, "&7User"),
 		BRONZE(1, "&6Bronze"),
@@ -57,6 +60,9 @@ public class RankEnum {
 	}
 	public Kit getIfPresentKit(String name) {
 		return Enums.getIfPresent(Kit.class, name).orNull();
+	}
+	public Kit getIfPresentKit(Rank rank) {
+		return Enums.getIfPresent(Kit.class, rank.toString()).orNull();
 	}
 	public enum Kit{
 		USER("&7User", 0, 10800000L){

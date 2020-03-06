@@ -43,13 +43,14 @@ public class LootChestManager {
 		if(yml.getConfigurationSection("Loot.Chests") != null) {
 			Set<String> set = yml.getConfigurationSection("Loot.Chests").getKeys(false);
 			ArrayList<String> list = new ArrayList<String>(set);
-			if(set.size() != 0) {
+			if(list.size() != 0) {
 				for(int i = 0; i < list.size(); i++) {
 					UUID uuid = UUID.fromString(list.get(i));
 					Location loc = (Location) yml.get("Loot.Chests." + uuid + ".Location");
 					int tier = yml.getInt("Loot.Chests." + uuid + ".Tier");
 					int radius = yml.getInt("Loot.Chests." + uuid + ".Radius");
-					new LootChest(uuid, loc, tier, radius);
+					LootChest chest = new LootChest(uuid, loc, tier, radius);
+					this.add(uuid, chest);
 				}
 			}
 		}

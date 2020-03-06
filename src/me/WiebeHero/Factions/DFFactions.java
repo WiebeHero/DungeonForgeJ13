@@ -477,24 +477,29 @@ public class DFFactions implements Listener,CommandExecutor{
 									final DFFaction fac = faction;
 									int rank = facPlayer.getRank();
 									if(rank >= 2) {
-										new BukkitRunnable() {
-											int count = 10;
-											@Override
-											public void run() {
-												if(player.getLocation().getX() == locX && player.getLocation().getZ() == locZ) {
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting to faction home in &b" + count + "..."));
-													count--;
-													if(count == 0) {
-														player.teleport(fac.getFactionHome());
+										if(fac.getFactionHome() != null) {
+											new BukkitRunnable() {
+												int count = 10;
+												@Override
+												public void run() {
+													if(player.getLocation().getX() == locX && player.getLocation().getZ() == locZ) {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting to faction home in &b" + count + "..."));
+														count--;
+														if(count == 0) {
+															player.teleport(fac.getFactionHome());
+															cancel();
+														}
+													}
+													else {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
 														cancel();
 													}
 												}
-												else {
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
-													cancel();
-												}
-											}
-										}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+											}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have set your faction home!"));
+										}
 									}
 									else {
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to teleport to your faction home!"));

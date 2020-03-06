@@ -1,6 +1,6 @@
 package me.WiebeHero.LootChest;
 
-import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,6 +31,7 @@ public class MoneyNotes implements Listener{
 					dfPlayer.addMoney(money);
 					score.updateScoreboard(player);
 					player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 2.0F);
 				}
 			}
 		}

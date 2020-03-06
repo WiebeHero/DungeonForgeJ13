@@ -10,6 +10,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
@@ -37,4 +38,7 @@ public abstract class CommandFile implements Listener{
 	void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, PlayerInteractEvent event) {};
 	void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageEvent event) {};
     void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {};
+    ItemStack getStack() {
+		return null;
+	};
 }

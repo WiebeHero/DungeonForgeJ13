@@ -58,6 +58,7 @@ import me.WiebeHero.APIs.ParticleAPI;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
+import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.CustomMethods.PotionM;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
@@ -77,9 +78,11 @@ public class Enchantment extends CommandFile implements Listener{
 	private DFFactionPlayerManager facPlayerManager;
 	private PotionM p;
 	private ParticleAPI pApi;
-	public Enchantment(DFPlayerManager dfManager, DFFactionManager facManager, PotionM p, ParticleAPI pApi, DFFactionPlayerManager facPlayerManager) {
+	private ItemStackBuilder builder;
+	public Enchantment(DFPlayerManager dfManager, DFFactionManager facManager, PotionM p, ParticleAPI pApi, DFFactionPlayerManager facPlayerManager, ItemStackBuilder builder) {
 		this.dfManager = dfManager;
 		this.facManager = facManager;
+		this.builder = builder;
 		this.p = p;
 		this.pApi = pApi;
 		this.facPlayerManager = facPlayerManager;
@@ -112,6 +115,19 @@ public class Enchantment extends CommandFile implements Listener{
 					}
 				}
 			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6All Out",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to deal a ton of damage",
+						"&7to your enemy, however. Some of the damage you",
+						"&7have dealt will recoil back at you."
+					))
+				);
+			}
 		}));
 		this.listMelee.put("Beserk", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
@@ -127,6 +143,18 @@ public class Enchantment extends CommandFile implements Listener{
 					p.applyEffect(damager, types, amp, durationAdd);
 				}
 			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Beserk",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to gain a high amount of strength",
+						"&7and mining fatigue when you hit an enemy."
+					))
+				);
+			}
 		}));
 		this.listMelee.put("Blast", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
@@ -141,6 +169,20 @@ public class Enchantment extends CommandFile implements Listener{
 					CustomEnchantments.getInstance().getServer().getPluginManager().callEvent(e);
 					victim.damage(5 + level);
 				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Blast",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to create an explosion",
+						"&7when you hit an enemy. Dealing extra damage",
+						"&7to the enemy you hit and dealing damage to sorounding",
+						"&7enemies."
+					))
+				);
 			}
 		}));
 		this.listMelee.put("Bleed", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
@@ -165,6 +207,19 @@ public class Enchantment extends CommandFile implements Listener{
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0, 10L);
 				}
 			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Bleed",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to let your enemy bleed",
+						"&7causing the enemy to recieve continues damage",
+						"&7for a short amount of time, when you hit your enemy."
+					))
+				);
+			}
 		}));
 		this.listMelee.put("Blind", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
@@ -179,6 +234,18 @@ public class Enchantment extends CommandFile implements Listener{
 					PotionEffectType type = PotionEffectType.BLINDNESS;
 					p.applyEffect(victim, type, amp, durationAdd);
 				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Blind",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to apply the blindness",
+						"&7effect to your enemy when you hit them."
+					))
+				);
 			}
 		}));
 		this.listMelee.put("Blizzard", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
@@ -203,6 +270,19 @@ public class Enchantment extends CommandFile implements Listener{
 					}
 				}
 			} 
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Blizzard",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to apply the blindness",
+						"&7and slowness effect to the enemy you hit and",
+						"&7the enemies sorounding him for a few seconds."
+					))
+				);
+			}
 		}));
 		this.listMelee.put("Brand", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			HashMap<UUID, Integer> brandList = new HashMap<UUID, Integer>();
@@ -249,7 +329,18 @@ public class Enchantment extends CommandFile implements Listener{
 					}.runTaskLater(CustomEnchantments.getInstance(), 140L + (30L * level));
 				}
 			}
-			
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Brand",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to Brand the enemy that you hit",
+						"&7causing them to take more damage from incomming attacks."
+					))
+				);
+			}
 		}));
 		this.listMelee.put("Break", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
@@ -262,6 +353,18 @@ public class Enchantment extends CommandFile implements Listener{
 					DFPlayer dfPlayer = dfManager.getEntity(victim);
 					dfPlayer.removeDfCal(3.0 * level, 140 + (level * 20));
 				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Break",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to decrease the enemy's",
+						"&7defense skill for a few seconds."
+					))
+				);
 			}
 		}));
 		this.listMelee.put("Charge", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
@@ -279,6 +382,19 @@ public class Enchantment extends CommandFile implements Listener{
 						}
 					}.runTaskLater(CustomEnchantments.getInstance(), 800 - 120 * level);
 				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Charge",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you right click an item with this",
+						"&7enchantment on it, it will apply strength and speed",
+						"&7on you for a short time."
+					))
+				);
 			}
 		}));
 		this.listMelee.put("Chronical Disturbance", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
@@ -302,6 +418,19 @@ public class Enchantment extends CommandFile implements Listener{
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
 				}
 			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Chronical Disturbance",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to deal a high amount of damage",
+						"&7to your enemy. This attack will also make their",
+						"&7screen shake."
+					))
+				);
+			}
 		}));
 		
 		this.listMelee.put("Confusion", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
@@ -318,6 +447,18 @@ public class Enchantment extends CommandFile implements Listener{
 					PotionEffectType type = PotionEffectType.CONFUSION;
 					p.applyEffect(victim, type, amp, durationAdd);
 				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Confusion",
+					new ArrayList<String>(Arrays.asList(
+						"&7You have a chance to apply the nausea effect",
+						"&7to the enemy that you hit for a few seconds."
+					))
+				);
 			}
 		}));
 		this.listMelee.put("Cyclone", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
@@ -1926,15 +2067,11 @@ public class Enchantment extends CommandFile implements Listener{
 						if(equiped == true && !list.containsKey(damager.getUniqueId())) {
 							dfPlayer.addMove(0.008F + 0.008F * level, 0);
 							player.setWalkSpeed(dfPlayer.getMove());
-							Bukkit.broadcastMessage(dfPlayer.getMove() + "");
-							Bukkit.broadcastMessage(damager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue() + "");
 							list.put(dfPlayer.getUUID(), 0.008F + 0.008F * level);
 						}
 						else if(equiped == false && list.containsKey(damager.getUniqueId())) {
 							dfPlayer.removeMove(list.get(dfPlayer.getUUID()), 0);
 							player.setWalkSpeed((float) dfPlayer.getMove());
-							Bukkit.broadcastMessage(dfPlayer.getMove() + "");
-							Bukkit.broadcastMessage(damager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue() + "");
 							list.remove(dfPlayer.getUUID());
 						}
 					}
