@@ -18,17 +18,14 @@ import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 
 public class DFArmorUpgrade implements Listener{
 	private NovisEnchantmentGetting enchant;
-	private EffectSkills sk;
 	private DFPlayerManager dfManager;
-	public DFArmorUpgrade(DFPlayerManager dfManager, NovisEnchantmentGetting enchant, EffectSkills sk) {
+	public DFArmorUpgrade(DFPlayerManager dfManager, NovisEnchantmentGetting enchant) {
 		this.dfManager = dfManager;
 		this.enchant = enchant;
-		this.sk = sk;
 	}
 	@EventHandler
 	public void weapons(EntityDeathEvent event) {
@@ -70,19 +67,19 @@ public class DFArmorUpgrade implements Listener{
 							int itemLevel = item.getInteger("Level");
 		    				if(itemLevel != 15) {
 			    				if(i.getType().toString().contains("HELMET")) {
-			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.HEAD, sk, enchant);
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.HEAD, dfManager, enchant);
 			    					Bukkit.getPluginManager().callEvent(e);
 			    				}
 			    				else if(i.getType().toString().contains("CHESTPLATE")) {
-			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.CHEST, sk, enchant);
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.CHEST, dfManager, enchant);
 			    					Bukkit.getPluginManager().callEvent(e);
 			    				}
 			    				else if(i.getType().toString().contains("LEGGINGS")) {
-			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.LEGS, sk, enchant);
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.LEGS, dfManager, enchant);
 			    					Bukkit.getPluginManager().callEvent(e);
 			    				}
 			    				else if(i.getType().toString().contains("BOOTS")) {
-			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.FEET, sk, enchant);
+			    					DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.FEET, dfManager, enchant);
 			    					Bukkit.getPluginManager().callEvent(e);
 			    				}
 					    	}

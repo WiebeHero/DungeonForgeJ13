@@ -13,18 +13,15 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.Scoreboard.DFScoreboard;
 
 public class SkillMenuInteract implements Listener{
 	private DFPlayerManager dfManager;
 	private SkillMenu menu;
-	private EffectSkills sk;
 	private ClassMenu cMenu;
 	private DFScoreboard score;
-	public SkillMenuInteract(DFPlayerManager manager, SkillMenu menu, EffectSkills sk, ClassMenu cMenu, DFScoreboard board) {
+	public SkillMenuInteract(DFPlayerManager manager, SkillMenu menu, ClassMenu cMenu, DFScoreboard board) {
 		this.menu = menu;
-		this.sk = sk;
 		this.dfManager = manager;
 		this.cMenu = cMenu;
 		this.score = board;
@@ -99,7 +96,7 @@ public class SkillMenuInteract implements Listener{
 							dfPlayer.removeSkillPoints(1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							dfPlayer.resetCalculations();
-							sk.attackSpeed(player);
+							dfPlayer.attackSpeed();
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -152,7 +149,7 @@ public class SkillMenuInteract implements Listener{
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							dfPlayer.resetCalculations();
 							menu.SkillMenuInv(player);
-							sk.changeHealth(player);
+							dfPlayer.changeHealth();
 						}
 						else {
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));
@@ -170,7 +167,7 @@ public class SkillMenuInteract implements Listener{
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
 							dfPlayer.resetCalculations();
 							menu.SkillMenuInv(player);
-							sk.runDefense(player);
+							dfPlayer.runDefense();
 						}
 						else {
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis skill is already maxed!"));

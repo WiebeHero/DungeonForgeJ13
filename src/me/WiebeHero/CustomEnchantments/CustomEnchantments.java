@@ -71,6 +71,7 @@ import me.WiebeHero.DungeonInstances.DungeonPartyCommand;
 import me.WiebeHero.EnchantmentAPI.CommandFile;
 import me.WiebeHero.EnchantmentAPI.Enchantment;
 import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
+import me.WiebeHero.EnchantmentAPI.EnchantmentGuideInventory;
 import me.WiebeHero.EnchantmentAPI.EnchantmentHandler;
 import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
@@ -171,7 +172,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private PotionM potionM = new PotionM();
 	private ParticleAPI pApi = new ParticleAPI();
 	private SwordSwingProgress sword = new SwordSwingProgress();
-	private EffectSkills sk = new EffectSkills(dfManager, sword);
 	private MethodLuck luck = new MethodLuck();
 	private WGMethods wg = new WGMethods();
 	private ClassMenu classMenu = new ClassMenu();
@@ -192,6 +192,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private RankEnum rEnum = new RankEnum(builder, con);
 	private KitMenu menu = new KitMenu(builder, rankedManager, rEnum);
 	private KitCommand kitCommand = new KitCommand(rankedManager, rEnum, menu);
+	private EnchantmentGuideInventory enchantmentGuideInv;
 	
 	// General Variables
 	public static boolean hardSave = false;
@@ -203,6 +204,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		instance = this;
 		//Enable Plugin Message
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "\n\nThe plugin CustomEnchantments has been enabled!\n\n");
+		enchantmentGuideInv = new EnchantmentGuideInventory(enchant, builder);
 		AHCommand ahCommand = new AHCommand(ahManager, rankedManager, ahInv);
 		MSGCommand msgCommand = new MSGCommand(msgManager, null);
 		loadConfigManager();
@@ -222,19 +224,20 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		facManager.loadFactions();
 		facManager.activeEnergyTimer();
 		ahManager.loadAuctionHouse();
+		dfManager.loadPlayers();
 		maintenance = yml.getBoolean("General.Values.Maintenance");
 		ahManager.start();
 		//Config Manager
 		ModerationEvents mod = new ModerationEvents(facManager, dfManager, rankedManager, punishManager, staffManager, spawnerManager, lootChestManager, gui, multi, luck, method, score, classMenu);
 		//Custom Weapons
-		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(dfManager, nEnchant, sk), this);
+		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(dfManager, nEnchant), this);
 		//Custom Armor
-		getServer().getPluginManager().registerEvents(new DFArmorUpgrade(dfManager, nEnchant, sk), this);
-		getServer().getPluginManager().registerEvents(new DFShieldUpgrade(dfManager, nEnchant, sk), this);
+		getServer().getPluginManager().registerEvents(new DFArmorUpgrade(dfManager, nEnchant), this);
+		getServer().getPluginManager().registerEvents(new DFShieldUpgrade(dfManager, nEnchant), this);
 		//Custom Shields
 		//Skills
-		getServer().getPluginManager().registerEvents(new SkillMenuInteract(dfManager, skill, sk, classMenu, score), this);
-		getServer().getPluginManager().registerEvents(new SkillJoin(dfManager, classMenu, sk), this);
+		getServer().getPluginManager().registerEvents(new SkillMenuInteract(dfManager, skill, classMenu, score), this);
+		getServer().getPluginManager().registerEvents(new SkillJoin(dfManager, classMenu), this);
 		getServer().getPluginManager().registerEvents(new ClassMenuSelection(dfManager, classMenu), this);
 		getServer().getPluginManager().registerEvents(new XPEarningMobs(dfManager, score), this);
 		getServer().getPluginManager().registerEvents(new EffectSkills(dfManager, sword), this);
@@ -264,7 +267,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(score, this);
 		//XP Trader
 		getServer().getPluginManager().registerEvents(new XPTraderMenu(), this);
-		getServer().getPluginManager().registerEvents(new XPAddWeapons(nEnchant, sk), this);
+		getServer().getPluginManager().registerEvents(new XPAddWeapons(nEnchant, dfManager), this);
 		getServer().getPluginManager().registerEvents(new XPAddPlayers(dfManager, score), this);
 		//lootSteal
 		getServer().getPluginManager().registerEvents(new CancelLootSteal(), this);
@@ -282,7 +285,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Seasonal Events
 		getServer().getPluginManager().registerEvents(new ChristmasInventoryEvents(), this);
 		punishManager.loadPunishList();
-		dfManager.loadPlayers();
 		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
 		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
 		try{
@@ -301,12 +303,17 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
-		getServer().getPluginManager().registerEvents(new EnchantmentHandler(enchant), this);
-		enchant.loadMeleeEnchantments();
-		enchant.loadBowEnchantments();
-		enchant.loadArmorEnchantments();
-		enchant.loadShieldEnchantments();
+		getServer().getPluginManager().registerEvents(new EnchantmentHandler(enchant, enchantmentGuideInv), this);
 		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getMeleeEnchantments().entrySet()) {
+			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
+		}
+		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getBowEnchantments().entrySet()) {
+			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
+		}
+		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getArmorEnchantments().entrySet()) {
+			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
+		}
+		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getShieldEnchantments().entrySet()) {
 			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
 		}
 		con.loadConsumables();

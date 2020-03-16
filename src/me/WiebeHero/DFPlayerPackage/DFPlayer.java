@@ -5,16 +5,19 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFPlayerPackage.EnumSkills.SkillState;
 import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 import me.WiebeHero.DFPlayerPackage.State.States;
+import net.md_5.bungee.api.ChatColor;
 
 public class DFPlayer {
 	public UUID id;
@@ -938,5 +941,163 @@ public class DFPlayer {
 			}
 		}
 		return null;
+	}
+	public void attackSpeed() {
+		DFPlayer dfPlayer = this;
+		new BukkitRunnable() {
+			public void run() {
+				//-------------------------------------------------------
+				//Player Attack Speed Handler
+				//-------------------------------------------------------
+				Player p = Bukkit.getPlayer(dfPlayer.getUUID());
+				if(p != null && p.isOnline()) {
+					ItemStack item = p.getEquipment().getItemInMainHand();
+					if(item != null) {
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().hasLore()) {
+								if(ChatColor.stripColor(item.getItemMeta().getLore().toString()).contains("Attack Speed:")) {
+									if(item.getType() != Material.BOW) {
+										String check1 = "";
+										String check2 = "";
+										for(String s : item.getItemMeta().getLore()) {
+											if(ChatColor.stripColor(s).contains("Attack Speed:")) {
+												check1 = ChatColor.stripColor(s);
+											}
+											else if(ChatColor.stripColor(s).contains("Attack Damage:")) {
+												check2 = ChatColor.stripColor(s);
+											}
+										}
+										check1 = check1.replaceAll("[^\\d.]", "");
+										double attackSpeed = Double.parseDouble(check1);
+										check2 = check2.replaceAll("[^\\d.]", "");
+										double attackDamage = Double.parseDouble(check2);
+										p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(attackDamage);
+										if(p instanceof Player) {
+											p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
+										}
+									}
+									else {
+										String check1 = "";
+										for(String s : item.getItemMeta().getLore()) {
+											if(s.contains("Attack Speed")) {
+												check1 = ChatColor.stripColor(s);
+											}
+										}
+										check1 = check1.replaceAll("[^\\d.]", "");
+										double attackSpeed = Double.parseDouble(check1);
+										p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
+										if(p instanceof Player) {
+											p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(attackSpeed / 100.00 * (dfPlayer.getSpdCal() + 100.00));
+										}
+									}
+								}
+								else {
+									p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
+									if(p instanceof Player) {
+										p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+									}
+								}
+							}
+							else {
+								p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
+								if(p instanceof Player) {
+									p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+								}
+							}
+						}
+						else {
+							p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
+							if(p instanceof Player) {
+								p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+							}
+						}
+					}
+					else {
+						p.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1);
+						if(p instanceof Player) {
+							p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+						}
+					}
+				}
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+	}
+	public void changeHealth() {
+		Entity entity = Bukkit.getEntity(this.getUUID());
+		if(entity instanceof LivingEntity) {
+			LivingEntity ent = (LivingEntity) entity;
+			if(!ent.isDead()) {
+				double baseHealth = 20.00;
+				if(entity instanceof Player) {
+					baseHealth = 20.00;
+				}
+				else {
+					baseHealth = 25.00;
+				}
+				double newHealth = baseHealth;
+				newHealth = baseHealth / 100.00 * (this.getHpCal() + 100.00);
+				double roundOff1 = (double) Math.round(newHealth * 100.00) / 100.00;
+				ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
+			}
+		}
+	}
+	public void runDefense() {
+		DFPlayer dfPlayer = this;
+		new BukkitRunnable() {
+			public void run() {
+				Entity entity = Bukkit.getEntity(dfPlayer.getUUID());
+				if(entity instanceof LivingEntity) {
+					LivingEntity ent = (LivingEntity) entity;
+					double armorD = 0.0;
+					double armorT = 0.0;
+					for(ItemStack item : ent.getEquipment().getArmorContents()) {
+						if(item != null) {
+							if(item.hasItemMeta()) {
+								if(item.getItemMeta().hasLore()) {
+									if(item.getItemMeta().getLore().toString().contains("Armor Defense") && item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
+										String check1 = "";
+										String check2 = "";
+										for(String s : item.getItemMeta().getLore()) {
+											if(s.contains("Armor Defense")) {
+												check1 = ChatColor.stripColor(s);
+											}
+											else if(s.contains("Armor Toughness")){
+												check2 = ChatColor.stripColor(s);
+											}
+										}
+										check1 = check1.replaceAll("[^\\d.]", "");
+										check2 = check2.replaceAll("[^\\d.]", "");
+										double armorDT = Double.parseDouble(check1);
+										double armorTT = Double.parseDouble(check2);
+										armorD = armorD + armorDT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+										armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+									}
+								}
+							}
+						}
+					}
+					ItemStack item = ent.getEquipment().getItemInOffHand();
+					if(item != null) {
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().hasLore()) {
+								if(item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
+									String check1 = "";
+									for(String s : item.getItemMeta().getLore()) {
+										if(s.contains("Armor Toughness")) {
+											check1 = ChatColor.stripColor(s);
+										}
+									}
+									check1 = check1.replaceAll("[^\\d.]", "");
+									double armorTT = Double.parseDouble(check1);
+									armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+								}
+							}
+						}
+					}
+					ent.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(armorD);
+					ent.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(armorT);
+				}
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 	}
 }

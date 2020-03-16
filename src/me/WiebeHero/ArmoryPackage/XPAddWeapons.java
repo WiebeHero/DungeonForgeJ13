@@ -11,15 +11,15 @@ import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
-import me.WiebeHero.DFPlayerPackage.EffectSkills;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 
 public class XPAddWeapons implements Listener{
 	private NovisEnchantmentGetting enchant;
-	private EffectSkills sk;
-	public XPAddWeapons(NovisEnchantmentGetting enchant, EffectSkills sk) {
+	private DFPlayerManager dfManager;
+	public XPAddWeapons(NovisEnchantmentGetting enchant, DFPlayerManager dfManager) {
 		this.enchant = enchant;
-		this.sk = sk;
+		this.dfManager = dfManager;
 	}
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
@@ -60,7 +60,7 @@ public class XPAddWeapons implements Listener{
 								int xpCursor = cursor.getInteger("XP") + 2500;
 								int totalXpCursor = cursor.getInteger("TotalXP");
 								int total = xpItem + totalXpCursor + xpCursor;
-								DFItemXpGainEvent e = new DFItemXpGainEvent(player, i, c, total, event.getSlot(), sk, enchant);
+								DFItemXpGainEvent e = new DFItemXpGainEvent(player, i, c, total, event.getSlot(), dfManager, enchant);
 								Bukkit.getPluginManager().callEvent(e);
 								if(!e.isCancelled()) {
 									event.setCancelled(true);

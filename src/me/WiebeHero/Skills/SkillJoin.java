@@ -21,7 +21,6 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.RankedPlayerPackage.RankEnum;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.NBTTagDouble;
@@ -32,12 +31,10 @@ import net.minecraft.server.v1_13_R2.NBTTagString;
 public class SkillJoin implements Listener{
 	private DFPlayerManager dfManager;
 	private ClassMenu classMenu;
-	private EffectSkills es;
 	private RankEnum rEnum;
-	public SkillJoin(DFPlayerManager manager, ClassMenu menu, EffectSkills es) {
+	public SkillJoin(DFPlayerManager manager, ClassMenu menu) {
 		this.dfManager = manager;
 		this.classMenu = menu;
-		this.es = es;
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void skillJoin(PlayerJoinEvent event) {
@@ -70,9 +67,9 @@ public class SkillJoin implements Listener{
 			}
 			else {
 				dfPlayer.resetCalculations();
-				es.changeHealth(player);
-				es.attackSpeed(player);
-				es.runDefense(player);
+				dfPlayer.changeHealth();
+				dfPlayer.attackSpeed();
+				dfPlayer.runDefense();
 			}
 		}
 	}

@@ -19,17 +19,14 @@ import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 
 public class DFWeaponUpgrade implements Listener{
 	private NovisEnchantmentGetting enchant;
-	private EffectSkills sk;
 	private DFPlayerManager dfManager;
-	public DFWeaponUpgrade(DFPlayerManager dfManager, NovisEnchantmentGetting enchant, EffectSkills sk) {
+	public DFWeaponUpgrade(DFPlayerManager dfManager, NovisEnchantmentGetting enchant) {
 		this.dfManager = dfManager;
 		this.enchant = enchant;
-		this.sk = sk;
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void weapons(EntityDeathEvent event) {
@@ -73,7 +70,7 @@ public class DFWeaponUpgrade implements Listener{
 						}
 						int itemLevel = item.getInteger("Level");
 	    				if(itemLevel != 15) {
-							DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.HAND, sk, enchant);
+							DFItemXpGainEvent e = new DFItemXpGainEvent(damager, i, totalxpearned, EquipmentSlot.HAND, dfManager, enchant);
 							Bukkit.getPluginManager().callEvent(e);
 				    	}
 					}

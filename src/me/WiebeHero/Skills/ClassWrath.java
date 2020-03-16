@@ -2,6 +2,7 @@
 package me.WiebeHero.Skills;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -14,9 +15,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactionManager;
@@ -27,6 +28,7 @@ public class ClassWrath implements Listener{
 	private DFPlayerManager dfManager;
 	private DFFactionPlayerManager facPlayerManager;
 	private DFFactionManager facManager;
+	private ArrayList<UUID> disableBow = new ArrayList<UUID>();
 	public ClassWrath(DFPlayerManager manager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager) {
 		this.dfManager = manager;
 		this.facPlayerManager = facPlayerManager;
@@ -89,10 +91,10 @@ public class ClassWrath implements Listener{
 							long dur = cLevel * 60;
 							for(Entity e : ents) {
 								if(e instanceof Player) {
-									EffectSkills.disableBow.add(e.getUniqueId());
+									this.disableBow.add(e.getUniqueId());
 									new BukkitRunnable() {
 										public void run() {
-											EffectSkills.disableBow.remove(e.getUniqueId());
+											disableBow.remove(e.getUniqueId());
 										}
 									}.runTaskLater(CustomEnchantments.getInstance(), dur);
 								}
@@ -130,6 +132,15 @@ public class ClassWrath implements Listener{
 						}
 					}
 				}
+			}
+		}
+	}
+	@EventHandler
+	public void cancelBow(DFShootBowEvent event) {
+		if(!event.isCancelled()) {
+			Player p = event.getShooter();
+			if(this.disableBow.contains(p.getUniqueId())) {
+				event.setCancelled(true);
 			}
 		}
 	}

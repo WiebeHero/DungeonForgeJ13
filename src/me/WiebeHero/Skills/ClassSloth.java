@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -17,7 +18,6 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 
 public class ClassSloth implements Listener{
@@ -56,8 +56,8 @@ public class ClassSloth implements Listener{
 						Arrow arrow = player.getWorld().spawnArrow(loc, rotateVectorAroundY(vec, 180), (float)(1.50 * 0.20), 26);
 						arrow.setShooter(player);
 						arrow.setCritical(true);
-						EffectSkills.arrowList.put(arrow.getUniqueId(), 1.0F);
-						EffectSkills.arrowDamage.put(arrow.getUniqueId(), damage);
+						arrow.setMetadata("AttackStrength", new FixedMetadataValue(CustomEnchantments.getInstance(), 1.0F));
+						arrow.setDamage(damage);
 					}
 					new BukkitRunnable() {
 						public void run() {
@@ -112,7 +112,7 @@ public class ClassSloth implements Listener{
 					if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
 						if(dfPlayer.getCrtMod() > 0) {
 							if(dfPlayer.getHealth() >= dfPlayer.getMaxHealth() * 0.50) {
-								dfPlayer.addCrtCal(25, 1);
+								dfPlayer.addCrtCal(dfPlayer.getCrtCal() * 5, 1);
 							}
 						}
 					}

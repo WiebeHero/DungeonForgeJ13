@@ -12,12 +12,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.DFPlayerPackage.EffectSkills;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 
 public class DFItemLevelUpEvent extends Event{
 	private NovisEnchantmentGetting enchant;
-	private EffectSkills sk;
+	private DFPlayerManager dfManager;
 	
 	private static final HandlerList handlers = new HandlerList();
 	private Player player;
@@ -28,24 +29,24 @@ public class DFItemLevelUpEvent extends Event{
 	private int slotR;
 	private EquipmentSlot slot;
 	
-	public DFItemLevelUpEvent(Player player, ItemStack item, int xp, EquipmentSlot slot, EffectSkills sk, NovisEnchantmentGetting enchant){
+	public DFItemLevelUpEvent(Player player, ItemStack item, int xp, EquipmentSlot slot, DFPlayerManager dfManager, NovisEnchantmentGetting enchant){
         this.player = player;
         this.isCancelled = false;
         this.xp = xp;
         this.item = item;
         this.slot = slot;
-        this.sk = sk;
+        this.dfManager = dfManager;
         this.enchant = enchant;
     }
 	
-	public DFItemLevelUpEvent(Player player, ItemStack item, ItemStack cursor, int xp, int slot, EffectSkills sk, NovisEnchantmentGetting enchant){
+	public DFItemLevelUpEvent(Player player, ItemStack item, ItemStack cursor, int xp, int slot, DFPlayerManager dfManager, NovisEnchantmentGetting enchant){
         this.player = player;
         this.isCancelled = false;
         this.xp = xp;
         this.item = item;
         this.cursor = cursor;
         this.slotR = slot;
-        this.sk = sk;
+        this.dfManager = dfManager;
         this.enchant = enchant;
     }
 	
@@ -182,7 +183,10 @@ public class DFItemLevelUpEvent extends Event{
 				i.setItemMeta(meta);
 				this.getPlayer().getInventory().setItemInMainHand(i);
 				//Weapon Data
-				sk.attackSpeed(this.getPlayer());
+				if(dfManager.contains(this.getPlayer())) {
+					DFPlayer dfPlayer = dfManager.getEntity(this.getPlayer());
+					dfPlayer.attackSpeed();
+				}
 			}
 			else if(this.getEquipmentSlot() == EquipmentSlot.HEAD) {
 				ItemStack i = this.getItemStack();
@@ -248,7 +252,10 @@ public class DFItemLevelUpEvent extends Event{
 				i.setItemMeta(meta);
 				this.getPlayer().getInventory().setHelmet(i);
 				//Weapon Data
-				sk.runDefense(this.getPlayer());
+				if(dfManager.contains(this.getPlayer())) {
+					DFPlayer dfPlayer = dfManager.getEntity(this.getPlayer());
+					dfPlayer.runDefense();
+				}
 			}
 			else if(this.getEquipmentSlot() == EquipmentSlot.CHEST) {
 				ItemStack i = this.getItemStack();
@@ -314,7 +321,10 @@ public class DFItemLevelUpEvent extends Event{
 				i.setItemMeta(meta);
 				this.getPlayer().getInventory().setChestplate(i);
 				//Weapon Data
-				sk.runDefense(this.getPlayer());
+				if(dfManager.contains(this.getPlayer())) {
+					DFPlayer dfPlayer = dfManager.getEntity(this.getPlayer());
+					dfPlayer.runDefense();
+				}
 			}
 			else if(this.getEquipmentSlot() == EquipmentSlot.LEGS) {
 				ItemStack i = this.getItemStack();
@@ -380,7 +390,10 @@ public class DFItemLevelUpEvent extends Event{
 				i.setItemMeta(meta);
 				this.getPlayer().getInventory().setLeggings(i);
 				//Weapon Data
-				sk.runDefense(this.getPlayer());
+				if(dfManager.contains(this.getPlayer())) {
+					DFPlayer dfPlayer = dfManager.getEntity(this.getPlayer());
+					dfPlayer.runDefense();
+				}
 			}
 			else if(this.getEquipmentSlot() == EquipmentSlot.FEET) {
 				ItemStack i = this.getItemStack();
@@ -446,7 +459,10 @@ public class DFItemLevelUpEvent extends Event{
 				i.setItemMeta(meta);
 				this.getPlayer().getInventory().setBoots(i);
 				//Weapon Data
-				sk.runDefense(this.getPlayer());
+				if(dfManager.contains(this.getPlayer())) {
+					DFPlayer dfPlayer = dfManager.getEntity(this.getPlayer());
+					dfPlayer.runDefense();
+				}
 			}
 			else if(this.getEquipmentSlot() == EquipmentSlot.OFF_HAND) {
 				ItemStack i = this.getItemStack();
@@ -474,16 +490,16 @@ public class DFItemLevelUpEvent extends Event{
 					}
 				}
 				double value1 = baseDamage + incDamage * (itemLevel - 1);
-	        	double value2 = baseSpeed - incSpeed * (itemLevel - 1);
+            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
 				//Config Data
 				//Weapon Data
-	        	item.setInteger("Level", itemLevel);
-	        	item.setInteger("XP", this.getXP());
-	        	item.setInteger("MAXXP", maxxp);
-	        	item.setInteger("TotalXP", total);
-	        	item.setDouble("Armor Toughness", value1);
-	        	item.setDouble("Cooldown", value2);
-	        	this.setItemStack(item.getItem());
+            	item.setInteger("Level", itemLevel);
+            	item.setInteger("XP", this.getXP());
+            	item.setInteger("MAXXP", maxxp);
+            	item.setInteger("TotalXP", total);
+            	item.setDouble("Armor Toughness", value1);
+            	item.setDouble("Cooldown", value2);
+            	i = item.getItem();
 				ItemMeta meta = i.getItemMeta();
 				meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
 				ArrayList<String> newLore = new ArrayList<String>();
@@ -512,7 +528,77 @@ public class DFItemLevelUpEvent extends Event{
 				i.setItemMeta(meta);
 				this.getPlayer().getInventory().setItemInOffHand(i);
 				//Weapon Data
-				sk.runDefense(this.getPlayer());
+				if(dfManager.contains(this.getPlayer())) {
+					DFPlayer dfPlayer = dfManager.getEntity(this.getPlayer());
+					dfPlayer.runDefense();
+				}
+//				ItemStack i = this.getItemStack();
+//				NBTItem item = new NBTItem(i);
+//				int itemLevel = item.getInteger("Level");
+//				int maxxp = item.getInteger("MAXXP");
+//				int total = item.getInteger("TotalXP");	
+//				String name = item.getString("ItemName");
+//				String rarity = item.getString("Rarity");
+//				String enchantmentString = item.getString("EnchantmentString");
+//				double baseDamage = item.getDouble("Base Armor Toughness");
+//				double baseSpeed = item.getDouble("Base Cooldown");
+//				double incDamage = item.getDouble("Inc Armor Toughness");
+//				double incSpeed = item.getDouble("Inc Cooldown");
+//				this.getPlayer().getWorld().playSound(this.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, (float)2, (float)1.5);
+//				for(int x = itemLevel + 1; x <= 15; x++) {
+//					if(this.getXP() >= maxxp) {
+//						itemLevel = x;
+//						this.setXP(this.getXP() - maxxp);
+//						total = total + maxxp;
+//						maxxp = maxxp / 100 * 135;
+//					}
+//					else {
+//						break;
+//					}
+//				}
+//				double value1 = baseDamage + incDamage * (itemLevel - 1);
+//	        	double value2 = baseSpeed - incSpeed * (itemLevel - 1);
+//				//Config Data
+//				//Weapon Data
+//	        	item.setInteger("Level", itemLevel);
+//	        	item.setInteger("XP", this.getXP());
+//	        	item.setInteger("MAXXP", maxxp);
+//	        	item.setInteger("TotalXP", total);
+//	        	item.setDouble("Armor Toughness", value1);
+//	        	item.setDouble("Cooldown", value2);
+//	        	this.setItemStack(item.getItem());
+//				ItemMeta meta = i.getItemMeta();
+//				meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+//				ArrayList<String> newLore = new ArrayList<String>();
+//				newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+//				double roundOff1 = (double) Math.round(value1 * 100) / 100;
+//				double roundOff2 = (double) Math.round(value2 * 100) / 100;
+//				newLore.add(new CCT().colorize("&7-----------------------"));
+//				newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff1));
+//				newLore.add(new CCT().colorize("&7Cooldown: &b" + roundOff2 + " Seconds"));
+//				newLore.add(new CCT().colorize("&7-----------------------"));
+//				if(itemLevel < 15) {
+//					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + this.getXP() + " &6/ &b&l" + maxxp + "&a]"));
+//				}
+//				else if(itemLevel == 15) {
+//					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+//				}
+//				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
+//				newLore.add(new CCT().colorize("&7-----------------------"));
+//				if(itemLevel >= 6) {
+//					int loreRequired = itemLevel - 4;
+//					int levelRequired = loreRequired * 5;
+//					newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+//				}
+//				newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+//				meta.setLore(newLore);
+//				i.setItemMeta(meta);
+//				this.getPlayer().getInventory().setItemInOffHand(i);
+//				//Weapon Data
+//				if(dfManager.contains(this.getPlayer())) {
+//					DFPlayer dfPlayer = dfManager.getEntity(this.getPlayer());
+//					dfPlayer.runDefense();
+//				}
 			}
 			else {
 				Player player = this.getPlayer();
@@ -600,7 +686,7 @@ public class DFItemLevelUpEvent extends Event{
 				}
 				else if(item.hasKey("ShieldKey")) {
 					newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff1));
-    				newLore.add(new CCT().colorize("&7Cooldown: &6" + roundOff2));
+    				newLore.add(new CCT().colorize("&7Cooldown: &b" + roundOff2 + " Seconds"));
 				}
 				else if(item.hasKey("ArmorKey")) {
     				newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Kit;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Rank;
 
@@ -102,9 +104,11 @@ public class RankedPlayer {
 		return this.homeCount;
 	}
 	public void loadKits() {
-		if(!this.getKitCooldownList().containsKey(Kit.USER)) {
-			for(Kit kit : Kit.values()) {
+		for(Kit kit : Kit.values()) {
+			if(!this.getKitCooldownList().containsKey(kit)) {
 				this.addKitCooldown(kit, 0L);
+			}
+			if(!this.getKitCooldownList().containsKey(kit)) {
 				if(kit.rank >= 100) {
 					this.setKitUnlock(kit, false);
 				}

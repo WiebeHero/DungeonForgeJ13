@@ -7,20 +7,18 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.DFPlayerPackage.EffectSkills;
+import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 
 public class DFItemXpGainEvent extends Event{
 	private NovisEnchantmentGetting enchant;
-	private EffectSkills sk;
+	private DFPlayerManager dfManager;
 	
 	private static final HandlerList handlers = new HandlerList();
 	private Player player;
@@ -31,17 +29,17 @@ public class DFItemXpGainEvent extends Event{
 	private int slotR;
 	private EquipmentSlot slot;
 	
-	public DFItemXpGainEvent(Player player, ItemStack item, int xp, EquipmentSlot slot, EffectSkills sk, NovisEnchantmentGetting enchant){
+	public DFItemXpGainEvent(Player player, ItemStack item, int xp, EquipmentSlot slot, DFPlayerManager dfManager, NovisEnchantmentGetting enchant){
         this.player = player;
         this.isCancelled = false;
         this.xp = xp;
         this.item = item;
         this.slot = slot;
         this.enchant = enchant;
-        this.sk = sk;
+        this.dfManager = dfManager;
     }
 	
-	public DFItemXpGainEvent(Player player, ItemStack item, ItemStack cursor, int xp, int slot, EffectSkills sk, NovisEnchantmentGetting enchant){
+	public DFItemXpGainEvent(Player player, ItemStack item, ItemStack cursor, int xp, int slot, DFPlayerManager dfManager, NovisEnchantmentGetting enchant){
         this.player = player;
         this.isCancelled = false;
         this.xp = xp;
@@ -49,7 +47,7 @@ public class DFItemXpGainEvent extends Event{
         this.cursor = cursor;
         this.slotR = slot;
         this.enchant = enchant;
-        this.sk = sk;
+        this.dfManager = dfManager;
     }
 	
 	public Player getPlayer() {
@@ -178,11 +176,11 @@ public class DFItemXpGainEvent extends Event{
 				int maxxp = item.getInteger("MAXXP");
 				if(xp >= maxxp) {
 					if(this.getEquipmentSlot() != null) {
-						DFItemLevelUpEvent e = new DFItemLevelUpEvent(this.getPlayer(), i, xp, this.getEquipmentSlot(), sk, enchant);
+						DFItemLevelUpEvent e = new DFItemLevelUpEvent(this.getPlayer(), i, xp, this.getEquipmentSlot(), dfManager, enchant);
 						Bukkit.getPluginManager().callEvent(e);
 					}
 					else {
-						DFItemLevelUpEvent e = new DFItemLevelUpEvent(this.getPlayer(), i, this.getCursorStack(), xp, this.getClickedSlot(), sk, enchant);
+						DFItemLevelUpEvent e = new DFItemLevelUpEvent(this.getPlayer(), i, this.getCursorStack(), xp, this.getClickedSlot(), dfManager, enchant);
 						Bukkit.getPluginManager().callEvent(e);
 					}
 				}

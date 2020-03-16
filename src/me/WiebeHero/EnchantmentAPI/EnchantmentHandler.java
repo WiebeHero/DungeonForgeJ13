@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,20 +19,26 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
+import de.tr7zw.nbtapi.NBTItem;
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
 import me.WiebeHero.MoreStuff.SwordSwingProgress;
 
 public class EnchantmentHandler extends SwordSwingProgress{
 	private Enchantment enchantment;
-	public EnchantmentHandler(Enchantment enchantment) {
+	private EnchantmentGuideInventory enchInv;
+	public EnchantmentHandler(Enchantment enchantment, EnchantmentGuideInventory enchInv) {
 		this.enchantment = enchantment;
+		this.enchInv = enchInv;
 	}
 	@EventHandler
 	public void meleeEnchantmentHandler(EntityDamageByEntityEvent event) {
@@ -321,7 +328,7 @@ public class EnchantmentHandler extends SwordSwingProgress{
 			if(!event.isCancelled()) {
 				LivingEntity damager = (LivingEntity) event.getShooter();
 				ItemStack item = event.getBow();
-				if(event.getProjectile().hasMetadata("AttackStrength") && event.getProjectile().getMetadata("AttackStrength").get(0).asDouble() == 1.00) {
+				if(event.getAttackCharge() == 1.0F) {
 					if(item != null) {
 						if(item.hasItemMeta()) {
 							if(item.getItemMeta().hasLore()) {
@@ -656,5 +663,172 @@ public class EnchantmentHandler extends SwordSwingProgress{
 			}
 		}
 	}
-	
+	@EventHandler
+	public void enchantmentGuideOpen(PlayerInteractEntityEvent event) {
+		if(event.getPlayer() instanceof Player) {
+			if(event.getRightClicked() instanceof HumanEntity) {
+				Player player = event.getPlayer();
+				HumanEntity guide = (HumanEntity) event.getRightClicked();
+				if(guide.getCustomName() != null) {
+					if(guide.getCustomName().contains(ChatColor.stripColor("Enchantments"))) {
+						this.enchInv.openMainInventory(player);
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void enchantmentGuideMenu(InventoryClickEvent event) {
+		Player player = (Player) event.getWhoClicked();
+		ItemStack i = event.getCurrentItem();
+		if(ChatColor.stripColor(player.getOpenInventory().getTitle()).equals("Enchantments")) {
+			event.setCancelled(true);
+			if(i != null) {
+				NBTItem item = new NBTItem(i);
+				if(item.hasKey("Melee")) {
+					if(this.enchInv.getMeleeSize() != 0) {
+						this.enchInv.openMeleeInventory(player, 1);
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cMelee enchantments are currently not available"));
+					}
+				}
+				if(item.hasKey("Bow")) {
+					if(this.enchInv.getBowSize() != 0) {
+						this.enchInv.openBowInventory(player, 1);
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cBow enchantments are currently not available"));
+					}
+				}
+				if(item.hasKey("Armor")) {
+					if(this.enchInv.getArmorSize() != 0) {
+						this.enchInv.openArmorInventory(player, 1);
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cArmor enchantments are currently not available"));
+					}
+				}
+				if(item.hasKey("Shield")) {
+					if(this.enchInv.getShieldSize() != 0) {
+						this.enchInv.openShieldInventory(player, 1);
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cShield enchantments are currently not available"));
+					}
+				}
+				else if(item.hasKey("Exit")) {
+					player.closeInventory();
+				}
+			}
+		}
+		else if(player.getOpenInventory().getTitle().contains("Melee Enchantments")) {
+			event.setCancelled(true);
+			if(i != null) {
+				NBTItem item = new NBTItem(i);
+				if(item.hasKey("Next")) {
+					int page = item.getInteger("Next");
+					if(page - 1 < this.enchInv.getMeleeSize()) {
+						this.enchInv.openMeleeInventory(player, page);
+					}
+					else {
+						this.enchInv.openMeleeInventory(player, 1);
+					}
+				}
+				else if(item.hasKey("Previous")) {
+					int page = item.getInteger("Previous");
+					if(page - 1 >= 0) {
+						this.enchInv.openMeleeInventory(player, page);
+					}
+					else {
+						this.enchInv.openMeleeInventory(player, this.enchInv.getMeleeSize());
+					}
+				}
+				else if(item.hasKey("Back")) {
+					this.enchInv.openMainInventory(player);
+				}
+			}
+		}
+		else if(player.getOpenInventory().getTitle().contains("Bow Enchantments")) {
+			event.setCancelled(true);
+			if(i != null) {
+				NBTItem item = new NBTItem(i);
+				if(item.hasKey("Next")) {
+					int page = item.getInteger("Next");
+					if(page - 1 < this.enchInv.getBowSize()) {
+						this.enchInv.openBowInventory(player, page);
+					}
+					else {
+						this.enchInv.openBowInventory(player, 1);
+					}
+				}
+				else if(item.hasKey("Previous")) {
+					int page = item.getInteger("Previous");
+					if(page - 1 >= 0) {
+						this.enchInv.openBowInventory(player, page);
+					}
+					else {
+						this.enchInv.openBowInventory(player, this.enchInv.getBowSize());
+					}
+				}
+				else if(item.hasKey("Back")) {
+					this.enchInv.openMainInventory(player);
+				}
+			}
+		}
+		else if(player.getOpenInventory().getTitle().contains("Armor Enchantments")) {
+			event.setCancelled(true);
+			if(i != null) {
+				NBTItem item = new NBTItem(i);
+				if(item.hasKey("Next")) {
+					int page = item.getInteger("Next");
+					if(page - 1 < this.enchInv.getArmorSize()) {
+						this.enchInv.openArmorInventory(player, page);
+					}
+					else {
+						this.enchInv.openArmorInventory(player, 1);
+					}
+				}
+				else if(item.hasKey("Previous")) {
+					int page = item.getInteger("Previous");
+					if(page - 1 >= 0) {
+						this.enchInv.openArmorInventory(player, page);
+					}
+					else {
+						this.enchInv.openArmorInventory(player, this.enchInv.getArmorSize());
+					}
+				}
+				else if(item.hasKey("Back")) {
+					this.enchInv.openMainInventory(player);
+				}
+			}
+		}
+		else if(player.getOpenInventory().getTitle().contains("Shield Enchantments")) {
+			event.setCancelled(true);
+			if(i != null) {
+				NBTItem item = new NBTItem(i);
+				if(item.hasKey("Next")) {
+					int page = item.getInteger("Next");
+					if(page - 1 < this.enchInv.getShieldSize()) {
+						this.enchInv.openShieldInventory(player, page);
+					}
+					else {
+						this.enchInv.openShieldInventory(player, 1);
+					}
+				}
+				else if(item.hasKey("Previous")) {
+					int page = item.getInteger("Previous");
+					if(page - 1 >= 0) {
+						this.enchInv.openShieldInventory(player, page);
+					}
+					else {
+						this.enchInv.openShieldInventory(player, this.enchInv.getShieldSize());
+					}
+				}
+				else if(item.hasKey("Back")) {
+					this.enchInv.openMainInventory(player);
+				}
+			}
+		}
+	}
 }

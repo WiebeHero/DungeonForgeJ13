@@ -1,9 +1,6 @@
 package me.WiebeHero.CustomEnchantments;
 
-import org.bukkit.plugin.Plugin;
-
 public class CCT {
-	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
 	public CCT() {
 		
 	}
