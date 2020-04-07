@@ -33,7 +33,7 @@ public class DFWeaponUpgrade implements Listener{
 		LivingEntity victim = (LivingEntity) event.getEntity();
 		EntityDamageEvent ede = victim.getLastDamageCause();
 		DamageCause dc = ede.getCause();
-		if(event.getEntity().getKiller() instanceof Player && (dc == DamageCause.ENTITY_ATTACK || dc == DamageCause.PROJECTILE)){
+		if(event.getEntity().getKiller() instanceof Player && (dc == DamageCause.ENTITY_ATTACK || dc == DamageCause.PROJECTILE || dc == DamageCause.CUSTOM)){
 			Player damager = (Player) event.getEntity().getKiller();
 			ItemStack i = damager.getInventory().getItemInMainHand();
 			if(i != null) {

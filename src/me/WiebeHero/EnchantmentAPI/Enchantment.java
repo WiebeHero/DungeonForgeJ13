@@ -18,12 +18,13 @@ import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftArmorStand;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Arrow.PickupStatus;
 import org.bukkit.entity.DragonFireball;
@@ -40,6 +41,7 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -49,7 +51,6 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -72,6 +73,7 @@ import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.Factions.DFFactionPlayer;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
+import net.minecraft.server.v1_13_R2.EntityArmorStand;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.PacketPlayOutWorldParticles;
 
@@ -117,7 +119,10 @@ public class Enchantment extends CommandFile implements Listener{
 						dfPlayer.addAtkCal(200.0 + 50.0 * level, 1);
 						new BukkitRunnable() {
 							public void run() {
-								damager.damage(event.getFinalDamage() * 0.60 - (0.05 * level));
+								damager.damage(event.getDamage() / 100 * 60 - (5 * level));
+								if(damager instanceof Player) {
+									damager.setKiller((Player)damager);
+								}
 							}
 						}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 					}
@@ -173,11 +178,10 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				if(i <= 4 + 1.5 * level) {
+				//if(i <= 4 + 1.5 * level) {
+				if(i <= 100) {
 					final double range = 5.00 + level; 
 					final double damage = 7 + 1.5 * level;
-					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
-					DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.7D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, locCF, 80, range, range, range, 0.1);
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, (float) 1);
@@ -185,21 +189,12 @@ public class Enchantment extends CommandFile implements Listener{
 						if(e != damager) {
 							if(e instanceof LivingEntity) {
 								LivingEntity ent = (LivingEntity) e;
-								if(facPlayerManager.contains(ent.getUniqueId())) {
-									DFFactionPlayer facP = facPlayerManager.getFactionPlayer(ent);
-									DFFaction other = facManager.getFaction(facP.getFactionId());
-									if(faction != null && other != null) {
-										if(!faction.isAlly(other.getName()) || !faction.isMember(ent.getUniqueId())) {
-											ent.damage(damage, damager);
-										}
+								if(!facManager.isFriendly(damager, ent)) {
+									if(damager instanceof Player) {
+										ent.setKiller((Player)damager);
 									}
-									else {
-										ent.damage(damage, damager);
-									}
-								}
-								else {
-									ent.damage(damage, damager);
-								}
+									ent.damage(damage - e.getLocation().distance(victim.getLocation()));
+								}	
 							}
 						}
 					}
@@ -232,6 +227,9 @@ public class Enchantment extends CommandFile implements Listener{
 						int count = 0;
 						public void run() {
 							if(count <= (14 + level * 2)) {
+								if(damager instanceof Player) {
+									victim.setKiller((Player)damager);
+								}
 								victim.damage(1 + level * 0.5);
 								count++;
 							}
@@ -450,6 +448,9 @@ public class Enchantment extends CommandFile implements Listener{
 						int count = 0;
 						public void run() {
 							if(count <= 60 + 20 * level) {
+								if(damager instanceof Player) {
+									victim.setKiller((Player)damager);
+								}
 								victim.damage(0.1 + 0.05 * level);
 								count++;
 							}
@@ -581,6 +582,126 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7counter attack, causing you to take a",
 						"&7defensive stand and gaining the resistance",
 						"&7effect for a few seconds."
+					))
+				);
+			}
+		}));
+		this.listMelee.put("Determined Slash", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			HashMap<UUID, Integer> activated = new HashMap<UUID, Integer>();
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!cooldown.contains(damager.getUniqueId())) {
+					damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou prepare &6Determined Slash!"));
+					activated.put(damager.getUniqueId(), level);
+				}
+//				Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 1.7D, damager.getLocation().getZ() + 0D);
+//				damager.getWorld().spawnParticle(Particle.FLAME, locCF, 60, 0.05, 0.1, 0.05, 0.1); 
+//				damager.getWorld().playSound(damager.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 2, (float) 1.25);
+			}
+			@EventHandler
+			public void activateSlash(PlayerInteractEvent event) {
+				Player player = event.getPlayer();
+				UUID uuid = player.getUniqueId();
+				Action action = event.getAction();
+				if(action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
+					if(activated.containsKey(uuid)) {
+						event.setCancelled(true);
+						cooldown.add(uuid);
+						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
+						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
+						new BukkitRunnable() {
+							public void run() {
+								cooldown.remove(uuid);
+							}
+						}.runTaskLater(CustomEnchantments.getInstance(), 1300L - 50L * activated.get(player.getUniqueId()));
+						ArmorStand slash1 = (ArmorStand) player.getWorld().spawnEntity(player.getLocation().add(0, 1, 0).add(player.getLocation().getDirection()), EntityType.ARMOR_STAND);
+						Location locLeft = pApi.getLocationRelative(slash1.getLocation(), -2.0, 0);
+						Location locRight = pApi.getLocationRelative(slash1.getLocation(), 2.0, 0);
+						ArmorStand slash2 = (ArmorStand) player.getWorld().spawnEntity(locLeft, EntityType.ARMOR_STAND);
+						ArmorStand slash3 = (ArmorStand) player.getWorld().spawnEntity(locRight, EntityType.ARMOR_STAND);
+						ArrayList<ArmorStand> stands = new ArrayList<ArmorStand>(Arrays.asList(slash1, slash2, slash3));
+						for(int i = 0; i < stands.size(); i++) {
+							ArmorStand slash = stands.get(i);
+							slash.setInvulnerable(true);
+							slash.setRemoveWhenFarAway(false);
+							EntityArmorStand standE = ((CraftArmorStand)slash).getHandle();
+							standE.noclip = true;
+							standE.setInvisible(true);
+						}
+						ArrayList<UUID> hit = new ArrayList<UUID>();
+						new BukkitRunnable() {
+							int c = 0;
+							boolean cancelled = false;
+							double damage = 8.00 + 2.00 * activated.get(uuid);
+							public void run() {
+								if(c <= 30) {
+									Location loc = slash1.getLocation();
+									ArrayList<Location> locs = pApi.getSemiCircle(loc, 3, 50, true);
+									for(int i = 0; i < locs.size(); i++) {
+										Location l = locs.get(i);
+										l.getWorld().spawnParticle(Particle.REDSTONE, l, 1, new DustOptions(Color.RED, 2.5F));
+									}
+									for(int i = 0; i < stands.size(); i++) {
+										ArmorStand slash = stands.get(i);
+										for(Entity e : slash.getNearbyEntities(1.0, 0.2, 1.0)) {
+											if(e instanceof LivingEntity && e != player && !stands.contains(e)) {
+												if(!hit.contains(e.getUniqueId())) {
+													LivingEntity ent = (LivingEntity) e;
+													ent.setKiller(player);
+													hit.add(ent.getUniqueId());
+													if(facPlayerManager.contains(ent.getUniqueId())) {
+														DFFactionPlayer facP = facPlayerManager.getFactionPlayer(ent);
+														DFFaction other = facManager.getFaction(facP.getFactionId());
+														if(faction != null && other != null) {
+															if(!faction.isAlly(other.getName()) || !faction.isMember(ent.getUniqueId())) {
+																ent.damage(damage);
+															}
+														}
+														else {
+															ent.damage(damage);
+														}
+													}
+													else {
+														ent.damage(damage);
+													}
+													damage = damage / 2;
+												}
+											}
+										}
+										if(slash.getLocation().getBlock().getType() != Material.AIR) {
+											slash.remove();
+											cancelled = true;
+										}
+										slash.setVelocity(slash.getLocation().getDirection().multiply(0.75F));
+									}
+								}
+								if(cancelled == true) {
+									cancel();
+								}
+								c++;
+							}
+						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
+						activated.remove(uuid);
+					}
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Determined Slash",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you right click, you prepare to perform",
+						"&6Determined Slash. &7When you have prepared &6Determined Slash",
+						"&7and then left click, a red slash will appear",
+						"&7infront of you traveling a certain distance",
+						"&7damaging enemies who come into contact with the",
+						"&7slash. This slash is piercing, meaning it will continue",
+						"&7after damaging an enemy. However, the damage will be decreased",
+						"&7by half per enemy that is hit.",
+						"&7This enchantment has a cooldown."
 					))
 				);
 			}
@@ -1156,11 +1277,12 @@ public class Enchantment extends CommandFile implements Listener{
 		}));
 		this.listMelee.put("Large Fireball", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
 			ArrayList<UUID> playerStuff = new ArrayList<UUID>();
+			HashMap<UUID, Integer> fireball = new HashMap<UUID, Integer>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level) {
 				playerStuff.add(damager.getUniqueId()); // set to "true"
 				Fireball ball = damager.launchProjectile(Fireball.class);
-				ball.setMetadata("Level", new FixedMetadataValue(CustomEnchantments.getInstance(), level));
+				fireball.put(ball.getUniqueId(), level);
 				Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 1.7D, damager.getLocation().getZ() + 0D);
 				damager.getWorld().spawnParticle(Particle.FLAME, locCF, 60, 0.05, 0.1, 0.05, 0.1); 
 				for(Player victim1 : Bukkit.getOnlinePlayers()) {
@@ -1176,41 +1298,24 @@ public class Enchantment extends CommandFile implements Listener{
 			public void LargeFireballBall(ProjectileHitEvent event){
 		        if(event.getEntity() instanceof Fireball){
 		            Fireball f = (Fireball) event.getEntity();
-		            LivingEntity victim = (LivingEntity) event.getHitEntity();
-		            Block hitBlock = (Block) event.getHitBlock();
-		            if(f.getShooter() instanceof Player){
-		                if(f.hasMetadata("Level")) {
-	                		Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.7D, victim.getLocation().getZ() + 0D);
-							victim.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, locCF, 60, 2, 2, 2, 1); 
-							for(Player victim1 : Bukkit.getOnlinePlayers()) {
-								((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, (float) 1.25);
-							}
-							int level = f.getMetadata("Level").get(0).asInt();
-							double range = 4 + 1 * level;
-							if(victim instanceof LivingEntity) {
-								if(victim != null) {
-									for(Entity en : victim.getNearbyEntities(range, range, range)){
-										LivingEntity victimsNearby = (LivingEntity) en;
-										if(en == victim) {
-											victim.damage(10 + 3 * level);
-										}
-										else {
-											victimsNearby.damage(5 + 1.5 * level);	
-										}
-									}
+		            if(fireball.containsKey(f.getUniqueId())) {
+		            	LivingEntity shooter = (LivingEntity) f.getShooter();
+                		Location locCF = new Location(f.getWorld(), f.getLocation().getX() + 0D, f.getLocation().getY() + 1.7D, f.getLocation().getZ() + 0D);
+						f.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, locCF, 60, 2, 2, 2, 1); 
+						for(Player victim1 : Bukkit.getOnlinePlayers()) {
+							((Player) victim1).playSound(f.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, (float) 1.25);
+						}
+						int level = fireball.get(f.getUniqueId());
+						double range = 4 + level;
+						for(Entity en : f.getWorld().getNearbyEntities(locCF, range, range, range)){
+							if(en instanceof LivingEntity) {
+								LivingEntity nearby = (LivingEntity) en;
+								if(shooter instanceof Player) {
+									nearby.setKiller((Player)shooter);
 								}
+								nearby.damage(10 + 1.5 * level - (f.getLocation().distance(nearby.getLocation())));
 							}
-							else if(hitBlock instanceof Block) {
-								if(hitBlock != null) {
-									for(Entity en : hitBlock.getWorld().getNearbyEntities(locCF, range, range, range)){
-										if(en instanceof LivingEntity) {
-											LivingEntity victimsNearby = (LivingEntity) en;
-											victimsNearby.damage(5 + 1.5 * level);
-										}
-									}
-								}
-							}
-		                }
+						}
 		            }
 		        }
 		    }
@@ -1412,6 +1517,9 @@ public class Enchantment extends CommandFile implements Listener{
 						public void run() {
 							if(count < 100 + 20 * level) {
 								count++;
+								if(damager instanceof Player) {
+									victim.setKiller((Player)damager);
+								}
 								victim.damage(0.05 + 0.05 * level);
 							}
 							else {
@@ -1569,6 +1677,9 @@ public class Enchantment extends CommandFile implements Listener{
 								cancel();
 							}
 							else {
+								if(damager instanceof Player) {
+									victim.setKiller((Player)damager);
+								}
 								victim.damage(0.5 + 0.5 * level);
 							}
 						}
@@ -1720,15 +1831,21 @@ public class Enchantment extends CommandFile implements Listener{
 				if(event.getHitEntity() != null && event.getEntity() != null && event.getEntity().getShooter() instanceof LivingEntity) {
 					if(event.getHitEntity() instanceof LivingEntity && event.getEntity().getShooter() instanceof LivingEntity) {
 						Projectile pro = event.getEntity();
-						if(snowball.containsKey(pro.getUniqueId())) {
-							int level = snowball.get(pro.getUniqueId());
-							snowball.remove(pro.getUniqueId());
-							LivingEntity ent = (LivingEntity) event.getHitEntity();
-							int amp = level;
-							int durationAdd = 100 + 20 * level;
-							ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.SLOW, PotionEffectType.BLINDNESS));
-							p.applyEffect(ent, types, amp, durationAdd);
-							ent.damage(1.5 + 0.5 * level);
+						if(pro.getShooter() instanceof LivingEntity) {
+							LivingEntity shooter = (LivingEntity) pro.getShooter();
+							if(snowball.containsKey(pro.getUniqueId())) {
+								int level = snowball.get(pro.getUniqueId());
+								snowball.remove(pro.getUniqueId());
+								LivingEntity ent = (LivingEntity) event.getHitEntity();
+								int amp = level;
+								int durationAdd = 100 + 20 * level;
+								ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.SLOW, PotionEffectType.BLINDNESS));
+								p.applyEffect(ent, types, amp, durationAdd);
+								if(shooter instanceof Player) {
+									ent.setKiller((Player)shooter);
+								}
+								ent.damage(1.5 + 0.5 * level);
+							}
 						}
 					}
 				}
@@ -1763,6 +1880,9 @@ public class Enchantment extends CommandFile implements Listener{
 						if(e instanceof LivingEntity) {
 							if(e != damager) {
 								LivingEntity entity = (LivingEntity) e;
+								if(damager instanceof Player) {
+									entity.setKiller((Player)damager);
+								}
 								entity.damage(6 + 2.5 * level);
 							}
 						}
@@ -2111,6 +2231,9 @@ public class Enchantment extends CommandFile implements Listener{
 					int amp = (int)Math.floor(0 + (level) / 2);
 					int durationAdd = 100 + 20 * level;
 					p.applyEffect(victim, PotionEffectType.WEAKNESS, amp, durationAdd);
+					if(damager instanceof Player) {
+						victim.setKiller((Player)damager);
+					}
 					victim.damage(4 + level);
 					victim.setFireTicks(victim.getFireTicks() + (100 + 20 * level));
 				}
@@ -2332,6 +2455,9 @@ public class Enchantment extends CommandFile implements Listener{
 						if(entity instanceof LivingEntity) {
 							if(entity != victim) {
 								LivingEntity entity1 = (LivingEntity) entity;
+								if(victim instanceof Player) {
+									entity1.setKiller((Player)victim);
+								}
 								entity1.damage(2.00 + 0.50 * level);
 							}
 						}
@@ -2373,7 +2499,7 @@ public class Enchantment extends CommandFile implements Listener{
 				return builder.constructItem(
 					Material.ENCHANTED_BOOK,
 					1,
-					"&6Arcanist Explosion",
+					"&6Archery",
 					new ArrayList<String>(Arrays.asList(
 						"&7When you equip armor, you get more knowledge",
 						"&7about ranged weapons. Causing your Ranged Damage",
@@ -2460,6 +2586,9 @@ public class Enchantment extends CommandFile implements Listener{
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GENERIC_HURT, 2, (float) 1.1);
 					}
+					if(victim instanceof Player) {
+						damager.setKiller((Player)victim);
+					}
 					damager.damage(1 + level);
 				}
 			}
@@ -2478,23 +2607,39 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Curse", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+			HashMap<UUID, UUID> cursees = new HashMap<UUID, UUID>();
+			HashMap<UUID, UUID> cursed = new HashMap<UUID, UUID>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level) {
-				ArrayList<UUID> cursed = new ArrayList<UUID>();
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
 				if(i <= 0.1 + 0.1 * level) {
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 2, (float) 0.5);
-					cursed.add(damager.getUniqueId());
+					cursed.put(victim.getUniqueId(), damager.getUniqueId());
 					new BukkitRunnable() {
 						public void run() {
-							if(cursed.contains(damager.getUniqueId())) {
+							if(cursed.containsKey(victim.getUniqueId())) {
+								if(victim instanceof Player) {
+									damager.setKiller((Player)victim);
+								}
 								damager.damage(Double.MAX_VALUE);
 								cursed.remove(damager.getUniqueId());
 							}
 						}
 					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 600 - 40 * level);
+				}
+			}
+			@EventHandler
+			public void cancelCurse(EntityDamageByEntityEvent event) {
+				if(!event.isCancelled()) {
+					if(event.getDamager() instanceof LivingEntity && event.getEntity() instanceof LivingEntity) {
+						LivingEntity victim = (LivingEntity) event.getEntity();
+						LivingEntity damager = (LivingEntity) event.getDamager();
+						if(cursed.containsKey(victim.getUniqueId()) && cursed.get(victim.getUniqueId()).equals(damager.getUniqueId())) {
+							cursed.remove(victim.getUniqueId());
+						}
+					}
 				}
 			}
 			@Override
@@ -2507,8 +2652,8 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you curse them to death. Causing them to be",
 						"&7put under a curse that kills the enemy after a while.",
-						"&7To break the curse, the attacker needs to hit you at least 3",
-						"&7times to remove the curse."
+						"&7To break the curse, the attacker needs to damage",
+						"&7you at least one time to break the curse."
 					))
 				);
 			}
@@ -2549,7 +2694,11 @@ public class Enchantment extends CommandFile implements Listener{
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GENERIC_HURT, 2, (float) 1.5);
 					}
 					double damage = event.getDamage();
+					if(victim instanceof Player) {
+						damager.setKiller((Player)victim);
+					}
 					damager.damage(damage);
+					event.setCancelled(true);
 				}
 			}
 			@Override
@@ -2610,6 +2759,9 @@ public class Enchantment extends CommandFile implements Listener{
 					for(Entity e : victim.getNearbyEntities(range, range, range)) {
 						if(e instanceof LivingEntity) {
 							LivingEntity ent = (LivingEntity) e;
+							if(victim instanceof Player) {
+								ent.setKiller((Player)victim);
+							}
 							ent.damage(3 + level * 3);
 						}
 					}
@@ -2787,7 +2939,12 @@ public class Enchantment extends CommandFile implements Listener{
 							if(entity instanceof LivingEntity) {
 								LivingEntity attacked = (LivingEntity) entity;
 								if(attacked != victim) {
-									attacked.setFireTicks(attacked.getFireTicks() + (140 + 20 * level));
+									if(facManager.isFriendly(victim, attacked)) {
+										if(victim instanceof Player) {
+											attacked.setKiller((Player)victim);
+										}
+										attacked.setFireTicks(attacked.getFireTicks() + (140 + 20 * level));
+									}
 								}
 							}
 						}
@@ -2938,6 +3095,9 @@ public class Enchantment extends CommandFile implements Listener{
 					victim.getWorld().spawnParticle(Particle.FLAME, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_BLAZE_HURT, 2, (float) 1.1);
+					}
+					if(victim instanceof Player) {
+						damager.setKiller((Player)victim);
 					}
 					damager.setFireTicks(damager.getFireTicks() + (150 + 70 * level));
 				}
@@ -3604,6 +3764,37 @@ public class Enchantment extends CommandFile implements Listener{
 				);
 			}
 		}));
+		this.listArmor.put("Use the system", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+			@Override
+			public void activateEnchantment(LivingEntity victim, int level, EntityDamageByEntityEvent event) {
+				float i = ThreadLocalRandom.current().nextFloat() * 100;
+				if(i <= 13 + 2 * level) {
+					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.0D, victim.getLocation().getZ() + 0D);
+					victim.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, locCF, 20, 0.1, 0.1, 0.1, 0.1); 
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.BLOCK_PISTON_EXTEND, 2, (float) 1.5);
+					}
+					new BukkitRunnable() {
+						public void run() {
+							victim.setNoDamageTicks(victim.getNoDamageTicks() / 100 * (120 + 8 * level));
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 0L);
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Use the system",
+					new ArrayList<String>(Arrays.asList(
+						"&7When the enemy attacks you, there is a chance",
+						"&7that you hack into the system and extend your",
+						"&7immunity timer by a few ticks."
+					))
+				);
+			}
+		}));
 		this.listArmor.put("Valor", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
@@ -3666,6 +3857,127 @@ public class Enchantment extends CommandFile implements Listener{
 	
 	public void loadBowEnchantments() {
 		this.listBow = new HashMap<String, Pair<Condition, CommandFile>>();
+		this.listBow.put("Arrow Rain", new Pair<>(Condition.LEFT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			ArrayList<UUID> arrows = new ArrayList<UUID>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!cooldown.contains(damager.getUniqueId())) {
+					if(damager instanceof Player && dfManager.contains(damager)) {
+						Player player = (Player) damager;
+						DFPlayer dfPlayer = dfManager.getEntity(player);
+						DFShootBowEvent shoot = new DFShootBowEvent(player, 1.0F, dfPlayer);
+						if(shoot.getProjectile() instanceof Arrow) {
+							cooldown.add(damager.getUniqueId());
+							Arrow arrow = (Arrow) shoot.getProjectile();
+							double range = 2.75 + 0.25 * level;
+							int maxArrows = 50 + 10 * level;
+							Location loc = player.getLocation().clone();
+							loc.add(0, 15, 0);
+							new BukkitRunnable() {
+								int count = 0;
+								public void run() {
+									if(count <= maxArrows) {
+										Location temp = loc.clone();
+										float x = (float) (ThreadLocalRandom.current().nextFloat() * (range * 2.0F) - range);
+										float y = (float) (ThreadLocalRandom.current().nextFloat() * (range * 2.0F) - range);
+										temp.setPitch(90.0F);
+										temp.add(x, 0, y);
+										Arrow arr = player.getWorld().spawnArrow(temp, temp.getDirection(), 2.55F, 0.0F);
+										arr.setShooter(player);
+										arr.setCritical(true);
+										arr.setDamage(arrow.getDamage());
+										arr.setPickupStatus(PickupStatus.DISALLOWED);
+										arrows.add(arr.getUniqueId());
+										count++;
+									}
+									else {
+										cancel();
+									}
+								}
+							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+							shoot.setCancelled(true);
+							shoot.shootArrow();
+							new BukkitRunnable() {
+								public void run() {
+									cooldown.remove(player.getUniqueId());
+								}
+							}.runTaskLater(CustomEnchantments.getInstance(), 1100 - 65L * level);
+						}
+					}
+				}
+			}
+			@EventHandler
+			public void arrowRainHit(ProjectileHitEvent event) {
+				if(event.getEntity() instanceof Arrow) {
+					Arrow arrow = (Arrow) event.getEntity();
+					if(arrow.getShooter() instanceof Player) {
+						Player shooter = (Player) arrow.getShooter();
+						if(event.getHitEntity() instanceof LivingEntity) {
+							if(facManager.isFriendly(shooter, event.getHitEntity())) {
+								arrow.remove();
+							}
+						}
+						else {
+							arrow.remove();
+						}
+					}
+				}
+			}
+			@EventHandler(priority = EventPriority.HIGHEST)
+			public void arrowRainDamage(EntityDamageByEntityEvent event) {
+				if(event.getDamager() instanceof Arrow) {
+					Arrow arrow = (Arrow) event.getDamager();
+					if(arrow.getShooter() instanceof Player) {
+						if(arrows.contains(arrow.getUniqueId())) {
+							Player shooter = (Player) arrow.getShooter();
+							if(event.getEntity() instanceof LivingEntity) {
+								LivingEntity ent = (LivingEntity) event.getEntity();
+								if(facManager.isFriendly(shooter, ent)) {
+									event.setCancelled(true);
+									arrows.remove(arrow.getUniqueId());
+									arrow.remove();
+								}
+								else {
+									new BukkitRunnable() {
+										public void run() {
+											ent.setNoDamageTicks(0);
+											arrows.remove(arrow.getUniqueId());
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), 0L);
+								}
+							}
+						}
+					}
+				}
+			}
+			@EventHandler
+			public void projectileHit(ProjectileHitEvent event) {
+				if(event.getEntity() instanceof Arrow) {
+					Arrow arrow = (Arrow) event.getEntity();
+					if(arrow.getShooter() instanceof Player) {
+						if(arrows.contains(arrow.getUniqueId())) {
+							arrows.remove(arrow.getUniqueId());
+							arrow.remove();
+						}
+					}
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Arrow Rain",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you left click, you prepare a &6Grab and Pull",
+						"&7arrow. When you hit a enemy, you pull them towards",
+						"&7your current location.",
+						"&7This enchantment has a cooldown."
+					))
+				);
+			}
+		}));
 		this.listBow.put("Black Heart", new Pair<>(Condition.LEFT_CLICK, new CommandFile() {
 			ArrayList<UUID> activated = new ArrayList<UUID>();
 			ArrayList<UUID> cooldown = new ArrayList<UUID>();
@@ -3723,7 +4035,7 @@ public class Enchantment extends CommandFile implements Listener{
 						Player shooter = (Player) arrow.getShooter();
 						if(arrows.containsKey(arrow.getUniqueId())) {
 							arrow.setPickupStatus(PickupStatus.DISALLOWED);
-							if(event.getHitEntity() != null) {
+							if(event.getHitEntity() == null) {
 								this.loop(shooter, arrow, arrow);
 							}
 							else {
@@ -3735,7 +4047,7 @@ public class Enchantment extends CommandFile implements Listener{
 				}
 			}
 			public void loop(Player shooter, Arrow arrow, Entity ent) {
-				int level = arrows.get(ent.getUniqueId());
+				int level = arrows.get(arrow.getUniqueId());
 				final double range = 4.00 + level; 
 				final double damage = 2 + 0.65 * level;
 				final int count = 4 + level;
@@ -3750,23 +4062,10 @@ public class Enchantment extends CommandFile implements Listener{
 									if(e instanceof LivingEntity) {
 										LivingEntity ent = (LivingEntity) e;
 										BlockData data = Bukkit.createBlockData(Material.BLACK_CONCRETE);
-										if(facPlayerManager.contains(ent.getUniqueId())) {
-											DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(ent);
-											DFFaction other = facManager.getFaction(facPlayer.getFactionId());
-											if(faction != null && other != null) {
-												if(!faction.isAlly(other.getName()) || !faction.isMember(ent.getUniqueId())) {
-													ent.damage(damage, shooter);
-													Location locCF = new Location(ent.getWorld(), ent.getLocation().getX() + 0D, ent.getLocation().getY() + 1.5D, ent.getLocation().getZ() + 0D);
-													ent.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF, 10, data); 
-												}
+										if(!facManager.isFriendly(shooter, e)) {
+											if(shooter instanceof Player) {
+												ent.setKiller((Player)shooter);
 											}
-											else {
-												ent.damage(damage, shooter);
-												Location locCF = new Location(ent.getWorld(), ent.getLocation().getX() + 0D, ent.getLocation().getY() + 1.5D, ent.getLocation().getZ() + 0D);
-												ent.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF, 10, data); 
-											}
-										}
-										else {
 											ent.damage(damage, shooter);
 											Location locCF = new Location(ent.getWorld(), ent.getLocation().getX() + 0D, ent.getLocation().getY() + 1.5D, ent.getLocation().getZ() + 0D);
 											ent.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF, 10, data); 
@@ -3775,6 +4074,10 @@ public class Enchantment extends CommandFile implements Listener{
 								}
 							}
 							c++;
+						}
+						else {
+							arrow.remove();
+							cancel();
 						}
 					}
 				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 60 - 5 * level);
@@ -3792,6 +4095,144 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7any enemies nearby this arrow over a span of time. If this arrow hits an",
 						"&7entity, it will follow the damage effect around the entity.",
 						"&7This enchantments has a cooldown"
+					))
+				);
+			}
+		}));
+		this.listBow.put("Black Hole", new Pair<>(Condition.LEFT_CLICK, new CommandFile() {
+			ArrayList<UUID> activated = new ArrayList<UUID>();
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			HashMap<UUID, Integer> levels = new HashMap<UUID, Integer>();
+			HashMap<UUID, Integer> arrows = new HashMap<UUID, Integer>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!cooldown.contains(damager.getUniqueId()) && !activated.contains(damager.getUniqueId())) {
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_ENDERMAN_AMBIENT, 2, (float) 1.5);
+					}
+					cooldown.add(damager.getUniqueId());
+					levels.put(damager.getUniqueId(), level);
+					activated.add(damager.getUniqueId());
+					damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have prepared a &6Black Hole &aarrow!"));
+				}
+			}
+			@EventHandler
+			public void shootArrow(DFShootBowEvent event) {
+				Player player = event.getShooter();
+				if(!event.isCancelled()) {
+					if(event.getProjectile() instanceof Arrow) {
+						Arrow arrow = (Arrow) event.getProjectile();
+						UUID uuid = player.getUniqueId();
+						if(activated.contains(uuid)) {
+							int level = levels.get(uuid);
+							activated.remove(uuid);
+							new BukkitRunnable() {
+								public void run() {
+									if(!arrow.isDead()) {
+										Location locCF = new Location(arrow.getWorld(), arrow.getLocation().getX() + 0D, arrow.getLocation().getY() + 0D, arrow.getLocation().getZ() + 0D);
+										arrow.getWorld().spawnParticle(Particle.REDSTONE, locCF, 1, new Particle.DustOptions(Color.fromRGB(0), 1)); 
+									}
+									else {
+										cancel();
+									}
+								}
+							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
+							new BukkitRunnable() {
+								public void run() {
+									cooldown.remove(uuid);
+								}
+							}.runTaskLater(CustomEnchantments.getInstance(), 1500L - 100L * level);
+							arrows.put(arrow.getUniqueId(), levels.get(player.getUniqueId()));
+							levels.remove(uuid);
+						}
+					}
+				}
+			}
+			@EventHandler
+			public void arrowHit(ProjectileHitEvent event) {
+				if(event.getEntity() instanceof Arrow) {
+					Arrow arrow = (Arrow) event.getEntity();
+					if(arrow.getShooter() instanceof Player) {
+						Player shooter = (Player) arrow.getShooter();
+						if(arrows.containsKey(arrow.getUniqueId())) {
+							arrow.setPickupStatus(PickupStatus.DISALLOWED);
+							if(event.getHitEntity() == null) {
+								this.loop(shooter, arrow, arrow);
+							}
+							else {
+								this.loop(shooter, arrow, event.getHitEntity());
+							}
+							
+						}
+					}
+				}
+			}
+			public void loop(Player shooter, Arrow arrow, Entity entity) {
+				int level = arrows.get(arrow.getUniqueId());
+				final double range = 8.00 + 1.5 * level; 
+				final double damage = 2 + 0.65 * level;
+				final int count = 75 + 15 * level;
+				new BukkitRunnable() {
+					int c = 0;
+					public void run() {
+						if(c <= count) {
+							for(Entity e : entity.getNearbyEntities(range, range, range)) {
+								if(e != shooter && e != entity) {
+									if(e instanceof LivingEntity) {
+										if(!facManager.isFriendly(shooter, e)) {
+											LivingEntity ent = (LivingEntity) e;
+											Vector direction = entity.getLocation().add(0, -1.8, 0).toVector().subtract(ent.getLocation().toVector()).normalize();
+											double distance = e.getLocation().distance(entity.getLocation());
+											ent.setVelocity(direction.multiply(0.25F - (distance / 100))); 
+										}
+									}
+								}
+							}
+							c++;
+						}
+						else {
+							int amp = (int)Math.floor(0 + (level) / 2);
+							int durationAdd = 160 + level * 40;
+							double implodeRadius = range / 2;
+							Location loc = new Location(entity.getWorld(), entity.getLocation().getX() + 0D, entity.getLocation().getY() + 0.0D, entity.getLocation().getZ() + 0D);
+							entity.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 60, 0.1, 0.1, 0.1, 0.1); 
+							for(Entity e : entity.getNearbyEntities(implodeRadius, implodeRadius, implodeRadius)) {
+								if(e != shooter && e != entity) {
+									if(e instanceof LivingEntity) {
+										LivingEntity ent = (LivingEntity) e;
+										if(!facManager.isFriendly(shooter, e)) {
+											if(shooter instanceof Player) {
+												ent.setKiller((Player)shooter);
+											}
+											p.applyEffect(ent, new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.BLINDNESS, PotionEffectType.SLOW)), amp, durationAdd);
+											ent.damage(damage, shooter);
+											Location locCF = new Location(entity.getWorld(), entity.getLocation().getX() + 0D, entity.getLocation().getY() + 0.0D, entity.getLocation().getZ() + 0D);
+											entity.getWorld().spawnParticle(Particle.SMOKE_NORMAL, locCF, 15, 0.1, 0.1, 0.1, 0.1); 
+										}
+									}
+								}
+							}
+							arrow.remove();
+							cancel();
+						}
+					}
+				}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 2L);
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Black Hole",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you left click, you prepare a &6Black Hole",
+						"&7arrow. When you shoot this arrow, a black particle",
+						"&7will follow the arrow. When this arrow lands, it will pull",
+						"&7nearby enemies towards the arrow, after a short while, the",
+						"&7black hole will implode. Causing nearby enemies to take",
+						"&7damage and recieve the blindness and slowness effect",
+						"&7for a few seconds.",
+						"&7This enchantment has a cooldown."
 					))
 				);
 			}
@@ -3854,42 +4295,31 @@ public class Enchantment extends CommandFile implements Listener{
 						if(arrows.containsKey(arrow.getUniqueId())) {
 							arrow.setPickupStatus(PickupStatus.DISALLOWED);
 							if(event.getHitEntity() != null) {
-								this.loop(shooter, arrow);
+								this.loop(shooter, arrow, arrow);
 							}
 							else {
-								this.loop(shooter, event.getHitEntity());
+								this.loop(shooter, arrow, event.getHitEntity());
 							}
 						}
 					}
 				}
 			}
-			public void loop(Player shooter, Entity en) {
-				int level = arrows.get(en.getUniqueId());
+			public void loop(Player shooter, Arrow arrow, Entity en) {
+				int level = arrows.get(arrow.getUniqueId());
 				final double range = 5.00 + level; 
 				final double damage = 7 + 1.5 * level;
-				DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(shooter);
-				DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 				Location locCF = new Location(en.getWorld(), en.getLocation().getX() + 0D, en.getLocation().getY() + 1.7D, en.getLocation().getZ() + 0D);
 				en.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, locCF, 80, range, range, range, 0.1);
 				en.getWorld().playSound(en.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, (float) 1);
 				for(Entity e : en.getNearbyEntities(range, range, range)) {
 					if(e != shooter) {
 						if(e instanceof LivingEntity) {
-							LivingEntity ent = (LivingEntity) e;
-							double finalDamage = damage - (e.getLocation().distance(en.getLocation())) / 2.5;
-							if(facPlayerManager.contains(ent.getUniqueId())) {
-								DFFactionPlayer facP = facPlayerManager.getFactionPlayer(ent);
-								DFFaction other = facManager.getFaction(facP.getFactionId());
-								if(faction != null && other != null) {
-									if(!faction.isAlly(other.getName()) || !faction.isMember(ent.getUniqueId())) {
-										ent.damage(finalDamage, shooter);
-									}
+							if(facManager.isFriendly(shooter, e)) {
+								LivingEntity ent = (LivingEntity) e;
+								double finalDamage = damage - (e.getLocation().distance(en.getLocation())) / 2.5;
+								if(shooter instanceof Player) {
+									ent.setKiller((Player)shooter);
 								}
-								else {
-									ent.damage(finalDamage, shooter);
-								}
-							}
-							else {
 								ent.damage(finalDamage, shooter);
 							}
 						}
@@ -3947,24 +4377,24 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, DFShootBowEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				if(i <= 20 + 1.5 * level) {
-					if(dfManager.contains(damager)) {
-						DFPlayer dfPlayer = dfManager.getEntity(damager);
-						Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 2.5D, damager.getLocation().getZ() + 0D);
-						damager.getWorld().spawnParticle(Particle.REDSTONE, locCF, 20, 0.15, 0.15, 0.15, new DustOptions(Color.RED, 5)); 
-						for(Player victim1 : Bukkit.getOnlinePlayers()) {
-							((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_ARROW_SHOOT, 2, (float) 1.5);
+				if(i <= 20 + 2.5 * level) {
+					if(damager instanceof Player) {
+						if(dfManager.contains(damager)) {
+							DFPlayer dfPlayer = dfManager.getEntity(damager);
+							Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 2.5D, damager.getLocation().getZ() + 0D);
+							damager.getWorld().spawnParticle(Particle.REDSTONE, locCF, 20, 0.15, 0.15, 0.15, new DustOptions(Color.RED, 5)); 
+							for(Player victim1 : Bukkit.getOnlinePlayers()) {
+								((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_ARROW_SHOOT, 2, (float) 1.5);
+							}
+							tap.add(event.getProjectile().getUniqueId());
+							new BukkitRunnable() {
+								public void run() {
+									DFShootBowEvent ev = new DFShootBowEvent((Player)damager, 1.0F, dfPlayer);
+									Bukkit.getServer().getPluginManager().callEvent(ev);
+									ev.shootArrow();
+								}
+							}.runTaskLater(CustomEnchantments.getInstance(), 6L);
 						}
-						new BukkitRunnable() {
-							public void run() {
-								tap.add(event.getProjectile().getUniqueId());
-							}
-						}.runTaskLater(CustomEnchantments.getInstance(), 1L);
-						new BukkitRunnable() {
-							public void run() {
-								event.shootArrow(dfPlayer);
-							}
-						}.runTaskLater(CustomEnchantments.getInstance(), 6L);
 					}
 				}
 			}
@@ -3975,13 +4405,11 @@ public class Enchantment extends CommandFile implements Listener{
 						LivingEntity ent = (LivingEntity) event.getEntity();
 						Arrow arrow = (Arrow) event.getDamager();
 						if(tap.contains(arrow.getUniqueId())) {
-							Bukkit.broadcastMessage("Hihi");
-							ent.setNoDamageTicks(0);
 							new BukkitRunnable() {
 								public void run() {
-									Bukkit.broadcastMessage(ent.getNoDamageTicks() + "");
+									ent.setNoDamageTicks(0);
 								}
-							}.runTaskLater(CustomEnchantments.getInstance(), 2L);
+							}.runTaskLater(CustomEnchantments.getInstance(), 0L);
 						}
 					}
 				}
@@ -4060,6 +4488,62 @@ public class Enchantment extends CommandFile implements Listener{
 				);
 			}
 		}));
+		this.listBow.put("Grab and Pull", new Pair<>(Condition.LEFT_CLICK, new CommandFile() {
+			ArrayList<UUID> prepared = new ArrayList<UUID>();
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			HashMap<UUID, Integer> levelBow = new HashMap<UUID, Integer>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!cooldown.contains(damager.getUniqueId()) && !prepared.contains(damager.getUniqueId())) {
+					prepared.add(damager.getUniqueId());
+					cooldown.add(damager.getUniqueId());
+					levelBow.put(damager.getUniqueId(), level);
+					damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have prepared a &6Grab and Pull &aarrow!"));
+				}
+			}
+			@EventHandler
+			public void land(ProjectileHitEvent event) {
+				if(event.getEntity() instanceof Arrow) {
+					Arrow arrow = (Arrow) event.getEntity();
+					if(event.getEntity().getShooter() instanceof Player) {
+						Player player = (Player) event.getEntity().getShooter();
+						if(prepared.contains(player.getUniqueId())) {
+							if(event.getHitEntity() != null && event.getHitEntity() instanceof LivingEntity) {
+								LivingEntity ent = (LivingEntity) event.getHitEntity();
+								prepared.remove(player.getUniqueId());
+								int level = levelBow.get(player.getUniqueId());
+								new BukkitRunnable() {
+									public void run() {
+										ent.setVelocity(new Vector(0, 0.5, 0));
+										Vector direction = player.getLocation().add(0, 4.0, 0).toVector().subtract(ent.getLocation().toVector()).normalize().multiply(player.getLocation().distance(arrow.getLocation()) / (15.0 - level * 1.5));
+										ent.setVelocity(direction);
+									}
+								}.runTaskLater(CustomEnchantments.getInstance(), 3L);
+								new BukkitRunnable() {
+									public void run() {
+										cooldown.remove(player.getUniqueId());
+									}
+								}.runTaskLater(CustomEnchantments.getInstance(), 800 - 75 * level);
+							}
+						}
+					}
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Grab and Pull",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you left click, you prepare a &6Grab and Pull",
+						"&7arrow. When you hit a enemy, you pull them towards",
+						"&7your current location.",
+						"&7This enchantment has a cooldown."
+					))
+				);
+			}
+		}));
 		this.listBow.put("Grappling Hook", new Pair<>(Condition.LEFT_CLICK, new CommandFile() {
 			HashMap<UUID, Boolean> prepared = new HashMap<UUID, Boolean>();
 			ArrayList<UUID> cooldown = new ArrayList<UUID>();
@@ -4067,10 +4551,11 @@ public class Enchantment extends CommandFile implements Listener{
 			HashMap<UUID, Vector> vector = new HashMap<UUID, Vector>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
-				if(!cooldown.contains(damager.getUniqueId())) {
+				if(!cooldown.contains(damager.getUniqueId()) && !levelBow.containsKey(damager.getUniqueId())) {
 					prepared.put(damager.getUniqueId(), true);
 					cooldown.add(damager.getUniqueId());
 					levelBow.put(damager.getUniqueId(), level);
+					damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have prepared a &6Grappling Hook &7arrow!"));
 				}
 			}
 			@EventHandler
@@ -4094,7 +4579,7 @@ public class Enchantment extends CommandFile implements Listener{
 							if(prepared.get(player.getUniqueId()) == true) {
 								prepared.put(player.getUniqueId(), false);
 								player.setVelocity(new Vector(0, 0.5, 0));
-								int level = levelBow.get(arrow.getUniqueId());
+								int level = levelBow.get(player.getUniqueId());
 								new BukkitRunnable() {
 									public void run() {
 										player.setVelocity(vector.get(player.getUniqueId()).normalize().multiply(player.getLocation().distance(arrow.getLocation()) / (15.0 - level * 1.5)));
@@ -4121,6 +4606,127 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7When you left click, you prepare a &6Grappling Hook",
 						"&7arrow. When you hit a block/enemy, you leap towards",
 						"&7where the arrow landed.",
+						"&7This enchantment has a cooldown."
+					))
+				);
+			}
+		}));
+		this.listBow.put("Shooting Star", new Pair<>(Condition.LEFT_CLICK, new CommandFile() {
+			ArrayList<UUID> activated = new ArrayList<UUID>();
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			HashMap<UUID, Integer> levels = new HashMap<UUID, Integer>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!cooldown.contains(damager.getUniqueId()) && !activated.contains(damager.getUniqueId())) {
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1.5);
+					}
+					cooldown.add(damager.getUniqueId());
+					levels.put(damager.getUniqueId(), level);
+					activated.add(damager.getUniqueId());
+					damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou prepare to &6shoot a Star!"));
+				}
+			}
+			@EventHandler
+			public void shootArrow(DFShootBowEvent event) {
+				Player player = event.getShooter();
+				UUID uuid = player.getUniqueId();
+				if(activated.contains(uuid)) {
+					event.getProjectile().remove();
+					event.setCancelled(true);
+					activated.remove(uuid);
+					int level = levels.get(uuid);
+					int count = 200 + 25 * level;
+					double range = 3.0 + 0.5 * level;
+					double damage = 10.0 + 3.0 * level;
+					int duration = 200 + 50 * level;
+					ArmorStand star = (ArmorStand) player.getWorld().spawnEntity(player.getLocation().add(0, 1.8, 0).add(player.getLocation().getDirection()), EntityType.ARMOR_STAND);
+					star.setInvulnerable(true);
+					star.setRemoveWhenFarAway(false);
+					EntityArmorStand stand = ((CraftArmorStand)star).getHandle();
+					stand.noclip = true;
+					stand.setInvisible(true);
+					new BukkitRunnable() {
+						int c = 0;
+						public void run() {
+							if(c <= count) {
+								star.setVelocity(star.getLocation().getDirection().multiply(0.5));
+								pApi.sphere(Particle.FIREWORKS_SPARK, star.getLocation(), 0.75, 5);
+								for(Entity en : star.getNearbyEntities(0.75, 0.75, 0.75)) {
+									if(en != null && en instanceof LivingEntity && en != player) {
+										star.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, star.getLocation(), 60, 0.25, 0.25, 0.25, 0.2);
+										star.getWorld().playSound(star.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 2, (float) 1);
+										star.remove();
+										for(Entity e : star.getNearbyEntities(range, range, range)) {
+											if(!facManager.isFriendly(player, e)) {
+												if(e instanceof LivingEntity) {
+													Vector direction = star.getLocation().add(0, -1, 0).toVector().subtract(e.getLocation().toVector()).normalize();
+													LivingEntity ent = (LivingEntity) e;
+													double finalDamage = damage - ent.getLocation().distance(star.getLocation()) * 1.8;
+													int finalDuration = (int)(duration - ent.getLocation().distance(star.getLocation()) * 35);
+													if(player instanceof Player) {
+														ent.setKiller((Player)player);
+													}
+													ent.damage(finalDamage, player);
+													ent.setVelocity(direction.multiply(-1.8F + (range / 10)));
+													ent.setFireTicks(finalDuration);
+												}
+											}
+										}
+										cancel();
+										break;
+									}
+								}
+								if(star.getLocation().getBlock().getType() != Material.AIR) {
+									star.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, star.getLocation(), 60, 0.25, 0.25, 0.25, 0.1);
+									star.getWorld().playSound(star.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 2, (float) 1);
+									star.remove();
+									for(Entity e : star.getNearbyEntities(range, range, range)) {
+										if(e != null && e instanceof LivingEntity && e != player) {
+											if(!facManager.isFriendly(player, e)) {
+												LivingEntity ent = (LivingEntity) e;
+												Vector direction = star.getLocation().add(0, -1, 0).toVector().subtract(ent.getLocation().toVector()).normalize();
+												double finalDamage = damage - ent.getLocation().distance(star.getLocation()) * 1.8;
+												int finalDuration = (int)(duration - ent.getLocation().distance(star.getLocation()) * 35);
+												if(player instanceof Player) {
+													ent.setKiller((Player)player);
+												}
+												ent.damage(finalDamage, player);
+												ent.setVelocity(direction.multiply(-1.8F + (range / 10)));
+												ent.setFireTicks(finalDuration);
+											}
+										}
+									}
+									cancel();
+								}
+								c++;
+							}
+							else {
+								star.remove();
+								cancel();
+							}
+						}
+					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(uuid);
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 1400L - 75L * level);
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you left click, you prepare to shoot a star.",
+						"&7When you shoot, it will shoot a star towards the direction",
+						"&7that you are looking. When this star hits a block or an",
+						"&7entity, the star will explode. Causing nearby enemies to",
+						"&7take damage, be set on fire and they will be knocked away",
+						"&7from the star.",
 						"&7This enchantment has a cooldown."
 					))
 				);
@@ -4386,8 +4992,6 @@ public class Enchantment extends CommandFile implements Listener{
 				final double range = 6.00 + level * 0.75; 
 				final double damage = 0.25 + 0.25 * level;
 				final int count = 6 + level * 2;
-				DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(shooter);
-				DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 				new BukkitRunnable() {
 					int c = 0;
 					public void run() {
@@ -4395,29 +4999,16 @@ public class Enchantment extends CommandFile implements Listener{
 							for(Entity e : en.getNearbyEntities(range, range, range)) {
 								if(e != shooter) {
 									if(e instanceof LivingEntity) {
-										LivingEntity ent = (LivingEntity) e;
-										BlockData data = Bukkit.createBlockData(Material.SAND);
-										double finalDamage = damage - (e.getLocation().distance(en.getLocation())) / 1.5;
-										if(facPlayerManager.contains(ent.getUniqueId())) {
-											DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(ent);
-											DFFaction other = facManager.getFaction(facPlayer.getFactionId());
-											if(faction != null && other != null) {
-												if(!faction.isAlly(other.getName()) || !faction.isMember(ent.getUniqueId())) {
-													ent.damage(finalDamage, shooter);
-													Location locCF = new Location(ent.getWorld(), ent.getLocation().getX() + 0D, ent.getLocation().getY() + 1.5D, ent.getLocation().getZ() + 0D);
-													ent.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF, 7, data); 
-												}
+										if(facManager.isFriendly(shooter, e)) {
+											LivingEntity ent = (LivingEntity) e;
+											BlockData data = Bukkit.createBlockData(Material.SAND);
+											double finalDamage = damage - (e.getLocation().distance(en.getLocation())) / 1.5;
+											if(shooter instanceof Player) {
+												ent.setKiller((Player)shooter);
 											}
-											else {
-												ent.damage(finalDamage, shooter);
-												Location locCF = new Location(ent.getWorld(), ent.getLocation().getX() + 0D, ent.getLocation().getY() + 1.5D, ent.getLocation().getZ() + 0D);
-												ent.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF, 7, data); 
-											}
-										}
-										else {
-											ent.damage(finalDamage, shooter);
+											ent.damage(finalDamage);
 											Location locCF = new Location(ent.getWorld(), ent.getLocation().getX() + 0D, ent.getLocation().getY() + 1.5D, ent.getLocation().getZ() + 0D);
-											ent.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF, 7, data); 
+											ent.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF, 7, data);
 										}
 									}
 								}
@@ -4464,6 +5055,95 @@ public class Enchantment extends CommandFile implements Listener{
 					new ArrayList<String>(Arrays.asList(
 						"&7When you shoot the enemy, close ranged",
 						"&7attacks deal more damage."
+					))
+				);
+			}
+		}));
+		this.listBow.put("Lazer Shot", new Pair<>(Condition.LEFT_CLICK, new CommandFile() {
+			ArrayList<UUID> activated = new ArrayList<UUID>();
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			HashMap<UUID, Integer> levels = new HashMap<UUID, Integer>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!cooldown.contains(damager.getUniqueId()) && !activated.contains(damager.getUniqueId())) {
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(damager.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2, (float) 1.5);
+					}
+					cooldown.add(damager.getUniqueId());
+					levels.put(damager.getUniqueId(), level);
+					activated.add(damager.getUniqueId());
+					damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou prepare to &6shoot a Star!"));
+				}
+			}
+			@EventHandler
+			public void shootArrow(DFShootBowEvent event) {
+				Player player = event.getShooter();
+				UUID uuid = player.getUniqueId();
+				if(activated.contains(uuid)) {
+					event.getProjectile().remove();
+					event.setCancelled(true);
+					activated.remove(uuid);
+					int level = levels.get(uuid);
+					double range = 20 + 2.5 * level;
+					double damage = 12.0 + 3.0 * level;
+					int duration = 200 + 50 * level;
+					int pierce = 2 + level;
+					int pierced = 0;
+					ArrayList<UUID> hit = new ArrayList<UUID>();
+					Location loc = player.getLocation().clone().add(0, 1.65, 0);
+					loc.getWorld().playSound(loc, Sound.ENTITY_FIREWORK_ROCKET_SHOOT, 2, (float) 1);
+					for(double i = 0.0; i <= range; i += 0.2) {
+						loc.add(loc.getDirection().multiply(0.2F));
+						loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 1, 0.0, 0.0, 0.0, 0.0);
+						for(Entity en : loc.getNearbyEntities(0.2, 0.2, 0.2)) {
+							if(en != null && en instanceof LivingEntity && en != player) {
+								LivingEntity ent = (LivingEntity) en;
+								if(!facManager.isFriendly(player, en)) {
+									if(!hit.contains(ent.getUniqueId())) {
+										hit.add(ent.getUniqueId());
+										if(player instanceof Player) {
+											ent.setKiller((Player)player);
+										}
+										ent.damage(damage);
+										ent.setFireTicks(duration);
+										damage = damage / 2;
+										duration = duration / 2;
+										loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 20, 0.1, 0.1, 0.1, 0.1);
+										loc.getWorld().playSound(loc, Sound.ENTITY_FIREWORK_ROCKET_BLAST, 2, (float) 1);
+										pierced++;
+										if(pierced == pierce) {
+											break;
+										}
+									}
+								}
+							}
+						}
+						if(loc.getBlock().getType() != Material.AIR) {
+							break;
+						}
+					}
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(uuid);
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 1300L - 80L * level);
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Lazer Shot",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you left click, you prepare to shoot a lazer.",
+						"&7When you shoot, it will shoot a lazer towards the direction",
+						"&7that you are looking. When this lazer hits a block or an",
+						"&7entity, the lazer will pierce the enemy. Causing that enemy",
+						"&7to be set on fire and take damage. This lazer pierces other",
+						"&7enemies, the lazer will get it's damage halved per enemy hit.",
+						"&7The same rules are applied for the duration of the fire.",
+						"&7This enchantment has a cooldown."
 					))
 				);
 			}
@@ -4782,8 +5462,13 @@ public class Enchantment extends CommandFile implements Listener{
 					for(Entity entity : victim.getNearbyEntities(range, range, range)){
 						if(entity instanceof LivingEntity) {
 							if(entity != victim) {
-								LivingEntity entity1 = (LivingEntity) entity;
-								entity1.damage(2.00 + 0.50 * level);
+								if(facManager.isFriendly(victim, entity)) {
+									LivingEntity entity1 = (LivingEntity) entity;
+									if(victim instanceof Player) {
+										entity1.setKiller((Player)victim);
+									}
+									entity1.damage(2.00 + 0.50 * level);
+								}
 							}
 						}
 					}
@@ -4881,6 +5566,9 @@ public class Enchantment extends CommandFile implements Listener{
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GENERIC_HURT, 2, (float) 1.1);
 					}
+					if(victim instanceof Player) {
+						damager.setKiller((Player)victim);
+					}
 					damager.damage(1 + level);
 				}
 			}
@@ -4911,6 +5599,9 @@ public class Enchantment extends CommandFile implements Listener{
 					new BukkitRunnable() {
 						public void run() {
 							if(cursed.contains(damager.getUniqueId())) {
+								if(victim instanceof Player) {
+									damager.setKiller((Player)victim);
+								}
 								damager.damage(Double.MAX_VALUE);
 								cursed.remove(damager.getUniqueId());
 							}
@@ -4945,6 +5636,9 @@ public class Enchantment extends CommandFile implements Listener{
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GENERIC_HURT, 2, (float) 1.5);
 					}
 					double damage = event.getDamage();
+					if(victim instanceof Player) {
+						damager.setKiller((Player)victim);
+					}
 					damager.damage(damage);
 				}
 			}

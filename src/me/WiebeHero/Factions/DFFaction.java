@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class DFFaction {
@@ -104,7 +105,6 @@ public class DFFaction {
 		DFFactionPlayer df = this.memberManager.getFactionPlayer(uuid);
 		df.setRank(df.getRank() - 1);
 	}
-	
 	public UUID getFactionId() {
 		return this.facId;
 	}

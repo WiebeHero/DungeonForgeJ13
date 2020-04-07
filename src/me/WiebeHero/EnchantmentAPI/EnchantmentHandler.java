@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -386,17 +387,19 @@ public class EnchantmentHandler extends SwordSwingProgress{
 			Player damager = event.getPlayer();
 			if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				if(damager.getEquipment().getItemInMainHand() != null) {
-					if(damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
-						if(damager.getEquipment().getItemInMainHand().getItemMeta().getLore() != null) {
-							for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-								String enchant = ChatColor.stripColor(s1);
-								String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-								if(enchantment.getMeleeEnchantments().containsKey(check)) {
-									if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.RIGHT_CLICK) {
-										enchant = enchant.replaceAll("[^\\d.]", "");
-										int level = Integer.parseInt(enchant) - 1;
-										enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level);
-										enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+					if(damager.getEquipment().getItemInMainHand().getType() != Material.BOW) {
+						if(damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
+							if(damager.getEquipment().getItemInMainHand().getItemMeta().getLore() != null) {
+								for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+									String enchant = ChatColor.stripColor(s1);
+									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+									if(enchantment.getMeleeEnchantments().containsKey(check)) {
+										if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.RIGHT_CLICK) {
+											enchant = enchant.replaceAll("[^\\d.]", "");
+											int level = Integer.parseInt(enchant) - 1;
+											enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level);
+											enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+										}
 									}
 								}
 							}
@@ -406,17 +409,19 @@ public class EnchantmentHandler extends SwordSwingProgress{
 			}
 			else if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 				if(damager.getEquipment().getItemInMainHand() != null) {
-					if(damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
-						if(damager.getEquipment().getItemInMainHand().getItemMeta().getLore() != null) {
-							for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-								String enchant = ChatColor.stripColor(s1);
-								String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-								if(enchantment.getBowEnchantments().containsKey(check)) {
-									if(enchantment.getBowEnchantments().get(check).getKey() == Condition.LEFT_CLICK) {
-										enchant = enchant.replaceAll("[^\\d.]", "");
-										int level = Integer.parseInt(enchant) - 1;
-										enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
-										enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+					if(damager.getEquipment().getItemInMainHand().getType() == Material.BOW) {
+						if(damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
+							if(damager.getEquipment().getItemInMainHand().getItemMeta().getLore() != null) {
+								for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+									String enchant = ChatColor.stripColor(s1);
+									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+									if(enchantment.getBowEnchantments().containsKey(check)) {
+										if(enchantment.getBowEnchantments().get(check).getKey() == Condition.LEFT_CLICK) {
+											enchant = enchant.replaceAll("[^\\d.]", "");
+											int level = Integer.parseInt(enchant) - 1;
+											enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
+											enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+										}
 									}
 								}
 							}

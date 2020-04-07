@@ -107,8 +107,6 @@ public class RankedPlayer {
 		for(Kit kit : Kit.values()) {
 			if(!this.getKitCooldownList().containsKey(kit)) {
 				this.addKitCooldown(kit, 0L);
-			}
-			if(!this.getKitCooldownList().containsKey(kit)) {
 				if(kit.rank >= 100) {
 					this.setKitUnlock(kit, false);
 				}

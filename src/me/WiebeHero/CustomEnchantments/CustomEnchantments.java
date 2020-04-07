@@ -98,7 +98,6 @@ import me.WiebeHero.MoreStuff.CombatTag;
 import me.WiebeHero.MoreStuff.DisableThings;
 import me.WiebeHero.MoreStuff.Disparitys;
 import me.WiebeHero.MoreStuff.EnderPearlCooldown;
-import me.WiebeHero.MoreStuff.LevelRestrictions;
 import me.WiebeHero.MoreStuff.MOTDSetting;
 import me.WiebeHero.MoreStuff.Portals;
 import me.WiebeHero.MoreStuff.PreventIllegalItems;
@@ -330,7 +329,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new SwordSwingProgress(), this);
 		getServer().getPluginManager().registerEvents(new PreventIllegalItems(), this);
 		getServer().getPluginManager().registerEvents(new Disparitys(dfManager), this);
-		getServer().getPluginManager().registerEvents(new LevelRestrictions(), this);
 		getServer().getPluginManager().registerEvents(new RestrictInteractionWithBlocks(), this);
 		getServer().getPluginManager().registerEvents(new EnderPearlCooldown(), this);
 		getServer().getPluginManager().registerEvents(new MOTDSetting(), this);

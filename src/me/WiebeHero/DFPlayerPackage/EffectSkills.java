@@ -306,9 +306,9 @@ public class EffectSkills implements Listener{
 										}
 									}
 								}
-								DFShootBowEvent ev = new DFShootBowEvent(player, s.getAttackStrength(player));
+								DFShootBowEvent ev = new DFShootBowEvent(player, s.getAttackStrength(player), dfPlayer);
 								Bukkit.getServer().getPluginManager().callEvent(ev);
-								ev.shootArrow(dfPlayer);
+								ev.shootArrow();
 							}
 						}
 					}
