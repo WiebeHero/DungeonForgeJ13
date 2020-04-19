@@ -64,6 +64,21 @@ public class DFPlayerManager {
 			this.dfPlayerList.put(e.getUniqueId(), new DFPlayer(e));
 		}
 	}
+	public void softResetEntity(LivingEntity e) {
+		if(this.contains(e)) {
+			DFPlayer dfPlayer = this.dfPlayerList.get(e.getUniqueId());
+			dfPlayer.setLevel(1);
+			dfPlayer.setAtk(0);
+			dfPlayer.setSpd(0);
+			dfPlayer.setCrt(0);
+			dfPlayer.setRnd(0);
+			dfPlayer.setHp(0);
+			dfPlayer.setDf(0);
+			dfPlayer.setSkillPoints(3);
+			dfPlayer.setExperience(0);
+			dfPlayer.setMaxExperience(750);
+		}
+	}
 	public void resetEntity(UUID uuid) {
 		if(this.contains(uuid)) {
 			this.dfPlayerList.remove(uuid);

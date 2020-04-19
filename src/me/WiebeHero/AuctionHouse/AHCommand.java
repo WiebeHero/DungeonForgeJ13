@@ -88,6 +88,9 @@ public class AHCommand implements CommandExecutor{
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have nothing in your hand, hold the item you want to sell."));
 							}
 						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have reached the maximum amount of items you can sell on the AH!"));
+						}
 					}
 					else {
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage!: /ah sell (Price)"));

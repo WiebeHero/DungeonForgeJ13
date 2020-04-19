@@ -107,3 +107,6 @@ commands:
   customitem:
     ussage: /<command>
     description: 'Command for giving custom items'
+  level:
+    ussage: /<command>
+    description: 'Command for setting levels'

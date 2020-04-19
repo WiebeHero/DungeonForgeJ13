@@ -180,7 +180,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ClassMenu classMenu = new ClassMenu();
 	private ItemStackBuilder builder = new ItemStackBuilder();
 	private SkillMenu skill = new SkillMenu(dfManager, builder, classMenu);
-	private SkillCommand skillCommand = new SkillCommand(skill);
+	private SkillCommand skillCommand = new SkillCommand(skill, dfManager, rankedManager);
 	private DFScoreboard score = new DFScoreboard(dfManager, facManager, facPlayerManager, luck, rankedManager, wg);
 	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager);
 	private AHManager ahManager = new AHManager(availableSlots);
@@ -371,6 +371,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(msgCommand.ignore).setExecutor(msgCommand);
 		getCommand(skillCommand.skill).setExecutor(skillCommand);
 		getCommand(skillCommand.skills).setExecutor(skillCommand);
+		getCommand(skillCommand.level).setExecutor(skillCommand);
 		getCommand(ahCommand.ah).setExecutor(ahCommand);
 		//Moderation
 		getCommand(mod.ban).setExecutor(mod);
