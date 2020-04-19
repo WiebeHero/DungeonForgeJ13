@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.Particle.DustOptions;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 public class ParticleAPI {
 	public void sphere(Particle particle, Location loc, double r, int amount) {
@@ -31,10 +31,39 @@ public class ParticleAPI {
             double angle = i * increment * (clock ? -1 : 1);
             double x = center.getX() + (radius * Math.cos((angle + Math.toRadians(center.getYaw() + (clock ? 180 : 0)))));
             double z = center.getZ() + (radius * Math.sin((angle + Math.toRadians(center.getYaw() + (clock ? 180 : 0)))));
-            locations.add(new Location(world, x, center.getY(), z));
+            Location temp = new Location(world, x, center.getY(), z);
+            Vector vec = this.rotateVector(center.getDirection(), 0, (float)angle);
+            temp.add(vec);
+            locations.add(temp);
         }
         return locations;
     }
+	public final Vector rotateVector(Vector v, float yawDegrees, float pitchDegrees) {
+        double yaw = Math.toRadians(-1 * (yawDegrees + 90));
+        double pitch = Math.toRadians(-pitchDegrees);
+
+        double cosYaw = Math.cos(yaw);
+        double cosPitch = Math.cos(pitch);
+        double sinYaw = Math.sin(yaw);
+        double sinPitch = Math.sin(pitch);
+
+        double initialX, initialY, initialZ;
+        double x, y, z;
+
+        // Z_Axis rotation (Pitch)
+        initialX = v.getX();
+        initialY = v.getY();
+        x = initialX * cosPitch - initialY * sinPitch;
+        y = initialX * sinPitch + initialY * cosPitch;
+
+        // Y_Axis rotation (Yaw)
+        initialZ = v.getZ();
+        initialX = x;
+        z = initialZ * cosYaw - initialX * sinYaw;
+        x = initialZ * sinYaw + initialX * cosYaw;
+
+        return new Vector(x, y, z);
+	}
 	public Location getLocationRelative(Location loc, double distance, int direction) {
 		//The location is the location to get the new loc from
 		//Distance is the distance away from the player

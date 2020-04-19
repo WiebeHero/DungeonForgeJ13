@@ -775,6 +775,11 @@ public class LootRewards {
 		item1 = i.getItem();
 		ItemMeta meta1 = item1.getItemMeta();
 		meta1.setDisplayName(new CCT().colorize("&aMoney Note: $" + i.getInteger("Money")));
+		ArrayList<String> lore1 = new ArrayList<String>();
+		lore1.add(new CCT().colorize("&7Right click this note to recieve"));
+		lore1.add(new CCT().colorize("&7the amount of money that is on"));
+		lore1.add(new CCT().colorize("&7the note."));
+		meta1.setLore(lore1);
 		item1.setItemMeta(meta1);
 		return item1;
 	}
@@ -875,16 +880,19 @@ public class LootRewards {
 		return item1;
 	}
 	public ItemStack playerXPBottle(int xp) {
-		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
-		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
+		ItemStack item1 = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
+		ItemMeta itemmeta = item1.getItemMeta();
+		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&7XP Amount: " + xp));
+		lore1.add(new CCT().colorize("&7When you throw this bottle, you"));
+		lore1.add(new CCT().colorize("&7will gain xp appropiate to it's amount"));
+		lore1.add(new CCT().colorize("&7XP Amount: &6" + xp));
 		itemmeta.setLore(lore1);
-		item.setItemMeta(itemmeta);
-		return item;
+		item1.setItemMeta(itemmeta);
+		NBTItem item = new NBTItem(item1);
+		item.setInteger("XPBottle", xp);
+		item1 = item.getItem();
+		return item1;
 	}
 	public static ArrayList<ItemStack> getTier1List(){
 		return LootRewards.rewards1;

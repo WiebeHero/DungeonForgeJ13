@@ -98,7 +98,7 @@ public class EnchantmentHandler extends SwordSwingProgress{
 					else {
 						d = 1.0;
 					}
-					if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_SWEEP_ATTACK) {
+					if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK || victim.getLastDamageCause().getCause() == DamageCause.ENTITY_SWEEP_ATTACK) {
 						if(d == 1.0) {
 							if(damager.getEquipment().getItemInMainHand() != null) {
 								if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
@@ -140,7 +140,7 @@ public class EnchantmentHandler extends SwordSwingProgress{
 					else {
 						d = 1.0;
 					}
-					if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_SWEEP_ATTACK) {
+					if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK || victim.getLastDamageCause().getCause() == DamageCause.ENTITY_SWEEP_ATTACK) {
 						if(d == 1.0) {
 							if(damager.getEquipment().getItemInMainHand() != null) {
 								if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {

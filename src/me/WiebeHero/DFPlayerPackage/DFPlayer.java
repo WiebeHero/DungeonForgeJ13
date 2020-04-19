@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFPlayerPackage.EnumSkills.SkillState;
 import me.WiebeHero.DFPlayerPackage.Enums.Classes;
@@ -1099,5 +1100,59 @@ public class DFPlayer {
 				}
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+	}
+	public Pair<Double, Double> getAbsoluteArmorPoints() {
+		DFPlayer dfPlayer = this;
+		Entity entity = Bukkit.getEntity(dfPlayer.getUUID());
+		double armorD = 0.0;
+		double armorT = 0.0;
+		if(entity instanceof LivingEntity) {
+			LivingEntity ent = (LivingEntity) entity;
+			for(ItemStack item : ent.getEquipment().getArmorContents()) {
+				if(item != null) {
+					if(item.hasItemMeta()) {
+						if(item.getItemMeta().hasLore()) {
+							if(item.getItemMeta().getLore().toString().contains("Armor Defense") && item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
+								String check1 = "";
+								String check2 = "";
+								for(String s : item.getItemMeta().getLore()) {
+									if(s.contains("Armor Defense")) {
+										check1 = ChatColor.stripColor(s);
+									}
+									else if(s.contains("Armor Toughness")){
+										check2 = ChatColor.stripColor(s);
+									}
+								}
+								check1 = check1.replaceAll("[^\\d.]", "");
+								check2 = check2.replaceAll("[^\\d.]", "");
+								double armorDT = Double.parseDouble(check1);
+								double armorTT = Double.parseDouble(check2);
+								armorD = armorD + armorDT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+								armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+							}
+						}
+					}
+				}
+			}
+			ItemStack item = ent.getEquipment().getItemInOffHand();
+			if(item != null) {
+				if(item.hasItemMeta()) {
+					if(item.getItemMeta().hasLore()) {
+						if(item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
+							String check1 = "";
+							for(String s : item.getItemMeta().getLore()) {
+								if(s.contains("Armor Toughness")) {
+									check1 = ChatColor.stripColor(s);
+								}
+							}
+							check1 = check1.replaceAll("[^\\d.]", "");
+							double armorTT = Double.parseDouble(check1);
+							armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+						}
+					}
+				}
+			}
+		}
+		return new Pair<Double, Double>(armorD, armorT);
 	}
 }

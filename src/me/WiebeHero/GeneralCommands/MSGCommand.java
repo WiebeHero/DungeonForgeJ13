@@ -29,10 +29,9 @@ public class MSGCommand implements CommandExecutor{
 			if(cmd.getName().equalsIgnoreCase(msg)) {
 				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 					if(args.length >= 2) {
-						Player temp = method.convertOfflinePlayer(args[0]);
-						if(temp.getName() != null) {
-							Player p = Bukkit.getPlayer(args[0]);
-							if(p != null) {
+						Player p = Bukkit.getPlayer(args[0]);
+						if(p != null) {
+							if(p.isOnline()) {
 								MSG msg = msgManager.get(p.getUniqueId());
 								if(msg != null) {
 									if(!msg.isInIgnore(p.getUniqueId())) {
@@ -71,16 +70,16 @@ public class MSGCommand implements CommandExecutor{
 				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 					if(args.length == 2) {
 						if(args[0].equalsIgnoreCase("add")) {
-							Player temp = method.convertOfflinePlayer(args[1]);
-							if(temp.getName() != null) {
+							Player p = Bukkit.getPlayer(args[1]);
+							if(p != null) {
 								MSG msg = msgManager.get(player.getUniqueId());
 								if(msg != null) {
-									if(!msg.isInIgnore(temp.getUniqueId())) {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + temp.getName() + " &ahas been added to your ignore list."));
-										msg.addIgnore(temp.getUniqueId());
+									if(!msg.isInIgnore(p.getUniqueId())) {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &ahas been added to your ignore list."));
+										msg.addIgnore(p.getUniqueId());
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + temp.getName() + " &cis already in you ignore list!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cis already in you ignore list!"));
 									}
 								}
 								else {

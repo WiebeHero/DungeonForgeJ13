@@ -1,16 +1,13 @@
 package me.WiebeHero.DFPlayerPackage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Arrow.PickupStatus;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,14 +25,12 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
-import de.tr7zw.nbtapi.NBTItem;
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.MoreStuff.SwordSwingProgress;
@@ -350,8 +345,9 @@ public class EffectSkills implements Listener{
 				if(dfManager.contains(player)) {
 					DFPlayer dfPlayer = dfManager.getEntity(player);
 					if(dfPlayer.getDfCal() > 0) {
-						double armor = player.getAttribute(Attribute.GENERIC_ARMOR).getValue();
-						double toughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
+						Pair<Double, Double> pair = dfPlayer.getAbsoluteArmorPoints();
+						double armor = pair.getKey();
+						double toughness = pair.getValue();
 						double total = 0;
 						if(armor > 30) {
 							total = total + (armor - 30);
@@ -360,7 +356,10 @@ public class EffectSkills implements Listener{
 							total = total + (toughness - 20);
 						}
 						total = total / 1.35;
-						event.setDamage(event.getDamage() / 100.00 * (100.00 - total));
+						Bukkit.broadcastMessage(total + "");
+						double newTotal = 100.00 - total < 0 ? 0 : 100.00 - total;
+						Bukkit.broadcastMessage(newTotal + "");
+						event.setDamage(event.getDamage() / 100.00 * (newTotal));
 					}
 				}
 			}

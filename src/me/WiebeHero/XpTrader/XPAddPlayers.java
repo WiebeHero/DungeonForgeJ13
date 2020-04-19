@@ -2,7 +2,6 @@ package me.WiebeHero.XpTrader;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,8 +10,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEvents.DFPlayerLevelUpEvent;
+import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Scoreboard.DFScoreboard;
@@ -29,63 +30,14 @@ public class XPAddPlayers implements Listener {
 		Player player = event.getPlayer();
 		if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if(player.getInventory().getItemInMainHand() != null) {
-				if(player.getInventory().getItemInMainHand().getType() == Material.EXPERIENCE_BOTTLE) {
-					if(player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()) {
-						if(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(ChatColor.stripColor("XP Bottle (Player)"))) {
-							DFPlayer dfPlayer = dfManager.getEntity(player);
-							ItemStack item = player.getInventory().getItemInMainHand();
-							String xpAmount = "";
-				    		for(String s : item.getItemMeta().getLore()) {
-				    			if(s.contains("XP Amount:")) {
-				    				xpAmount = ChatColor.stripColor(s);
-				    			}
-				    		}
-				    		xpAmount = xpAmount.replaceAll("[^\\d.]", "");
-							int xpAdd = Integer.parseInt(xpAmount);
-							int xp = dfPlayer.getExperience();
-							int maxxp = dfPlayer.getMaxExperience();
-							int level = dfPlayer.getLevel();
-							int finalXP = xp + xpAdd;
-							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, 2, (float) 1.0);
-							if(level < 100) {
-								if(finalXP >= maxxp) {
-									level++;
-									xp = finalXP - maxxp;
-									int maxxpFinal = (int)(double)(maxxp / 100.00 * 120.00);
-									dfPlayer.addLevel(1);
-									dfPlayer.setMaxExperience(maxxpFinal);
-									dfPlayer.setExperience(xp);
-									dfPlayer.addSkillPoints(3);
-									player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have leveled up to level &6" + level + "&a!"));
-									board.updateScoreboard(player);
-									DFPlayerLevelUpEvent ev = new DFPlayerLevelUpEvent(player);
-									Bukkit.getServer().getPluginManager().callEvent(ev);
-								}
-								else if(finalXP > 0){
-									dfPlayer.setExperience(finalXP);
-								}
-							}
-							float barprogress = (float) finalXP / maxxp;
-							if(finalXP > 0){
-								if(!(barprogress > 1)) {
-									player.setLevel(level);
-									player.setExp((float)barprogress);
-								}
-								else {
-									if(barprogress >= 0 && barprogress <= 1) {
-										player.setLevel(level);
-										player.setExp((float)barprogress - 1.0F);
-									}
-									else {
-										player.setLevel(level);
-										player.setExp(0.0F);
-									}
-								}
-							}
-							player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-						}
-					}
+				ItemStack item = player.getInventory().getItemInMainHand();
+				NBTItem i = new NBTItem(item);
+				if(i.hasKey("XPBottle")) {
+					int xpAdd = i.getInteger("XPBottle");
+					DFPlayerXpGainEvent ev = new DFPlayerXpGainEvent(player, xpAdd, this.dfManager, this.board);
+					Bukkit.getServer().getPluginManager().callEvent(ev);
+					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, 2, (float) 1.0);
+					player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 				}
 			}
 		}

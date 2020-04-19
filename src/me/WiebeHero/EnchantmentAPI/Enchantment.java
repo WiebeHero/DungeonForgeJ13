@@ -57,6 +57,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
 import javafx.util.Pair;
 import me.WiebeHero.APIs.ParticleAPI;
@@ -102,7 +103,6 @@ public class Enchantment extends CommandFile implements Listener{
 	public HashMap<String, Pair<Condition, CommandFile>> listArmor;
 	public HashMap<String, Pair<Condition, CommandFile>> listShield;
 	public HashMap<String, Pair<Condition, CommandFile>> listBow;
-	
 	
 	public void loadMeleeEnchantments() {
 		this.listMelee = new HashMap<String, Pair<Condition, CommandFile>>();
@@ -409,7 +409,7 @@ public class Enchantment extends CommandFile implements Listener{
 		this.listMelee.put("Charge", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
 			ArrayList<UUID> playerStuff = new ArrayList<UUID>();
 			@Override
-			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, PlayerInteractEvent event) {
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
 				if(!playerStuff.contains(damager.getUniqueId())) {
 					int amp = (int)Math.floor(0 + (level) / 2);
 					int durationAdd = 100 + 33 * level;
@@ -1275,6 +1275,81 @@ public class Enchantment extends CommandFile implements Listener{
 				);
 			}
 		}));
+		this.listMelee.put("Inner Focus", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			ArrayList<UUID> jump = new ArrayList<UUID>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!cooldown.contains(damager.getUniqueId())) {
+					if(damager.isOnGround()) {
+						int duration = 250 + 50 * level;
+						int inc = 5 + level;
+						DFPlayer dfPlayer = dfManager.getEntity(damager);
+						p.applyEffect(damager, PotionEffectType.SLOW, 20, 100);
+						cooldown.add(damager.getUniqueId());
+						jump.add(damager.getUniqueId());
+						new BukkitRunnable() {
+							int timer = 100;
+							int count = 0;
+							public void run() {
+								if(count > timer) {
+									jump.remove(damager.getUniqueId());
+									dfPlayer.addAtk(inc);
+									dfPlayer.addSpd(inc);
+									dfPlayer.addCrt(inc);
+									dfPlayer.addRnd(inc);
+									dfPlayer.addHp(inc);
+									dfPlayer.addDf(inc);
+									new BukkitRunnable() {
+										public void run() {
+											dfPlayer.removeAtk(inc);
+											dfPlayer.removeSpd(inc);
+											dfPlayer.removeCrt(inc);
+											dfPlayer.removeRnd(inc);
+											dfPlayer.removeHp(inc);
+											dfPlayer.removeDf(inc);
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), duration);
+									cancel();
+								}
+								else {
+									count++;
+								}
+							}
+						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+						new BukkitRunnable() {
+							public void run() {
+								cooldown.remove(damager.getUniqueId());
+							}
+						}.runTaskLater(CustomEnchantments.getInstance(), 100L);
+//						.runTaskLater(CustomEnchantments.getInstance(), 1000 - 70 * level);
+						
+					}
+				}
+			}
+			@EventHandler
+			public void noMove(PlayerJumpEvent event) {
+				Player player = event.getPlayer();
+				if(jump.contains(player.getUniqueId())) {
+					event.setCancelled(true);
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Inner Focus",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you right click, you freeze for 5 seconds.",
+						"&7You charge all of the energy around you that",
+						"&7causes your skills to rise by a certain amount",
+						"&7for a few seconds.",
+						"&7This enchantment has a cooldown."
+					))
+				);
+			}
+		}));
 		this.listMelee.put("Large Fireball", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
 			ArrayList<UUID> playerStuff = new ArrayList<UUID>();
 			HashMap<UUID, Integer> fireball = new HashMap<UUID, Integer>();
@@ -1399,6 +1474,82 @@ public class Enchantment extends CommandFile implements Listener{
 					new ArrayList<String>(Arrays.asList(
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will gain some health."
+					))
+				);
+			}
+		}));
+		this.listMelee.put("Lightning Thrust", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			HashMap<UUID, Pair<Integer, ItemStack>> activated = new HashMap<UUID, Pair<Integer, ItemStack>>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!cooldown.contains(damager.getUniqueId())) {
+					damager.getWorld().strikeLightningEffect(damager.getLocation());
+					damager.setVelocity(new Vector(0, 0.5, 0));
+					new BukkitRunnable() {
+						public void run() {
+							damager.getWorld().playSound(damager.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 2, (float) 1.25);
+							damager.setVelocity(damager.getLocation().getDirection().multiply(1.25F + 0.25F * level));
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 5L);
+					cooldown.add(damager.getUniqueId());
+					activated.put(damager.getUniqueId(), new Pair<Integer, ItemStack>(level, damager.getEquipment().getItemInMainHand()));
+					new BukkitRunnable() {
+						public void run() {
+							if(activated.containsKey(damager.getUniqueId())) {
+								activated.remove(damager.getUniqueId());
+							}
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 55L);
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(damager.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 1150L - 50 * level);
+				}
+			}
+			@EventHandler
+			public void lightningThrust(EntityDamageByEntityEvent event) {
+				if(!event.isCancelled()) {
+					if(event.getDamager() instanceof LivingEntity && event.getEntity() instanceof LivingEntity) {
+						LivingEntity damager = (LivingEntity) event.getDamager();
+						LivingEntity victim = (LivingEntity) event.getEntity();
+						if(activated.containsKey(damager.getUniqueId())) {
+							Pair<Integer, ItemStack> pair = activated.get(damager.getUniqueId());
+							if(pair.getValue().equals(damager.getEquipment().getItemInMainHand())) {
+								victim.getWorld().strikeLightningEffect(victim.getLocation());
+								p.applyEffect(victim, new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.SLOW_DIGGING, PotionEffectType.SLOW)), 1, 200 + pair.getKey());
+								activated.remove(damager.getUniqueId());
+								new BukkitRunnable() {
+									int count = 0;
+									int timer = 60 + 20 * pair.getKey();
+									public void run() {
+										if(count <= timer) {
+											victim.damage(0.03 + 0.03 * pair.getKey());
+											count++;
+										}
+										else {
+											cancel();
+										}
+									}
+								}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+							}
+						}
+					}
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Lightning Thrust",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you right click, you charge your weapon",
+						"&7with electric energy, you then launch up and in",
+						"&7the direction that you are looking. When you hit",
+						"&7the enemy with your weapon, you give the enemy slowness,",
+						"&7mining fatigue and a screen shake that also damages them."
 					))
 				);
 			}
@@ -1726,6 +1877,41 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7When you attack the enemy, there is a chance",
 						"&7you infect a deadly poison into them causing",
 						"&7them to recieve the poison effect for a few seconds."
+					))
+				);
+			}
+		}));
+		this.listMelee.put("Rampage", new Pair<>(Condition.ENTITY_DEATH_MELEE, new CommandFile() {
+			@Override
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDeathEvent event) {
+				float i = ThreadLocalRandom.current().nextFloat() * 100;
+				if(victim instanceof Player) {
+					i = 0;
+				}
+				if(i <= 25 + 15 * level) {
+					Location loc1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 0.25D, victim.getLocation().getZ() + 0D);
+					damager.getWorld().spawnParticle(Particle.REDSTONE, loc1, 60, 0.1, 0.1, 0.1, 0.1, new DustOptions(Color.fromRGB(255, 0, 0), 1.0F));
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 2, (float) 1.25);
+					}
+					DFPlayer dfPlayer = dfManager.getEntity(damager.getUniqueId());
+					dfPlayer.addAtkCal(2.5 + 2.5 * level, 100 + 20 * level);
+					dfPlayer.addSpdCal(0.5 + 0.5 * level, 100 + 20 * level);
+					dfPlayer.addMove(0.005F + 0.005F * level, 100 + 20 * level);
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Rampage",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you kill the enemy, there is a chance",
+						"&7that your attack damage, attack speed and",
+						"&7movement speed are increased for a few seconds.",
+						"&7if the enemy is a player, the chance of this",
+						"&7enchantment activating is increased to 100%."
 					))
 				);
 			}
@@ -3911,15 +4097,17 @@ public class Enchantment extends CommandFile implements Listener{
 			public void arrowRainHit(ProjectileHitEvent event) {
 				if(event.getEntity() instanceof Arrow) {
 					Arrow arrow = (Arrow) event.getEntity();
-					if(arrow.getShooter() instanceof Player) {
-						Player shooter = (Player) arrow.getShooter();
-						if(event.getHitEntity() instanceof LivingEntity) {
-							if(facManager.isFriendly(shooter, event.getHitEntity())) {
+					if(arrows.contains(arrow.getUniqueId())) {
+						if(arrow.getShooter() instanceof Player) {
+							Player shooter = (Player) arrow.getShooter();
+							if(event.getHitEntity() instanceof LivingEntity) {
+								if(facManager.isFriendly(shooter, event.getHitEntity())) {
+									arrow.remove();
+								}
+							}
+							else {
 								arrow.remove();
 							}
-						}
-						else {
-							arrow.remove();
 						}
 					}
 				}
@@ -4591,6 +4779,7 @@ public class Enchantment extends CommandFile implements Listener{
 										cooldown.remove(player.getUniqueId());
 									}
 								}.runTaskLater(CustomEnchantments.getInstance(), 1200 - 100 * levelBow.get(player.getUniqueId()));
+								levelBow.remove(player.getUniqueId());
 							}
 						}
 					}
@@ -4607,6 +4796,56 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7arrow. When you hit a block/enemy, you leap towards",
 						"&7where the arrow landed.",
 						"&7This enchantment has a cooldown."
+					))
+				);
+			}
+		}));
+		this.listBow.put("Homing", new Pair<>(Condition.PROJECTILE_SHOOT, new CommandFile() {
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, DFShootBowEvent event) {
+				float i = ThreadLocalRandom.current().nextFloat() * 100;
+				if(i <= 6 + level * 2) {
+					Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 2D, damager.getLocation().getZ() + 0D);
+					damager.getWorld().spawnParticle(Particle.CLOUD, locCF, 30, 0.05, 0.05, 0.05); 
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_PIG_SADDLE, 2, (float) 1.25);
+					}
+					new BukkitRunnable() {
+						LivingEntity target = null;
+						public void run() {
+							//ballLoc.getDirection().add(ent.getLocation().add(0, 1, 0).subtract(ballLoc).toVector().normalize().multiply(speed / 100 * 175)).normalize().multiply(speed / 100 * 87.5)
+							Arrow arrow = (Arrow) event.getProjectile();
+							if(target == null) {
+								for(Entity e : arrow.getNearbyEntities(20, 20, 20)) {
+									if(e != null && e != damager && e instanceof LivingEntity) {
+										LivingEntity tar = (LivingEntity) e;
+										if(!facManager.isFriendly(damager, tar)) {
+											target = tar;
+											break;
+										}
+									}
+								}
+							}
+							else {
+								double speed = arrow.getVelocity().length();
+								Vector finalLoc = arrow.getVelocity().add(target.getLocation().add(0, 1, 0).subtract(arrow.getLocation()).toVector().normalize().multiply(speed * 0.15)).normalize().multiply(speed);
+								arrow.setVelocity(finalLoc);
+							}
+						}
+					}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+					
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Homing",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you shoot your bow, there is a chance",
+						"&7that your arrow will home into the nearest target",
+						"&7present in it's radius."
 					))
 				);
 			}

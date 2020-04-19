@@ -28,13 +28,12 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
-public class NovisInventory extends NovisRewards implements Listener{
-	public Set<String> check = new HashSet<String>();
-	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
-	BukkitTask bt1;
-	BukkitTask bt2;
-	BukkitTask bt3;
-	BukkitTask bt4;
+public class NovisInventory implements Listener{
+	private Set<String> check = new HashSet<String>();
+	private NovisRewards rewards;
+	public NovisInventory(NovisRewards rewards) {
+		this.rewards = rewards;
+	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//
 	//
@@ -43,7 +42,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 	//
 	//--------------------------------------------------------------------------------------------------------------------
 	public void NewInventory1(Player player, ArrayList<ItemStack> finalLootList) {
-		Inventory i = plugin.getServer().createInventory(null, 27, (new CCT().colorize("&6Decrypting Crystal...")));
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 27, (new CCT().colorize("&6Decrypting Crystal...")));
 		player.openInventory(i);
 		check.add(player.getName());
 		ArrayList<ItemStack> lootList = new ArrayList<ItemStack>();
@@ -54,7 +53,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 		//--------------------------------------------------------------------------------------------------------------------
 		//Inventory Animation
 		//--------------------------------------------------------------------------------------------------------------------
-		bt1 = new BukkitRunnable() {
+		new BukkitRunnable() {
 			int counter = 17;
 			int count = 0;
 			@Override
@@ -95,7 +94,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 					if(counter == 0) {
 						cancel();
 						counter = 9;
-						bt2 = new BukkitRunnable() {
+						new BukkitRunnable() {
 							@Override
 							public void run() {
 								if(player.getOpenInventory().getTitle().contains(ChatColor.stripColor("Decrypting "))) {
@@ -134,7 +133,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									if(counter == 0) {
 										cancel();
 										counter = 5;
-										bt3 = new BukkitRunnable() {
+										new BukkitRunnable() {
 											@Override
 											public void run() {
 												if(player.getOpenInventory().getTitle().contains(ChatColor.stripColor("Decrypting "))) {
@@ -172,7 +171,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 													counter--;
 													if(counter == 0) {
 														cancel();
-														bt4 = new BukkitRunnable() {
+														new BukkitRunnable() {
 															@Override
 															public void run() {
 																i.setItem(0, emptyVoid(player));
@@ -271,8 +270,7 @@ public class NovisInventory extends NovisRewards implements Listener{
 									player.getInventory().getItemInMainHand().setAmount(i.getAmount() - 1);
 									check.add(player.getName());
 									String loottable = item.getString("Rarity");
-									NovisInventory inv = new NovisInventory();
-									inv.NewInventory1(player, listSelection(loottable));
+									this.NewInventory1(player, listSelection(loottable));
 									new BukkitRunnable() {
 										public void run() {
 											check.remove(player.getName());
@@ -319,22 +317,22 @@ public class NovisInventory extends NovisRewards implements Listener{
 	public ArrayList<ItemStack> listSelection(String s) {
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 		if(s.contains("Common")) {
-			list = NovisRewards.rewards1;
+			list = this.rewards.getCommonRewards();
 		}
-		if(s.contains("Rare")) {
-			list = NovisRewards.rewards2;
+		else if(s.contains("Rare")) {
+			list = this.rewards.getRareRewards();
 		}
-		if(s.contains("Epic")) {
-			list = NovisRewards.rewards3;
+		else if(s.contains("Epic")) {
+			list = this.rewards.getEpicRewards();
 		}
-		if(s.contains("Legendary")) {
-			list = NovisRewards.rewards4;
+		else if(s.contains("Legendary")) {
+			list = this.rewards.getLegendaryRewards();
 		}
-		if(s.contains("Mythic")) {
-			list = NovisRewards.rewards5;
+		else if(s.contains("Mythic")) {
+			list = this.rewards.getMythicRewards();
 		}
-		if(s.contains("Heroic")) {
-			list = NovisRewards.rewards6;
+		else if(s.contains("Heroic")) {
+			list = this.rewards.getHeroicRewards();
 		}
 		return list;
 	}

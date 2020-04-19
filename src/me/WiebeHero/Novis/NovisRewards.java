@@ -1,6 +1,7 @@
 package me.WiebeHero.Novis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 import org.bukkit.Color;
@@ -22,15 +23,17 @@ import net.minecraft.server.v1_13_R2.NBTTagList;
 import net.minecraft.server.v1_13_R2.NBTTagString;
 
 public class NovisRewards {
-	public static ArrayList<ItemStack> rewards1 = new ArrayList<ItemStack>();
-	public static ArrayList<ItemStack> rewards2 = new ArrayList<ItemStack>();
-	public static ArrayList<ItemStack> rewards3 = new ArrayList<ItemStack>();
-	public static ArrayList<ItemStack> rewards4 = new ArrayList<ItemStack>();
-	public static ArrayList<ItemStack> rewards5 = new ArrayList<ItemStack>();
-	public static ArrayList<ItemStack> rewards6 = new ArrayList<ItemStack>();
-	public NovisEnchantmentGetting enchant = new NovisEnchantmentGetting();
-	public NovisRewards() {
-		addRewards();
+	private ArrayList<ItemStack> rewards1 = new ArrayList<ItemStack>();
+	private ArrayList<ItemStack> rewards2 = new ArrayList<ItemStack>();
+	private ArrayList<ItemStack> rewards3 = new ArrayList<ItemStack>();
+	private ArrayList<ItemStack> rewards4 = new ArrayList<ItemStack>();
+	private ArrayList<ItemStack> rewards5 = new ArrayList<ItemStack>();
+	private ArrayList<ItemStack> rewards6 = new ArrayList<ItemStack>();
+	private NovisEnchantmentGetting enchant;
+	private HashMap<String, ItemStack> itemList = new HashMap<String, ItemStack>();
+	public NovisRewards(NovisEnchantmentGetting enchant) {
+		this.enchant = enchant;
+		this.addRewards();
 	}
 	public void addRewards() {
 		FileConfiguration config = CustomEnchantments.getInstance().getConfig();
@@ -125,6 +128,7 @@ public class NovisRewards {
 			else if(check.contains("Heroic")) {
 				rewards6.add(item);
 			}
+			this.itemList.put(listItemsWep.get(i).toLowerCase().replace(" ", "_"), item);
 		}
 		Set<String> configListBow = config.getConfigurationSection("Items.Bows").getKeys(false);
 		ArrayList<String> listItemsBows = new ArrayList<String>(configListBow);
@@ -192,6 +196,7 @@ public class NovisRewards {
 			else if(check.contains("Heroic")) {
 				rewards6.add(item);
 			}
+			this.itemList.put(listItemsBows.get(i).toLowerCase().replace(" ", "_"), item);
 		}
 		Set<String> configListShields = config.getConfigurationSection("Items.Shields").getKeys(false);
 		ArrayList<String> listItemsShields = new ArrayList<String>(configListShields);
@@ -258,6 +263,7 @@ public class NovisRewards {
 			else if(check.contains("Heroic")) {
 				rewards6.add(item);
 			}
+			this.itemList.put(listItemsShields.get(i).toLowerCase().replace(" ", "_"), item);
 		}
 		Set<String> configListArmor = config.getConfigurationSection("Items.Armor").getKeys(false);
 		ArrayList<String> listItemsArmor = new ArrayList<String>(configListArmor);
@@ -385,6 +391,28 @@ public class NovisRewards {
 			else if(check.contains("Heroic")) {
 				rewards6.add(item);
 			}
+			this.itemList.put(listItemsArmor.get(i).toLowerCase().replace(" ", "_"), item);
 		}
+	}
+	public ArrayList<ItemStack> getCommonRewards(){
+		return this.rewards1;
+	}
+	public ArrayList<ItemStack> getRareRewards(){
+		return this.rewards2;
+	}
+	public ArrayList<ItemStack> getEpicRewards(){
+		return this.rewards3;
+	}
+	public ArrayList<ItemStack> getLegendaryRewards(){
+		return this.rewards4;
+	}
+	public ArrayList<ItemStack> getMythicRewards(){
+		return this.rewards5;
+	}
+	public ArrayList<ItemStack> getHeroicRewards(){
+		return this.rewards6;
+	}
+	public HashMap<String, ItemStack> getItemList(){
+		return this.itemList;
 	}
 }

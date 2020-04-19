@@ -32,9 +32,10 @@ public class SkillJoin implements Listener{
 	private DFPlayerManager dfManager;
 	private ClassMenu classMenu;
 	private RankEnum rEnum;
-	public SkillJoin(DFPlayerManager manager, ClassMenu menu) {
+	public SkillJoin(DFPlayerManager manager, ClassMenu menu, RankEnum rEnum) {
 		this.dfManager = manager;
 		this.classMenu = menu;
+		this.rEnum = rEnum;
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void skillJoin(PlayerJoinEvent event) {

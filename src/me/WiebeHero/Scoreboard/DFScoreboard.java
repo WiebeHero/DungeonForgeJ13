@@ -94,7 +94,7 @@ public class DFScoreboard implements Listener{
 					territory = "&a&l" + faction.getName();
 				}
 			}
-			else if(facManager.isInAChunk(player)) {
+			if(facManager.isInAChunk(player)) {
 				for(DFFaction fac : facManager.getFactionMap().values()) {
 					if(fac.getChunkList().contains(player.getLocation().getChunk())) {
 						territory = "&c&l" + fac.getName();
@@ -177,7 +177,7 @@ public class DFScoreboard implements Listener{
 				territory = "&a&l" + faction.getName();
 			}
 		}
-		else if(facManager.isInAChunk(player)) {
+		if(facManager.isInAChunk(player)) {
 			for(DFFaction fac : facManager.getFactionMap().values()) {
 				if(fac.getChunkList().contains(player.getLocation().getChunk())) {
 					territory = "&c&l" + fac.getName();

@@ -2,17 +2,21 @@ package me.WiebeHero.Skills;
 
 import java.util.Random;
 
-import org.bukkit.Sound;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
-import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Scoreboard.DFScoreboard;
@@ -29,11 +33,7 @@ public class XPEarningMobs implements Listener{
 		if(event.getEntity().getKiller() != null && event.getEntity().getKiller() instanceof Player) {
 			if(event.getEntity() instanceof LivingEntity) {
 				Player player = event.getEntity().getKiller();
-				DFPlayer dfPlayer = dfManager.getEntity(player);
 				LivingEntity victim = event.getEntity();
-				int level = dfPlayer.getLevel();
-				int xp = dfPlayer.getExperience();
-				int maxxp = dfPlayer.getMaxExperience();
 				int finalXP = 0;
 				if(!(victim instanceof Player)) {
 					Entity ent = NBTInjector.patchEntity(victim);
@@ -66,7 +66,7 @@ public class XPEarningMobs implements Listener{
 						else {
 							i1 = new Random().nextInt(3) + 3 + 2 * levelMob;
 						}
-						finalXP = i1 + xp;
+						finalXP = i1;
 					}
 				}
 				else {
@@ -74,49 +74,21 @@ public class XPEarningMobs implements Listener{
 					int otherLevel = df.getLevel();
 					int i1 = 0;
 					i1 = new Random().nextInt(7 * otherLevel) + 4 * otherLevel;
-					finalXP = i1 + xp;
+					finalXP = i1;
 				}
-				if(level < 100) {
-					if(finalXP >= maxxp) {
-						for(int i = level; i < 100; i++) {
-							if(finalXP >= maxxp) {
-								finalXP = finalXP - maxxp;
-								maxxp = Math.abs(maxxp);
-								level++;
-								maxxp = (int)(double)(maxxp / 100.00 * 120.00);
-								dfPlayer.addLevel(1);
-								dfPlayer.setExperience(finalXP);
-								dfPlayer.setMaxExperience(maxxp);
-								dfPlayer.addSkillPoints(3);
-							}
-							else {
-								break;
-							}
-						}
-						board.updateScoreboard(player);
-	    	    		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
-	    	            player.sendMessage(new CCT().colorize("&aYou have leveled up to level: &6&l" + level));
-					}
-					else if(finalXP > 0){
-						dfPlayer.setExperience(finalXP);
-					}
-				}
-				float barprogress = (float) finalXP / maxxp;
-				if(finalXP > 0){
-					if(!(barprogress > 1)) {
-						player.setLevel(level);
-						player.setExp((float)barprogress);
-					}
-					else {
-						player.setLevel(level);
-						player.setExp((float)barprogress - 1.0F);
-					}
-				}
+				DFPlayerXpGainEvent ev = new DFPlayerXpGainEvent(player, finalXP, this.dfManager, this.board);
+				Bukkit.getServer().getPluginManager().callEvent(ev);
 			}
 		}
 	}
 	@EventHandler
-	public void cancelXpSpawning(EntityDeathEvent event) {
-		event.setDroppedExp(0);
+	public void cancelXpSpawning(EntitySpawnEvent event) {
+		if(event.getEntityType() == EntityType.EXPERIENCE_ORB) {
+			new BukkitRunnable() {
+				public void run() {
+					event.getEntity().remove();
+				}
+			}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+		}
 	}
 }

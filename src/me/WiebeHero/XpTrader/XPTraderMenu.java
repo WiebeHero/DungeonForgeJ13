@@ -2,8 +2,6 @@ package me.WiebeHero.XpTrader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,16 +21,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomMethods.ItemStackBuilder;
 
 public class XPTraderMenu implements Listener{
-	public Plugin plugin = CustomEnchantments.getPlugin(CustomEnchantments.class);
 	public void XPTraderPlayer(Player player) {
-		Inventory i = plugin.getServer().createInventory(null, 54, (new CCT().colorize("&6&lXP Trader")));
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 54, (new CCT().colorize("&6&lXP Trader")));
 		i.setItem(0, emptyVoid());
 		i.setItem(1, emptyVoid());
 		i.setItem(2, emptyVoid());
@@ -198,7 +195,7 @@ public class XPTraderMenu implements Listener{
 							invPlayer.removeItem(invPlayer.getItem(event.getSlot()));
 							int slot = invXPTrader.firstEmpty();
 							invXPTrader.setItem(slot, item);
-							invXPTrader.setItem(slot + 4, xpBottlePlayer(rarity * level, item.getAmount()));
+							invXPTrader.setItem(slot + 4, playerXPBottle(rarity * level, item.getAmount()));
 							player.updateInventory();
 						}
 						else {
@@ -230,35 +227,20 @@ public class XPTraderMenu implements Listener{
 		item.setItemMeta(itemmeta);
 		return item;
 	}
-	//--------------------------------------------------------------------------------------------------------------------
-	//XP Pot
-	//--------------------------------------------------------------------------------------------------------------------
-	public ItemStack xpBottleItem(int xpAmount, int amountItem) {
-		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, amountItem);
-		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Item)"));
+	public ItemStack playerXPBottle(int xp, int amount) {
+		ItemStack item1 = new ItemStack(Material.EXPERIENCE_BOTTLE, amount);
+		ItemMeta itemmeta = item1.getItemMeta();
+		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&6XP Amount: " + xpAmount));
+		lore1.add(new CCT().colorize("&7When you throw this bottle, you"));
+		lore1.add(new CCT().colorize("&7will gain xp appropiate to it's amount"));
+		lore1.add(new CCT().colorize("&7XP Amount: &6" + xp));
 		itemmeta.setLore(lore1);
-		item.setItemMeta(itemmeta);
-		return item;
-	}
-	//--------------------------------------------------------------------------------------------------------------------
-	//XP Pot
-	//--------------------------------------------------------------------------------------------------------------------
-	public ItemStack xpBottlePlayer(int xpAmount, int amountItem) {
-		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, amountItem);
-		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
-		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
-		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&6XP Amount: " + xpAmount));
-		itemmeta.setLore(lore1);
-		item.setItemMeta(itemmeta);
-		return item;
+		item1.setItemMeta(itemmeta);
+		NBTItem item = new NBTItem(item1);
+		item.setInteger("XPBottle", xp);
+		item1 = item.getItem();
+		return item1;
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//Accept Trade Button
