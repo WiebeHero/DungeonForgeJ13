@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -22,11 +23,21 @@ import net.md_5.bungee.api.ChatColor;
 
 public class ClassMenuSelection implements Listener{
 	private DFPlayerManager dfManager;
+	private ArrayList<UUID> move = new ArrayList<UUID>();
 	private ArrayList<UUID> activated = new ArrayList<UUID>();
 	private ClassMenu menu;
 	public ClassMenuSelection(DFPlayerManager manager, ClassMenu menu) {
 		this.dfManager = manager;
 		this.menu = menu;
+	}
+	@EventHandler
+	public void joinHandler(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if(!this.dfManager.contains(player)) {
+			if(!move.contains(player.getUniqueId())) {
+				move.add(player.getUniqueId());
+			}
+		}
 	}
 	@EventHandler
 	public void clickInInv(InventoryClickEvent event) {
@@ -60,6 +71,8 @@ public class ClassMenuSelection implements Listener{
 					String temp = className[1].toUpperCase();
 					Classes currentClass = Enum.valueOf(Classes.class, temp);
 					dfPlayer.setPlayerClass(currentClass);
+					dfPlayer.resetIncreases();
+					dfPlayer.resetCalculations();
 					activated.remove(player.getUniqueId());
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have chosen the class " + className[1]));
 					player.closeInventory();

@@ -55,7 +55,8 @@ public class XPAddWeapons implements Listener{
 						}
 						if(check) {
 							int levelItem = item.getInteger("Level");
-							if(levelItem < 15) {
+							int levelCursor = item.getInteger("Level");
+							if(levelItem < 15 && levelCursor < 15) {
 								int xpItem = item.getInteger("XP");
 								int xpCursor = cursor.getInteger("XP") + 2500;
 								int totalXpCursor = cursor.getInteger("TotalXP");

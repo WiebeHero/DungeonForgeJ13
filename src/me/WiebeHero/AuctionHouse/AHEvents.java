@@ -206,6 +206,8 @@ public class AHEvents implements Listener{
 						NBTItem item = new NBTItem(i);
 						if(item.hasKey("Confirm")) {
 							ItemStack purchasedItem = view.getItem(2);
+							event.setCancelled(true);
+							player.getOpenInventory().close();
 							if(purchasedItem != null) {
 								NBTItem pur = new NBTItem(purchasedItem);
 								if(pur.hasKey("AHItem")) {

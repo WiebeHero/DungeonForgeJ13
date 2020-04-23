@@ -31,6 +31,7 @@ public class ClassPride implements Listener{
 		if(dfManager.contains(player)) {
 			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.PRIDE) {
+				event.setCancelled(true);
 				if(dfPlayer.getUseable()) {
 					dfPlayer.setUseable(false);
 					dfPlayer.setActivation(true);
@@ -61,7 +62,6 @@ public class ClassPride implements Listener{
 					else {
 						dfPlayer.addDfCal(defense, duration);
 					}
-					event.setCancelled(true);
 					new BukkitRunnable() {
 						public void run() {
 							dfPlayer.setActivation(false);

@@ -973,16 +973,7 @@ public class SkillMenu {
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getAtk();
 		double calcNow = dfPlayer.getAtkCal();
-		double calcNext = dfPlayer.getAtkCal();
-		if(dfPlayer.getSkillState(SkillState.ATK) == States.UP) {
-			calcNext = calcNext + 2.25;
-		}
-		else if(dfPlayer.getSkillState(SkillState.ATK) == States.DW) {
-			calcNext = calcNext + 0.75;
-		}
-		else if(dfPlayer.getSkillState(SkillState.ATK) == States.NM){
-			calcNext = calcNext + 1.5;
-		}
+		double calcNext = dfPlayer.getAtkCal() + dfPlayer.getAtkIncrease();
 		meta.setDisplayName(new CCT().colorize("&4Attack Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new CCT().colorize("&7Increase the damage you deal through melee."));
@@ -1002,16 +993,7 @@ public class SkillMenu {
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getSpd();
 		double calcNow = dfPlayer.getSpdCal();
-		double calcNext = dfPlayer.getSpdCal();
-		if(dfPlayer.getSkillState(SkillState.SPD) == States.UP) {
-			calcNext = calcNext + 0.75;
-		}
-		else if(dfPlayer.getSkillState(SkillState.SPD) == States.DW) {
-			calcNext = calcNext + 0.25;
-		}
-		else if(dfPlayer.getSkillState(SkillState.SPD) == States.NM){
-			calcNext = calcNext + 0.50;
-		}
+		double calcNext = dfPlayer.getSpdCal() + dfPlayer.getSpdIncrease();
 		meta.setDisplayName(new CCT().colorize("&9Attack Speed: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new CCT().colorize("&7You can attack faster."));
@@ -1031,16 +1013,7 @@ public class SkillMenu {
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getCrt();
 		double calcNow = dfPlayer.getCrtCal();
-		double calcNext = dfPlayer.getCrtCal();
-		if(dfPlayer.getSkillState(SkillState.CRT) == States.UP) {
-			calcNext = calcNext + 0.75;
-		}
-		else if(dfPlayer.getSkillState(SkillState.CRT) == States.DW) {
-			calcNext = calcNext + 0.25;
-		}
-		else if(dfPlayer.getSkillState(SkillState.CRT) == States.NM){
-			calcNext = calcNext + 0.50;
-		}
+		double calcNext = dfPlayer.getCrtCal() + dfPlayer.getCrtIncrease();
 		meta.setDisplayName(new CCT().colorize("&5Critical Chance: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new CCT().colorize("&7Have a chance to deal double damage."));
@@ -1060,16 +1033,7 @@ public class SkillMenu {
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getRnd();
 		double calcNow = dfPlayer.getRndCal();
-		double calcNext = dfPlayer.getRndCal();
-		if(dfPlayer.getSkillState(SkillState.RND) == States.UP) {
-			calcNext = calcNext + 3.0;
-		}
-		else if(dfPlayer.getSkillState(SkillState.RND) == States.DW) {
-			calcNext = calcNext + 1.0;
-		}
-		else if(dfPlayer.getSkillState(SkillState.RND) == States.NM){
-			calcNext = calcNext + 2.0;
-		}
+		double calcNext = dfPlayer.getRndCal() + dfPlayer.getRndIncrease();
 		meta.setDisplayName(new CCT().colorize("&dRanged Damage: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new CCT().colorize("&7Increase the damage you deal through ranged."));
@@ -1089,16 +1053,7 @@ public class SkillMenu {
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getHp();
 		double calcNow = dfPlayer.getHpCal();
-		double calcNext = dfPlayer.getHpCal();
-		if(dfPlayer.getSkillState(SkillState.HP) == States.UP) {
-			calcNext = calcNext + 7.5;
-		}
-		else if(dfPlayer.getSkillState(SkillState.HP) == States.DW) {
-			calcNext = calcNext + 2.5;
-		}
-		else if(dfPlayer.getSkillState(SkillState.HP) == States.NM){
-			calcNext = calcNext + 5.0;
-		}
+		double calcNext = dfPlayer.getHpCal() + dfPlayer.getHpIncrease();
 		meta.setDisplayName(new CCT().colorize("&cHealth: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new CCT().colorize("&7Increase your MAX HP."));
@@ -1118,16 +1073,7 @@ public class SkillMenu {
 		ItemMeta meta = item.getItemMeta();
 		int levelNow = dfPlayer.getDf();
 		double calcNow = dfPlayer.getDfCal();
-		double calcNext = dfPlayer.getDfCal();
-		if(dfPlayer.getSkillState(SkillState.DF) == States.UP) {
-			calcNext = calcNext + 2.25;
-		}
-		else if(dfPlayer.getSkillState(SkillState.DF) == States.DW) {
-			calcNext = calcNext + 0.75;
-		}
-		else if(dfPlayer.getSkillState(SkillState.DF) == States.NM){
-			calcNext = calcNext + 1.50;
-		}
+		double calcNext = dfPlayer.getDfCal() + dfPlayer.getDfIncrease();
 		meta.setDisplayName(new CCT().colorize("&8Defense: &7[&b" + levelNow + " &6/ &b100&7]"));
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add(new CCT().colorize("&7Increase armor points you recieve from armor."));

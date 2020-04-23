@@ -40,6 +40,7 @@ public class ClassWrath implements Listener{
 		if(dfManager.contains(player)) {
 			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.WRATH) {
+				event.setCancelled(true);
 				if(dfPlayer.getUseable()) {
 					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
 					DFFaction fac = facManager.getFaction(facPlayer.getFactionId());
@@ -47,7 +48,6 @@ public class ClassWrath implements Listener{
 					double damage1 = 5 + level * 0.15;
 					double range = 4 + level * 0.06;
 					long cooldown = 2600 - level * 5;
-					event.setCancelled(true);
 					ArrayList<Entity> ents = new ArrayList<Entity>(player.getNearbyEntities(range, range, range));
 					ents.remove(player);
 					if(!ents.isEmpty()) {

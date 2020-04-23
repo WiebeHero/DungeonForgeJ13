@@ -33,6 +33,7 @@ public class ClassEnvy implements Listener{
 		if(dfManager.contains(player)) {
 			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.ENVY) {
+				event.setCancelled(true);
 				if(dfPlayer.getUseable() == true) {
 					dfPlayer.setActivation(true);
 					dfPlayer.setUseable(false);
@@ -46,7 +47,6 @@ public class ClassEnvy implements Listener{
 					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 2.0F, 1.0F);
 					player.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 80, 0.15, 0.15, 0.15, 0); 
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have used &6Special Attack!"));
-					event.setCancelled(true);
 					new BukkitRunnable() {
 						public void run() {
 							if(dfPlayer.getActivation() == true) {

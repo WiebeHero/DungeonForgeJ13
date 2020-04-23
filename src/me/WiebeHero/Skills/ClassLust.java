@@ -35,6 +35,7 @@ public class ClassLust implements Listener{
 		if(dfManager.contains(player)) {
 			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.LUST) {
+				event.setCancelled(true);
 				if(dfPlayer.getUseable()) {
 					int level = dfPlayer.getLevel();
 					double heal = 10 + level * 0.15;
@@ -46,7 +47,6 @@ public class ClassLust implements Listener{
 					ArrayList<Entity> ents = new ArrayList<Entity>(player.getNearbyEntities(range, range, range));
 					ents.remove(player);
 					if(!ents.isEmpty()) {
-						event.setCancelled(true);
 						for(Entity e : ents) {
 							if(e != null) {
 								if(e instanceof LivingEntity) {

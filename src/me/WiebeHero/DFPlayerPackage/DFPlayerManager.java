@@ -61,7 +61,10 @@ public class DFPlayerManager {
 	public void resetEntity(LivingEntity e) {
 		if(this.contains(e)) {
 			this.dfPlayerList.remove(e.getUniqueId());
-			this.dfPlayerList.put(e.getUniqueId(), new DFPlayer(e));
+			DFPlayer dfPlayer = new DFPlayer(e);
+			this.dfPlayerList.put(e.getUniqueId(), dfPlayer);
+			dfPlayer.runDefense();
+			dfPlayer.attackSpeed();
 		}
 	}
 	public void softResetEntity(LivingEntity e) {
@@ -77,6 +80,8 @@ public class DFPlayerManager {
 			dfPlayer.setSkillPoints(3);
 			dfPlayer.setExperience(0);
 			dfPlayer.setMaxExperience(750);
+			dfPlayer.runDefense();
+			dfPlayer.attackSpeed();
 		}
 	}
 	public void resetEntity(UUID uuid) {
@@ -113,33 +118,33 @@ public class DFPlayerManager {
 					String className = yml.getString("Skills.Players." + uuid + ".Class");
 					className = className.toUpperCase();
 					Classes classChoice = Enum.valueOf(Classes.class, className);
-					dfPlayer.cClass = classChoice;
-					dfPlayer.lvl = yml.getInt("Skills.Players." + uuid + ".Level");
-					dfPlayer.xp = yml.getInt("Skills.Players." + uuid + ".XP");
-					dfPlayer.maxxp = yml.getInt("Skills.Players." + uuid + ".MXP");
-					dfPlayer.sk_pt = yml.getInt("Skills.Players." + uuid + ".Skill Points");
-					dfPlayer.atk = yml.getInt("Skills.Players." + uuid + ".Attack Damage");
-					dfPlayer.spd = yml.getInt("Skills.Players." + uuid + ".Attack Speed");
-					dfPlayer.crt = yml.getInt("Skills.Players." + uuid + ".Critical Chance");
-					dfPlayer.rnd = yml.getInt("Skills.Players." + uuid + ".Ranged Damage");
-					dfPlayer.hp = yml.getInt("Skills.Players." + uuid + ".Health");
-					dfPlayer.df = yml.getInt("Skills.Players." + uuid + ".Defense");
-					dfPlayer.atk_m = yml.getInt("Skills.Players." + uuid + ".Attack Modifier");
-					dfPlayer.spd_m = yml.getInt("Skills.Players." + uuid + ".Speed Modifier");
-					dfPlayer.crt_m = yml.getInt("Skills.Players." + uuid + ".Critical Modifier");
-					dfPlayer.rnd_m = yml.getInt("Skills.Players." + uuid + ".Ranged Modifier");
-					dfPlayer.hp_m = yml.getInt("Skills.Players." + uuid + ".Health Modifier");
-					dfPlayer.df_m = yml.getInt("Skills.Players." + uuid + ".Defense Modifier");
-					dfPlayer.money = yml.getDouble("Skills.Players." + uuid + ".Money");
-					dfPlayer.active = false;
-					dfPlayer.use = true;
-					dfPlayer.move = 0.2F;
-					dfPlayer.atk_ct = 0.00;
-					dfPlayer.spd_ct = 0.00;
-					dfPlayer.crt_ct = 0.00;
-					dfPlayer.rnd_ct = 0.00;
-					dfPlayer.hp_ct = 0.00;
-					dfPlayer.df_ct = 0.00;
+					dfPlayer.setPlayerClass(classChoice);
+					dfPlayer.setLevel(yml.getInt("Skills.Players." + uuid + ".Level"));
+					dfPlayer.setExperience(yml.getInt("Skills.Players." + uuid + ".XP"));
+					dfPlayer.setMaxExperience(yml.getInt("Skills.Players." + uuid + ".MXP"));
+					dfPlayer.setSkillPoints(yml.getInt("Skills.Players." + uuid + ".Skill Points"));
+					dfPlayer.setAtk(yml.getInt("Skills.Players." + uuid + ".Attack Damage"));
+					dfPlayer.setSpd(yml.getInt("Skills.Players." + uuid + ".Attack Speed"));
+					dfPlayer.setCrt(yml.getInt("Skills.Players." + uuid + ".Critical Chance"));
+					dfPlayer.setRnd(yml.getInt("Skills.Players." + uuid + ".Ranged Damage"));
+					dfPlayer.setHp(yml.getInt("Skills.Players." + uuid + ".Health"));
+					dfPlayer.setDf(yml.getInt("Skills.Players." + uuid + ".Defense"));
+					dfPlayer.setAtkMod(yml.getInt("Skills.Players." + uuid + ".Attack Modifier"));
+					dfPlayer.setSpdMod(yml.getInt("Skills.Players." + uuid + ".Speed Modifier"));
+					dfPlayer.setCrtMod(yml.getInt("Skills.Players." + uuid + ".Critical Modifier"));
+					dfPlayer.setRndMod(yml.getInt("Skills.Players." + uuid + ".Ranged Modifier"));
+					dfPlayer.setHpMod(yml.getInt("Skills.Players." + uuid + ".Health Modifier"));
+					dfPlayer.setDfMod(yml.getInt("Skills.Players." + uuid + ".Defense Modifier"));
+					dfPlayer.setMoney(yml.getDouble("Skills.Players." + uuid + ".Money"));
+					dfPlayer.setActivation(false);
+					dfPlayer.setUseable(true);
+					dfPlayer.setMove(0.2F);
+					dfPlayer.setAtkCal(0.00);
+					dfPlayer.setSpdCal(0.00);
+					dfPlayer.setCrtCal(0.00);
+					dfPlayer.setRndCal(0.00);
+					dfPlayer.setHpCal(0.00);
+					dfPlayer.setDfCal(0.00);
 					this.addEntity(uuid, dfPlayer);
 				}
 			}

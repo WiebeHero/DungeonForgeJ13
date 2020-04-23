@@ -34,6 +34,7 @@ public class ClassGluttony implements Listener{
 		if(dfManager.contains(player)) {
 			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.GLUTTONY) {
+				event.setCancelled(true);
 				if(dfPlayer.getUseable() == true) {
 					dfPlayer.setUseable(false);
 					dfPlayer.setActivation(true);
@@ -56,7 +57,6 @@ public class ClassGluttony implements Listener{
 					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 2, (float) 0.5);
 					double totalHeal = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * (heal / 100);
 					double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-					event.setCancelled(true);
 					dfPlayer.addDfCal(defense, duration);
 					if(player.getHealth() + totalHeal <= maxHealth) {
 						player.setHealth(player.getHealth() + totalHeal);

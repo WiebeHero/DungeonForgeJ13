@@ -167,11 +167,11 @@ public class DFItemLevelUpEvent extends Event{
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel < 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + this.getXP() + " &6/ &b&l" + maxxp + "&a]"));
+					newLore.add(this.getNewXPBar(this.getXP(), maxxp));
 				}
 				else if(itemLevel == 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
 				}
-				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel >= 6) {
 					int loreRequired = itemLevel - 4;
@@ -236,11 +236,11 @@ public class DFItemLevelUpEvent extends Event{
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel < 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + this.getXP() + " &6/ &b&l" + maxxp + "&a]"));
+					newLore.add(this.getNewXPBar(this.getXP(), maxxp));
 				}
 				else if(itemLevel == 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
 				}
-				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel >= 6) {
 					int loreRequired = itemLevel - 4;
@@ -305,11 +305,11 @@ public class DFItemLevelUpEvent extends Event{
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel < 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + this.getXP() + " &6/ &b&l" + maxxp + "&a]"));
+					newLore.add(this.getNewXPBar(this.getXP(), maxxp));
 				}
 				else if(itemLevel == 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
 				}
-				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel >= 6) {
 					int loreRequired = itemLevel - 4;
@@ -374,11 +374,11 @@ public class DFItemLevelUpEvent extends Event{
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel < 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + this.getXP() + " &6/ &b&l" + maxxp + "&a]"));
+					newLore.add(this.getNewXPBar(this.getXP(), maxxp));
 				}
 				else if(itemLevel == 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
 				}
-				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel >= 6) {
 					int loreRequired = itemLevel - 4;
@@ -443,11 +443,11 @@ public class DFItemLevelUpEvent extends Event{
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel < 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + this.getXP() + " &6/ &b&l" + maxxp + "&a]"));
+					newLore.add(this.getNewXPBar(this.getXP(), maxxp));
 				}
 				else if(itemLevel == 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
 				}
-				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel >= 6) {
 					int loreRequired = itemLevel - 4;
@@ -512,11 +512,11 @@ public class DFItemLevelUpEvent extends Event{
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel < 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + this.getXP() + " &6/ &b&l" + maxxp + "&a]"));
+					newLore.add(this.getNewXPBar(this.getXP(), maxxp));
 				}
 				else if(itemLevel == 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
 				}
-				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(itemLevel >= 6) {
 					int loreRequired = itemLevel - 4;
@@ -532,73 +532,6 @@ public class DFItemLevelUpEvent extends Event{
 					DFPlayer dfPlayer = dfManager.getEntity(this.getPlayer());
 					dfPlayer.runDefense();
 				}
-//				ItemStack i = this.getItemStack();
-//				NBTItem item = new NBTItem(i);
-//				int itemLevel = item.getInteger("Level");
-//				int maxxp = item.getInteger("MAXXP");
-//				int total = item.getInteger("TotalXP");	
-//				String name = item.getString("ItemName");
-//				String rarity = item.getString("Rarity");
-//				String enchantmentString = item.getString("EnchantmentString");
-//				double baseDamage = item.getDouble("Base Armor Toughness");
-//				double baseSpeed = item.getDouble("Base Cooldown");
-//				double incDamage = item.getDouble("Inc Armor Toughness");
-//				double incSpeed = item.getDouble("Inc Cooldown");
-//				this.getPlayer().getWorld().playSound(this.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, (float)2, (float)1.5);
-//				for(int x = itemLevel + 1; x <= 15; x++) {
-//					if(this.getXP() >= maxxp) {
-//						itemLevel = x;
-//						this.setXP(this.getXP() - maxxp);
-//						total = total + maxxp;
-//						maxxp = maxxp / 100 * 135;
-//					}
-//					else {
-//						break;
-//					}
-//				}
-//				double value1 = baseDamage + incDamage * (itemLevel - 1);
-//	        	double value2 = baseSpeed - incSpeed * (itemLevel - 1);
-//				//Config Data
-//				//Weapon Data
-//	        	item.setInteger("Level", itemLevel);
-//	        	item.setInteger("XP", this.getXP());
-//	        	item.setInteger("MAXXP", maxxp);
-//	        	item.setInteger("TotalXP", total);
-//	        	item.setDouble("Armor Toughness", value1);
-//	        	item.setDouble("Cooldown", value2);
-//	        	this.setItemStack(item.getItem());
-//				ItemMeta meta = i.getItemMeta();
-//				meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
-//				ArrayList<String> newLore = new ArrayList<String>();
-//				newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
-//				double roundOff1 = (double) Math.round(value1 * 100) / 100;
-//				double roundOff2 = (double) Math.round(value2 * 100) / 100;
-//				newLore.add(new CCT().colorize("&7-----------------------"));
-//				newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff1));
-//				newLore.add(new CCT().colorize("&7Cooldown: &b" + roundOff2 + " Seconds"));
-//				newLore.add(new CCT().colorize("&7-----------------------"));
-//				if(itemLevel < 15) {
-//					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + this.getXP() + " &6/ &b&l" + maxxp + "&a]"));
-//				}
-//				else if(itemLevel == 15) {
-//					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
-//				}
-//				newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
-//				newLore.add(new CCT().colorize("&7-----------------------"));
-//				if(itemLevel >= 6) {
-//					int loreRequired = itemLevel - 4;
-//					int levelRequired = loreRequired * 5;
-//					newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
-//				}
-//				newLore.add(new CCT().colorize("&7Rarity: " + rarity));
-//				meta.setLore(newLore);
-//				i.setItemMeta(meta);
-//				this.getPlayer().getInventory().setItemInOffHand(i);
-//				//Weapon Data
-//				if(dfManager.contains(this.getPlayer())) {
-//					DFPlayer dfPlayer = dfManager.getEntity(this.getPlayer());
-//					dfPlayer.runDefense();
-//				}
 			}
 			else {
 				Player player = this.getPlayer();
@@ -695,25 +628,7 @@ public class DFItemLevelUpEvent extends Event{
 				newLore.add(new CCT().colorize("&7-----------------------"));
 				if(levelItem < 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + total + " &6/ &b&l" + maxxpItem + "&a]"));
-					double barprogress = (double) total / (double) maxxpItem * 100.0;
-					String loreString = "&7[&a";
-					boolean canStop = true;
-					for(double x = 0.00; x <= 100.00; x+=2.00) {
-						if(barprogress >= x) {
-							loreString = loreString + ":";
-						}
-						else if(canStop) {
-							loreString = loreString + "&7:";
-							canStop = false;
-						}
-						else {
-							loreString = loreString + ":";
-						}
-						if(x == 100) {
-							loreString = loreString + "&7] &a" + String.format("%.2f", barprogress) + "%";
-						}
-					}
-					newLore.add(new CCT().colorize(loreString));
+					newLore.add(this.getNewXPBar(total, maxxpItem));
 				}
 				else if(levelItem == 15) {
 					newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
@@ -732,6 +647,27 @@ public class DFItemLevelUpEvent extends Event{
 				player.updateInventory();
 			}
 		}
+	}
+	private String getNewXPBar(double xp, double maxxp) {
+		double barprogress = (double) xp / (double) maxxp * 100.0;
+		String loreString = "&7[&a";
+		boolean canStop = true;
+		for(double x = 0.00; x <= 100.00; x+=2.00) {
+			if(barprogress >= x) {
+				loreString = loreString + ":";
+			}
+			else if(canStop) {
+				loreString = loreString + "&7:";
+				canStop = false;
+			}
+			else {
+				loreString = loreString + ":";
+			}
+			if(x == 100) {
+				loreString = loreString + "&7] &a" + String.format("%.2f", barprogress) + "%";
+			}
+		}
+		return new CCT().colorize(loreString);
 	}
 
 	@Override public HandlerList getHandlers() { return handlers; }

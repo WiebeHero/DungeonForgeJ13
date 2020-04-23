@@ -210,7 +210,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		
 
 		NovisRewards rewards = new NovisRewards(nEnchant);
-		ItemCommand itemCommand = new ItemCommand(rewards, rankedManager);
+		ItemCommand itemCommand = new ItemCommand(rewards, rankedManager, nEnchant);
 		
 		enchantmentGuideInv = new EnchantmentGuideInventory(enchant, builder);
 		AHCommand ahCommand = new AHCommand(ahManager, rankedManager, ahInv);

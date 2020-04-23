@@ -3,6 +3,8 @@ package me.WiebeHero.MoreStuff;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 
 public class SwordSwingProgress implements Listener{
 	public static ArrayList<String> names = new ArrayList<String>();
@@ -110,7 +113,7 @@ public class SwordSwingProgress implements Listener{
 	public void switchProgressMiss(PlayerInteractEvent event) {
 		Player player = (Player) event.getPlayer();
 		if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-			if(!(names.contains(player.getName()))) {
+			if(!(names.contains(player.getName()))) { 
 				names.add(player.getName());
 				new BukkitRunnable() {
 					@Override

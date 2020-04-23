@@ -67,6 +67,7 @@ public class SkillJoin implements Listener{
 				}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 			}
 			else {
+				dfPlayer.resetIncreases();
 				dfPlayer.resetCalculations();
 				dfPlayer.changeHealth();
 				dfPlayer.attackSpeed();

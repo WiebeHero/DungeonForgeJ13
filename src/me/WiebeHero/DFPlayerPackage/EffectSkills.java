@@ -356,9 +356,7 @@ public class EffectSkills implements Listener{
 							total = total + (toughness - 20);
 						}
 						total = total / 1.35;
-						Bukkit.broadcastMessage(total + "");
 						double newTotal = 100.00 - total < 0 ? 0 : 100.00 - total;
-						Bukkit.broadcastMessage(newTotal + "");
 						event.setDamage(event.getDamage() / 100.00 * (newTotal));
 					}
 				}

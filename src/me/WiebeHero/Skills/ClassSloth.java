@@ -32,6 +32,7 @@ public class ClassSloth implements Listener{
 		if(dfManager.contains(player)) {
 			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
+				event.setCancelled(true);
 				if(dfPlayer.getUseable()) {
 					dfPlayer.setUseable(false);
 					dfPlayer.setActivation(true);
@@ -51,7 +52,6 @@ public class ClassSloth implements Listener{
 						double inc = cLevel * 0.4;
 						dfPlayer.addAtkCal(inc, duration);
 					}
-					event.setCancelled(true);
 					for(int i = 0; i <= (int)arrowA; i++) {
 						Arrow arrow = player.getWorld().spawnArrow(loc, rotateVectorAroundY(vec, 180), (float)(1.50 * 0.20), 26);
 						arrow.setShooter(player);

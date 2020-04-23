@@ -179,7 +179,7 @@ public class Enchantment extends CommandFile implements Listener{
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
 				//if(i <= 4 + 1.5 * level) {
-				if(i <= 100) {
+				if(i <= 4 + 1.5 * level) {
 					final double range = 5.00 + level; 
 					final double damage = 7 + 1.5 * level;
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.7D, victim.getLocation().getZ() + 0D);
@@ -760,7 +760,7 @@ public class Enchantment extends CommandFile implements Listener{
 		this.listMelee.put("Dragons Fireball", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
 			ArrayList<UUID> playerStuff = new ArrayList<UUID>();
 			@Override
-			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, PlayerInteractEvent event) {
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
 				if(!playerStuff.contains(damager.getUniqueId())) {
 					playerStuff.add(damager.getUniqueId()); // set to "true"
 					damager.launchProjectile(DragonFireball.class);
@@ -1526,6 +1526,7 @@ public class Enchantment extends CommandFile implements Listener{
 									public void run() {
 										if(count <= timer) {
 											victim.damage(0.03 + 0.03 * pair.getKey());
+											victim.setNoDamageTicks(0);
 											count++;
 										}
 										else {
@@ -1568,7 +1569,7 @@ public class Enchantment extends CommandFile implements Listener{
 						List<ItemStack> stacks = event.getDrops();
 						for(int i1 = 0; i1 < stacks.size(); i1++) {
 							if(stacks.get(i1).getMaxStackSize() != 1) {
-								stacks.get(i1).setAmount((int)(stacks.get(i1).getAmount() * (1.33 + 0.33 * level)));
+								stacks.get(i1).setAmount((int)(stacks.get(i1).getAmount() * (1.1 + 0.1 * level)));
 							}
 						}
 					}
@@ -2665,18 +2666,15 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Archery", new Pair<>(Condition.ARMOR_CHANGE, new CommandFile() {
-			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
-					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
-						dfPlayer.addRndCal(6.0 + 6.0 * level, 0);
-						list.put(dfPlayer.getUUID(), 6.0 + 6.0 * level);
+					if(equiped == true) {
+						dfPlayer.addRndCal(3.0 + 3.0 * level, 0);
 					}
-					else if(equiped == false && list.containsKey(damager.getUniqueId())) {
-						dfPlayer.removeRndCal(list.get(dfPlayer.getUUID()), 0);
-						list.remove(dfPlayer.getUUID());
+					else if(equiped == false) {
+						dfPlayer.removeRndCal(3.0 + 3.0 * level, 0);
 					}
 				}
 			}
@@ -2793,7 +2791,6 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Curse", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
-			HashMap<UUID, UUID> cursees = new HashMap<UUID, UUID>();
 			HashMap<UUID, UUID> cursed = new HashMap<UUID, UUID>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level) {
@@ -2969,18 +2966,15 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Empower", new Pair<>(Condition.ARMOR_CHANGE, new CommandFile() {
-			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
-					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
-						dfPlayer.addAtkCal(4.50 + 4.50 * level, 0);
-						list.put(dfPlayer.getUUID(), 4.50 + 4.50 * level);
+					if(equiped == true) {
+						dfPlayer.addAtkCal(2.25 + 2.25 * level, 0);
 					}
-					else if(equiped == false && list.containsKey(damager.getUniqueId())) {
-						dfPlayer.removeAtkCal(list.get(dfPlayer.getUUID()), 0);
-						list.remove(dfPlayer.getUUID());
+					else if(equiped == false) {
+						dfPlayer.removeAtkCal(2.25 + 2.25 * level, 0);
 					}
 				}
 			}
@@ -3213,18 +3207,15 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Hastefull", new Pair<>(Condition.ARMOR_CHANGE, new CommandFile() {
-			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
-					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
+					if(equiped == true) {
 						dfPlayer.addSpdCal(1.5 + 1.5 * level, 0);
-						list.put(dfPlayer.getUUID(), 1.5 + 1.5 * level);
 					}
-					else if(equiped == false && list.containsKey(damager.getUniqueId())) {
-						dfPlayer.removeSpdCal(list.get(dfPlayer.getUUID()), 0);
-						list.remove(dfPlayer.getUUID());
+					else if(equiped == false) {
+						dfPlayer.removeSpdCal(1.5 + 1.5 * level, 0);
 					}
 				}
 			}
@@ -3447,22 +3438,19 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Lightweight", new Pair<>(Condition.ARMOR_CHANGE, new CommandFile() {
-			HashMap<UUID, Float> list = new HashMap<UUID, Float>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(damager instanceof Player) {
 						Player player = (Player) damager;
-						if(equiped == true && !list.containsKey(damager.getUniqueId())) {
-							dfPlayer.addMove(0.008F + 0.008F * level, 0);
+						if(equiped == true) {
+							dfPlayer.addMove(0.003F + 0.003F * level, 0);
 							player.setWalkSpeed(dfPlayer.getMove());
-							list.put(dfPlayer.getUUID(), 0.008F + 0.008F * level);
 						}
-						else if(equiped == false && list.containsKey(damager.getUniqueId())) {
-							dfPlayer.removeMove(list.get(dfPlayer.getUUID()), 0);
+						else if(equiped == false) {
+							dfPlayer.removeMove(0.003F + 0.003F * level, 0);
 							player.setWalkSpeed((float) dfPlayer.getMove());
-							list.remove(dfPlayer.getUUID());
 						}
 					}
 				}
@@ -3487,13 +3475,11 @@ public class Enchantment extends CommandFile implements Listener{
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
-					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
+					if(equiped == true) {
 						dfPlayer.addCrtCal(0.75 + 0.75 * level, 0);
-						list.put(dfPlayer.getUUID(), 0.75 + 0.75 * level);
 					}
-					else if(equiped == false && list.containsKey(damager.getUniqueId())) {
-						dfPlayer.removeCrtCal(list.get(dfPlayer.getUUID()), 0);
-						list.remove(dfPlayer.getUUID());
+					else if(equiped == false) {
+						dfPlayer.removeCrtCal(0.75 + 0.75 * level, 0);
 					}
 				}
 			}
@@ -3555,13 +3541,11 @@ public class Enchantment extends CommandFile implements Listener{
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
-					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
-						dfPlayer.addHpCal(12.5 + 12.5 * level, 0);
-						list.put(dfPlayer.getUUID(), 12.5 + 12.5 * level);
+					if(equiped == true) {
+						dfPlayer.addSpdCal(7.5 + 7.5 * level, 0);
 					}
-					else if(equiped == false && list.containsKey(damager.getUniqueId())) {
-						dfPlayer.removeHpCal(list.get(dfPlayer.getUUID()), 0);
-						list.remove(dfPlayer.getUUID());
+					else if(equiped == false) {
+						dfPlayer.removeSpdCal(7.5 + 7.5 * level, 0);
 					}
 				}
 			}
@@ -3921,18 +3905,15 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Tough Skin", new Pair<>(Condition.ARMOR_CHANGE, new CommandFile() {
-			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
-					if(equiped == true && !list.containsKey(damager.getUniqueId())) {
-						dfPlayer.addDfCal(2.5 + 2.5 * level, 0);
-						list.put(dfPlayer.getUUID(), 2.5 + 2.5 * level);
+					if(equiped == true) {
+						dfPlayer.addDfCal(1.875 + 1.875 * level, 0);
 					}
-					else if(equiped == false && list.containsKey(damager.getUniqueId())) {
-						dfPlayer.removeDfCal(list.get(dfPlayer.getUUID()), 0);
-						list.remove(dfPlayer.getUUID());
+					else if(equiped == false) {
+						dfPlayer.removeDfCal(1.875 + 1.875 * level, 0);
 					}
 				}
 			}
@@ -4958,7 +4939,7 @@ public class Enchantment extends CommandFile implements Listener{
 				return builder.constructItem(
 					Material.ENCHANTED_BOOK,
 					1,
-					"&6",
+					"&6Shooting Star",
 					new ArrayList<String>(Arrays.asList(
 						"&7When you left click, you prepare to shoot a star.",
 						"&7When you shoot, it will shoot a star towards the direction",

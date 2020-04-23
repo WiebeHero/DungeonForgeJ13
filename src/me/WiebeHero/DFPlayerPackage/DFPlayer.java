@@ -21,40 +21,54 @@ import me.WiebeHero.DFPlayerPackage.State.States;
 import net.md_5.bungee.api.ChatColor;
 
 public class DFPlayer {
-	public UUID id;
-	public Classes cClass;
-	public double money;
-	public int xp;
-	public int maxxp;
-	public int sk_pt;
-	public int lvl;
-	public int atk;
-	public int spd;
-	public int crt;
-	public int rnd;
-	public int hp;
-	public int df;
-	public int atk_m;
-	public int spd_m;
-	public int crt_m;
-	public int rnd_m;
-	public int hp_m;
-	public int df_m;
-	public double atk_c;
-	public double spd_c;
-	public double crt_c;
-	public double rnd_c;
-	public double hp_c;
-	public double df_c;
-	public float move;
-	public boolean active;
-	public boolean use;
-	public double atk_ct;
-	public double spd_ct;
-	public double crt_ct;
-	public double rnd_ct;
-	public double df_ct;
-	public double hp_ct;
+	private UUID id;
+	private Classes cClass;
+	private double money;
+	private int xp;
+	private int maxxp;
+	private int sk_pt;
+	private int lvl;
+	private int atk;
+	private int spd;
+	private int crt;
+	private int rnd;
+	private int hp;
+	private int df;
+	private int atk_m;
+	private int spd_m;
+	private int crt_m;
+	private int rnd_m;
+	private int hp_m;
+	private int df_m;
+	private double atk_c;
+	private double spd_c;
+	private double crt_c;
+	private double rnd_c;
+	private double hp_c;
+	private double df_c;
+	private float move;
+	private boolean active;
+	private boolean use;
+	private double atk_ct;
+	private double spd_ct;
+	private double crt_ct;
+	private double rnd_ct;
+	private double df_ct;
+	private double hp_ct;
+	
+	private double bAtkInc = 1.50;
+	private double bSpdInc = 0.50;
+	private double bCrtInc = 0.50;
+	private double bRndInc = 2.0;
+	private double bHpInc = 5.00;
+	private double bDfInc = 1.25;
+	
+	private double atkInc;
+	private double spdInc;
+	private double crtInc;
+	private double rndInc;
+	private double hpInc;
+	private double dfInc;
 	
 	public DFPlayer(LivingEntity _player) {
 		if(_player != null) {
@@ -118,6 +132,38 @@ public class DFPlayer {
 		this.hp_ct = 0.00;
 		this.df_ct = 0.00;
 	}
+	public void resetIncreases() {
+		for(Entry<SkillState, States> state: this.getSkillStates().entrySet()) {
+			double multiplier = 1.0;
+			if(state.getValue() == States.UP) {
+				multiplier = 1.5;
+			}
+			else if(state.getValue() == States.NM) {
+				multiplier = 1.0;
+			}
+			else if(state.getValue() == States.DW) {
+				multiplier = 0.5;
+			}
+			if(state.getKey() == SkillState.ATK) {
+				this.atkInc = this.bAtkInc * multiplier;
+			}
+			else if(state.getKey() == SkillState.SPD) {
+				this.spdInc = this.bSpdInc * multiplier;
+			}
+			else if(state.getKey() == SkillState.CRT) {
+				this.crtInc = this.bCrtInc * multiplier;
+			}
+			else if(state.getKey() == SkillState.RND) {
+				this.rndInc = this.bRndInc * multiplier;
+			}
+			else if(state.getKey() == SkillState.HP) {
+				this.hpInc = this.bHpInc * multiplier;
+			}
+			else if(state.getKey() == SkillState.DF) {
+				this.dfInc = this.bDfInc * multiplier;
+			}
+		}
+	}
 	//---------------------------------------------------------
 	//Handling Calculations
 	//---------------------------------------------------------
@@ -151,7 +197,6 @@ public class DFPlayer {
 			else if(state.getKey() == SkillState.DF) {
 				this.df_c = this.df * (1.50 * multiplier);
 			}
-			
 		}
 	}
 	//---------------------------------------------------------
@@ -323,6 +368,27 @@ public class DFPlayer {
 	
 	public void removeSkillPoints(int amount) {
 		this.sk_pt = this.sk_pt - amount;
+	}
+	//---------------------------------------------------------
+	//Get base increases
+	//---------------------------------------------------------
+	public double getAtkIncrease() {
+		return this.atkInc;
+	}
+	public double getSpdIncrease() {
+		return this.spdInc;
+	}
+	public double getCrtIncrease() {
+		return this.crtInc;
+	}
+	public double getRndIncrease() {
+		return this.rndInc;
+	}
+	public double getHpIncrease() {
+		return this.hpInc;
+	}
+	public double getDfIncrease() {
+		return this.dfInc;
 	}
 	//---------------------------------------------------------
 	//Attack Damage Handler
@@ -586,10 +652,10 @@ public class DFPlayer {
 	public void removeAtkCal(double amount, long time) {
 		if(time != 0) {
 			DFPlayer p = this;
-			this.atk_ct += amount;
+			this.atk_ct -= amount;
 			new BukkitRunnable() {
 				public void run() {
-					p.atk_ct -= amount;
+					p.atk_ct += amount;
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
@@ -626,10 +692,10 @@ public class DFPlayer {
 	public void removeSpdCal(double amount, long time) {
 		if(time != 0) {
 			DFPlayer p = this;
-			this.spd_ct += amount;
+			this.spd_ct -= amount;
 			new BukkitRunnable() {
 				public void run() {
-					p.spd_ct -= amount;
+					p.spd_ct += amount;
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
@@ -666,10 +732,10 @@ public class DFPlayer {
 	public void removeCrtCal(double amount, long time) {
 		if(time != 0) {
 			DFPlayer p = this;
-			this.crt_ct += amount;
+			this.crt_ct -= amount;
 			new BukkitRunnable() {
 				public void run() {
-					p.crt_ct -= amount;
+					p.crt_ct += amount;
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
@@ -706,10 +772,10 @@ public class DFPlayer {
 	public void removeRndCal(double amount, long time) {
 		if(time != 0) {
 			DFPlayer p = this;
-			this.rnd_ct += amount;
+			this.rnd_ct -= amount;
 			new BukkitRunnable() {
 				public void run() {
-					p.rnd_ct -= amount;
+					p.rnd_ct += amount;
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
@@ -746,10 +812,10 @@ public class DFPlayer {
 	public void removeHpCal(double amount, long time) {
 		if(time != 0) {
 			DFPlayer p = this;
-			this.hp_ct += amount;
+			this.hp_ct -= amount;
 			new BukkitRunnable() {
 				public void run() {
-					p.hp_ct -= amount;
+					p.hp_ct += amount;
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
@@ -786,10 +852,10 @@ public class DFPlayer {
 	public void removeDfCal(double amount, long time) {
 		if(time != 0) {
 			DFPlayer p = this;
-			this.df_ct += amount;
+			this.df_ct -= amount;
 			new BukkitRunnable() {
 				public void run() {
-					p.df_ct -= amount;
+					p.df_ct += amount;
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}

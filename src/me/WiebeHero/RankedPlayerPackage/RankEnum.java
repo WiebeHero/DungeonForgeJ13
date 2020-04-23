@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.google.common.base.Enums;
 
@@ -401,62 +404,284 @@ public class RankEnum {
 		ADMIN("&4Admin", 14, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(common(64));
+				items.add(rare(64));
+				items.add(epic(64));
+				items.add(legendary(64));
+				items.add(mythic(64));
+				items.add(heroic(64));
+				items.add(playerXPBottle(1000));
+				items.add(moneyNote(5000));
+				items.add(builder.constructItem(Material.ROSE_RED));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
 		HEAD_ADMIN("&4Head Admin", 15, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(common(64));
+				items.add(rare(64));
+				items.add(epic(64));
+				items.add(legendary(64));
+				items.add(mythic(64));
+				items.add(heroic(64));
+				items.add(playerXPBottle(2000));
+				items.add(moneyNote(6000));
+				items.add(builder.constructItem(Material.REDSTONE));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
 		MANAGER("&5Manager", 16, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(common(64));
+				items.add(rare(64));
+				items.add(epic(64));
+				items.add(legendary(64));
+				items.add(mythic(64));
+				items.add(heroic(64));
+				items.add(playerXPBottle(3000));
+				items.add(moneyNote(7000));
+				items.add(builder.constructItem(Material.MAGENTA_DYE));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
 		OWNER("&2Owner", 17, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(common(64));
+				items.add(rare(64));
+				items.add(epic(64));
+				items.add(legendary(64));
+				items.add(mythic(64));
+				items.add(heroic(64));
+				items.add(playerXPBottle(4000));
+				items.add(moneyNote(8000));
+				items.add(builder.constructItem(Material.CACTUS_GREEN));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
-		RAID("&6Raid", 100, 259200000L){
+		RAID("&6Raid", 100, 172800000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(builder.constructItem(Material.TNT, 32));
+				items.add(builder.constructItem(Material.COBWEB, 8));
+				items.add(builder.constructItem(Material.PISTON, 16));
+				items.add(builder.constructItem(Material.STICKY_PISTON, 8));
+				items.add(builder.constructItem(Material.REDSTONE, 64));
+				items.add(builder.constructItem(Material.REPEATER, 16));
+				items.add(builder.constructItem(Material.DISPENSER, 8));
+				items.add(builder.constructItem(Material.WATER_BUCKET, 1));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
 		POTION("&6Potion", 101, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				ItemStack i = builder.constructItem(Material.POTION, 1);
+	            PotionMeta meta = (PotionMeta) i.getItemMeta();
+	            meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1800, 0), true);
+	            meta.setColor(PotionEffectType.SPEED.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Speed"));
+	            i.setItemMeta(meta);
+				items.add(i);
+				meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 600, 1), true);
+	            meta.setColor(PotionEffectType.SPEED.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Speed"));
+	            i.setItemMeta(meta);
+	            items.add(i);
+	            meta.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 1200, 0), true);
+	            meta.setColor(PotionEffectType.INCREASE_DAMAGE.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Strength"));
+	            i.setItemMeta(meta);
+	            items.add(i);
+	            meta.addCustomEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 3000, 0), true);
+	            meta.setColor(PotionEffectType.FIRE_RESISTANCE.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Fire Resistance"));
+	            i.setItemMeta(meta);
+	            items.add(i);
+	            meta.addCustomEffect(new PotionEffect(PotionEffectType.HEAL, 1, 0), true);
+	            meta.setColor(PotionEffectType.HEAL.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Instant Health"));
+	            i.setItemMeta(meta);
+	            i.setAmount(2);
+	            items.add(i);
+	            meta.addCustomEffect(new PotionEffect(PotionEffectType.JUMP, 1200, 0), true);
+	            meta.setColor(PotionEffectType.JUMP.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Jump Boost"));
+	            i.setItemMeta(meta);
+	            items.add(i);
+	            meta.addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION, 600, 0), true);
+	            meta.setColor(PotionEffectType.REGENERATION.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Regeneration"));
+	            i.setItemMeta(meta);
+	            i.setAmount(1);
+	            items.add(i);
+	            i.setType(Material.SPLASH_POTION);
+	            meta.addCustomEffect(new PotionEffect(PotionEffectType.HARM, 1, 1), true);
+	            meta.setColor(PotionEffectType.HARM.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Harming"));
+	            i.setItemMeta(meta);
+	            items.add(i);
+	            meta.addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 600, 0), true);
+	            meta.setColor(PotionEffectType.WEAKNESS.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Weakness"));
+	            i.setItemMeta(meta);
+	            items.add(i);
+	            meta.addCustomEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 1200, 0), true);
+	            meta.setColor(PotionEffectType.SLOW_FALLING.getColor());
+	            meta.setDisplayName(new CCT().colorize("&fPotion of Slow Falling"));
+	            i.setItemMeta(meta);
+	            items.add(i);
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
 		CRYSTAL("&6Crystal", 102, 259200000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(common(5));
+				items.add(rare(4));
+				items.add(epic(3));
+				items.add(legendary(2));
+				items.add(mythic(1));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
-		BUILD("&6Build", 103, 259200000L){
+		BUILD("&6Build", 103, 172800000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(builder.constructItem(Material.OAK_LOG, 64));
+				items.add(builder.constructItem(Material.COBBLESTONE, 64));
+				items.add(builder.constructItem(Material.COBBLESTONE, 64));
+				items.add(builder.constructItem(Material.OBSIDIAN, 4));
+				items.add(builder.constructItem(Material.GLASS, 64));
+				items.add(builder.constructItem(Material.WHITE_WOOL, 64));
+				items.add(builder.constructItem(Material.QUARTZ_BLOCK, 64));
+				items.add(builder.constructItem(Material.GLOWSTONE, 16));
+				items.add(builder.constructItem(Material.BRICKS, 64));
+				items.add(builder.constructItem(Material.OAK_LEAVES, 64));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
-		FLIGHT("&6Flight", 104, 259200000L){
+		FLIGHT("&6Flight", 104, 432000000L){
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(builder.constructItem(
+						Material.FEATHER,
+						1,
+						"&6Faction Flying Feather (10min)",
+						new ArrayList<String>(Arrays.asList(
+							"&7When you right click this item, you will be",
+							"&7able to fly in your territory for 10 minutes.",
+							"&7This will stack if you already have this effect active."
+						))
+				));
+				items.add(builder.constructItem(
+						Material.FEATHER,
+						1,
+						"&6Faction Flying Feather (20min)",
+						new ArrayList<String>(Arrays.asList(
+							"&7When you right click this item, you will be",
+							"&7able to fly in your territory for 20 minutes.",
+							"&7This will stack if you already have this effect active."
+						))
+				));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		},
 		SUPPLIER("&6Supplier", 105, 259200000L)
 		{
 			@Override
 			public void recieveKit(Player p) {
-				
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(common(4));
+				items.add(rare(3));
+				items.add(epic(2));
+				items.add(legendary(1));
+				items.add(builder.constructItem(Material.GOLDEN_APPLE, 16));
+				items.add(builder.constructItem(Material.ENDER_PEARL, 16));
+				items.add(builder.constructItem(Material.COOKED_BEEF, 64));
+				items.add(builder.constructItem(Material.TNT, 16));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
 			}
 		};
 		public final String display;

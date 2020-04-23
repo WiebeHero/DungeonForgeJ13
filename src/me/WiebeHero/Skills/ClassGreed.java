@@ -32,6 +32,7 @@ public class ClassGreed implements Listener{
 		if(dfManager.contains(player)) {
 			DFPlayer dfPlayer = dfManager.getEntity(player);
 			if(dfPlayer.getPlayerClass() == Classes.GREED) {
+				event.setCancelled(true);
 				if(dfPlayer.getUseable() == true) {
 					dfPlayer.setUseable(false);
 					dfPlayer.setActivation(true);
@@ -45,7 +46,6 @@ public class ClassGreed implements Listener{
 					BlockData bd = Material.COAL_BLOCK.createBlockData();
 					player.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 80, 0.15, 0.15, 0.15, 0, bd); 
 					dfPlayer.addSpdCal(attackS, duration);
-					event.setCancelled(true);
 					new BukkitRunnable() {
 						public void run() {
 							dfPlayer.setActivation(false);
