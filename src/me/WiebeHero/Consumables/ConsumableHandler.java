@@ -18,13 +18,10 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
-import eu.endercentral.crazy_advancements.Advancement;
-import eu.endercentral.crazy_advancements.events.AdvancementGrantEvent;
 import javafx.util.Pair;
 import me.WiebeHero.Consumables.ConsumableCondition.Condition;
 import me.WiebeHero.Consumables.Unlock.UnlockCraftCondition;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import net.minecraft.server.v1_13_R2.Advancements;
 
 public class ConsumableHandler implements Listener{
 	private Consumable con;
@@ -150,24 +147,6 @@ public class ConsumableHandler implements Listener{
 									}
 								}
 							}
-						}
-					}
-				}
-			}
-		}
-	}
-	public void discoverRecipeAdvancement(AdvancementGrantEvent event) {
-		Player player = event.getPlayer();
-		if(player != null) {
-			Advancement advancement = event.getAdvancement();
-			ArrayList<Pair<ArrayList<UnlockCraftCondition>, Recipe>> list = con.getCustomRecipeList();
-			for(int i = 0; i < list.size(); i++) {
-				if(list.get(i).getKey().contains(UnlockCraftCondition.PLAYER_ADVANCEMENT_GRANTED)) {
-					Recipe rec = list.get(i).getValue();
-					if(rec instanceof ShapedRecipe) {
-						ShapedRecipe recipe = (ShapedRecipe) rec;
-						if(recipe.getKey().toString().equals(advancement.getName().getKey())) {
-							player.discoverRecipe(recipe.getKey());
 						}
 					}
 				}
