@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class DFFaction {
@@ -13,7 +12,7 @@ public class DFFaction {
 	private DFFactionManager facManager;
 	private DFFactionPlayerManager memberManager;
 	public String facName;
-	public ArrayList<Chunk> chunkList;
+	public ArrayList<Long> chunkList;
 	public ArrayList<UUID> invitedList;
 	public ArrayList<UUID> invitedAllyList;
 	public ArrayList<UUID> allyList;
@@ -23,7 +22,7 @@ public class DFFaction {
 	public double energy;
 	public DFFaction(String facName, Player p, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
 		this.facId = UUID.randomUUID();
-		this.chunkList = new ArrayList<Chunk>();
+		this.chunkList = new ArrayList<Long>();
 		this.allyList = new ArrayList<UUID>();
 		this.invitedAllyList = new ArrayList<UUID>();
 		this.invitedList = new ArrayList<UUID>();
@@ -39,7 +38,7 @@ public class DFFaction {
 	}
 	public DFFaction(String facName, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
 		this.facId = UUID.randomUUID();
-		this.chunkList = new ArrayList<Chunk>();
+		this.chunkList = new ArrayList<Long>();
 		this.allyList = new ArrayList<UUID>();
 		this.invitedAllyList = new ArrayList<UUID>();
 		this.invitedList = new ArrayList<UUID>();
@@ -52,7 +51,7 @@ public class DFFaction {
 	}
 	public DFFaction(String facName, UUID facId, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
 		this.facId = facId;
-		this.chunkList = new ArrayList<Chunk>();
+		this.chunkList = new ArrayList<Long>();
 		this.allyList = new ArrayList<UUID>();
 		this.invitedAllyList = new ArrayList<UUID>();
 		this.invitedList = new ArrayList<UUID>();
@@ -109,7 +108,7 @@ public class DFFaction {
 		return this.facId;
 	}
 	
-	public ArrayList<Chunk> getChunkList(){
+	public ArrayList<Long> getChunkList(){
 		return this.chunkList;
 	}
 	
@@ -161,13 +160,19 @@ public class DFFaction {
 	}
 	
 	public void addChunk(Chunk c) {
-		this.chunkList.add(c);
+		this.chunkList.add(c.getChunkKey());
+	}
+	public void addChunk(long key) {
+		this.chunkList.add(key);
 	}
 	public void removeChunk(Chunk c) {
-		this.chunkList.remove(c);
+		this.chunkList.remove(c.getChunkKey());
+	}
+	public void removeChunk(long key) {
+		this.chunkList.remove(key);
 	}
 	public boolean isInChunk(Player player) {
-		Chunk c = player.getChunk();
+		long c = player.getChunk().getChunkKey();
 		if(this.getChunkList().contains(c)) {
 			return true;
 		}
@@ -175,7 +180,7 @@ public class DFFaction {
 	}
 	
 	public boolean isInChunk(Location loc) {
-		Chunk c = loc.getChunk();
+		long c = loc.getChunk().getChunkKey();
 		if(this.getChunkList().contains(c)) {
 			return true;
 		}

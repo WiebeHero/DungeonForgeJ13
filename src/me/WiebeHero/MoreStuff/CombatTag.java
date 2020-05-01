@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -26,252 +26,85 @@ public class CombatTag implements Listener {
 	public ArrayList<UUID> activated = new ArrayList<UUID>();
 	public static HashMap<UUID, Integer> combatTag = new HashMap<UUID, Integer>();
 	public static HashMap<UUID, BukkitTask> combatRunnable = new HashMap<UUID, BukkitTask>();
+	
 	@EventHandler
-	public void combatTagActivate(EntityDamageByEntityEvent event) {
-		if (!event.isCancelled()) {
-			if (event.getDamager() instanceof Player) {
-				if (event.getEntity() instanceof Monster) {
-					Player damager = (Player) event.getDamager();
-					combatTag.put(damager.getUniqueId(), 10);
-					if (!activated.contains(damager.getUniqueId())) {
-						damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-						activated.add(damager.getUniqueId());
-						BukkitTask run = new BukkitRunnable() {
-							@Override
-							public void run() {
-								int duration = combatTag.get(damager.getUniqueId());
-								duration--;
-								sendActionbar(damager, new CCT().colorize("&cCombat Tag: &6" + duration));
-								combatTag.put(damager.getUniqueId(), duration);
-								if (duration <= 0) {
-									cancel();
-									activated.remove(damager.getUniqueId());
-									sendActionbar(damager, new CCT().colorize("&aOut of combat!"));
-								}
-							}
-						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-						combatRunnable.put(damager.getUniqueId(), run);
+	public void activateTag(EntityDamageByEntityEvent event) {
+		if(!event.isCancelled()) {
+			if(event.getDamager() instanceof Entity && event.getEntity() instanceof LivingEntity) {
+				Entity damager = (Entity) event.getDamager();
+				LivingEntity victim = (LivingEntity) event.getEntity();
+				boolean dPlayer = false;
+				boolean vPlayer = false;
+				if(victim instanceof Player) {
+					vPlayer = true;
+				}
+				if(damager instanceof Player) {
+					dPlayer = true;
+				}
+				else if(damager instanceof Projectile) {
+					Projectile proj = (Projectile) damager;
+					if(proj.getShooter() instanceof Player) {
+						dPlayer = true;
 					}
 				}
-			} else if (event.getDamager() instanceof Monster) {
-				if (event.getEntity() instanceof Player) {
-					Player victim = (Player) event.getEntity();
-					combatTag.put(victim.getUniqueId(), 10);
-					if (!activated.contains(victim.getUniqueId())) {
-						victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-						activated.add(victim.getUniqueId());
-						BukkitTask run = new BukkitRunnable() {
-							@Override
-							public void run() {
-								int duration = combatTag.get(victim.getUniqueId());
-								duration--;
-								sendActionbar(victim, new CCT().colorize("&cCombat Tag: &6" + duration));
-								combatTag.put(victim.getUniqueId(), duration);
-								if (duration <= 0) {
-									cancel();
-									activated.remove(victim.getUniqueId());
-									sendActionbar(victim, new CCT().colorize("&aOut of combat!"));
-								}
-							}
-						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-						combatRunnable.put(victim.getUniqueId(), run);
+				if(dPlayer && vPlayer) {
+					Player p1 = (Player) damager;
+					Player p2 = (Player) victim;
+					if(combatRunnable.containsKey(p1.getUniqueId()) && combatRunnable.containsKey(p2.getUniqueId())) {
+						combatTag.put(p1.getUniqueId(), 10);
+						combatTag.put(p2.getUniqueId(), 10);
 					}
-				}
-			} else if (event.getDamager() instanceof Player) {
-				if (event.getEntity() instanceof Player) {
-					Player damager = (Player) event.getDamager();
-					Player victim = (Player) event.getEntity();
-					combatTag.put(damager.getUniqueId(), 20);
-					combatTag.put(victim.getUniqueId(), 20);
-					if (!activated.contains(damager.getUniqueId()) && !activated.contains(victim.getUniqueId())) {
-						damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-						victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-						activated.add(damager.getUniqueId());
-						activated.add(victim.getUniqueId());
+					else {
+						combatTag.put(p1.getUniqueId(), 10);
+						combatTag.put(p2.getUniqueId(), 10);
 						BukkitTask run1 = new BukkitRunnable() {
 							@Override
 							public void run() {
-								int duration = combatTag.get(damager.getUniqueId());
+								int duration = combatTag.get(p1.getUniqueId());
 								duration--;
-								sendActionbar(damager, new CCT().colorize("&cCombat Tag: &6" + duration));
-								combatTag.put(damager.getUniqueId(), duration);
+								sendActionbar(p1, new CCT().colorize("&2&l[DungeonForge]: &cCombat Tag: &6" + duration));
+								combatTag.put(p1.getUniqueId(), duration);
 								if (duration <= 0) {
 									cancel();
-									activated.remove(damager.getUniqueId());
-									sendActionbar(damager, new CCT().colorize("&aOut of combat!"));
-								}
-							}
-						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-						BukkitTask run2 = new BukkitRunnable() {
-							@Override
-							public void run() {
-								int duration = combatTag.get(victim.getUniqueId());
-								duration--;
-								sendActionbar(victim, new CCT().colorize("&cCombat Tag: &6" + duration));
-								combatTag.put(victim.getUniqueId(), duration);
-								if (duration <= 0) {
-									cancel();
-									activated.remove(victim.getUniqueId());
-									sendActionbar(victim, new CCT().colorize("&aOut of combat!"));
+									combatRunnable.remove(damager.getUniqueId());
+									sendActionbar(p1, new CCT().colorize("&2&l[DungeonForge]: &aOut of combat!"));
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 						combatRunnable.put(damager.getUniqueId(), run1);
-						combatRunnable.put(victim.getUniqueId(), run2);
-					}
-				}
-			} else if (event.getDamager() instanceof Arrow) {
-				Arrow arrow = (Arrow) event.getDamager();
-				if (arrow.getShooter() instanceof Player) {
-					Player damager = (Player) arrow.getShooter();
-					if (event.getEntity() instanceof LivingEntity) {
-						combatTag.put(damager.getUniqueId(), 20);
-						if (!activated.contains(damager.getUniqueId())) {
-							damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-							activated.add(damager.getUniqueId());
-							BukkitTask run = new BukkitRunnable() {
-								@Override
-								public void run() {
-									int duration = combatTag.get(damager.getUniqueId());
-									duration--;
-									sendActionbar(damager, new CCT().colorize("&cCombat Tag: &6" + duration));
-									combatTag.put(damager.getUniqueId(), duration);
-									if (duration <= 0) {
-										cancel();
-										activated.remove(damager.getUniqueId());
-										sendActionbar(damager, new CCT().colorize("&aOut of combat!"));
-									}
+						BukkitTask run2 = new BukkitRunnable() {
+							@Override
+							public void run() {
+								int duration = combatTag.get(p2.getUniqueId());
+								duration--;
+								sendActionbar(p2, new CCT().colorize("&2&l[DungeonForge]: &cCombat Tag: &6" + duration));
+								combatTag.put(p2.getUniqueId(), duration);
+								if (duration <= 0) {
+									cancel();
+									combatRunnable.remove(damager.getUniqueId());
+									sendActionbar(p2, new CCT().colorize("&2&l[DungeonForge]: &aOut of combat!"));
 								}
-							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-							combatRunnable.put(damager.getUniqueId(), run);
-						}
-					} else if (event.getEntity() instanceof Player) {
-						Player victim = (Player) event.getEntity();
-						combatTag.put(damager.getUniqueId(), 20);
-						combatTag.put(victim.getUniqueId(), 20);
-						if (!activated.contains(damager.getUniqueId()) && !activated.contains(victim.getUniqueId())) {
-							damager.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-							victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-							activated.add(damager.getUniqueId());
-							activated.add(victim.getUniqueId());
-							BukkitTask run1 = new BukkitRunnable() {
-								@Override
-								public void run() {
-									int duration = combatTag.get(damager.getUniqueId());
-									duration--;
-									sendActionbar(damager, new CCT().colorize("&cCombat Tag: &6" + duration));
-									combatTag.put(damager.getUniqueId(), duration);
-									if (duration <= 0) {
-										cancel();
-										activated.remove(damager.getUniqueId());
-										sendActionbar(damager, new CCT().colorize("&aOut of combat!"));
-									}
-								}
-							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-							BukkitTask run2 = new BukkitRunnable() {
-								@Override
-								public void run() {
-									int duration = combatTag.get(victim.getUniqueId());
-									duration--;
-									sendActionbar(victim, new CCT().colorize("&cCombat Tag: &" + duration));
-									combatTag.put(victim.getUniqueId(), duration);
-									if (duration <= 0) {
-										cancel();
-										activated.remove(victim.getUniqueId());
-										sendActionbar(victim, new CCT().colorize("&aOut of combat!"));
-									}
-								}
-							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-							combatRunnable.put(damager.getUniqueId(), run1);
-							combatRunnable.put(victim.getUniqueId(), run2);
-						}
-					}
-				} else {
-					if (arrow.getShooter() instanceof Player) {
-						Player damager1 = (Player) arrow.getShooter();
-						if (event.getEntity() instanceof LivingEntity) {
-							combatTag.put(damager1.getUniqueId(), 20);
-							if (!activated.contains(damager1.getUniqueId())) {
-								damager1.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-								activated.add(damager1.getUniqueId());
-								BukkitTask run = new BukkitRunnable() {
-									@Override
-									public void run() {
-										int duration = combatTag.get(damager1.getUniqueId());
-										duration--;
-										sendActionbar(damager1, new CCT().colorize("&cCombat Tag: &6" + duration));
-										combatTag.put(damager1.getUniqueId(), duration);
-										if (duration <= 0) {
-											cancel();
-											activated.remove(damager1.getUniqueId());
-											sendActionbar(damager1, new CCT().colorize("&aOut of combat!"));
-										}
-									}
-								}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-								combatRunnable.put(damager1.getUniqueId(), run);
 							}
-						} else if (event.getEntity() instanceof Player) {
-							Player victim = (Player) event.getEntity();
-							combatTag.put(damager1.getUniqueId(), 20);
-							combatTag.put(victim.getUniqueId(), 20);
-							if (!activated.contains(damager1.getUniqueId())
-									&& !activated.contains(victim.getUniqueId())) {
-								damager1.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-								victim.sendMessage(new CCT().colorize("&cYou have entered combat tag!"));
-								activated.add(damager1.getUniqueId());
-								activated.add(victim.getUniqueId());
-								BukkitTask run1 = new BukkitRunnable() {
-									@Override
-									public void run() {
-										int duration = combatTag.get(damager1.getUniqueId());
-										duration--;
-										sendActionbar(damager1, new CCT().colorize("&cCombat Tag: &6" + duration));
-										combatTag.put(damager1.getUniqueId(), duration);
-										if (duration <= 0) {
-											cancel();
-											activated.remove(damager1.getUniqueId());
-											sendActionbar(damager1, new CCT().colorize("&aOut of combat!"));
-										}
-									}
-								}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-								BukkitTask run2 = new BukkitRunnable() {
-									@Override
-									public void run() {
-										int duration = combatTag.get(victim.getUniqueId());
-										duration--;
-										sendActionbar(victim, new CCT().colorize("&cCombat Tag: &6" + duration));
-										combatTag.put(victim.getUniqueId(), duration);
-										if (duration <= 0) {
-											cancel();
-											activated.remove(victim.getUniqueId());
-											sendActionbar(victim, new CCT().colorize("&aOut of combat!"));
-										}
-									}
-								}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-								combatRunnable.put(damager1.getUniqueId(), run1);
-								combatRunnable.put(victim.getUniqueId(), run2);
-							}
-						}
-					} else if (arrow.getShooter() instanceof LivingEntity) {
-
+						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+						combatRunnable.put(damager.getUniqueId(), run2);
 					}
 				}
 			}
 		}
 	}
-
 	@EventHandler
 	public void combatTagLeave(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		if (combatTag.containsKey(player.getUniqueId())) {
 			if (combatTag.get(player.getUniqueId()) != 0) {
 				player.setHealth(0.00);
-				combatRunnable.remove(player.getUniqueId());
 				combatTag.put(player.getUniqueId(), 0);
+				sendActionbar(player, new CCT().colorize("&2&l[DungeonForge]:&aOut of combat!"));
+				combatRunnable.get(player.getUniqueId()).cancel();
+				combatRunnable.remove(player.getUniqueId());
 			}
 		}
 	}
-
 	@EventHandler
 	public void combatTagResetDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
@@ -281,8 +114,10 @@ public class CombatTag implements Listener {
 				player.spigot().respawn();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
-		combatRunnable.remove(player.getUniqueId());
 		combatTag.put(player.getUniqueId(), 0);
+		sendActionbar(player, new CCT().colorize("&2&l[DungeonForge]: &aOut of combat!"));
+		combatRunnable.get(player.getUniqueId()).cancel();
+		combatRunnable.remove(player.getUniqueId());
 	}
 
 	@EventHandler

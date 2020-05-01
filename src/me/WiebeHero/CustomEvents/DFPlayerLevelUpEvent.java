@@ -37,7 +37,7 @@ public class DFPlayerLevelUpEvent extends Event {
 					this.dfPlayer.addLevel(1);
 					this.levels.add(this.dfPlayer.getLevel());
 					this.dfPlayer.setExperience(this.dfPlayer.getExperience() - this.dfPlayer.getMaxExperience());
-					this.dfPlayer.setMaxExperience((int)(double)(this.dfPlayer.getMaxExperience() / 100.00 * 120.00));
+					this.dfPlayer.setMaxExperience((int)(double)(this.dfPlayer.getMaxExperience() / 100.00 * (this.dfPlayer.getExperienceMultiplier() * 100.00)));
 					this.dfPlayer.addSkillPoints(3);
 				}
 			}
@@ -59,6 +59,7 @@ public class DFPlayerLevelUpEvent extends Event {
 			this.player.setLevel(this.dfPlayer.getLevel());
 			this.player.setExp(0.0F);
 		}
+		this.dfPlayer.resetAbilityStats();
     }
 	
 	public int getOldLevel() {

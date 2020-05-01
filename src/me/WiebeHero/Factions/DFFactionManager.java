@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -67,7 +66,7 @@ public class DFFactionManager {
 	}
 	
 	public boolean isInAChunk(Player player) {
-		Chunk c = player.getChunk();
+		long c = player.getChunk().getChunkKey();
 		for(DFFaction fac : this.factionList.values()) {
 			if(fac.getChunkList().contains(c)) {
 				return true;
@@ -77,7 +76,7 @@ public class DFFactionManager {
 	}
 	
 	public boolean isInAChunk(Location loc) {
-		Chunk c = loc.getChunk();
+		long c = loc.getChunk().getChunkKey();
 		for(DFFaction fac : this.factionList.values()) {
 			if(fac.getChunkList().contains(c)) {
 				return true;
@@ -170,8 +169,8 @@ public class DFFactionManager {
 				fac.setFactionHome(loc);
 				ArrayList<String> chunks = new ArrayList<String>(yml.getStringList("Factions.List." + list.get(i) + ".Chunks List"));
 				for(int i1 = 0; i1 < chunks.size(); i1++) {
-					Chunk chunk = Bukkit.getWorld("FactionWorld-1").getChunkAt(Long.parseLong(chunks.get(i1)));
-					fac.addChunk(chunk);
+					long key = Long.parseLong(chunks.get(i1));
+					fac.addChunk(key);
 				}
 				ArrayList<String> tempfAllyList = new ArrayList<String>(yml.getStringList("Factions.List." + list.get(i) + ".Allies"));
 				ArrayList<UUID> fAllyList = new ArrayList<UUID>();
@@ -218,8 +217,8 @@ public class DFFactionManager {
 				}
 			}
 			ArrayList<Long> list = new ArrayList<Long>();
-			for(Chunk c : fac.getChunkList()) {
-				list.add(c.getChunkKey());
+			for(long c : fac.getChunkList()) {
+				list.add(c);
 			}
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Home", fac.getFactionHome());
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Name", fac.getName());

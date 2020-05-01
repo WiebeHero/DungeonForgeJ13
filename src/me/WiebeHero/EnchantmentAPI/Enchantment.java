@@ -3443,14 +3443,11 @@ public class Enchantment extends CommandFile implements Listener{
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(damager instanceof Player) {
-						Player player = (Player) damager;
 						if(equiped == true) {
 							dfPlayer.addMove(0.003F + 0.003F * level, 0);
-							player.setWalkSpeed(dfPlayer.getMove());
 						}
 						else if(equiped == false) {
 							dfPlayer.removeMove(0.003F + 0.003F * level, 0);
-							player.setWalkSpeed((float) dfPlayer.getMove());
 						}
 					}
 				}
@@ -3470,7 +3467,6 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Lucky", new Pair<>(Condition.ARMOR_CHANGE, new CommandFile() {
-			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
@@ -3536,7 +3532,6 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listArmor.put("Overheal", new Pair<>(Condition.ARMOR_CHANGE, new CommandFile() {
-			HashMap<UUID, Double> list = new HashMap<UUID, Double>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, boolean equiped, PlayerArmorChangeEvent event) {
 				if(dfManager.contains(damager)) {
@@ -4220,8 +4215,6 @@ public class Enchantment extends CommandFile implements Listener{
 				final double range = 4.00 + level; 
 				final double damage = 2 + 0.65 * level;
 				final int count = 4 + level;
-				DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(shooter);
-				DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 				new BukkitRunnable() {
 					int c = 0;
 					public void run() {

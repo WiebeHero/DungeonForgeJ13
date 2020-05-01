@@ -52,7 +52,7 @@ public class SkillCommand implements CommandExecutor{
 									        if(dfPlayer.getLevel() < 100) {
 												dfPlayer.addLevel(1);
 												dfPlayer.setExperience(0);
-												dfPlayer.setMaxExperience((int)(double)(dfPlayer.getMaxExperience() / 100.00 * 120.00));
+												dfPlayer.setMaxExperience((int)(double)(dfPlayer.getMaxExperience() / 100.00 * (dfPlayer.getExperienceMultiplier() * 100.00)));
 												dfPlayer.addSkillPoints(3);
 											}
 								        }

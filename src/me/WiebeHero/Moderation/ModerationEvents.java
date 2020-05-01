@@ -672,7 +672,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									}
 									World world = Bukkit.getWorld("FactionWorld-1");
 									world.getWorldBorder().setSize(5000.00);
-									
 									new BukkitRunnable() {
 										@Override
 										public void run() {
@@ -799,7 +798,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
         if(command.getName().equalsIgnoreCase("procedure")) { 
             if(sender instanceof Player) { 
             	if(args.length == 1) {
-            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset", "hardreset", "resetplayerprofile");
+            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset", "hardreset", "profile");
             	}
             	else if(args.length == 2) {
             		if(args[0].equalsIgnoreCase("maintenance")) {

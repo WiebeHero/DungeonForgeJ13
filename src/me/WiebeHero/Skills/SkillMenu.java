@@ -32,7 +32,7 @@ public class SkillMenu {
 	public void SkillMenuInv(Player player) {
 		Inventory i = Bukkit.getServer().createInventory(null, 36, new CCT().colorize("&7Skills of: &6" + player.getName()));
 		DFPlayer dfPlayer = dfManager.getEntity(player);
-		dfPlayer.resetCalculations();
+		dfPlayer.resetIncreases();
 		i.setItem(0, skillBook(player));
 		i.setItem(1, empty());
 		i.setItem(2, empty());
@@ -41,7 +41,7 @@ public class SkillMenu {
 		//Wrath
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		if(dfPlayer.getPlayerClass() == Classes.WRATH) {
-			i.setItem(4, menu.classWrath(dfPlayer.getLevel()));
+			i.setItem(4, menu.classWrath(dfPlayer, false));
 			if(dfPlayer.getAtk() < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
@@ -160,7 +160,7 @@ public class SkillMenu {
 		//Lust
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		else if(dfPlayer.getPlayerClass() == Classes.LUST) {
-			i.setItem(4, menu.classLust(dfPlayer.getLevel()));
+			i.setItem(4, menu.classLust(dfPlayer, false));
 			i.setItem(19, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
 			"&7is one of your downsides."))));
@@ -228,7 +228,7 @@ public class SkillMenu {
 				double sh = cLevel * 10;
 				double sh1 = (cLevel + 1) * 10;
 				double dur = cLevel * 5;
-				double dur1 = (cLevel + 1) + 5;
+				double dur1 = (cLevel + 1) * 5;
 				int pLevelReq = 10 + (10 * dfPlayer.getHpMod());
 				int levelReq = 20 + (20 * dfPlayer.getHpMod());
 				double moneyReq = 20000.00 + (20000.00 * dfPlayer.getHpMod());
@@ -273,7 +273,7 @@ public class SkillMenu {
 		//Gluttony
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		else if(dfPlayer.getPlayerClass() == Classes.GLUTTONY) {
-			i.setItem(4, menu.classGluttony(dfPlayer.getLevel()));
+			i.setItem(4, menu.classGluttony(dfPlayer, false));
 			i.setItem(19, modCreator(player, Material.BARRIER, "&4&lUndefined", new ArrayList<String>(Arrays.asList(
 			"&7This ability modifier doesn't exist, because this",
 			"&7is one of your downsides."))));
@@ -389,7 +389,7 @@ public class SkillMenu {
 		//Greed
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		else if(dfPlayer.getPlayerClass() == Classes.GREED) {
-			i.setItem(4, menu.classGreed(dfPlayer.getLevel()));
+			i.setItem(4, menu.classGreed(dfPlayer, false));
 			if(dfPlayer.getAtk() < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
@@ -497,7 +497,7 @@ public class SkillMenu {
 		//Sloth
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		else if(dfPlayer.getPlayerClass() == Classes.SLOTH) {
-			i.setItem(4, menu.classSloth(dfPlayer.getLevel()));
+			i.setItem(4, menu.classSloth(dfPlayer, false));
 			if(dfPlayer.getAtk() < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
@@ -602,7 +602,7 @@ public class SkillMenu {
 		//Envy
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		else if(dfPlayer.getPlayerClass() == Classes.ENVY) {
-			i.setItem(4, menu.classEnvy(dfPlayer.getLevel()));
+			i.setItem(4, menu.classEnvy(dfPlayer, false));
 			if(dfPlayer.getAtk() < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",
@@ -724,7 +724,7 @@ public class SkillMenu {
 		//Pride
 		//---------------------------------------------------------------------------------------------------------------------------------------------------------
 		else if(dfPlayer.getPlayerClass() == Classes.PRIDE) {
-			i.setItem(4, menu.classPride(dfPlayer.getLevel()));
+			i.setItem(4, menu.classPride(dfPlayer, false));
 			if(dfPlayer.getAtk() < 20) {
 				i.setItem(19, modCreator(player, Material.IRON_BARS, "&c&lLOCKED", new ArrayList<String>(Arrays.asList(
 				"&7This ability modifier is still locked! Reach level 20",

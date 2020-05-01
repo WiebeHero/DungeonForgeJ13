@@ -236,7 +236,7 @@ public class FactionsHandler implements Listener{
 		DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 		if(faction != null) {
 			faction.removeEnergy(2.0);
-			event.getEntity().sendMessage("&2&l[DungeonForge]: &cYou have died and your faction has lost 2 power!");
+			event.getEntity().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have died and your faction has lost 2 power!"));
 		}
 	}
 }

@@ -16,6 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFPlayerPackage.EnumSkills.SkillState;
+import me.WiebeHero.DFPlayerPackage.EnumSkills.Stats;
 import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 import me.WiebeHero.DFPlayerPackage.State.States;
 import net.md_5.bungee.api.ChatColor;
@@ -63,12 +64,16 @@ public class DFPlayer {
 	private double bHpInc = 5.00;
 	private double bDfInc = 1.25;
 	
+	private double mxpMultiplier = 1.08;
+	
 	private double atkInc;
 	private double spdInc;
 	private double crtInc;
 	private double rndInc;
 	private double hpInc;
 	private double dfInc;
+	
+	private HashMap<Stats, Double> statList;
 	
 	public DFPlayer(LivingEntity _player) {
 		if(_player != null) {
@@ -100,6 +105,7 @@ public class DFPlayer {
 			this.rnd_ct = 0.00;
 			this.hp_ct = 0.00;
 			this.df_ct = 0.00;
+			this.statList = new HashMap<Stats, Double>();
 		}
 	}
 	public DFPlayer(UUID uuid) {
@@ -131,6 +137,7 @@ public class DFPlayer {
 		this.rnd_ct = 0.00;
 		this.hp_ct = 0.00;
 		this.df_ct = 0.00;
+		this.statList = new HashMap<Stats, Double>();
 	}
 	public void resetIncreases() {
 		for(Entry<SkillState, States> state: this.getSkillStates().entrySet()) {
@@ -146,57 +153,78 @@ public class DFPlayer {
 			}
 			if(state.getKey() == SkillState.ATK) {
 				this.atkInc = this.bAtkInc * multiplier;
+				this.atk_c = this.atkInc * this.getAtk();
 			}
 			else if(state.getKey() == SkillState.SPD) {
 				this.spdInc = this.bSpdInc * multiplier;
+				this.spd_c = this.spdInc * this.getSpd();
 			}
 			else if(state.getKey() == SkillState.CRT) {
 				this.crtInc = this.bCrtInc * multiplier;
+				this.crt_c = this.crtInc * this.getCrt();
 			}
 			else if(state.getKey() == SkillState.RND) {
 				this.rndInc = this.bRndInc * multiplier;
+				this.rnd_c = this.rndInc * this.getRnd();
 			}
 			else if(state.getKey() == SkillState.HP) {
 				this.hpInc = this.bHpInc * multiplier;
+				this.hp_c = this.hpInc * this.getHp();
 			}
 			else if(state.getKey() == SkillState.DF) {
 				this.dfInc = this.bDfInc * multiplier;
+				this.df_c = this.dfInc * this.getDf();
 			}
 		}
+		this.changeHealth();
+		this.runDefense();
+		this.attackSpeed();
 	}
 	//---------------------------------------------------------
 	//Handling Calculations
 	//---------------------------------------------------------
-	public void resetCalculations() {
-		double multiplier = 1.0;
-		for(Entry<SkillState, States> state: this.getSkillStates().entrySet()) {
-			if(state.getValue() == States.UP) {
-				multiplier = 1.5;
-			}
-			else if(state.getValue() == States.NM) {
-				multiplier = 1.0;
-			}
-			else if(state.getValue() == States.DW) {
-				multiplier = 0.5;
-			}
-			if(state.getKey() == SkillState.ATK) {
-				this.atk_c = this.atk * (1.50 * multiplier);
-			}
-			else if(state.getKey() == SkillState.SPD) {
-				this.spd_c = this.spd * (0.50 * multiplier);
-			}
-			else if(state.getKey() == SkillState.CRT) {
-				this.crt_c = this.crt * (0.50 * multiplier);
-			}
-			else if(state.getKey() == SkillState.RND) {
-				this.rnd_c = this.rnd * (2.0 * multiplier);
-			}
-			else if(state.getKey() == SkillState.HP) {
-				this.hp_c = this.hp * (5.00 * multiplier);
-			}
-			else if(state.getKey() == SkillState.DF) {
-				this.df_c = this.df * (1.50 * multiplier);
-			}
+	public void resetAbilityStats() {
+		Classes c = this.cClass;
+		if(c == Classes.WRATH) {
+			this.statList.put(Stats.DAMAGE, c.baseList.get(Stats.DAMAGE) + c.incList.get(Stats.DAMAGE) * this.lvl);
+			this.statList.put(Stats.RANGE, c.baseList.get(Stats.RANGE) + c.incList.get(Stats.RANGE) * this.lvl);
+			this.statList.put(Stats.COOLDOWN, c.baseList.get(Stats.COOLDOWN) - c.incList.get(Stats.COOLDOWN) * this.lvl);
+		}
+		else if(c == Classes.ENVY) {
+			this.statList.put(Stats.ATK_INC, c.baseList.get(Stats.ATK_INC) + c.incList.get(Stats.ATK_INC) * this.lvl);
+			this.statList.put(Stats.COOLDOWN, c.baseList.get(Stats.COOLDOWN) - c.incList.get(Stats.COOLDOWN) * this.lvl);
+			this.statList.put(Stats.DURATION, c.baseList.get(Stats.DURATION) + c.incList.get(Stats.DURATION) * this.lvl);
+		}
+		else if(c == Classes.LUST) {
+			this.statList.put(Stats.HEAL, c.baseList.get(Stats.HEAL) + c.incList.get(Stats.HEAL) * this.lvl);
+			this.statList.put(Stats.DAMAGE, c.baseList.get(Stats.DAMAGE) + c.incList.get(Stats.DAMAGE) * this.lvl);
+			this.statList.put(Stats.RANGE, c.baseList.get(Stats.RANGE) + c.incList.get(Stats.RANGE) * this.lvl);
+			this.statList.put(Stats.COOLDOWN, c.baseList.get(Stats.COOLDOWN) - c.incList.get(Stats.COOLDOWN) * this.lvl);
+		}
+		else if(c == Classes.GLUTTONY) {
+			this.statList.put(Stats.HEAL, c.baseList.get(Stats.HEAL) + c.incList.get(Stats.HEAL) * this.lvl);
+			this.statList.put(Stats.DF_INC, c.baseList.get(Stats.DF_INC) + c.incList.get(Stats.DF_INC) * this.lvl);
+			this.statList.put(Stats.DURATION, c.baseList.get(Stats.DURATION) + c.incList.get(Stats.DURATION) * this.lvl);
+			this.statList.put(Stats.COOLDOWN, c.baseList.get(Stats.COOLDOWN) - c.incList.get(Stats.COOLDOWN) * this.lvl);
+		}
+		else if(c == Classes.PRIDE) {
+			this.statList.put(Stats.SPD_INC, c.baseList.get(Stats.SPD_INC) + c.incList.get(Stats.SPD_INC) * this.lvl);
+			this.statList.put(Stats.DF_INC, c.baseList.get(Stats.DF_INC) + c.incList.get(Stats.DF_INC) * this.lvl);
+			this.statList.put(Stats.DURATION, c.baseList.get(Stats.DURATION) + c.incList.get(Stats.DURATION) * this.lvl);
+			this.statList.put(Stats.COOLDOWN, c.baseList.get(Stats.COOLDOWN) - c.incList.get(Stats.COOLDOWN) * this.lvl);
+		}
+		else if(c == Classes.SLOTH) {
+			this.statList.put(Stats.ARROW_COUNT, c.baseList.get(Stats.ARROW_COUNT) + c.incList.get(Stats.ARROW_COUNT) * this.lvl);
+			this.statList.put(Stats.DAMAGE, c.baseList.get(Stats.DAMAGE) + c.incList.get(Stats.DAMAGE) * this.lvl);
+			this.statList.put(Stats.DF_INC, c.baseList.get(Stats.DF_INC) + c.incList.get(Stats.DF_INC) * this.lvl);
+			this.statList.put(Stats.DURATION, c.baseList.get(Stats.DURATION) + c.incList.get(Stats.DURATION) * this.lvl);
+			this.statList.put(Stats.COOLDOWN, c.baseList.get(Stats.COOLDOWN) - c.incList.get(Stats.COOLDOWN) * this.lvl);
+		}
+		else if(c == Classes.GREED) {
+			this.statList.put(Stats.DF_DEC, c.baseList.get(Stats.DF_DEC) + c.incList.get(Stats.DF_DEC) * this.lvl);
+			this.statList.put(Stats.SPD_INC, c.baseList.get(Stats.SPD_INC) + c.incList.get(Stats.SPD_INC) * this.lvl);
+			this.statList.put(Stats.COOLDOWN, c.baseList.get(Stats.COOLDOWN) - c.incList.get(Stats.COOLDOWN) * this.lvl);
+			this.statList.put(Stats.DURATION, c.baseList.get(Stats.DURATION) + c.incList.get(Stats.DURATION) * this.lvl);
 		}
 	}
 	//---------------------------------------------------------
@@ -297,6 +325,10 @@ public class DFPlayer {
 		}
 		return true;
 	}
+	
+	public Player getPlayer() {
+		return Bukkit.getPlayer(this.id);
+	}
 	//---------------------------------------------------------
 	//Level Handler
 	//---------------------------------------------------------
@@ -351,6 +383,10 @@ public class DFPlayer {
 	public void removeMaxExperience(int amount) {
 		this.maxxp = this.maxxp - amount;
 	}
+	
+	public double getExperienceMultiplier() {
+		return this.mxpMultiplier;
+	}
 	//---------------------------------------------------------
 	//Skill Points Handler
 	//---------------------------------------------------------
@@ -370,7 +406,7 @@ public class DFPlayer {
 		this.sk_pt = this.sk_pt - amount;
 	}
 	//---------------------------------------------------------
-	//Get base increases
+	//Get increases
 	//---------------------------------------------------------
 	public double getAtkIncrease() {
 		return this.atkInc;
@@ -389,6 +425,33 @@ public class DFPlayer {
 	}
 	public double getDfIncrease() {
 		return this.dfInc;
+	}
+	//---------------------------------------------------------
+	//Get base increases
+	//---------------------------------------------------------
+	public double getBaseAtkIncrease() {
+		return this.bAtkInc;
+	}
+	public double getBaseSpdIncrease() {
+		return this.bSpdInc;
+	}
+	public double getBaseCrtIncrease() {
+		return this.bCrtInc;
+	}
+	public double getBaseRndIncrease() {
+		return this.bRndInc;
+	}
+	public double getBaseHpIncrease() {
+		return this.bHpInc;
+	}
+	public double getBaseDfIncrease() {
+		return this.bDfInc;
+	}
+	//---------------------------------------------------------
+	//Get stats
+	//---------------------------------------------------------
+	public HashMap<Stats, Double> getStatList(){
+		return this.statList;
 	}
 	//---------------------------------------------------------
 	//Attack Damage Handler
@@ -672,20 +735,24 @@ public class DFPlayer {
 	
 	public void setSpdCal(double amount) {
 		this.spd_ct = amount;
+		this.attackSpeed();
 	}
 	
 	public void addSpdCal(double amount, long time) {
 		if(time != 0) {
 			DFPlayer p = this;
 			this.spd_ct += amount;
+			this.attackSpeed();
 			new BukkitRunnable() {
 				public void run() {
 					p.spd_ct -= amount;
+					p.attackSpeed();
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
 			this.spd_ct += amount;
+			this.attackSpeed();
 		}
 	}
 	
@@ -693,14 +760,17 @@ public class DFPlayer {
 		if(time != 0) {
 			DFPlayer p = this;
 			this.spd_ct -= amount;
+			this.attackSpeed();
 			new BukkitRunnable() {
 				public void run() {
 					p.spd_ct += amount;
+					p.attackSpeed();
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
 			this.spd_ct -= amount;
+			this.attackSpeed();
 		}
 	}
 	//---------------------------------------------------------
@@ -792,20 +862,24 @@ public class DFPlayer {
 	
 	public void setHpCal(double amount) {
 		this.hp_ct = amount;
+		this.health();
 	}
 	
 	public void addHpCal(double amount, long time) {
 		if(time != 0) {
 			DFPlayer p = this;
 			this.hp_ct += amount;
+			this.health();
 			new BukkitRunnable() {
 				public void run() {
 					p.hp_ct -= amount;
+					p.health();
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
 			this.hp_ct += amount;
+			this.health();
 		}
 	}
 	
@@ -813,14 +887,26 @@ public class DFPlayer {
 		if(time != 0) {
 			DFPlayer p = this;
 			this.hp_ct -= amount;
+			this.health();
 			new BukkitRunnable() {
 				public void run() {
 					p.hp_ct += amount;
+					p.health();
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
 			this.hp_ct -= amount;
+			this.health();
+		}
+	}
+	private void health() {
+		Entity e = Bukkit.getEntity(this.id);
+		if(e instanceof LivingEntity) {
+			LivingEntity ent = (LivingEntity) e;
+			double newHealth = 20.00 / 100.00 * (this.getHpCal() + 100.00);
+			double roundOff1 = (double) Math.round(newHealth * 100.00) / 100.00;
+			ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
 		}
 	}
 	//---------------------------------------------------------
@@ -832,19 +918,23 @@ public class DFPlayer {
 	
 	public void setDfCal(double amount) {
 		this.df_ct = amount;
+		this.runDefense();
 	}
 	
 	public void addDfCal(double amount, long time) {
 		if(time != 0) {
 			DFPlayer p = this;
 			this.df_ct += amount;
+			this.runDefense();
 			new BukkitRunnable() {
 				public void run() {
 					p.df_ct -= amount;
+					p.runDefense();
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
+			this.runDefense();
 			this.df_ct += amount;
 		}
 	}
@@ -853,14 +943,17 @@ public class DFPlayer {
 		if(time != 0) {
 			DFPlayer p = this;
 			this.df_ct -= amount;
+			this.runDefense();
 			new BukkitRunnable() {
 				public void run() {
 					p.df_ct += amount;
+					p.runDefense();
 				}
 			}.runTaskLater(CustomEnchantments.getInstance(), time);
 		}
 		else {
 			this.df_ct -= amount;
+			this.runDefense();
 		}
 	}
 	//---------------------------------------------------------
@@ -943,6 +1036,19 @@ public class DFPlayer {
 		}
 		else {
 			this.move += amount;
+			Entity entity = Bukkit.getEntity(this.id);
+			if(entity != null) {
+				if(entity instanceof LivingEntity) {
+					LivingEntity lEnt = (LivingEntity) entity;
+					if(lEnt instanceof Player) {
+						Player p = (Player) lEnt;
+						p.setWalkSpeed(this.move);
+					}
+					else {
+						lEnt.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.move);
+					}
+				}
+			}
 		}
 	}
 	
@@ -999,15 +1105,6 @@ public class DFPlayer {
 			return p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		}
 		return 20.00;
-	}
-	public LivingEntity returnPlayer() {
-		Entity ent = Bukkit.getEntity(this.getUUID());
-		if(ent != null) {
-			if(ent instanceof LivingEntity) {
-				return (LivingEntity)ent;
-			}
-		}
-		return null;
 	}
 	public void attackSpeed() {
 		DFPlayer dfPlayer = this;

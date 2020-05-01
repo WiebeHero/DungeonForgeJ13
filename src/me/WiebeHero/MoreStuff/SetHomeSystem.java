@@ -22,19 +22,26 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.CustomMethods.MethodLuck;
+import me.WiebeHero.RankedPlayerPackage.RankedManager;
+import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import net.md_5.bungee.api.ChatColor;
 
 public class SetHomeSystem implements Listener,CommandExecutor{
-	private MethodLuck luck = new MethodLuck();
+	
+	private RankedManager rManager;
 	public String command = "sethome";
 	public String homeCommand = "home";
 	public String homesCommand = "homes";
-	public HashMap<UUID, HashMap<String, Location>> outerList = new HashMap<UUID, HashMap<String, Location>>();
-	public HashMap<UUID, Integer> rankList = new HashMap<UUID, Integer>();
+	public HashMap<UUID, HashMap<String, Location>> outerList;
+	
+	public SetHomeSystem(RankedManager rManager) {
+		this.outerList = new HashMap<UUID, HashMap<String, Location>>();
+		this.rManager = rManager;
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
@@ -46,159 +53,146 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 			else {
 				innerList = outerList.get(player.getUniqueId());
 			}
+			RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
 			if(cmd.getName().equalsIgnoreCase(command)) {
-				if(player.getWorld().getName().equals("FactionWorld-1")) {
-					if(args.length == 1) {
-						if(!innerList.containsKey(args[0])) {
-							if(innerList.size() < rankList.get(player.getUniqueId())) {
-								innerList.put(args[0], player.getLocation());
+				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
+					if(player.getWorld().getName().equals("FactionWorld-1")) {
+						if(args.length == 1) {
+							if(!innerList.containsKey(args[0])) {
+								if(innerList.size() < rPlayer.getHomeCount()) {
+									innerList.put(args[0], player.getLocation());
+									outerList.put(player.getUniqueId(), innerList);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome &6" + args[0] + " &ahas been set!"));
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have reached the maximum amount of homes you can have!"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home already exists!"));
+							}
+						}
+						else {
+							if(innerList.size() < rPlayer.getHomeCount()) {
+								innerList.put("Home", player.getLocation());
 								outerList.put(player.getUniqueId(), innerList);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome &6" + args[0] + " &ahas been set!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome &6Home &ahas been set!"));
 							}
 							else {
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have reached the maximum amount of homes you can have!"));
 							}
 						}
-						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home already exists!"));
-						}
 					}
 					else {
-						if(innerList.size() < rankList.get(player.getUniqueId())) {
-							innerList.put("Home", player.getLocation());
-							outerList.put(player.getUniqueId(), innerList);
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome &6Home &ahas been set!"));
-						}
-						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have reached the maximum amount of homes you can have!"));
-						}
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't set a home here!"));
 					}
 				}
 				else {
-					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't set a home here!"));
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this command! You are in combat!"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(homeCommand)) {
-				if(args.length >= 1 && args.length <= 2) {
-					if(args[0].equalsIgnoreCase("remove")) {
-						if(innerList.containsKey(args[1])) {
-							innerList.remove(args[1]);
-							outerList.put(player.getUniqueId(), innerList);
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cHome &6" + args[1] + " &chas been removed."));
+				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
+					if(args.length >= 1 && args.length <= 2) {
+						if(args[0].equalsIgnoreCase("remove")) {
+							if(innerList.containsKey(args[1])) {
+								innerList.remove(args[1]);
+								outerList.put(player.getUniqueId(), innerList);
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cHome &6" + args[1] + " &chas been removed."));
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
+							}
+						}
+						else if(innerList.containsKey(args[0])) {
+							final Location loc = innerList.get(args[0]);
+							double locX = player.getLocation().getX();
+							double locY = player.getLocation().getY();
+							double locZ = player.getLocation().getZ();
+							new BukkitRunnable() {
+								int count = 10;
+								@Override
+								public void run() {
+									if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
+										count--;
+										if(count == 0) {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleported!"));
+											player.teleport(loc);
+											count = 10;
+											cancel();
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
+										cancel();
+									}
+								}	
+							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 						}
 						else {
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
 						}
 					}
-					else if(innerList.containsKey(args[0])) {
-						final Location loc = innerList.get(args[0]);
-						double locX = player.getLocation().getX();
-						double locY = player.getLocation().getY();
-						double locZ = player.getLocation().getZ();
-						new BukkitRunnable() {
-							int count = 10;
-							@Override
-							public void run() {
-								if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
-									count--;
-									if(count == 0) {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleported!"));
-										player.teleport(loc);
-										count = 10;
+					else {
+						if(innerList.containsKey("Home")) {
+							final Location loc = innerList.get("Home");
+							double locX = player.getLocation().getX();
+							double locY = player.getLocation().getY();
+							double locZ = player.getLocation().getZ();
+							new BukkitRunnable() {
+								int count = 10;
+								@Override
+								public void run() {
+									if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
+										count--;
+										if(count == 0) {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleported!"));
+											player.teleport(loc);
+											count = 10;
+											cancel();
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
 										cancel();
 									}
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
-									cancel();
-								}
-							}	
-						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-					}
-					else {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
+								}	
+							}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
+						}
 					}
 				}
 				else {
-					if(innerList.containsKey("Home")) {
-						final Location loc = innerList.get("Home");
-						double locX = player.getLocation().getX();
-						double locY = player.getLocation().getY();
-						double locZ = player.getLocation().getZ();
-						new BukkitRunnable() {
-							int count = 10;
-							@Override
-							public void run() {
-								if(player.getLocation().getX() == locX && player.getLocation().getY() == locY && player.getLocation().getZ() == locZ) {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to home in " + count + "..."));
-									count--;
-									if(count == 0) {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleported!"));
-										player.teleport(loc);
-										count = 10;
-										cancel();
-									}
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
-									cancel();
-								}
-							}	
-						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-					}
-					else {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
-					}
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this command! You are in combat!"));
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(homesCommand)) {
-				if(args.length == 0) {
-					for(Entry<String, Location> entry : innerList.entrySet()) {
-						if(innerList.isEmpty()) {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cNo homes have been set!"));
-							break;
-						}
-						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome Name: &6" + entry.getKey()) + " X: " + (int)entry.getValue().getX() + " Y: " + (int)entry.getValue().getY() + " Z: " + (int)entry.getValue().getZ());
+				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
+					if(args.length == 0) {
+						for(Entry<String, Location> entry : innerList.entrySet()) {
+							if(innerList.isEmpty()) {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cNo homes have been set!"));
+								break;
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome Name: &6" + entry.getKey()) + " X: " + (int)entry.getValue().getX() + " Y: " + (int)entry.getValue().getY() + " Z: " + (int)entry.getValue().getZ());
+							}
 						}
 					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments!: /homes"));
+					}
+				}
+				else {
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this command! You are in combat!"));
 				}
 			}
 		}
 		return true;
-	}
-	@EventHandler
-	public void rankedListregister(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-		if(!rankList.containsKey(player.getUniqueId())) {
-			LuckPerms api = LuckPermsProvider.get();
-			User user = api.getUserManager().getUser(player.getUniqueId());
-			if(luck.containsParrent(user, "bronze")) {
-				rankList.put(player.getUniqueId(), 2);
-			}
-			else if(luck.containsParrent(user, "silver")) {
-				rankList.put(player.getUniqueId(), 3);
-			}
-			else if(luck.containsParrent(user, "gold")) {
-				rankList.put(player.getUniqueId(), 4);
-			}
-			else if(luck.containsParrent(user, "platinum")) {
-				rankList.put(player.getUniqueId(), 5);
-			}
-			else if(luck.containsParrent(user, "diamond")) {
-				rankList.put(player.getUniqueId(), 6);
-			}
-			else if(luck.containsParrent(user, "emerald")) {
-				rankList.put(player.getUniqueId(), 8);
-			}
-			else if(luck.containsParrent(user, "owner") || luck.containsParrent(user, "manager") || luck.containsParrent(user, "headadmin")) {
-				rankList.put(player.getUniqueId(), 999);
-			}
-			else {
-				rankList.put(player.getUniqueId(), 1);
-			}
-		}
 	}
 	
 	public void loadHomes(YamlConfiguration yml, File f) {
@@ -224,11 +218,10 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 				loc = (Location) yml.get("Homes." + id + "." + homeList.get(i1));
 				locList.put(homeList.get(i1), loc);
 			}
-			CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "" + homeList);
-			CustomEnchantments.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.DARK_GREEN + "" + locList);
 			outerList.put(id, locList);
 		}
 	}
+	
 	public void saveHomes() {
 		File f =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);

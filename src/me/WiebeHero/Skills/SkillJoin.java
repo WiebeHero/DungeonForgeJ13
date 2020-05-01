@@ -68,7 +68,7 @@ public class SkillJoin implements Listener{
 			}
 			else {
 				dfPlayer.resetIncreases();
-				dfPlayer.resetCalculations();
+				dfPlayer.resetAbilityStats();
 				dfPlayer.changeHealth();
 				dfPlayer.attackSpeed();
 				dfPlayer.runDefense();

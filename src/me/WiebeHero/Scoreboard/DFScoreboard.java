@@ -22,7 +22,6 @@ import org.bukkit.scoreboard.Team.OptionStatus;
 
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFaction;
@@ -31,19 +30,16 @@ import me.WiebeHero.Factions.DFFactionPlayer;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
 import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
-import net.luckperms.api.model.user.User;
 
 public class DFScoreboard implements Listener{
 	private DFFactionManager facManager;
 	private DFFactionPlayerManager facPlayerManager;
 	private DFPlayerManager dfManager;
 	private RankedManager rManager;
-	private MethodLuck luck;
 	private WGMethods wg;
-	public DFScoreboard(DFPlayerManager dfManager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, MethodLuck luck, RankedManager rManager, WGMethods wg) {
+	public DFScoreboard(DFPlayerManager dfManager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, RankedManager rManager, WGMethods wg) {
 		this.dfManager = dfManager;
 		this.facManager = facManager;
-		this.luck = luck;
 		this.wg = wg;
 		this.facPlayerManager = facPlayerManager;
 		this.rManager = rManager;
@@ -95,9 +91,12 @@ public class DFScoreboard implements Listener{
 				}
 			}
 			if(facManager.isInAChunk(player)) {
+				long key = player.getLocation().getChunk().getChunkKey();
 				for(DFFaction fac : facManager.getFactionMap().values()) {
-					if(fac.getChunkList().contains(player.getLocation().getChunk())) {
-						territory = "&c&l" + fac.getName();
+					if(faction != fac) {
+						if(fac.getChunkList().contains(key)) {
+							territory = "&c&l" + fac.getName();
+						}
 					}
 				}
 			}
@@ -178,9 +177,12 @@ public class DFScoreboard implements Listener{
 			}
 		}
 		if(facManager.isInAChunk(player)) {
+			long key = player.getLocation().getChunk().getChunkKey();
 			for(DFFaction fac : facManager.getFactionMap().values()) {
-				if(fac.getChunkList().contains(player.getLocation().getChunk())) {
-					territory = "&c&l" + fac.getName();
+				if(faction != fac) {
+					if(fac.getChunkList().contains(key)) {
+						territory = "&c&l" + fac.getName();
+					}
 				}
 			}
 		}

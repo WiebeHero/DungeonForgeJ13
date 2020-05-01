@@ -298,7 +298,7 @@ public class DFFactions implements Listener,CommandExecutor{
 														tempLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
 														tempLoc.add(0.00, 0.00, -16.00);
 														Chunk chunk4 = player.getWorld().getChunkAt(tempLoc);
-														if(faction.getChunkList().contains(chunk1) || faction.getChunkList().contains(chunk2) || faction.getChunkList().contains(chunk3) || faction.getChunkList().contains(chunk4)) {
+														if(faction.getChunkList().contains(chunk1.getChunkKey()) || faction.getChunkList().contains(chunk2.getChunkKey()) || faction.getChunkList().contains(chunk3.getChunkKey()) || faction.getChunkList().contains(chunk4.getChunkKey())) {
 															if(faction.getChunkList().size() < maxChunks) {
 																if(faction.getEnergy() > faction.getChunkList().size() + 1) {
 																	faction.addChunk(player.getChunk());
@@ -355,7 +355,7 @@ public class DFFactions implements Listener,CommandExecutor{
 											else if(facManager.isInAChunk(player)){
 												DFFaction fac = null;
 												for(DFFaction f : facManager.getFactionMap().values()) {
-													if(f.getChunkList().contains(player.getChunk())) {
+													if(f.getChunkList().contains(player.getChunk().getChunkKey())) {
 														fac = f;
 													}
 												}
@@ -400,10 +400,15 @@ public class DFFactions implements Listener,CommandExecutor{
 										if(faction != null) {
 											int rank = facPlayer.getRank();
 											if(rank >= 3) {
-												for(Chunk c : faction.getChunkList()) {
-													faction.removeChunk(c);
+												if(!faction.getChunkList().isEmpty()) {
+													for(long key : faction.getChunkList()) {
+														faction.removeChunk(key);
+													}
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have unclaimed all of your factions chunks!"));
 												}
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have unclaimed all of your factions chunks!"));
+												else {
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction doesn't own any chunks!"));
+												}
 											}
 											else {
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to unclaim chunks!"));
@@ -978,13 +983,13 @@ public class DFFactions implements Listener,CommandExecutor{
 							}
 						}
 						else {
-							player.sendMessage(new CCT().colorize("&cInvalid Arguments! Use /f or /f help to see the faction commands!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
 						}
 					}
 				}
 			}
 			else {
-				player.sendMessage(new CCT().colorize("&cYou can't use this command! You are in combat!"));
+				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this command! You are in combat!"));
 			}
 		}
 		return false;

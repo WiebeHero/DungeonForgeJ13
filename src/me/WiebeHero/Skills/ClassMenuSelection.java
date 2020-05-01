@@ -72,7 +72,7 @@ public class ClassMenuSelection implements Listener{
 					Classes currentClass = Enum.valueOf(Classes.class, temp);
 					dfPlayer.setPlayerClass(currentClass);
 					dfPlayer.resetIncreases();
-					dfPlayer.resetCalculations();
+					dfPlayer.resetAbilityStats();
 					activated.remove(player.getUniqueId());
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have chosen the class " + className[1]));
 					player.closeInventory();

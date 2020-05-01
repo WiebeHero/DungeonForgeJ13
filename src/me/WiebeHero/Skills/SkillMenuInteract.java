@@ -78,7 +78,7 @@ public class SkillMenuInteract implements Listener{
 							dfPlayer.addAtk(1);
 							dfPlayer.removeSkillPoints(1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							dfPlayer.resetCalculations();
+							dfPlayer.resetIncreases();
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -95,7 +95,7 @@ public class SkillMenuInteract implements Listener{
 							dfPlayer.addSpd(1);
 							dfPlayer.removeSkillPoints(1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							dfPlayer.resetCalculations();
+							dfPlayer.resetIncreases();
 							dfPlayer.attackSpeed();
 							menu.SkillMenuInv(player);
 						}
@@ -113,7 +113,7 @@ public class SkillMenuInteract implements Listener{
 							dfPlayer.addCrt(1);
 							dfPlayer.removeSkillPoints(1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							dfPlayer.resetCalculations();
+							dfPlayer.resetIncreases();
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -130,7 +130,7 @@ public class SkillMenuInteract implements Listener{
 							dfPlayer.addRnd(1);
 							dfPlayer.removeSkillPoints(1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							dfPlayer.resetCalculations();
+							dfPlayer.resetIncreases();
 							menu.SkillMenuInv(player);
 						}
 						else {
@@ -147,7 +147,7 @@ public class SkillMenuInteract implements Listener{
 							dfPlayer.addHp(1);
 							dfPlayer.removeSkillPoints(1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							dfPlayer.resetCalculations();
+							dfPlayer.resetIncreases();
 							menu.SkillMenuInv(player);
 							dfPlayer.changeHealth();
 						}
@@ -165,7 +165,7 @@ public class SkillMenuInteract implements Listener{
 							dfPlayer.addDf(1);
 							dfPlayer.removeSkillPoints(1);
 							player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-							dfPlayer.resetCalculations();
+							dfPlayer.resetIncreases();
 							menu.SkillMenuInv(player);
 							dfPlayer.runDefense();
 						}
