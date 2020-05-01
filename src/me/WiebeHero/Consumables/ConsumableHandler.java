@@ -21,19 +21,17 @@ import org.bukkit.inventory.ShapelessRecipe;
 import eu.endercentral.crazy_advancements.Advancement;
 import eu.endercentral.crazy_advancements.events.AdvancementGrantEvent;
 import javafx.util.Pair;
-import me.WiebeHero.Advancements.Advancements;
 import me.WiebeHero.Consumables.ConsumableCondition.Condition;
 import me.WiebeHero.Consumables.Unlock.UnlockCraftCondition;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
+import net.minecraft.server.v1_13_R2.Advancements;
 
 public class ConsumableHandler implements Listener{
 	private Consumable con;
 	private DFPlayerManager dfManager;
-	private Advancements advancements;
-	public ConsumableHandler(DFPlayerManager dfManager, Consumable con, Advancements advancements) {
+	public ConsumableHandler(DFPlayerManager dfManager, Consumable con) {
 		this.dfManager = dfManager;
 		this.con = con;
-		this.advancements = advancements;
 	}
 	@EventHandler
 	public void consumeHandler(PlayerItemConsumeEvent event) {

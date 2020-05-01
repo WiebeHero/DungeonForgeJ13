@@ -39,8 +39,6 @@ import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
 import javafx.util.Pair;
 import me.WiebeHero.APIs.ParticleAPI;
-import me.WiebeHero.Advancements.AdvancementRegister;
-import me.WiebeHero.Advancements.Advancements;
 import me.WiebeHero.ArmoryPackage.DFArmorUpgrade;
 import me.WiebeHero.ArmoryPackage.DFShieldUpgrade;
 import me.WiebeHero.ArmoryPackage.DFWeaponUpgrade;
@@ -66,7 +64,6 @@ import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.DFPlayerPackage.DFPlayerRegister;
 import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.DFPlayerPackage.Enums;
-import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 import me.WiebeHero.DFShops.DFShop;
 import me.WiebeHero.DFShops.PayCommand;
 import me.WiebeHero.DungeonInstances.DungeonMaxima;
@@ -191,7 +188,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private KitMenu menu = new KitMenu(builder, rankedManager, rEnum);
 	private KitCommand kitCommand = new KitCommand(rankedManager, rEnum, menu);
 	private EnchantmentGuideInventory enchantmentGuideInv;
-	private Advancements advancements = new Advancements(builder);
 	private SetHomeSystem sethome = new SetHomeSystem(rankedManager);
 	// General Variables
 	public static boolean hardSave = false;
@@ -230,14 +226,12 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		dfManager.loadPlayers();
 		maintenance = yml.getBoolean("General.Values.Maintenance");
 		ahManager.start();
-		advancements.registerAdvancements();
 		Enums en = new Enums(dfManager, facManager);
 		//Config Manager
 		ModerationEvents mod = new ModerationEvents(facManager, dfManager, rankedManager, punishManager, staffManager, spawnerManager, lootChestManager, gui, multi, luck, method, score, classMenu);
 		//Custom Weapons
 		getServer().getPluginManager().registerEvents(en, this);
 		getServer().getPluginManager().registerEvents(new ActivateAbility(dfManager, facManager), this);
-		getServer().getPluginManager().registerEvents(new AdvancementRegister(advancements), this);
 		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(dfManager, nEnchant), this);
 		//Custom Armor
 		getServer().getPluginManager().registerEvents(new DFArmorUpgrade(dfManager, nEnchant), this);
@@ -280,7 +274,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new DFPlayerRegister(dfManager), this);
 		getServer().getPluginManager().registerEvents(new MSGEvents(msgManager), this);
 		getServer().getPluginManager().registerEvents(new AHEvents(ahInv, ahManager, dfManager), this);
-		getServer().getPluginManager().registerEvents(new ConsumableHandler(dfManager, con, advancements), this);
+		getServer().getPluginManager().registerEvents(new ConsumableHandler(dfManager, con), this);
 		getServer().getPluginManager().registerEvents(new RankedPlayerListener(rankedManager, luck), this);
 		getServer().getPluginManager().registerEvents(new DFMobHealth(), this);
 		//Seasonal Events
