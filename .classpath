@@ -10,6 +10,5 @@
 	<classpathentry kind="lib" path="lib/item-nbt-api-plugin-2.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/LuckPerms-Bukkit-5.0.50.jar"/>
 	<classpathentry kind="lib" path="lib/Multiverse-Core-2.5.jar"/>
-	<classpathentry kind="lib" path="lib/CrazyAdvancementsAPI.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
