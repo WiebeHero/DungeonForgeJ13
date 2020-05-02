@@ -1,6 +1,6 @@
 name: CustomEnchantments
 author: WiebeHero
-version: 0.346
+version: 0.347
 api-version: 1.13
 softdepend: [Multiverse-Core, WorldEdit, WorldGuard]
 main: me.WiebeHero.CustomEnchantments.CustomEnchantments
