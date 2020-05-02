@@ -177,7 +177,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager, wg);
 	private AHManager ahManager = new AHManager(availableSlots);
 	private AHInventory ahInv = new AHInventory(ahManager, builder);
-	private Enchantment enchant = new Enchantment(dfManager, facManager, potionM, pApi, facPlayerManager, builder);
+	private Enchantment enchant = new Enchantment(dfManager, facManager, potionM, pApi, facPlayerManager, builder, wg);
 	private Consumable con = new Consumable(dfManager, facManager, potionM, builder);
 	private PayCommand pay = new PayCommand(dfManager);
 	private DFSpawnerManager spawnerManager = new DFSpawnerManager(dfManager, disp);
@@ -298,7 +298,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
-		getServer().getPluginManager().registerEvents(new EnchantmentHandler(enchant, enchantmentGuideInv), this);
+		getServer().getPluginManager().registerEvents(new EnchantmentHandler(enchant, enchantmentGuideInv, wg), this);
 		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getMeleeEnchantments().entrySet()) {
 			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
 		}

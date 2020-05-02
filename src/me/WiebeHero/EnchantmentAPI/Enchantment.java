@@ -74,6 +74,7 @@ import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.Factions.DFFactionPlayer;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
+import me.WiebeHero.Scoreboard.WGMethods;
 import net.minecraft.server.v1_13_R2.EntityArmorStand;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.PacketPlayOutWorldParticles;
@@ -86,13 +87,15 @@ public class Enchantment extends CommandFile implements Listener{
 	private PotionM p;
 	private ParticleAPI pApi;
 	private ItemStackBuilder builder;
-	public Enchantment(DFPlayerManager dfManager, DFFactionManager facManager, PotionM p, ParticleAPI pApi, DFFactionPlayerManager facPlayerManager, ItemStackBuilder builder) {
+	private WGMethods wg;
+	public Enchantment(DFPlayerManager dfManager, DFFactionManager facManager, PotionM p, ParticleAPI pApi, DFFactionPlayerManager facPlayerManager, ItemStackBuilder builder, WGMethods wg) {
 		this.dfManager = dfManager;
 		this.facManager = facManager;
 		this.builder = builder;
 		this.p = p;
 		this.pApi = pApi;
 		this.facPlayerManager = facPlayerManager;
+		this.wg = wg;
 		this.loadMeleeEnchantments();
 		this.loadBowEnchantments();
 		this.loadArmorEnchantments();
@@ -528,12 +531,14 @@ public class Enchantment extends CommandFile implements Listener{
 							for(Entity e : victim.getNearbyEntities(range, range, range)) {
 								if(e instanceof LivingEntity) {
 									if(e != damager) {
-										int random1 = new Random().nextInt(4) - 4;
-										int random2 = new Random().nextInt(4) - 4;
-										float x = ThreadLocalRandom.current().nextFloat() * 4 + (float)random1;
-										float z = ThreadLocalRandom.current().nextFloat() * 4 + (float)random2;
 										LivingEntity entity = (LivingEntity) e;
-										entity.setVelocity(new Vector(x, 1.8 + 0.2 * level, z));
+										if(!wg.isInZone(e, "spawn")) {
+											int random1 = new Random().nextInt(4) - 4;
+											int random2 = new Random().nextInt(4) - 4;
+											float x = ThreadLocalRandom.current().nextFloat() * 4 + (float)random1;
+											float z = ThreadLocalRandom.current().nextFloat() * 4 + (float)random2;
+											entity.setVelocity(new Vector(x, 1.8 + 0.2 * level, z));
+										}
 									}
 								}
 							}
@@ -4341,11 +4346,13 @@ public class Enchantment extends CommandFile implements Listener{
 							for(Entity e : entity.getNearbyEntities(range, range, range)) {
 								if(e != shooter && e != entity) {
 									if(e instanceof LivingEntity) {
+										LivingEntity ent = (LivingEntity) e;
 										if(!facManager.isFriendly(shooter, e)) {
-											LivingEntity ent = (LivingEntity) e;
-											Vector direction = entity.getLocation().add(0, -1.8, 0).toVector().subtract(ent.getLocation().toVector()).normalize();
-											double distance = e.getLocation().distance(entity.getLocation());
-											ent.setVelocity(direction.multiply(0.25F - (distance / 100))); 
+											if(!wg.isInZone(ent, "spawn")) {
+												Vector direction = entity.getLocation().add(0, -1.8, 0).toVector().subtract(ent.getLocation().toVector()).normalize();
+												double distance = e.getLocation().distance(entity.getLocation());
+												ent.setVelocity(direction.multiply(0.175F - (distance / 100))); 
+											}
 										}
 									}
 								}
