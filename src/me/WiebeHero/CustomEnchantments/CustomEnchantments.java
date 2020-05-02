@@ -219,6 +219,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			e.printStackTrace();
 		}
 		rankedManager.loadKitCooldowns();
+		facPlayerManager.loadPlayers();
 		facManager.loadFactions();
 		facManager.activeEnergyTimer();
 		ahManager.loadAuctionHouse();
