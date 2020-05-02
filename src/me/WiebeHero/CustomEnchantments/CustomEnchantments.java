@@ -497,14 +497,54 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				e.remove();
 			}
 		}
-		dfManager.savePlayers();
-		facManager.saveFactions();
-		ahManager.saveAuctionHouse();
-		lootChestManager.saveLootChests();
-		spawnerManager.saveSpawners();
-		sethome.saveHomes();
-		punishManager.savePunishList();
-		rankedManager.saveKitCooldowns();
+		try {
+			dfManager.savePlayers();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			facManager.saveFactions();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			ahManager.saveAuctionHouse();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			lootChestManager.saveLootChests();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			spawnerManager.saveSpawners();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			sethome.saveHomes();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			punishManager.savePunishList();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			rankedManager.saveKitCooldowns();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {
