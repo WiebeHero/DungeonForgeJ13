@@ -52,12 +52,12 @@ public class CombatTag implements Listener {
 					Player p1 = (Player) damager;
 					Player p2 = (Player) victim;
 					if(combatRunnable.containsKey(p1.getUniqueId()) && combatRunnable.containsKey(p2.getUniqueId())) {
-						combatTag.put(p1.getUniqueId(), 10);
-						combatTag.put(p2.getUniqueId(), 10);
+						combatTag.put(p1.getUniqueId(), 11);
+						combatTag.put(p2.getUniqueId(), 11);
 					}
 					else {
-						combatTag.put(p1.getUniqueId(), 10);
-						combatTag.put(p2.getUniqueId(), 10);
+						combatTag.put(p1.getUniqueId(), 11);
+						combatTag.put(p2.getUniqueId(), 11);
 						BukkitTask run1 = new BukkitRunnable() {
 							@Override
 							public void run() {
@@ -97,14 +97,14 @@ public class CombatTag implements Listener {
 	public void combatTagLeave(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		if (combatTag.containsKey(player.getUniqueId())) {
-			if (combatTag.get(player.getUniqueId()) != 0) {
-				player.setHealth(0.00);
+			if(combatTag.get(player.getUniqueId()) != 0) {
 				if(combatRunnable.containsKey(player.getUniqueId())) {
 					combatRunnable.get(player.getUniqueId()).cancel();
 					combatRunnable.remove(player.getUniqueId());
 				}
 				combatTag.put(player.getUniqueId(), 0);
 				sendActionbar(player, new CCT().colorize("&2&l[DungeonForge]:&aOut of combat!"));
+				player.setHealth(0.00);
 			}
 		}
 	}
