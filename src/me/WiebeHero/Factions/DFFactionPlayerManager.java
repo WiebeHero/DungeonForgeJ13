@@ -45,6 +45,10 @@ public class DFFactionPlayerManager {
 		}
 	}
 	
+	public void add(UUID pUuid, DFFactionPlayer facPlayer) {
+		this.factionPlayerList.put(pUuid, facPlayer);
+	}
+	
 	public void add(UUID pUuid) {
 		this.factionPlayerList.put(pUuid, new DFFactionPlayer());
 	}

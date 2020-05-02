@@ -211,9 +211,11 @@ public class DFFactionManager {
 		for(DFFaction fac : this.factionList.values()) {
 			yml.createSection("Factions.List." + fac.getFactionId());
 			for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
-				if(entry.getValue().getFactionId().equals(fac.getFactionId())) {
-					yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Rank", entry.getValue().getRank());
-					yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Name", Bukkit.getOfflinePlayer(entry.getKey()).getName());
+				if(entry.getValue().isInFaction()) {
+					if(entry.getValue().getFactionId().equals(fac.getFactionId())) {
+						yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Rank", entry.getValue().getRank());
+						yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Name", Bukkit.getOfflinePlayer(entry.getKey()).getName());
+					}
 				}
 			}
 			ArrayList<Long> list = new ArrayList<Long>();

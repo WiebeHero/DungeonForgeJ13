@@ -28,6 +28,10 @@ public class DFFactionPlayer {
 		this.facId = facId;
 	}
 	
+	public boolean isInFaction() {
+		return this.facId != null;
+	}
+	
 	public UUID getFactionId() {
 		return this.facId;
 	}
