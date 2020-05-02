@@ -171,6 +171,9 @@ public class DFFaction {
 	public void removeChunk(long key) {
 		this.chunkList.remove(key);
 	}
+	public void clearChunks() {
+		this.chunkList.clear();
+	}
 	public boolean isInChunk(Player player) {
 		long c = player.getChunk().getChunkKey();
 		if(this.getChunkList().contains(c)) {

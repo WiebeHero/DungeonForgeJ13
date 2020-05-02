@@ -44,6 +44,7 @@ public class CombatTag implements Listener {
 				else if(damager instanceof Projectile) {
 					Projectile proj = (Projectile) damager;
 					if(proj.getShooter() instanceof Player) {
+						damager = (Player)proj.getShooter();
 						dPlayer = true;
 					}
 				}
@@ -66,12 +67,12 @@ public class CombatTag implements Listener {
 								combatTag.put(p1.getUniqueId(), duration);
 								if (duration <= 0) {
 									cancel();
-									combatRunnable.remove(damager.getUniqueId());
+									combatRunnable.remove(p1.getUniqueId());
 									sendActionbar(p1, new CCT().colorize("&2&l[DungeonForge]: &aOut of combat!"));
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-						combatRunnable.put(damager.getUniqueId(), run1);
+						combatRunnable.put(p1.getUniqueId(), run1);
 						BukkitTask run2 = new BukkitRunnable() {
 							@Override
 							public void run() {
@@ -81,12 +82,12 @@ public class CombatTag implements Listener {
 								combatTag.put(p2.getUniqueId(), duration);
 								if (duration <= 0) {
 									cancel();
-									combatRunnable.remove(damager.getUniqueId());
+									combatRunnable.remove(p2.getUniqueId());
 									sendActionbar(p2, new CCT().colorize("&2&l[DungeonForge]: &aOut of combat!"));
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-						combatRunnable.put(damager.getUniqueId(), run2);
+						combatRunnable.put(p2.getUniqueId(), run2);
 					}
 				}
 			}
