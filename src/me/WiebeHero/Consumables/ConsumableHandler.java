@@ -42,15 +42,17 @@ public class ConsumableHandler implements Listener{
 					contain = contain.replace(' ', '_');
 					if(con.getConsumables().containsKey(contain)) {
 						if(con.getConsumables().get(contain).getKey() == Condition.CONSUME) {
-							con.getConsumables().get(contain).getValue().activateConsumable(p);
-							con.getConsumables().get(contain).getValue().activateConsumable(p, event);
-							if(item.getItemMeta().getLore().toString().contains("Cooldown")) {
-								for(String s : item.getItemMeta().getLore()) {
-									if(s.contains("Cooldown")) {
-										int cooldown = Integer.parseInt(s.replaceAll("[^\\d.]", "")) * 20;
-										p.setCooldown(item.getType(), cooldown);
-									}
+							if(!p.hasCooldown(item.getType())) {
+								con.getConsumables().get(contain).getValue().activateConsumable(p);
+								con.getConsumables().get(contain).getValue().activateConsumable(p, event);
+								NBTItem i = new NBTItem(item);
+								if(i.hasKey("Cooldown")) {
+									int cooldown = i.getInteger("Cooldown");
+									p.setCooldown(item.getType(), cooldown);
 								}
+							}
+							else {
+								event.setCancelled(true);
 							}
 						}
 					}
