@@ -8,6 +8,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -51,6 +52,7 @@ public class NovisRewards {
 			double speedWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".BeginSpeed");
 			double incDamageWeapon = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".IncDamage");
 			double incDamageSpeed = config.getDouble("Items.Weapons." + listItemsWep.get(i) + ".IncSpeed");
+			meta.addEnchant(Enchantment.LURE, 1, false);
 			ArrayList<String> newLore = new ArrayList<String>();
 			newLore = enchant.setEnchantments(1, enchantmentsString, newLore);
 			newLore.add(new CCT().colorize("&7-----------------------"));
@@ -144,6 +146,7 @@ public class NovisRewards {
 			double drawSpeedWeapon = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".BeginSpeed");
 			double incDamage = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".IncDamage");
 			double incSpeed = config.getDouble("Items.Bows." + listItemsBows.get(i) + ".IncSpeed");
+			meta.addEnchant(Enchantment.LURE, 1, false);
 			ArrayList<String> newLore = new ArrayList<String>();
 			newLore = enchant.setEnchantments(1, enchantmentsString, newLore);
 			newLore.add(new CCT().colorize("&7-----------------------"));
@@ -212,6 +215,7 @@ public class NovisRewards {
 			double cooldown = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".BeginCooldown");
 			double incDamageWeapon = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".IncToughness");
 			double incCooldown = config.getDouble("Items.Shields." + listItemsShields.get(i) + ".IncCooldown");
+			meta.addEnchant(Enchantment.LURE, 1, false);
 			ArrayList<String> newLore = new ArrayList<String>();
 			newLore = enchant.setEnchantments(1, enchantmentsString, newLore);
 			newLore.add(new CCT().colorize("&7-----------------------"));
@@ -287,6 +291,7 @@ public class NovisRewards {
 			double armorToughness = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".BeginToughness");
 			double incArmorDefense = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".IncDefense");
 			double incArmorToughness = config.getDouble("Items.Armor." + listItemsArmor.get(i) + ".IncToughness");
+			meta.addEnchant(Enchantment.LURE, 1, false);
 			meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv 1&a]"));
 			ArrayList<String> newLore = new ArrayList<String>();
 			newLore = enchant.setEnchantments(1, enchantmentsString, newLore);

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -31,7 +30,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTItem;
 import javafx.util.Pair;
@@ -39,25 +37,24 @@ import me.WiebeHero.Consumables.ConsumableCondition.Condition;
 import me.WiebeHero.Consumables.Unlock.UnlockCraftCondition;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.CustomMethods.NewAttribute;
 import me.WiebeHero.CustomMethods.PotionM;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactionManager;
-import me.WiebeHero.Factions.DFFactionPlayer;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
 import net.md_5.bungee.api.ChatColor;
 
 public class Consumable {
 	private PotionM p;
 	private DFFactionManager facManager;
-	private DFFactionPlayerManager facPlayerManager;
 	private DFPlayerManager dfManager;
-	public Consumable(DFPlayerManager dfManager, DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, PotionM p) {
+	private ItemStackBuilder builder;
+	public Consumable(DFPlayerManager dfManager, DFFactionManager facManager, PotionM p, ItemStackBuilder builder) {
 		this.facManager = facManager;
 		this.dfManager = dfManager;
-		this.facPlayerManager = facPlayerManager;
+		this.builder = builder;
 		this.p = p;
 	}
 	
@@ -72,7 +69,7 @@ public class Consumable {
 		this.listConsumables = new HashMap<String, Pair<Condition, CommandFile>>();
 		this.listConsumables.put("Santa's_Cookie", new Pair<>(Condition.CONSUME, new CommandFile() {
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
 				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 2.0F, 1.0F);
 				if(dfManager.contains(eaten)) {
 					DFPlayer df = dfManager.getEntity(eaten);
@@ -86,43 +83,35 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Smooth_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					if(eaten.getHealth() + 2.5 <= eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-						eaten.setHealth(eaten.getHealth() + 2.5);
-					}
-					else {
-						eaten.setHealth(eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-					}
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 2);
-					}
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 60L);
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				if(eaten.getHealth() + 2.5 <= eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+					eaten.setHealth(eaten.getHealth() + 2.5);
 				}
+				else {
+					eaten.setHealth(eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+				}
+				eaten.setFoodLevel(eaten.getFoodLevel() + 2);
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Smooth_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
@@ -133,73 +122,62 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Shadow_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_GHAST_SHOOT, 2.0F, 0.5F);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					p.applyEffect(eaten, PotionEffectType.SPEED, 0, 150);
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 2);
-					}
-					if(facPlayerManager.contains(eaten.getUniqueId())) {
-						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(eaten);
-						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-						if(faction != null) {
-							for(Entity e : eaten.getNearbyEntities(5.0, 5.0, 5.0)) {
-								if(e != eaten) {
-									if(e instanceof LivingEntity) {
-										LivingEntity ent = (LivingEntity) e;
-										if(faction != null) {
-											if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
-												p.applyEffect(ent, PotionEffectType.BLINDNESS, 0, 150);
-											}
-										}
-										else {
-											p.applyEffect(ent, PotionEffectType.BLINDNESS, 0, 150);
-										}
-									}
-								}
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_GHAST_SHOOT, 2.0F, 0.5F);
+				p.applyEffect(eaten, PotionEffectType.SPEED, 0, 150);
+				if(eaten instanceof Player) {
+					Player p = (Player) eaten;
+					p.setFoodLevel(p.getFoodLevel() + 2);
+				}
+				for(Entity e : eaten.getNearbyEntities(5.0, 5.0, 5.0)) {
+					if(e != eaten) {
+						if(e instanceof LivingEntity) {
+							LivingEntity ent = (LivingEntity) e;
+							if(!facManager.isFriendly(eaten, ent)) {
+								p.applyEffect(ent, PotionEffectType.BLINDNESS, 0, 150);
 							}
 						}
 					}
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 150L);
 				}
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Shadow Fluzgla", 
-						Material.BLACK_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Speed I (To you): &b7.5 Seconds//"
-						+ "  &7Blindness I (To nearby enemies): &b7.5 Seconds//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Range: &65.0 Blocks//"
-						+ "  &7Cooldown: &b7.5 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.BLACK_WOOL,
+						1,
+						"&7Shadow Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Speed I (To you): &b7.5 Seconds",
+							"  &7Blindness I (To nearby enemies): &b7.5 Seconds",
+							"  &7Food Gain: &c2",
+							"  &7Range: &65.0 Blocks",
+							"  &7Cooldown: &b7.5 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						150
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Shadow_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -211,49 +189,46 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Hastened_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					p.applyEffect(eaten, PotionEffectType.FAST_DIGGING, 0, 200);
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 1);
-					}
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 200L);
-				}
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				p.applyEffect(eaten, PotionEffectType.FAST_DIGGING, 0, 200);
+				eaten.setFoodLevel(eaten.getFoodLevel() + 1);
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Hastened Fluzgla", 
-						Material.YELLOW_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Haste I (To you): &b10.0 Seconds//"
-						+ "  &7Food Gain: &c1//"
-						+ "  &7Cooldown: &b10.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.ORANGE_WOOL,
+						1,
+						"&7Hastened Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Haste I (To you): &b10 Seconds",
+							"  &7Food Gain: &c1",
+							"  &7Cooldown: &b10.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						200
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Hastened_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -265,57 +240,54 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Bursting_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 1);
-					}
-					for(int i = 0; i < 5; i++) {
-						eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 2.0F, 1.0F);
-						float yaw = eaten.getLocation().getYaw();
-		                double D = 0.5;
-		                double x = -D*Math.sin(yaw*Math.PI/180);
-		                double z = D*Math.cos(yaw*Math.PI/180);
-						eaten.getWorld().spawn(eaten.getLocation().add(x, 1.5, z), SmallFireball.class);
-					}
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 200L);
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				eaten.setFoodLevel(eaten.getFoodLevel() + 1);
+				for(int i = 0; i < 5; i++) {
+					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 2.0F, 1.0F);
+					float yaw = eaten.getLocation().getYaw();
+	                double D = 0.5;
+	                double x = -D*Math.sin(yaw*Math.PI/180);
+	                double z = D*Math.cos(yaw*Math.PI/180);
+					eaten.getWorld().spawn(eaten.getLocation().add(x, 1.5, z), SmallFireball.class);
 				}
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Bursting Fluzgla", 
-						Material.RED_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Shoot Fireballs//"
-						+ "  &7Amount: &65//"
-						+ "  &7Food Gain: &c1//"
-						+ "  &7Cooldown: &b10.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.RED_WOOL,
+						1,
+						"&7Bursting Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Shoot Fireballs",
+							"  &7Amount: &65",
+							"  &7Food Gain: &c1",
+							"  &7Cooldown: &b10.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						200
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Bursting_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -327,98 +299,76 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Healing_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
-					eaten.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.0, 0), 20, 0.2, 0.2, 0.2);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					p.applyEffect(eaten, PotionEffectType.REGENERATION, 0, 180);
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 1);
-					}
-					if(eaten.getHealth() + 2.5 <= eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-						eaten.setHealth(eaten.getHealth() + 2.5);
-					}
-					else {
-						eaten.setHealth(eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-					}
-					if(facPlayerManager.contains(eaten)) {
-						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(eaten);
-						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-						if(faction != null) {
-							for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
-								if(e != eaten) {
-									if(e instanceof LivingEntity) {
-										LivingEntity ent = (LivingEntity) e;
-										if(faction != null) {
-											if(faction.isMember(ent.getUniqueId())) {
-												ent.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
-												ent.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.2, 0), 20, 0.2, 0.2, 0.2);
-												p.applyEffect(eaten, PotionEffectType.REGENERATION, 1, 90);
-												if(ent.getHealth() + 5.0 <= ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-													ent.setHealth(ent.getHealth() + 5.0);
-												}
-												else {
-													ent.setHealth(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-												}
-											}
-											else if(faction.isAlly(ent.getUniqueId())) {
-												ent.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
-												ent.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.2, 0), 20, 0.2, 0.2, 0.2);
-												p.applyEffect(eaten, PotionEffectType.REGENERATION, 0, 180);
-												if(ent.getHealth() + 2.5 <= ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-													ent.setHealth(ent.getHealth() + 2.5);
-												}
-												else {
-													ent.setHealth(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-												}
-											}
-										}
-									}
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
+				eaten.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.0, 0), 20, 0.2, 0.2, 0.2);
+				p.applyEffect(eaten, PotionEffectType.REGENERATION, 0, 180);
+				eaten.setFoodLevel(eaten.getFoodLevel() + 1);
+				if(eaten.getHealth() + 2.5 <= eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+					eaten.setHealth(eaten.getHealth() + 2.5);
+				}
+				else {
+					eaten.setHealth(eaten.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+				}
+				for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
+					if(e != eaten) {
+						if(e instanceof LivingEntity) {
+							LivingEntity ent = (LivingEntity) e;
+							if(facManager.isFriendly(eaten, ent)) {
+								ent.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 2.0F);
+								ent.getWorld().spawnParticle(Particle.HEART, eaten.getLocation().add(0, 2.2, 0), 20, 0.2, 0.2, 0.2);
+								p.applyEffect(eaten, PotionEffectType.REGENERATION, 1, 100);
+								if(ent.getHealth() + 5.0 <= ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+									ent.setHealth(ent.getHealth() + 5.0);
+								}
+								else {
+									ent.setHealth(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 								}
 							}
 						}
 					}
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 300L);
 				}
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Healing Fluzgla", 
-						Material.PINK_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal (To you and allies): &c2.5 HP//"
-						+ "  &7Regen I (To you and allies): &b9.0 Seconds//"
-						+ "  &7Heal (To members): &c5.0 HP//"
-						+ "  &7Regen II (To members): &b4.5 Seconds//"
-						+ "  &7Food Gain (To you): &c1//"
-						+ "  &7Range: &67.5 Blocks//"
-						+ "  &7Cooldown: &b15.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.PINK_WOOL,
+						1,
+						"&7Healing Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal (To you): &c2.5 HP",
+							"  &7Regen I (To you): &b9.0 Seconds",
+							"  &7Heal (To members and allies): &c5.0 HP",
+							"  &7Regen II (To members and allies): &b5.0 Seconds",
+							"  &7Food Gain (To you): &c1",
+							"  &7Range: &67.5 Blocks",
+							"  &7Cooldown: &b15.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						300
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Healing_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -443,51 +393,48 @@ public class Consumable {
 					PotionEffectType.INCREASE_DAMAGE,
 					PotionEffectType.JUMP,
 					PotionEffectType.SPEED));
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 2.0F, 1.5F);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					int random = new Random().nextInt(types.size());
-					p.applyEffect(eaten, types.get(random), 2, 100);
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 2);
-					}
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 500L);
-				}
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 2.0F, 1.5F);
+				int random = new Random().nextInt(types.size());
+				p.applyEffect(eaten, types.get(random), 2, 100);
+				eaten.setFoodLevel(eaten.getFoodLevel() + 2);
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Godlike Fluzgla", 
-						Material.PURPLE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Random Effect III (To you): &b5.0 Seconds//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b25.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.PURPLE_WOOL,
+						1,
+						"&7Godlike Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Random Effect III (To you): &b5.0 Seconds",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b25.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						500
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Godlike_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -499,52 +446,49 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Aquatic_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_DOLPHIN_AMBIENT, 2.0F, 1.5F);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					p.applyEffect(eaten, PotionEffectType.DOLPHINS_GRACE, 0, 200);
-					p.applyEffect(eaten, PotionEffectType.WATER_BREATHING, 0, 200);
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 2);
-					}
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 300L);
-				}
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_DOLPHIN_AMBIENT, 2.0F, 1.5F);
+				p.applyEffect(eaten, PotionEffectType.DOLPHINS_GRACE, 0, 200);
+				p.applyEffect(eaten, PotionEffectType.WATER_BREATHING, 0, 200);
+				eaten.setFoodLevel(eaten.getFoodLevel() + 2);
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Aquatic Fluzgla", 
-						Material.LIGHT_BLUE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Dolphins Grace I: &b10.0 Seconds//"
-						+ "  &7Water Breathing I: &b10.0 Seconds//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b15.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.LIGHT_BLUE_WOOL,
+						1,
+						"&7Aquatic Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Dolphins Grace I: &b10.0 Seconds",
+							"  &7Water Breathing I: &b10.0 Seconds",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b15.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						300
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Aquatic_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -556,71 +500,57 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Frozen_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_HUSK_AMBIENT, 2.0F, 0.5F);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 3);
-					}
-					if(facPlayerManager.contains(eaten)) {
-						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(eaten);
-						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-						if(faction != null) {
-							for(Entity e : eaten.getNearbyEntities(6.0, 6.0, 6.0)) {
-								if(e != eaten) {
-									if(e instanceof LivingEntity) {
-										LivingEntity ent = (LivingEntity) e;
-										if(faction != null) {
-											if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
-												p.applyEffect(ent, PotionEffectType.SLOW, 1, 100);
-											}
-										}
-										else {
-											p.applyEffect(ent, PotionEffectType.SLOW, 1, 100);
-										}
-									}
-								}
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_HUSK_AMBIENT, 2.0F, 0.5F);
+				eaten.setFoodLevel(eaten.getFoodLevel() + 3);
+				for(Entity e : eaten.getNearbyEntities(6.0, 6.0, 6.0)) {
+					if(e != eaten) {
+						if(e instanceof LivingEntity) {
+							LivingEntity ent = (LivingEntity) e;
+							if(!facManager.isFriendly(eaten, ent)) {
+								p.applyEffect(ent, PotionEffectType.SLOW, 1, 100);
 							}
 						}
 					}
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 300L);
 				}
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Frozen Fluzgla", 
-						Material.BLUE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Slowness II (To enemies): &b5.0 Seconds//"
-						+ "  &7Food Gain: &c3//"
-						+ "  &7Range: &66.0 Blocks//"
-						+ "  &7Cooldown: &b15.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.BLUE_WOOL,
+						1,
+						"&7Frozen Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Slowness II (To enemies): &b5.0 Seconds",
+							"  &7Food Gain: &c3",
+							"  &7Range: &66.0 Blocks",
+							"  &7Cooldown: &b15.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						300
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Frozen_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -643,63 +573,60 @@ public class Consumable {
 					PotionEffectType.SLOW,
 					PotionEffectType.SLOW_DIGGING,
 					PotionEffectType.SLOW_FALLING));
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 3);
-					}
-					ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>();
-					if(eaten.getActivePotionEffects() != null || !eaten.getActivePotionEffects().isEmpty()) {
-						for(PotionEffect effect : eaten.getActivePotionEffects()) {
-							if(effect != null) {
-								if(negative.contains(effect.getType())) {
-									types.add(effect.getType());
-								}
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 2.0F, 1.0F);
+				eaten.setFoodLevel(eaten.getFoodLevel() + 3);
+				ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>();
+				if(eaten.getActivePotionEffects() != null || !eaten.getActivePotionEffects().isEmpty()) {
+					for(PotionEffect effect : eaten.getActivePotionEffects()) {
+						if(effect != null) {
+							if(negative.contains(effect.getType())) {
+								types.add(effect.getType());
 							}
 						}
 					}
-					if(!types.isEmpty()) {
-						int random = new Random().nextInt(types.size());
-						eaten.removePotionEffect(types.get(random));
-					}
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 350L);
+				}
+				if(!types.isEmpty()) {
+					int random = new Random().nextInt(types.size());
+					eaten.removePotionEffect(types.get(random));
 				}
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Curing Fluzgla", 
-						Material.GREEN_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Remove random negative effect//"
-						+ "  &7Food Gain: &c3//"
-						+ "  &7Cooldown: &b17.5 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.GREEN_WOOL,
+						1,
+						"&7Curing Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Remove random negative effect",
+							"  &7Food Gain: &c3",
+							"  &7Cooldown: &b17.5 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						350
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Curing_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -711,50 +638,47 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Bouncy_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_RABBIT_AMBIENT, 2.0F, 1.0F);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					if(eaten instanceof Player) {
-						Player p = (Player) eaten;
-						p.setFoodLevel(p.getFoodLevel() + 2);
-					}
-					p.applyEffect(eaten, PotionEffectType.JUMP, 1, 200);
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 250L);
-				}
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_RABBIT_AMBIENT, 2.0F, 1.0F);
+				eaten.setFoodLevel(eaten.getFoodLevel() + 2);
+				p.applyEffect(eaten, PotionEffectType.JUMP, 1, 200);
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Bouncy Fluzgla", 
-						Material.LIME_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Jump Boost II: &b10.0 Seconds//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b12.5 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.LIME_WOOL,
+						1,
+						"&7Bouncy Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Jump Boost II: &b10.0 Seconds",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b12.5 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						250
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Bouncy_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -766,66 +690,55 @@ public class Consumable {
 			}
 		}));
 		this.listConsumables.put("Poopy_Fluzgla", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> cooldown = new ArrayList<UUID>();
 			@Override
-			public void activateConsumable(LivingEntity eaten, PlayerInteractEvent event) {
-				if(!cooldown.contains(eaten.getUniqueId())) {
-					cooldown.add(eaten.getUniqueId());
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
-					eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT, 2.0F, 0.5F);
-					event.getItem().setAmount(event.getItem().getAmount() - 1);
-					if(facPlayerManager.contains(eaten)) {
-						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(eaten);
-						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-						if(faction != null) {
-							for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
-								if(e != eaten) {
-									if(e instanceof LivingEntity) {
-										LivingEntity ent = (LivingEntity) e;
-										if(faction != null) {
-											if(!faction.isMember(ent.getUniqueId()) && !faction.isAlly(ent.getUniqueId())) {
-												p.applyEffect(ent, PotionEffectType.CONFUSION, 1, 250);
-											}
-										}
-										else {
-											p.applyEffect(ent, PotionEffectType.CONFUSION, 1, 250);
-										}
-									}
-								}
+			public void activateConsumable(Player eaten, PlayerInteractEvent event) {
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_PLAYER_BURP, 2.0F, 1.0F);
+				eaten.getWorld().playSound(eaten.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT, 2.0F, 0.5F);
+				for(Entity e : eaten.getNearbyEntities(7.5, 7.5, 7.5)) {
+					if(e != eaten) {
+						if(e instanceof LivingEntity) {
+							LivingEntity ent = (LivingEntity) e;
+							if(!facManager.isFriendly(eaten, e)) {
+								p.applyEffect(ent, PotionEffectType.CONFUSION, 1, 250);
 							}
 						}
 					}
-					new BukkitRunnable() {
-						public void run() {
-							cooldown.remove(eaten.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 250L);
 				}
 			}
 			@Override
 			public void registerRecipe() {
-				ItemStack item = con.item(
-						"&7Smooth Fluzgla", 
-						Material.WHITE_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Heal: &c2.5 HP//"
-						+ "  &7Food Gain: &c2//"
-						+ "  &7Cooldown: &b3.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
-				ItemStack result = con.item(
-						"&7Poopy Fluzgla", 
-						Material.BROWN_WOOL, 
-						1, 
-						"&7-----------------------//"
-						+ "&7When consumed://"
-						+ "  &7Nausea II (To enemies): &b10.0 Seconds//"
-						+ "  &7Range: &67.5 Blocks//"
-						+ "  &7Cooldown: &b10.0 Seconds//"
-						+ "&7-----------------------//"
-						+ "&7Also used as a crafting ingridient.");
+				ItemStack item = builder.constructItem(
+						Material.WHITE_WOOL,
+						1,
+						"&7Smooth Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Heal: &c2.5 HP",
+							"  &7Food Gain: &c2",
+							"  &7Cooldown: &b3.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						60
+				);
+				ItemStack result = builder.constructItem(
+						Material.BROWN_WOOL,
+						1,
+						"&7Poopy Fluzgla",
+						new ArrayList<String>(Arrays.asList(
+							"&7-----------------------",
+							"&7When consumed:",
+							"  &7Nausea II (To enemies): &b10.0 Seconds",
+							"  &7Range: &67.5 Blocks",
+							"  &7Cooldown: &b10.0 Seconds",
+							"&7-----------------------",
+							"&7Also used as a crafting ingridient."
+						)),
+						"Cooldown",
+						200
+				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Poopy_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
 				recipe.shape(" Y ", "ZXZ", " Y ");
@@ -887,7 +800,7 @@ public class Consumable {
 				//-----------------------------------------------------------------------------------
 				HashMap<String, Integer> tier1 = new HashMap<String, Integer>();
 				tier1.put("Protection", 1);
-				ItemStack item = con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.0, 0.5, 80, null, Color.fromRGB(145, 95, 33));
+				ItemStack item = con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33));
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Helmet1");
 				ShapedRecipe recipe = new ShapedRecipe(key, item);
 				recipe.shape("XXX", "X X", "   ");
@@ -896,7 +809,7 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.0, 0.5, 80, null, Color.fromRGB(145, 95, 33));
+				item = con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Helmet2");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("   ", "XXX", "X X");
@@ -905,17 +818,17 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.0, 0.5, 100, tier1, Color.fromRGB(145, 95, 33));
+				item = con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.5, 0.75, 100, tier1, Color.fromRGB(145, 95, 33));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Helmet_1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.0, 0.5, 80, null, Color.fromRGB(145, 95, 33)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33)));
 				recipe.setGroup("Wooden Helmets");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Wooden Chestplate", EquipmentSlot.CHEST, 1.0, 0.5, 80, null, Color.fromRGB(145, 95, 33));
+				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Wooden Chestplate", EquipmentSlot.CHEST, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Chestplate");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("X X", "XXX", "XXX");
@@ -924,17 +837,17 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Wooden Chestplate", EquipmentSlot.CHEST, 1.0, 0.5, 100, tier1, Color.fromRGB(145, 95, 33));
+				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Wooden Chestplate", EquipmentSlot.CHEST, 1.5, 0.75, 100, tier1, Color.fromRGB(145, 95, 33));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Chestplate_1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_CHESTPLATE, "&7Wooden Chestplate", EquipmentSlot.CHEST, 1.0, 0.5, 80, null, Color.fromRGB(145, 95, 33)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_CHESTPLATE, "&7Wooden Chestplate", EquipmentSlot.CHEST, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33)));
 				recipe.setGroup("Wooden Chestplates");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Wooden Leggings", EquipmentSlot.LEGS, 1.0, 0.5, 80, null, Color.fromRGB(145, 95, 33));
+				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Wooden Leggings", EquipmentSlot.LEGS, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Leggings");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("XXX", "X X", "X X");
@@ -943,17 +856,17 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Wooden Leggings", EquipmentSlot.LEGS, 1.0, 0.5, 100, tier1, Color.fromRGB(145, 95, 33));
+				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Wooden Leggings", EquipmentSlot.LEGS, 1.5, 0.75, 100, tier1, Color.fromRGB(145, 95, 33));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Leggings_1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_LEGGINGS, "&7Wooden Leggings", EquipmentSlot.LEGS, 1.0, 0.5, 80, null, Color.fromRGB(145, 95, 33)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_LEGGINGS, "&7Wooden Leggings", EquipmentSlot.LEGS, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33)));
 				recipe.setGroup("Wooden Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.0, 0.50, 80, null, Color.fromRGB(145, 95, 33));
+				item = con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Boots1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("X X", "X X", "   ");
@@ -962,7 +875,7 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.0, 0.50, 80, null, Color.fromRGB(145, 95, 33));
+				item = con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Boots2");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("   ", "X X", "X X");
@@ -971,12 +884,12 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.0, 0.50, 100, tier1, Color.fromRGB(145, 95, 33));
+				item = con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.5, 0.75, 100, tier1, Color.fromRGB(145, 95, 33));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Wooden_Boots_1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.0, 0.50, 80, null, Color.fromRGB(145, 95, 33)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.5, 0.75, 80, null, Color.fromRGB(145, 95, 33)));
 				recipe.setGroup("Wooden Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
@@ -1102,73 +1015,73 @@ public class Consumable {
 				tier2.put("Unbreaking", 2);
 				
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Helmet_1");
-				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.HEAD, 0.7, 1.0, 50, tier1));
+				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.HEAD, 1.2, 1.25, 50, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.HEAD, 0.7, 1.0, 40, null));
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.HEAD, 1.2, 1.25, 40, null));
 				recipe.setGroup("Golden Helmets");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Helmet_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.CHEST, 0.7, 1.0, 60, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.CHEST, 1.2, 1.25, 60, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.CHEST, 0.7, 1.0, 50, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.CHEST, 1.2, 1.25, 50, tier1));
 				recipe.setGroup("Golden Helmets");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Chestplate_1");
-				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 0.7, 1.0, 50, tier1));
+				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 1.2, 1.25, 50, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 0.7, 1.0, 40, null));
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 1.2, 1.25, 40, null));
 				recipe.setGroup("Golden Chestplates");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Chestplate_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 0.7, 1.0, 60, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 1.2, 1.25, 60, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 0.7, 1.0, 50, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 1.2, 1.25, 50, tier1));
 				recipe.setGroup("Golden Chestplates");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Leggings_1");
-				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 0.7, 1.0, 50, tier1));
+				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 1.2, 1.25, 50, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 0.7, 1.0, 40, null));
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 1.2, 1.25, 40, null));
 				recipe.setGroup("Golden Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Leggings_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 0.7, 1.0, 60, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 1.2, 1.25, 60, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 0.7, 1.0, 50, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 1.2, 1.25, 50, tier1));
 				recipe.setGroup("Golden Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Boots_1");
-				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 0.7, 1.0, 50, tier1));
+				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 1.2, 1.25, 50, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 0.7, 1.0, 40, null));
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 1.2, 1.25, 40, null));
 				recipe.setGroup("Golden Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Gold_Boots_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 0.7, 1.0, 60, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 1.2, 1.25, 60, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 0.7, 1.0, 50, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 1.2, 1.25, 50, tier1));
 				recipe.setGroup("Golden Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
@@ -1365,7 +1278,7 @@ public class Consumable {
 				//-----------------------------------------------------------------------------------
 				//Stone Armor
 				//-----------------------------------------------------------------------------------
-				ItemStack item = con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95));
+				ItemStack item = con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95));
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Helmet1");
 				ShapedRecipe recipe = new ShapedRecipe(key, item);
 				recipe.shape("XXX", "X X", "   ");
@@ -1374,7 +1287,7 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Helmet2");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("   ", "XXX", "X X");
@@ -1383,27 +1296,27 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.65, 0.83, 125, tier1, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Helmet_1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Helmets");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.15, 0.58, 150, tier2, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.65, 0.83, 150, tier2, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Helmet_2");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("YYY", "YXY", "YYY");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_HELMET, "&7Stone Helmet", EquipmentSlot.HEAD, 1.65, 0.83, 125, tier1, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Helmets");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Chestplate");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("X X", "XXX", "XXX");
@@ -1412,27 +1325,27 @@ public class Consumable {
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
-				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.65, 0.83, 125, tier1, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Chestplate_1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Chestplates");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.15, 0.58, 150, tier2, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.65, 0.83, 150, tier2, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Chestplate_2");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("YYY", "YXY", "YYY");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_CHESTPLATE, "&7Stone Chestplate", EquipmentSlot.CHEST, 1.65, 0.83, 125, tier1, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Chestplates");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Leggings");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("XXX", "X X", "X X");
@@ -1442,27 +1355,27 @@ public class Consumable {
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
-				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.65, 0.83, 125, tier1, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Leggings_1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.15, 0.58, 150, tier2, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.65, 0.83, 150, tier2, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Leggings_2");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("YYY", "YXY", "YYY");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_LEGGINGS, "&7Stone Leggings", EquipmentSlot.LEGS, 1.65, 0.83, 125, tier1, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Boots1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("X X", "X X", "   ");
@@ -1470,7 +1383,7 @@ public class Consumable {
 				recipe.setGroup("Stone Boot");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
-				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Boots2");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("   ", "X X", "X X");
@@ -1480,22 +1393,22 @@ public class Consumable {
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
-				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.65, 0.83, 125, tier1, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Boots_1");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape(" Y ", "YXY", " Y ");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 100, null, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.65, 0.83, 100, null, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
-				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 150, tier2, Color.fromRGB(95, 95, 95));
+				item = con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.65, 0.83, 150, tier2, Color.fromRGB(95, 95, 95));
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Stone_Boots_2");
 				recipe = new ShapedRecipe(key, item);
 				recipe.shape("YYY", "YXY", "YYY");
 				recipe.setIngredient('Y', heart);
-				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.15, 0.58, 125, tier1, Color.fromRGB(95, 95, 95)));
+				recipe.setIngredient('X', con.equipment(Material.LEATHER_BOOTS, "&7Stone Boots", EquipmentSlot.FEET, 1.65, 0.83, 125, tier1, Color.fromRGB(95, 95, 95)));
 				recipe.setGroup("Stone Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
@@ -1685,109 +1598,109 @@ public class Consumable {
 				tier2.put("Unbreaking", 1);
 				
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Helmet_1");
-				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.3, 0.73, 190, tier1));
+				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.8, 0.98, 190, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.3, 0.73, 160, null));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.8, 0.98, 160, null));
 				recipe.setGroup("Iron Helmet");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Helmet_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.CHEST, 1.3, 0.73, 220, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.CHEST, 1.8, 0.98, 220, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.CHEST, 1.3, 0.73, 190, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.CHEST, 1.8, 0.98, 190, tier1));
 				recipe.setGroup("Iron Helmet");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Helmet_3");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.3, 0.73, 250, tier3));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.8, 0.98, 250, tier3));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.3, 0.73, 220, tier2));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.8, 0.98, 220, tier2));
 				recipe.setGroup("Iron Helmet");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Chestplate_1");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.3, 0.73, 190, tier1));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.8, 0.98, 190, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.3, 0.73, 160, null));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.8, 0.98, 160, null));
 				recipe.setGroup("Iron Chestplate");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Chestplate_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.3, 0.73, 220, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.8, 0.98, 220, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.3, 0.73, 190, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.8, 0.98, 190, tier1));
 				recipe.setGroup("Iron Chestplate");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Chestplate_3");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.3, 0.73, 250, tier3));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.8, 0.98, 250, tier3));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.3, 0.73, 220, tier2));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.8, 0.98, 220, tier2));
 				recipe.setGroup("Iron Chestplate");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Leggings_1");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.3, 0.73, 190, tier1));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.8, 0.98, 190, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.3, 0.73, 160, null));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.8, 0.98, 160, null));
 				recipe.setGroup("Iron Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Leggings_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.3, 0.73, 220, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.8, 0.98, 220, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.3, 0.73, 190, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.8, 0.98, 190, tier1));
 				recipe.setGroup("Iron Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Leggings_3");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.3, 0.73, 250, tier3));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.8, 0.98, 250, tier3));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.3, 0.73, 220, tier2));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.8, 0.98, 220, tier2));
 				recipe.setGroup("Iron Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Boots_1");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.3, 0.73, 190, tier1));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.8, 0.98, 190, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.3, 0.73, 160, null));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.8, 0.98, 160, null));
 				recipe.setGroup("Iron Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Boots_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.3, 0.73, 220, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.8, 0.98, 220, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.3, 0.73, 190, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.8, 0.98, 190, tier1));
 				recipe.setGroup("Iron Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Iron_Boots_3");
-				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.3, 0.73, 250, tier3));
+				recipe = new ShapedRecipe(key, con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.8, 0.98, 250, tier3));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.3, 0.73, 220, tier2));
+				recipe.setIngredient('Y', con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.8, 0.73, 220, tier2));
 				recipe.setGroup("Iron Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
@@ -2042,145 +1955,145 @@ public class Consumable {
 				tier2.put("Unbreaking", 2);
 				
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Helmet_1");
-				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 1.5, 0.85, 235, tier1));
+				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 235, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 1.5, 0.85, 200, null));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 200, null));
 				recipe.setGroup("Diamond Helmet");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Helmet_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.CHEST, 1.5, 0.85, 270, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.CHEST, 2.0, 1.1, 270, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.CHEST, 1.5, 0.85, 235, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.CHEST, 2.0, 1.1, 235, tier1));
 				recipe.setGroup("Diamond Helmet");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Helmet_3");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 1.5, 0.85, 305, tier3));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 305, tier3));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 1.5, 0.85, 270, tier2));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 270, tier2));
 				recipe.setGroup("Diamond Helmet");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Helmet_4");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 1.5, 0.85, 340, tier4));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 340, tier4));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 1.5, 0.85, 305, tier3));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 305, tier3));
 				recipe.setGroup("Diamond Helmet");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Chestplate_1");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 1.5, 0.85, 235, tier1));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 235, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 1.5, 0.85, 200, null));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 200, null));
 				recipe.setGroup("Diamond Chestplate");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Chestplate_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 1.5, 0.85, 270, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 270, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 1.5, 0.85, 235, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 235, tier1));
 				recipe.setGroup("Diamond Chestplate");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Chestplate_3");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 1.5, 0.85, 305, tier3));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 305, tier3));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 1.5, 0.85, 270, tier2));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 270, tier2));
 				recipe.setGroup("Diamond Chestplate");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Chestplate_4");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 1.5, 0.85, 340, tier4));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 340, tier4));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 1.5, 0.85, 305, tier3));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 305, tier3));
 				recipe.setGroup("Diamond Chestplate");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Leggings_1");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 1.5, 0.85, 235, tier1));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 235, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 1.5, 0.85, 200, null));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 200, null));
 				recipe.setGroup("Diamond Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Leggings_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 1.5, 0.85, 270, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 270, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 1.5, 0.85, 235, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 235, tier1));
 				recipe.setGroup("Diamond Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Leggings_3");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 1.5, 0.85, 305, tier3));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 305, tier3));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 1.5, 0.85, 270, tier2));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 270, tier2));
 				recipe.setGroup("Diamond Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Leggings_4");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 1.5, 0.85, 340, tier4));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 340, tier4));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 1.5, 0.85, 305, tier3));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 305, tier3));
 				recipe.setGroup("Diamond Leggings");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Boots_1");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 1.5, 0.85, 235, tier1));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 235, tier1));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 1.5, 0.85, 200, null));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 200, null));
 				recipe.setGroup("Diamond Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Boots_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 1.5, 0.85, 270, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 270, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 1.5, 0.85, 235, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 235, tier1));
 				recipe.setGroup("Diamond Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Boots_3");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 1.5, 0.85, 305, tier3));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 305, tier3));
 				recipe.shape(" X ", "XYX", " X ");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 1.5, 0.85, 270, tier2));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 270, tier2));
 				recipe.setGroup("Diamond Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Boots_4");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 1.5, 0.85, 340, tier4));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 340, tier4));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart1);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 1.5, 0.85, 305, tier3));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 305, tier3));
 				recipe.setGroup("Diamond Boots");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
@@ -2733,7 +2646,7 @@ public class Consumable {
 				//Leather Armor
 				//-----------------------------------------------------------------------------------
 				if(rec.getResult().getType() == Material.LEATHER_HELMET) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_HELMET, "&7Leather Helmet", EquipmentSlot.HEAD, 1.0, 0.5, 80, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_HELMET, "&7Leather Helmet", EquipmentSlot.HEAD, 1.5, 0.75, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2743,7 +2656,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.LEATHER_CHESTPLATE) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_CHESTPLATE, "&7Leather Chestplate", EquipmentSlot.CHEST, 1.0, 0.5, 80, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_CHESTPLATE, "&7Leather Chestplate", EquipmentSlot.CHEST, 1.5, 0.75, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2753,7 +2666,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.LEATHER_LEGGINGS) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_LEGGINGS, "&7Leather Leggings", EquipmentSlot.LEGS, 1.0, 0.5, 80, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_LEGGINGS, "&7Leather Leggings", EquipmentSlot.LEGS, 1.5, 0.75, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2763,7 +2676,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.LEATHER_BOOTS) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_BOOTS, "&7Leather Boots", EquipmentSlot.FEET, 1.0, 0.5, 80, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_BOOTS, "&7Leather Boots", EquipmentSlot.FEET, 1.5, 0.75, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2776,7 +2689,7 @@ public class Consumable {
 				//Golden Armor
 				//-----------------------------------------------------------------------------------
 				if(rec.getResult().getType() == Material.GOLDEN_HELMET) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.HEAD, 0.7, 1.0, 40, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.HEAD, 1.2, 1.25, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2786,7 +2699,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.GOLDEN_CHESTPLATE) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 0.7, 1.0, 40, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 1.2, 1.25, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2796,7 +2709,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.GOLDEN_LEGGINGS) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 0.7, 1.0, 40, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 1.2, 1.25, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2806,7 +2719,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.GOLDEN_BOOTS) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 0.7, 1.0, 40, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 1.2, 1.25, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2819,7 +2732,7 @@ public class Consumable {
 				//Iron Armor
 				//-----------------------------------------------------------------------------------
 				if(rec.getResult().getType() == Material.IRON_HELMET) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.3, 0.73, 160, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.8, 0.98, 160, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2829,7 +2742,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.IRON_CHESTPLATE) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.3, 0.73, 160, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.8, 0.98, 160, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2839,7 +2752,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.IRON_LEGGINGS) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.3, 0.73, 160, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.8, 0.98, 160, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2849,7 +2762,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.IRON_BOOTS) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.3, 0.73, 160, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.8, 0.98, 160, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2862,7 +2775,7 @@ public class Consumable {
 				//Iron Armor
 				//-----------------------------------------------------------------------------------
 				if(rec.getResult().getType() == Material.DIAMOND_HELMET) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 1.5, 0.85, 200, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 200, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2872,7 +2785,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.DIAMOND_CHESTPLATE) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 1.5, 0.85, 200, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 200, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2882,7 +2795,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.DIAMOND_LEGGINGS) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 1.5, 0.85, 200, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 200, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
@@ -2892,7 +2805,7 @@ public class Consumable {
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				if(rec.getResult().getType() == Material.DIAMOND_BOOTS) {
-					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 1.5, 0.85, 200, null));
+					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 200, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());

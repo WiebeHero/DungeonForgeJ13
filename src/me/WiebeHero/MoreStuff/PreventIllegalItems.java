@@ -33,6 +33,11 @@ public class PreventIllegalItems implements Listener{
 					event.setCurrentItem(null);
 				}
 			}
+			else if(item.getType() == Material.WRITABLE_BOOK || item.getType() == Material.WRITTEN_BOOK) {
+				if(!item.getItemMeta().hasDisplayName()) {
+					event.setCurrentItem(null);
+				}
+			}
 		}
 	}
 	@EventHandler
@@ -52,6 +57,12 @@ public class PreventIllegalItems implements Listener{
 				}
 			}
 			else if(item.getItemStack().getType() == Material.BOW || item.getItemStack().getType() == Material.ENDER_EYE || item.getItemStack().getType() == Material.END_CRYSTAL) {
+				if(!item.getItemStack().getItemMeta().hasDisplayName()) {
+					event.setCancelled(true);
+					event.getItem().remove();
+				}
+			}
+			else if(item.getItemStack().getType() == Material.WRITABLE_BOOK || item.getItemStack().getType() == Material.WRITTEN_BOOK) {
 				if(!item.getItemStack().getItemMeta().hasDisplayName()) {
 					event.setCancelled(true);
 					event.getItem().remove();

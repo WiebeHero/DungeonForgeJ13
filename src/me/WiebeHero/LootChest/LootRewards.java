@@ -159,9 +159,9 @@ public class LootRewards {
 		rewards1.add(enderPearl16());
 		rewards1.add(commonCrystal());
 		rewards1.add(rareCrystal());
-		rewards1.add(playerXPBottle(75));
-		rewards1.add(playerXPBottle(150));
-		rewards1.add(playerXPBottle(300));
+		rewards1.add(playerXPBottle(50));
+		rewards1.add(playerXPBottle(100));
+		rewards1.add(playerXPBottle(200));
 		rewards1.add(moneyNote(250));
 		//--------------------------------------------------------------------------------------------------------------------
 		//Tier 2
@@ -306,10 +306,10 @@ public class LootRewards {
 		rewards2.add(rareCrystal());
 		rewards2.add(rareCrystal());
 		rewards2.add(epicCrystal());
-		rewards2.add(playerXPBottle(75));
-		rewards2.add(playerXPBottle(150));
-		rewards2.add(playerXPBottle(300));
-		rewards2.add(playerXPBottle(600));
+		rewards2.add(playerXPBottle(50));
+		rewards2.add(playerXPBottle(100));
+		rewards2.add(playerXPBottle(200));
+		rewards2.add(playerXPBottle(400));
 		rewards2.add(moneyNote(250));
 		rewards2.add(moneyNote(500));
 		//--------------------------------------------------------------------------------------------------------------------
@@ -459,11 +459,11 @@ public class LootRewards {
 		rewards3.add(epicCrystal());
 		rewards3.add(epicCrystal());
 		rewards3.add(legendaryCrystal());
-		rewards3.add(playerXPBottle(75));
-		rewards3.add(playerXPBottle(150));
-		rewards3.add(playerXPBottle(300));
+		rewards3.add(playerXPBottle(50));
+		rewards3.add(playerXPBottle(100));
+		rewards3.add(playerXPBottle(200));
+		rewards3.add(playerXPBottle(400));
 		rewards3.add(playerXPBottle(600));
-		rewards3.add(playerXPBottle(1000));
 		rewards3.add(moneyNote(250));
 		rewards3.add(moneyNote(500));
 		rewards3.add(moneyNote(1000));
@@ -619,12 +619,12 @@ public class LootRewards {
 		rewards4.add(legendaryCrystal());
 		rewards4.add(legendaryCrystal());
 		rewards4.add(mythicCrystal());
-		rewards4.add(playerXPBottle(75));
-		rewards4.add(playerXPBottle(150));
-		rewards4.add(playerXPBottle(300));
+		rewards4.add(playerXPBottle(50));
+		rewards4.add(playerXPBottle(100));
+		rewards4.add(playerXPBottle(200));
+		rewards4.add(playerXPBottle(400));
 		rewards4.add(playerXPBottle(600));
-		rewards4.add(playerXPBottle(1000));
-		rewards4.add(playerXPBottle(1500));
+		rewards4.add(playerXPBottle(800));
 		rewards4.add(moneyNote(250));
 		rewards4.add(moneyNote(500));
 		rewards4.add(moneyNote(1000));

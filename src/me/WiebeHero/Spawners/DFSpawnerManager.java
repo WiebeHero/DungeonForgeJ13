@@ -422,7 +422,7 @@ public class DFSpawnerManager {
 		dfManager.addEntity(ent.getUniqueId());
 		DFPlayer dfPlayer = dfManager.getEntity(ent.getUniqueId());
 		dfPlayer.setLevel(level);
-		int skills = level * 6;
+		int skills = level * 4;
 		int cl = new Random().nextInt(7) + 1;
 		switch(cl) {
 		case 1:
@@ -478,9 +478,9 @@ public class DFSpawnerManager {
 				break;
 			}
 		}
-		dfPlayer.setMove(0.2F + 0.01F * tier + 0.0003F * level);
+		dfPlayer.setMove(0.2F + 0.01F * tier + 0.00025F * level);
 		dfPlayer.resetIncreases();
-		double newHealth = 25.00 / 100.00 * (dfPlayer.getHpCal() + 100.00);
+		double newHealth = 22.50 / 100.00 * (dfPlayer.getHpCal() + 100.00);
 		double roundOff1 = (double) Math.round(newHealth * 100.00) / 100.00;
 		mob.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(dfPlayer.getMove());
 		mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
@@ -490,10 +490,10 @@ public class DFSpawnerManager {
 				mob.setHealth(mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 10L);
-		mob.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1.5 * tier);
+		mob.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1.2 * tier);
 		mob.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(0.2 * dfPlayer.getDf());
 		mob.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(0.1333 * dfPlayer.getDf());
-		mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(17.50);
+		mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(12.5 + 2.5 * level);
 		mob.getEquipment().setHelmetDropChance(0.00F);
 		mob.getEquipment().setChestplateDropChance(0.00F);
 		mob.getEquipment().setLeggingsDropChance(0.00F);

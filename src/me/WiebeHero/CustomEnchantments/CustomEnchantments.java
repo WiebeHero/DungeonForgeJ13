@@ -174,11 +174,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private SkillMenu skill = new SkillMenu(dfManager, builder, classMenu);
 	private SkillCommand skillCommand = new SkillCommand(skill, dfManager, rankedManager);
 	private DFScoreboard score = new DFScoreboard(dfManager, facManager, facPlayerManager, rankedManager, wg);
-	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager);
+	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager, wg);
 	private AHManager ahManager = new AHManager(availableSlots);
 	private AHInventory ahInv = new AHInventory(ahManager, builder);
 	private Enchantment enchant = new Enchantment(dfManager, facManager, potionM, pApi, facPlayerManager, builder);
-	private Consumable con = new Consumable(dfManager, facManager, facPlayerManager, potionM);
+	private Consumable con = new Consumable(dfManager, facManager, potionM, builder);
 	private PayCommand pay = new PayCommand(dfManager);
 	private DFSpawnerManager spawnerManager = new DFSpawnerManager(dfManager, disp);
 	private ModerationGUI gui = new ModerationGUI(dfManager);
@@ -497,14 +497,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				e.remove();
 			}
 		}
-		rankedManager.saveKitCooldowns();
-		sethome.saveHomes();
 		dfManager.savePlayers();
 		facManager.saveFactions();
-		punishManager.savePunishList();
+		ahManager.saveAuctionHouse();
 		lootChestManager.saveLootChests();
 		spawnerManager.saveSpawners();
-		ahManager.saveAuctionHouse();
+		sethome.saveHomes();
+		punishManager.savePunishList();
+		rankedManager.saveKitCooldowns();
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {

@@ -33,7 +33,7 @@ public class SpawnCommand implements Listener,CommandExecutor{
 							@Override
 							public void run() {
 								if(loc.getWorld().getName().equals(player.getWorld().getName())) {
-									if(loc.distance(player.getLocation()) == 0.00) {
+									if(loc.distance(player.getLocation()) <= 0.1) {
 										if(temp == 0) {
 											temp = temp - 20;
 											if(count / 20 != 0) {

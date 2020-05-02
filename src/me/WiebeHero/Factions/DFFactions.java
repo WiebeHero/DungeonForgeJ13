@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,6 +24,7 @@ import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.MoreStuff.CombatTag;
 import me.WiebeHero.Scoreboard.DFScoreboard;
+import me.WiebeHero.Scoreboard.WGMethods;
 
 public class DFFactions implements Listener,CommandExecutor{
 	public String faction = "faction";
@@ -30,11 +32,15 @@ public class DFFactions implements Listener,CommandExecutor{
 	private DFFactionPlayerManager facPlayerManager;
 	private DFScoreboard board;
 	private DFPlayerManager dfManager;
-	public DFFactions(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, DFScoreboard board, DFPlayerManager dfManager) {
+	private WGMethods wg;
+	private ArrayList<String> spawning;
+	public DFFactions(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, DFScoreboard board, DFPlayerManager dfManager, WGMethods wg) {
 		this.facManager = facManager;
 		this.facPlayerManager = facPlayerManager;
 		this.board = board;
 		this.dfManager = dfManager;
+		this.wg = wg;
+		this.spawning = new ArrayList<String>();
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
@@ -483,24 +489,48 @@ public class DFFactions implements Listener,CommandExecutor{
 									int rank = facPlayer.getRank();
 									if(rank >= 2) {
 										if(fac.getFactionHome() != null) {
-											new BukkitRunnable() {
-												int count = 10;
-												@Override
-												public void run() {
-													if(player.getLocation().getX() == locX && player.getLocation().getZ() == locZ) {
-														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting to faction home in &b" + count + "..."));
-														count--;
-														if(count == 0) {
-															player.teleport(fac.getFactionHome());
-															cancel();
+											if(wg.isInZone(player, "spawn")) {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+												player.teleport(fac.getFactionHome());
+											}
+											else {
+												new BukkitRunnable() {
+													int count = 200;
+													int temp = 0;
+													@Override
+													public void run() {
+														if(loc.getWorld().getName().equals(player.getWorld().getName())) {
+															if(loc.distance(player.getLocation()) <= 0.1) {
+																if(temp == 0) {
+																	temp = temp - 20;
+																	if(count / 20 != 0) {
+																		player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to your faction home in " + (count / 20) + "..."));
+																	}
+																}
+																if(count == 0) {
+																	player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+																	player.teleport(fac.getFactionHome());
+																	count = 10;
+																	spawning.remove(player.getUniqueId().toString());
+																	cancel();
+																}
+															}
+															else {
+																player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
+																cancel();
+																spawning.remove(player.getUniqueId().toString());
+															}
 														}
-													}
-													else {
-														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
-														cancel();
-													}
-												}
-											}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
+														else {
+															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
+															cancel();
+															spawning.remove(player.getUniqueId().toString());
+														}
+														count--;
+														temp++;
+													}	
+												}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+											}
 										}
 										else {
 											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have set your faction home!"));
@@ -585,14 +615,21 @@ public class DFFactions implements Listener,CommandExecutor{
 									if(facPlayer.getRank() != 4) {
 										faction.removeMember(player);
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have left &6" + faction.getName()));
-										for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
-											if(entry.getValue().getFactionId() != null) {
-												UUID id = entry.getKey();
-												Player p = Bukkit.getPlayer(id);
-												if(player != null) {
-													p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas left the faction!"));
+										if(!facPlayerManager.getFactionPlayerMap().isEmpty()) {
+											for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
+												if(entry.getValue() != null) {
+													if(entry.getValue().getFactionId() != null) {
+														UUID id = entry.getKey();
+														Player p = Bukkit.getPlayer(id);
+														if(player != null) {
+															p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas left the faction!"));
+														}
+													}
 												}
 											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cAn error has occured, please contact higher ups."));
 										}
 									}
 									else {
@@ -666,14 +703,19 @@ public class DFFactions implements Listener,CommandExecutor{
 										if(fac.isInvited(player.getUniqueId())) {
 											p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas joined the faction!"));
 											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have joined " + fac.getName()));
-											for(UUID id : facPlayerManager.getFactionPlayerMap().keySet()) {
-												Player pl = Bukkit.getPlayer(id);
-												if(pl != null && pl != p) {
-													pl.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas joined the faction!"));
-												}
-											}
 											fac.removeInvite(player.getUniqueId());
 											fac.addMember(player);
+											for(UUID id : facPlayerManager.getFactionPlayerMap().keySet()) {
+												Player pl = Bukkit.getPlayer(id);
+												DFFactionPlayer fPlayer = facPlayerManager.getFactionPlayer(id);
+												if(pl != null && pl != p) {
+													if(pl.isOnline()) {
+														if(fPlayer.getFactionId().equals(fac.getFactionId())) {
+															pl.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas joined the faction!"));
+														}
+													}
+												}
+											}
 										}
 										else {
 											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou haven't recieved an invite from " + p.getName() + "&a!"));

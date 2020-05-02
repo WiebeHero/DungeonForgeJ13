@@ -3,6 +3,7 @@ package me.WiebeHero.XpTrader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -109,29 +110,29 @@ public class XPTraderMenu implements Listener{
 						}
 						if(it.hasKey("Rarity")) {
 							if(it.getString("Rarity").equals("&7Common")) {
-								rarity = 75;
+								rarity = 50;
 							}
 							if(it.getString("Rarity").equals("&aRare")) {
-								rarity = 150;
+								rarity = 100;
 							}
 							if(it.getString("Rarity").equals("&bEpic")) {
-								rarity = 300;
+								rarity = 200;
 							}
 							if(it.getString("Rarity").equals("&cLegendary")) {
-								rarity = 600;
+								rarity = 400;
 							}
 							if(it.getString("Rarity").equals("&5Mythic")) {
-								rarity = 1000;
+								rarity = 600;
 							}
 							if(it.getString("Rarity").equals("&eHeroic")) {
-								rarity = 1500;
+								rarity = 800;
 							}
 						}
 						if(item.getItemMeta().getDisplayName().contains("Accept?")) {
 							Inventory invXPTrader = view.getTopInventory(); 
 							ArrayList<ItemStack> importantSlots = new ArrayList<ItemStack>(Arrays.asList(invXPTrader.getItem(14), invXPTrader.getItem(15), invXPTrader.getItem(16), invXPTrader.getItem(23), invXPTrader.getItem(24), invXPTrader.getItem(25), invXPTrader.getItem(32), invXPTrader.getItem(33), invXPTrader.getItem(34), invXPTrader.getItem(41), invXPTrader.getItem(42), invXPTrader.getItem(43)));
 							ArrayList<Integer> slotNumber = new ArrayList<Integer>(Arrays.asList(10, 11, 12, 14, 15, 16, 19, 20, 21, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37, 38, 39, 41, 42, 43));
-							player.sendMessage(new CCT().colorize("&aTrade Accepted!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTrade Accepted!"));
 							for(int i = 0; i < importantSlots.size(); i++) {
 								if(importantSlots.get(i) != null) {
 									if(title.contains("XP Trader")) {
@@ -160,7 +161,6 @@ public class XPTraderMenu implements Listener{
 					}
 				}
 				else if(open.getType() == InventoryType.PLAYER) {
-					event.setCancelled(true);
 					if(action == ClickType.LEFT) {
 						NBTItem it = new NBTItem(item);
 						int level = 1;
@@ -170,37 +170,41 @@ public class XPTraderMenu implements Listener{
 						}
 						if(it.hasKey("Rarity")) {
 							if(it.getString("Rarity").equals("&7Common")) {
-								rarity = 75;
+								rarity = 50;
 							}
 							if(it.getString("Rarity").equals("&aRare")) {
-								rarity = 150;
+								rarity = 100;
 							}
 							if(it.getString("Rarity").equals("&bEpic")) {
-								rarity = 300;
+								rarity = 200;
 							}
 							if(it.getString("Rarity").equals("&cLegendary")) {
-								rarity = 600;
+								rarity = 400;
 							}
 							if(it.getString("Rarity").equals("&5Mythic")) {
-								rarity = 1000;
+								rarity = 600;
 							}
 							if(it.getString("Rarity").equals("&eHeroic")) {
-								rarity = 1500;
+								rarity = 800;
 							}
 						}
 						if(rarity != 0) {
-							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)1.5);
 							Inventory invXPTrader = view.getTopInventory();
 							Inventory invPlayer = view.getBottomInventory();
-							invPlayer.removeItem(invPlayer.getItem(event.getSlot()));
 							int slot = invXPTrader.firstEmpty();
-							invXPTrader.setItem(slot, item);
-							invXPTrader.setItem(slot + 4, playerXPBottle(rarity * level, item.getAmount()));
-							player.updateInventory();
+							if(slot != -1) {
+								player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, (float)2, (float)1.5);
+								invPlayer.setItem(event.getSlot(), new ItemStack(Material.AIR, 1));
+								invXPTrader.setItem(slot, item);
+								invXPTrader.setItem(slot + 4, playerXPBottle(rarity * level, item.getAmount()));
+								player.updateInventory();
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe trader's inventory is full!"));
+							}
 						}
 						else {
-							event.setCancelled(true);
-							player.sendMessage(new CCT().colorize("&cUnvalid Item."));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cUnvalid Item."));
 						}
 					}
 				}

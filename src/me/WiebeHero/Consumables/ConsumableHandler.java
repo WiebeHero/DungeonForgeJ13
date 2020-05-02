@@ -18,6 +18,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
+import de.tr7zw.nbtapi.NBTItem;
 import javafx.util.Pair;
 import me.WiebeHero.Consumables.ConsumableCondition.Condition;
 import me.WiebeHero.Consumables.Unlock.UnlockCraftCondition;
@@ -68,14 +69,14 @@ public class ConsumableHandler implements Listener{
 					contain = contain.replace(' ', '_');
 					if(con.getConsumables().containsKey(contain)) {
 						if(con.getConsumables().get(contain).getKey() == Condition.LEFT_CLICK || con.getConsumables().get(contain).getKey() == Condition.RIGHT_CLICK) {
-							con.getConsumables().get(contain).getValue().activateConsumable(p);
-							con.getConsumables().get(contain).getValue().activateConsumable(p, event);
-							if(item.getItemMeta().getLore().toString().contains("Cooldown")) {
-								for(String s : item.getItemMeta().getLore()) {
-									if(s.contains("Cooldown")) {
-										int cooldown = Integer.parseInt(s.replaceAll("[^\\d.]", "")) * 20;
-										p.setCooldown(item.getType(), cooldown);
-									}
+							if(!p.hasCooldown(item.getType())) {
+								con.getConsumables().get(contain).getValue().activateConsumable(p);
+								con.getConsumables().get(contain).getValue().activateConsumable(p, event);
+								event.getItem().setAmount(event.getItem().getAmount() - 1);
+								NBTItem i = new NBTItem(item);
+								if(i.hasKey("Cooldown")) {
+									int cooldown = i.getInteger("Cooldown");
+									p.setCooldown(item.getType(), cooldown);
 								}
 							}
 						}

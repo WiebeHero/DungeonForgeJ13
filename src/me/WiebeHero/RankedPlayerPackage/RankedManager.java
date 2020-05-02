@@ -84,77 +84,118 @@ public class RankedManager {
 			yml.createSection("Kits.Cooldowns." + entry.getKey());
 			UUID uuid = entry.getKey();
 			RankedPlayer rPlayer = entry.getValue();
-			if(rPlayer.getKitCooldown(Kit.BRONZE) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Bronze", rPlayer.getKitCooldown(Kit.BRONZE));
+			yml.set("Kits.Cooldowns." + uuid, null);
+			if(rPlayer.hasKitCooldown(Kit.BRONZE)) {
+				if(rPlayer.getKitCooldown(Kit.BRONZE) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Bronze", rPlayer.getKitCooldown(Kit.BRONZE));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.SILVER) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Silver", rPlayer.getKitCooldown(Kit.SILVER));
+			if(rPlayer.hasKitCooldown(Kit.SILVER)) {
+				if(rPlayer.getKitCooldown(Kit.SILVER) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Silver", rPlayer.getKitCooldown(Kit.SILVER));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.GOLD) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Gold", rPlayer.getKitCooldown(Kit.GOLD));
+			if(rPlayer.hasKitCooldown(Kit.GOLD)) {
+				if(rPlayer.getKitCooldown(Kit.GOLD) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Gold", rPlayer.getKitCooldown(Kit.GOLD));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.PLATINUM) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Platinum", rPlayer.getKitCooldown(Kit.PLATINUM));
+			if(rPlayer.hasKitCooldown(Kit.PLATINUM)) {
+				if(rPlayer.getKitCooldown(Kit.PLATINUM) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Platinum", rPlayer.getKitCooldown(Kit.PLATINUM));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.DIAMOND) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Diamond", rPlayer.getKitCooldown(Kit.DIAMOND));
+			if(rPlayer.hasKitCooldown(Kit.DIAMOND)) {
+				if(rPlayer.getKitCooldown(Kit.DIAMOND) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Diamond", rPlayer.getKitCooldown(Kit.DIAMOND));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.EMERALD) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Emerald", rPlayer.getKitCooldown(Kit.EMERALD));
+			if(rPlayer.hasKitCooldown(Kit.EMERALD)) {
+				if(rPlayer.getKitCooldown(Kit.EMERALD) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Emerald", rPlayer.getKitCooldown(Kit.EMERALD));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.HELPER) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Helper", rPlayer.getKitCooldown(Kit.HELPER));
+			if(rPlayer.hasKitCooldown(Kit.HELPER)) {
+				if(rPlayer.getKitCooldown(Kit.HELPER) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Helper", rPlayer.getKitCooldown(Kit.HELPER));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.HELPER_PLUS) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Helper_Plus", rPlayer.getKitCooldown(Kit.HELPER_PLUS));
+			if(rPlayer.hasKitCooldown(Kit.HELPER_PLUS)) {
+				if(rPlayer.getKitCooldown(Kit.HELPER_PLUS) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Helper_Plus", rPlayer.getKitCooldown(Kit.HELPER_PLUS));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.MOD) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Mod", rPlayer.getKitCooldown(Kit.MOD));
+			if(rPlayer.hasKitCooldown(Kit.MOD)) {
+				if(rPlayer.getKitCooldown(Kit.MOD) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Mod", rPlayer.getKitCooldown(Kit.MOD));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.HEAD_MOD) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Head_Mod", rPlayer.getKitCooldown(Kit.HEAD_MOD));
+			if(rPlayer.hasKitCooldown(Kit.HEAD_MOD)) {
+				if(rPlayer.getKitCooldown(Kit.HEAD_MOD) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Head_Mod", rPlayer.getKitCooldown(Kit.HEAD_MOD));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.ADMIN) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Admin", rPlayer.getKitCooldown(Kit.ADMIN));
+			if(rPlayer.hasKitCooldown(Kit.ADMIN)) {
+				if(rPlayer.getKitCooldown(Kit.ADMIN) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Admin", rPlayer.getKitCooldown(Kit.ADMIN));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.HEAD_ADMIN) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Head_Admin", rPlayer.getKitCooldown(Kit.HEAD_ADMIN));
+			if(rPlayer.hasKitCooldown(Kit.HEAD_ADMIN)) {
+				if(rPlayer.getKitCooldown(Kit.HEAD_ADMIN) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Head_Admin", rPlayer.getKitCooldown(Kit.HEAD_ADMIN));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.MANAGER) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Manager", rPlayer.getKitCooldown(Kit.MANAGER));
+			if(rPlayer.hasKitCooldown(Kit.MANAGER)) {
+				if(rPlayer.getKitCooldown(Kit.MANAGER) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Manager", rPlayer.getKitCooldown(Kit.MANAGER));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.OWNER) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Owner", rPlayer.getKitCooldown(Kit.OWNER));
+			if(rPlayer.hasKitCooldown(Kit.OWNER)) {
+				if(rPlayer.getKitCooldown(Kit.OWNER) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Owner", rPlayer.getKitCooldown(Kit.OWNER));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.USER) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".User", rPlayer.getKitCooldown(Kit.USER));
+			if(rPlayer.hasKitCooldown(Kit.USER)) {
+				if(rPlayer.getKitCooldown(Kit.USER) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".User", rPlayer.getKitCooldown(Kit.USER));
+				}
 			}
-			if(rPlayer.getKitCooldown(Kit.RAID) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Raid.Cooldown", rPlayer.getKitCooldown(Kit.RAID));
+			if(rPlayer.hasKitCooldown(Kit.RAID)) {
+				if(rPlayer.getKitCooldown(Kit.RAID) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Raid.Cooldown", rPlayer.getKitCooldown(Kit.RAID));
+				}
 			}
 			if(rPlayer.getKitUnlock(Kit.RAID) == true) {
 				yml.set("Kits.Cooldowns." + uuid + ".Raid.Unlock", rPlayer.getKitUnlock(Kit.RAID));
 			}
-			if(rPlayer.getKitCooldown(Kit.POTION) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Potion.Cooldown", rPlayer.getKitCooldown(Kit.POTION));
+			if(rPlayer.hasKitCooldown(Kit.POTION)) {
+				if(rPlayer.getKitCooldown(Kit.POTION) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Potion.Cooldown", rPlayer.getKitCooldown(Kit.POTION));
+				}
 			}
 			if(rPlayer.getKitUnlock(Kit.POTION) == true) {
 				yml.set("Kits.Cooldowns." + uuid + ".Potion.Unlock", rPlayer.getKitUnlock(Kit.POTION));
 			}
-			if(rPlayer.getKitCooldown(Kit.BUILD) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Build.Cooldown", rPlayer.getKitCooldown(Kit.BUILD));
+			if(rPlayer.hasKitCooldown(Kit.BUILD)) {
+				if(rPlayer.getKitCooldown(Kit.BUILD) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Build.Cooldown", rPlayer.getKitCooldown(Kit.BUILD));
+				}
 			}
 			if(rPlayer.getKitUnlock(Kit.BUILD) == true) {
 				yml.set("Kits.Cooldowns." + uuid + ".Build.Unlock", rPlayer.getKitUnlock(Kit.BUILD));
 			}
-			if(rPlayer.getKitCooldown(Kit.CRYSTAL) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Flight.Cooldown", rPlayer.getKitCooldown(Kit.CRYSTAL));
+			if(rPlayer.hasKitCooldown(Kit.CRYSTAL)) {
+				if(rPlayer.getKitCooldown(Kit.CRYSTAL) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Flight.Cooldown", rPlayer.getKitCooldown(Kit.CRYSTAL));
+				}
 			}
 			if(rPlayer.getKitUnlock(Kit.CRYSTAL) == true) {
 				yml.set("Kits.Cooldowns." + uuid + ".Flight.Unlock", rPlayer.getKitUnlock(Kit.CRYSTAL));
 			}
-			if(rPlayer.getKitCooldown(Kit.SUPPLIER) != 0L) {
-				yml.set("Kits.Cooldowns." + uuid + ".Supplier.Cooldown", rPlayer.getKitCooldown(Kit.SUPPLIER));
+			if(rPlayer.hasKitCooldown(Kit.SUPPLIER)) {
+				if(rPlayer.getKitCooldown(Kit.SUPPLIER) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Supplier.Cooldown", rPlayer.getKitCooldown(Kit.SUPPLIER));
+				}
 			}
 			if(rPlayer.getKitUnlock(Kit.SUPPLIER) == true) {
 				yml.set("Kits.Cooldowns." + uuid + ".Supplier.Unlock", rPlayer.getKitUnlock(Kit.SUPPLIER));

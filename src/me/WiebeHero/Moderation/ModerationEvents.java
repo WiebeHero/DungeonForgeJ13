@@ -337,7 +337,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					@SuppressWarnings("deprecation")
 					OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 					if(p.getName() != null) {
-						RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
+						RankedPlayer rPlayer = rManager.getRankedPlayer(p.getUniqueId());
 						if(rPlayer.isStaff()) {
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player is staff. Rank: " + rPlayer.getHighestRank().display));
 						}
@@ -1030,7 +1030,13 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		if(sManager.contains(player.getUniqueId())) {
 			Staff staff = sManager.get(player.getUniqueId());
 			if(staff.getStaffMode() == true) {
-				event.setCancelled(true);
+				ItemStack item = player.getInventory().getItemInMainHand();
+				if(item != null) {
+					NBTItem i = new NBTItem(item);
+					if(i.hasKey("SpawnerItem") && i.hasKey("LootItem")) {
+						event.setCancelled(true);
+					}
+				}
 			}
 		}
 	}

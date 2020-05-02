@@ -37,7 +37,7 @@ public class MSGCommand implements CommandExecutor{
 									if(!msg.isInIgnore(p.getUniqueId())) {
 										String message = "";
 										for(int i = 1; i < args.length; i++) {
-											message = message + args[i];
+											message = message + " " + args[i];
 										}
 										p.sendMessage("§6" + player.getName() + " whispers to §6" + p.getName() + ": §7" + message);
 										player.sendMessage("§6" + player.getName() + " whispers to §6" + p.getName() + ": §7" + message);

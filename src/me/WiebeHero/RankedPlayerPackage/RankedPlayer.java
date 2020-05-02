@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Kit;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Rank;
 
@@ -37,6 +35,9 @@ public class RankedPlayer {
 	}
 	public Long getKitCooldown(Kit kit) {
 		return this.kitCooldown.get(kit);
+	}
+	public boolean hasKitCooldown(Kit kit) {
+		return this.kitCooldown.containsKey(kit);
 	}
 	public void addKitCooldown(Kit kit, Long cooldown) {
 		this.kitCooldown.put(kit, cooldown);

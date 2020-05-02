@@ -98,10 +98,12 @@ public class CombatTag implements Listener {
 		if (combatTag.containsKey(player.getUniqueId())) {
 			if (combatTag.get(player.getUniqueId()) != 0) {
 				player.setHealth(0.00);
+				if(combatRunnable.containsKey(player.getUniqueId())) {
+					combatRunnable.get(player.getUniqueId()).cancel();
+					combatRunnable.remove(player.getUniqueId());
+				}
 				combatTag.put(player.getUniqueId(), 0);
 				sendActionbar(player, new CCT().colorize("&2&l[DungeonForge]:&aOut of combat!"));
-				combatRunnable.get(player.getUniqueId()).cancel();
-				combatRunnable.remove(player.getUniqueId());
 			}
 		}
 	}
@@ -114,10 +116,12 @@ public class CombatTag implements Listener {
 				player.spigot().respawn();
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+		if(combatRunnable.containsKey(player.getUniqueId())) {
+			combatRunnable.get(player.getUniqueId()).cancel();
+			combatRunnable.remove(player.getUniqueId());
+		}
 		combatTag.put(player.getUniqueId(), 0);
 		sendActionbar(player, new CCT().colorize("&2&l[DungeonForge]: &aOut of combat!"));
-		combatRunnable.get(player.getUniqueId()).cancel();
-		combatRunnable.remove(player.getUniqueId());
 	}
 
 	@EventHandler
