@@ -645,7 +645,7 @@ public class EnchantmentHandler extends SwordSwingProgress{
 									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
 									if(enchantment.getArmorEnchantments().containsKey(check)) {
 										if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.ENTITY_DAMAGE) {
-											if(wg.isInZone(victim, "spawn")) {
+											if(!wg.isInZone(victim, "spawn")) {
 												enchant = enchant.replaceAll("[^\\d.]", "");
 												int level = Integer.parseInt(enchant) - 1;
 												enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
