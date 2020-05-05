@@ -39,6 +39,9 @@ commands:
   home:
     ussage: /<command>
     description: 'Command for home'
+  delhome:
+    ussage: /<command>
+    description: 'Command for delhome'
   homes:
     ussage: /<command>
     description: 'Command for homes'
@@ -84,6 +87,9 @@ commands:
   checkstaff:
     ussage: /<command>
     description: 'Command for checkstaff'
+  rank:
+    ussage: /<command>
+    description: 'Command for rank'
   procedure:
     ussage: /<command>
     description: 'Command for initiating procedure'

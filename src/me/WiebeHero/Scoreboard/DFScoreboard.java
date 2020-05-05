@@ -160,12 +160,6 @@ public class DFScoreboard implements Listener{
 		DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
 		DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 		//--------------------------------------------------------------------------------------
-		//Blank Scores
-		//--------------------------------------------------------------------------------------
-		Score blank1 = score.getScore("");
-		Score blank2 = score.getScore(" ");
-		Score blank3 = score.getScore("  ");
-		//--------------------------------------------------------------------------------------
 		//Faction setting
 		//--------------------------------------------------------------------------------------
 		String facN = "&7None";
@@ -192,14 +186,9 @@ public class DFScoreboard implements Listener{
 		else if(wg.isInZone(player, "spawn")) {
 			territory = "&a&lSpawn";
 		}
-		Score facLine = score.getScore(new CCT().colorize("&7Faction: " + facN));
-		Score facTeritory = score.getScore(new CCT().colorize("&7Territory: " + territory));
-		Score rank = score.getScore(new CCT().colorize("&7Rank: " + rPlayer.getHighestRank().display));
-		Score level = score.getScore(new CCT().colorize("&7Level: &b&l" + dfManager.getEntity(player).getLevel()));
-		Score adress = score.getScore(new CCT().colorize("    &2&lplay.dungeonforge.eu"));
-		Score cash = score.getScore(new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
 		for(Player p : Bukkit.getOnlinePlayers()) {
-			DFPlayer dfPlayer = dfManager.getEntity(player);
+			DFPlayer dfPlayer = dfManager.getEntity(p);
+			RankedPlayer rp = rManager.getRankedPlayer(p.getUniqueId());
 			Team t = null;
 			if(scoreboard.getTeam(p.getName()) == null) {
 				t = scoreboard.registerNewTeam(p.getName());
@@ -211,7 +200,7 @@ public class DFScoreboard implements Listener{
 			String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
 			String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
 			t.setSuffix(new CCT().colorize(" &6" + now));
-			p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rPlayer.getHighestRank().display));
+			p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rp.getHighestRank().display));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(p.getName());
 		}
@@ -240,15 +229,15 @@ public class DFScoreboard implements Listener{
         for(String entry : entries){
         	scoreboard.resetScores(entry);
         }
-        blank1.setScore(9);
-		facLine.setScore(8);
-		facTeritory.setScore(7);
-		cash.setScore(6);
-		blank2.setScore(5);
-		rank.setScore(4);
-		level.setScore(3);
-		blank3.setScore(2);
-		adress.setScore(1);
+        this.replaceScore(score, 9, "");
+        this.replaceScore(score, 8, new CCT().colorize("&7Faction: " + facN));
+        this.replaceScore(score, 7, new CCT().colorize("&7Territory: " + territory));
+        this.replaceScore(score, 6, new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
+        this.replaceScore(score, 5, " ");
+        this.replaceScore(score, 4, new CCT().colorize("&7Rank: " + rPlayer.getHighestRank().display));
+        this.replaceScore(score, 3, new CCT().colorize("&7Level: &b&l" + dfManager.getEntity(player).getLevel()));
+        this.replaceScore(score, 2, "  ");
+        this.replaceScore(score, 1, new CCT().colorize("    &2&lplay.dungeonforge.eu"));
 		scoreboards.put(player.getUniqueId(), scoreboard);
 		player.setScoreboard(scoreboard);
 	}

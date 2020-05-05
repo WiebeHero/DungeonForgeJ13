@@ -64,7 +64,8 @@ public class DFPlayer {
 	private double bHpInc = 5.00;
 	private double bDfInc = 1.25;
 	
-	private double mxpMultiplier = 1.08;
+	private double maxpMultiplier = 1.12;
+	private double mixpMultiplier = 1.0001;
 	
 	private double atkInc;
 	private double spdInc;
@@ -385,7 +386,10 @@ public class DFPlayer {
 	}
 	
 	public double getExperienceMultiplier() {
-		return this.mxpMultiplier;
+		double x = this.maxpMultiplier - this.mixpMultiplier;
+		double y = x / 100.00;
+		double z = y * this.getLevel();
+		return this.maxpMultiplier - z;
 	}
 	//---------------------------------------------------------
 	//Skill Points Handler

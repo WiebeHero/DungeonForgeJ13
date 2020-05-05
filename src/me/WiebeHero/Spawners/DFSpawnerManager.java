@@ -490,10 +490,10 @@ public class DFSpawnerManager {
 				mob.setHealth(mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 10L);
-		mob.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(1.2 * tier);
+		mob.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(0.75 * tier);
 		mob.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(0.2 * dfPlayer.getDf());
 		mob.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(0.1333 * dfPlayer.getDf());
-		mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(12.5 + 2.5 * level);
+		mob.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(7.5 + 2.5 * tier);
 		mob.getEquipment().setHelmetDropChance(0.00F);
 		mob.getEquipment().setChestplateDropChance(0.00F);
 		mob.getEquipment().setLeggingsDropChance(0.00F);

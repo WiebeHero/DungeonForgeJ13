@@ -2,6 +2,8 @@ package me.WiebeHero.Moderation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -53,6 +55,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 
 import de.tr7zw.nbtapi.NBTItem;
+import javafx.util.Pair;
 import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
@@ -62,6 +65,7 @@ import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.LootChest.LootChest;
 import me.WiebeHero.LootChest.LootChestManager;
+import me.WiebeHero.RankedPlayerPackage.RankEnum.Rank;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
 import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
 import me.WiebeHero.Scoreboard.DFScoreboard;
@@ -87,7 +91,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	private Methods m;
 	private DFScoreboard board;
 	private ClassMenu menu;
-	private HashMap<UUID, UUID> target = new HashMap<UUID, UUID>();
+	private HashMap<UUID, Pair<UUID, String>> target = new HashMap<UUID, Pair<UUID, String>>();
 	private HashMap<UUID, String> reason = new HashMap<UUID, String>();
 	private HashMap<UUID, EntityType> spawnerType = new HashMap<UUID, EntityType>();
 	private HashMap<UUID, Integer> spawnerTier = new HashMap<UUID, Integer>();
@@ -101,7 +105,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public String mute = "mute";
 	public String unmute = "unmute";
 	public String staffmode = "staffmode";
-	public String staff = "staff";
+	public String rank = "rank";
 	public String checkstaff = "checkstaff";
 	
 	public ModerationEvents(DFFactionManager facManager, DFPlayerManager dfManager, RankedManager rManager, PunishManager pManager, StaffManager sManager, DFSpawnerManager spManager, LootChestManager lcManager, ModerationGUI gui, MethodMulti multi, MethodLuck luck, Methods m, DFScoreboard board, ClassMenu menu) {
@@ -123,207 +127,64 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
-			if(cmd.getName().equalsIgnoreCase(staff)) {
-				if(args.length == 2) {
-					if(args[0].equalsIgnoreCase("promote")) {
-						if(sManager.contains(player.getUniqueId()) || sManager.get(player.getUniqueId()).getRank() != 0) {
-							Staff staff = sManager.get(player.getUniqueId());
-							Player p = m.convertOfflinePlayer(args[1]);
-							if(p.getName() != null) {
-								if(sManager.contains(p.getUniqueId())) {
-									Staff s = sManager.get(p.getUniqueId());
-									if(staff.getRank() >= 7) {
-										if(staff.getRank() > s.getRank() || staff.getRank() == 10) {
-											LuckPerms api = LuckPermsProvider.get();
-											User promoted = api.getUserManager().getUser(p.getUniqueId());
-											Player p1 = Bukkit.getPlayer(p.getUniqueId());
-											if(p1 != player) {
-												if(s.getRank() + 1 == 1) {
-													luck.addParent(promoted, "qa");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Quality Assurance!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Quality Assurance!"));
-												}
-												if(s.getRank() + 1 == 2) {
-													luck.removeParent(promoted, "qa");
-													luck.addParent(promoted, "qaadmin");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Quality Assurance Admin!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Quality Assurance Admin!"));
-												}
-												if(s.getRank() + 1 == 3) {
-													luck.removeParent(promoted, "qaadmin");
-													luck.addParent(promoted, "helper");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Helper!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Helper!"));
-												}
-												if(s.getRank() + 1 == 4) {
-													luck.removeParent(promoted, "helper");
-													luck.addParent(promoted, "helper+");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Helper+!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Helper+!"));
-												}
-												if(s.getRank() + 1 == 5) {
-													luck.removeParent(promoted, "helper+");
-													luck.addParent(promoted, "moderator");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Moderator!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Moderator!"));
-												}
-												if(s.getRank() + 1 == 6) {
-													luck.removeParent(promoted, "moderator");
-													luck.addParent(promoted, "headmod");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Head Moderator!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Head Moderator!"));
-												}
-												if(s.getRank() + 1 == 7) {
-													luck.removeParent(promoted, "headmod");
-													luck.addParent(promoted, "admin");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Admin!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Admin!"));
-												}
-												if(s.getRank() + 1 == 8) {
-													luck.removeParent(promoted, "admin");
-													luck.addParent(promoted, "headadmin");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Head Admin!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Head Admin!"));
-												}
-												if(s.getRank() + 1 == 9) {
-													luck.removeParent(promoted, "headadmin");
-													luck.addParent(promoted, "manager");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Manager!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Manager!"));
-												}
-												if(s.getRank() + 1 == 10) {
-													luck.removeParent(promoted, "manager");
-													luck.addParent(promoted, "owner");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Owner!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Owner!"));
+			RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
+			if(cmd.getName().equalsIgnoreCase(rank)) {
+				if(args.length == 3) {
+					if(args[0].equalsIgnoreCase("set")) {
+						if(rPlayer.isStaff()) {
+							if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+								OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
+								if(p.getName() != null) {
+									if(rManager.contains(p.getUniqueId())) {
+										RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
+										String r = args[2].toUpperCase();
+										if(Rank.valueOf(r) != null) {
+											Rank rank = Rank.valueOf(r);
+											User promoted = luck.loadUser(p.getUniqueId());
+											if(!player.getUniqueId().equals(p.getUniqueId())) {
+												if(rPlayer.getHighestRank().rank > rank.rank) {
+													if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
+														for(Rank ranks : Rank.values()) {
+															String group = ranks.toString().toLowerCase();
+															if(luck.containsParrent(promoted, group)) {
+																luck.removeParent(promoted, group);
+															}
+														}
+														luck.addParent(promoted, rank.toString().toLowerCase());
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " to Owner!"));
+														if(Bukkit.getPlayer(args[1]) != null) {
+															Player t = Bukkit.getPlayer(args[1]);
+															t.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have been promoted to Owner!"));
+															board.updateScoreboard(t);
+															this.punishJoin(t);
+														}
+													}
+													else {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYour rank must be higher then the players rank you are setting!"));
+													}
 												}
 												else {
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player can't be promoted to a higher rank!"));
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou can't set a higher rank than this!"));
 												}
-												board.updateScoreboard(p);
-												this.punishJoin(p);
 											}
 											else {
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't promote yourself!"));
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't set your own rank!"));
 											}
 										}
 										else {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't promote player's who have an equal/higher rank then you!"));
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis rank doesn't exist!"));
 										}
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to promote this player!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player has never joined DungeonForge!"));
 									}
 								}
 								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cA fatal error occured."));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 								}
 							}
 							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
-							}
-						}
-						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
-						}
-					}
-					else if(args[0].equalsIgnoreCase("demote")) {
-						if(sManager.contains(player.getUniqueId()) || sManager.get(player.getUniqueId()).getRank() != 0) {
-							Staff staff = sManager.get(player.getUniqueId());
-							Player p = m.convertOfflinePlayer(args[1]);
-							if(p.getName() != null) {
-								if(sManager.contains(p.getUniqueId())) {
-									Staff s = sManager.get(p.getUniqueId());
-									if(staff.getRank() >= 7) {
-										if(staff.getRank() > s.getRank() || staff.getRank() == 10) {
-											LuckPerms api = LuckPermsProvider.get();
-											User promoted = api.getUserManager().getUser(p.getUniqueId());
-											Player p1 = Bukkit.getPlayer(p.getUniqueId());
-											if(p1 != player) {
-												if(s.getRank() - 1 == 0) {
-													luck.removeParent(promoted, "qa");
-													luck.addParent(promoted, "user");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to User!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to User!"));
-												}
-												if(s.getRank() - 1 == 1) {
-													luck.removeParent(promoted, "qaadmin");
-													luck.addParent(promoted, "qa");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to Quality Assurance!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to Quality Assurance!"));
-												}
-												if(s.getRank() - 1 == 2) {
-													luck.removeParent(promoted, "helper");
-													luck.addParent(promoted, "qaadmin");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to Quality Assurance Admin!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to Quality Assurance Admin!"));
-												}
-												if(s.getRank() - 1 == 3) {
-													luck.removeParent(promoted, "helper+");
-													luck.addParent(promoted, "helper");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to Helper!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to Helper!"));
-												}
-												if(s.getRank() - 1 == 4) {
-													luck.removeParent(promoted, "moderator");
-													luck.addParent(promoted, "helper+");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to Helper+!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to Helper+!"));
-												}
-												if(s.getRank() - 1 == 5) {
-													luck.removeParent(promoted, "headmod");
-													luck.addParent(promoted, "moderator");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to Moderator!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to Moderator!"));
-												}
-												if(s.getRank() - 1 == 6) {
-													luck.removeParent(promoted, "admin");
-													luck.addParent(promoted, "headmod");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to Head Moderator!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to Head Moderator!"));
-												}
-												if(s.getRank() - 1 == 7) {
-													luck.removeParent(promoted, "headadmin");
-													luck.addParent(promoted, "admin");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to Admin!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to Admin!"));
-												}
-												if(s.getRank() - 1 == 8) {
-													luck.removeParent(promoted, "manager");
-													luck.addParent(promoted, "headadmin");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to Head Admin!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to Head Admin!"));
-												}
-												if(s.getRank() - 1 == 9) {
-													luck.removeParent(promoted, "owner");
-													luck.addParent(promoted, "manager");
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " to Manager!"));
-													p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been demoted to Manager!"));
-												}
-												else {
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player can't be demoted to a lower rank!"));
-												}
-												board.updateScoreboard(p);
-												this.punishJoin(p);
-											}
-											else {
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't promote yourself!"));
-											}
-										}
-										else {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't promote player's who have an equal/higher rank then you!"));
-										}
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to promote this player!"));
-									}
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cA fatal error occured."));
-								}
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to set someone's rank!"));
 							}
 						}
 						else {
@@ -337,12 +198,17 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					@SuppressWarnings("deprecation")
 					OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 					if(p.getName() != null) {
-						RankedPlayer rPlayer = rManager.getRankedPlayer(p.getUniqueId());
-						if(rPlayer.isStaff()) {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player is staff. Rank: " + rPlayer.getHighestRank().display));
+						if(rManager.contains(p.getUniqueId())) {
+							RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
+							if(oPlayer.isStaff()) {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player is staff. Rank: " + oPlayer.getHighestRank().display));
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not staff! If he is impersonating staff, please consider reporting him!"));
+							}
 						}
 						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not staff! If he is impersonating staff, please consider reporting him!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player has never joined DungeonForge!"));
 						}
 					}
 					else {
@@ -351,7 +217,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			if(cmd.getName().equalsIgnoreCase(staffmode)) {
-				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(sManager.contains(player.getUniqueId()) && rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
 					Staff staff = sManager.get(player.getUniqueId());
 					if(staff.getStaffMode() == true) {
 						player.getInventory().setContents(staff.getInv());
@@ -376,7 +242,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						player.getInventory().setItem(2, vanish());
 						player.getInventory().setItem(3, examine());
 						player.getInventory().setItem(4, playerInfo());
-						if(staff.getRank() >= 6) {
+						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
 							player.getInventory().setItem(7, spawner());
 							player.getInventory().setItem(8, loot());
 						}
@@ -393,43 +259,33 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(ban)) {
-				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						Staff staff = sManager.get(player.getUniqueId());
-						if(staff.getRank() >= 5) {
-							Player p = m.convertOfflinePlayer(args[0]);
-							if(sManager.contains(p.getUniqueId())) {
-								Staff s = sManager.get(p.getUniqueId());
-								if(staff.getRank() > s.getRank()) {
-									if(p.getName() != null && pManager.contains(p.getUniqueId())) {
+						if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
+							if(p.getName() != null) {
+								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
+									RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
+									if(rPlayer.getHighestRank().rank >= oPlayer.getHighestRank().rank) {
 										Punish pun = pManager.get(p.getUniqueId());
-										target.put(player.getUniqueId(), p.getUniqueId());
+										target.put(player.getUniqueId(), new Pair<UUID, String>(p.getUniqueId(), p.getName()));
 										if(!pun.isBanned()) {
-											gui.BanReason(player, Bukkit.getPlayer(target.get(player.getUniqueId())));
+											gui.BanReason(player, p.getName());
 										}
 										else {
 											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is already banned!"));
 										}
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist."));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank needs to be higher then the player you're banning!"));
 									}
 								}
 								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank needs to be higher then the player you're banning!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player has never joined DungeonForge!"));
 								}
 							}
 							else {
-								if(p.getName() != null && pManager.contains(p.getUniqueId())) {
-									Punish pun = pManager.get(p.getUniqueId());
-									target.put(player.getUniqueId(), p.getUniqueId());
-									if(!pun.isBanned()) {
-										gui.BanReason(player, Bukkit.getPlayer(target.get(player.getUniqueId())));
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is already banned!"));
-									}
-								}
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 							}
 						}
 						else {
@@ -445,22 +301,34 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(unban)) {
-				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						Staff staff = sManager.get(player.getUniqueId());
-						if(staff.getRank() >= 5) {
-							Player p = m.convertOfflinePlayer(args[0]);
-							if(p.getName() != null && pManager.contains(p.getUniqueId())) {
-								Punish pun = pManager.get(p.getUniqueId());
-								if(pun.isBanned()) {
-									pun.setBanTime(0L);
-									pun.setBanPerm(false);
-									pun.removeBannedBy(pun.getBanOffense() - 1);
-									pun.removeBanReason(pun.getBanOffense() - 1);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + p.getName()));
+						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
+							if(p.getName() != null) {
+								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
+									Punish pun = pManager.get(p.getUniqueId());
+									if(pun.isBanned()) {
+										pun.setBanTime(0L);
+										pun.setBanPerm(false);
+										int offense = pun.getBanOffense();
+										if(!pun.getBanReasonsList().isEmpty()) {
+											pun.removeBanReason(offense - 1);
+										}
+										if(!pun.getBannedByList().isEmpty()) {
+											pun.removeBannedBy(offense - 1);
+										}
+										if(!pun.getBanDateList().isEmpty()) {
+											pun.removeBanDate(offense - 1);
+										}
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + p.getName()));
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not banned!"));
+									}
 								}
 								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not banned!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player has never joined DungeonForge!"));
 								}
 							}
 							else {
@@ -480,34 +348,27 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(mute)) {
-				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						Staff staff = sManager.get(player.getUniqueId());
-						if(staff.getRank() >= 3) {
-							Player p = m.convertOfflinePlayer(args[0]);
-							if(sManager.contains(p.getUniqueId())) {
-								Staff s = sManager.get(p.getUniqueId());
-								if(staff.getRank() > s.getRank()) {
-									if(p.getName() != null) {
-										target.put(player.getUniqueId(), p.getUniqueId());
-										gui.MuteReason(player, Bukkit.getPlayer(target.get(player.getUniqueId())));
+						if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
+							if(p.getName() != null) {
+								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
+									RankedPlayer rp = rManager.getRankedPlayer(p.getUniqueId());
+									if(rPlayer.getHighestRank().rank > rp.getHighestRank().rank) {
+										target.put(player.getUniqueId(), new Pair<UUID, String>(p.getUniqueId(), p.getName()));
+										gui.MuteReason(player, p.getName());
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist."));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank needs to be higher then the player you're muting!"));
 									}
 								}
 								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank needs to be higher then the player you're muting!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player has never joined DungeonForge!"));
 								}
 							}
 							else {
-								if(p.getName() != null) {
-									target.put(player.getUniqueId(), p.getUniqueId());
-									gui.MuteReason(player, Bukkit.getPlayer(target.get(player.getUniqueId())));
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist."));
-								}
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist."));
 							}
 						}
 						else {
@@ -523,23 +384,39 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(unmute)) {
-				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
+				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						Staff staff = sManager.get(player.getUniqueId());
-						if(staff.getRank() >= 3) {
-							Player p = m.convertOfflinePlayer(args[0]);
-							if(p.getName() != null && pManager.contains(p.getUniqueId())) {
-								Punish pun = pManager.get(p.getUniqueId());
-								if(pun.isMuted() && pManager.contains(player.getUniqueId())) {
-									pun.setMuteTime(0L);
-									pun.removeMutedBy(pun.getMuteOffense() - 1);
-									pun.removeMuteReason(pun.getMuteOffense() - 1);
-									Player offender = Bukkit.getPlayer(target.get(player.getUniqueId()));
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + offender.getName()));
+						if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
+							if(p.getName() != null) {
+								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
+									Punish pun = pManager.get(p.getUniqueId());
+									if(pun.isMuted()) {
+										pun.setMuteTime(0L);
+										int offense = pun.getBanOffense();
+										if(!pun.getMuteReasonsList().isEmpty()) {
+											pun.removeMuteReason(offense - 1);
+										}
+										if(!pun.getMutedByList().isEmpty()) {
+											pun.removeMutedBy(offense - 1);
+										}
+										if(!pun.getMuteDateList().isEmpty()) {
+											pun.removeMuteDate(offense - 1);
+										}
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + p.getName()));
+										if(Bukkit.getPlayer(p.getUniqueId()) != null) {
+											Player offender = Bukkit.getPlayer(p.getUniqueId());
+											offender.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas unmuted you!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not muted!"));
+									}
 								}
 								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not muted!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player has neven joined DungeonForge!"));
 								}
+								
 							}
 							else {
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist."));
@@ -558,237 +435,168 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(protocol)) {
-				if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
-					if(args.length == 1) {
-						if(args[0].equalsIgnoreCase("clearall")) {
-							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
-								Staff staff = sManager.get(player.getUniqueId());
-								if(staff.getRank() >= 7) {
-									CustomEnchantments.maintenance = true;
-									for(Player p : Bukkit.getOnlinePlayers()) {
-										p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cA protocol procedure was activated, standby."));
-									}
-									for(OfflinePlayer temp : Bukkit.getOfflinePlayers()) {
-										Player p = m.convertOfflinePlayer(temp.getUniqueId());
-										if(p.getName() != null) {
-											p.getInventory().clear();
-											p.saveData();
-										}
-									}
-									CustomEnchantments.maintenance = false;
+				if(rPlayer.isStaff()) {
+					if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(args.length == 1) {
+							if(args[0].equalsIgnoreCase("clearall")) {
+								CustomEnchantments.maintenance = true;
+								for(Player p : Bukkit.getOnlinePlayers()) {
+									p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cA protocol procedure was activated, standby."));
 								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
-								}
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
-							}
-						}
-						else if(args[0].equalsIgnoreCase("shutdown")) {
-							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
-								Staff staff = sManager.get(player.getUniqueId());
-								if(staff.getRank() >= 7) {
-									CustomEnchantments.shutdown = true;
-									for(Player p : Bukkit.getOnlinePlayers()) {
-										if(p != null) {
-											p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
-										}
-									}
-									Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
-									Bukkit.getServer().shutdown();
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
-								}
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
-							}
-						}
-						else if(args[0].equalsIgnoreCase("softreset")) {
-							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
-								Staff staff = sManager.get(player.getUniqueId());
-								if(staff.getRank() >= 8) {
-									CustomEnchantments.shutdown = true;
-									CustomEnchantments.maintenance = true;
-									for(Player p : Bukkit.getOnlinePlayers()) {
-										if(p != null) {
-											p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
-										}
-									}
-									for(OfflinePlayer temp : Bukkit.getOfflinePlayers()) {
-										Player p = m.convertOfflinePlayer(temp.getUniqueId());
-										if(p.getName() != null) {
-											p.getInventory().clear();
-											p.getEnderChest().clear();
-											p.saveData();
-										}
-									}
-									new BukkitRunnable() {
-										@Override
-										public void run() {
-											Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
-											Bukkit.getServer().shutdown();
-										}
-									}.runTaskLater(CustomEnchantments.getInstance(), 100L);
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
-								}
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
-							}
-						}
-						else if(args[0].equalsIgnoreCase("hardreset")) {
-							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
-								Staff staff = sManager.get(player.getUniqueId());
-								if(staff.getRank() >= 8) {
-									CustomEnchantments.shutdown = true;
-									CustomEnchantments.maintenance = true;
-									for(Player p : Bukkit.getOnlinePlayers()) {
-										if(p != null) {
-											p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
-										}
-									}
-									for(OfflinePlayer temp : Bukkit.getOfflinePlayers()) {
-										Player p = m.convertOfflinePlayer(temp.getUniqueId());
-										if(p.getName() != null) {
-											p.getInventory().clear();
-											p.getEnderChest().clear();
-											p.saveData();
-										}
-									}
-									MultiverseCore mul = multi.getMultiverseCore();
-									if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") != null) {
-										mul.deleteWorld("FactionWorld-1");
-										long mapSeed = new Random().nextLong();
-										mul.getMVWorldManager().addWorld("FactionWorld-1", Environment.NORMAL, mapSeed + "", WorldType.NORMAL, false, "World");
-									}
-									else if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") == null) {
-										long mapSeed = new Random().nextLong();
-										mul.getMVWorldManager().addWorld("FactionWorld-1", Environment.NORMAL, mapSeed + "", WorldType.NORMAL, false, "World");
-									}
-									World world = Bukkit.getWorld("FactionWorld-1");
-									world.getWorldBorder().setSize(5000.00);
-									new BukkitRunnable() {
-										@Override
-										public void run() {
-											Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
-											Bukkit.getServer().shutdown();
-										}
-									}.runTaskLater(CustomEnchantments.getInstance(), 3000L);
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
-								}
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
-							}
-						}
-					}
-					else if(args.length == 2) {
-						if(args[0].equalsIgnoreCase("clear")) {
-							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
-								Staff staff = sManager.get(player.getUniqueId());
-								if(staff.getRank() >= 7) {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aProcedure clear initiated."));
-									Player p = m.convertOfflinePlayer(args[1]);
+								for(OfflinePlayer temp : Bukkit.getOfflinePlayers()) {
+									Player p = m.convertOfflinePlayer(temp.getUniqueId());
 									if(p.getName() != null) {
-										Player p1 = Bukkit.getPlayer(args[1]);
-										if(p1 != null) {
-											p1.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cA protocol procedure was activated, standby."));
-										}
+										p.getInventory().clear();
+										p.saveData();
+									}
+								}
+								CustomEnchantments.maintenance = false;
+							}
+							else if(args[0].equalsIgnoreCase("shutdown")) {
+								CustomEnchantments.shutdown = true;
+								for(Player p : Bukkit.getOnlinePlayers()) {
+									if(p != null) {
+										p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
+									}
+								}
+								Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
+								Bukkit.getServer().shutdown();
+							}
+							else if(args[0].equalsIgnoreCase("softreset")) {
+								CustomEnchantments.shutdown = true;
+								CustomEnchantments.maintenance = true;
+								for(Player p : Bukkit.getOnlinePlayers()) {
+									if(p != null) {
+										p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
+									}
+								}
+								for(OfflinePlayer temp : Bukkit.getOfflinePlayers()) {
+									Player p = m.convertOfflinePlayer(temp.getUniqueId());
+									if(p.getName() != null) {
 										p.getInventory().clear();
 										p.getEnderChest().clear();
 										p.saveData();
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aProcedure clear completed."));
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cProcedure clear failed, player doesn't exist."));
 									}
 								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
-								}
+								new BukkitRunnable() {
+									@Override
+									public void run() {
+										Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
+										Bukkit.getServer().shutdown();
+									}
+								}.runTaskLater(CustomEnchantments.getInstance(), 100L);
 							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
+							else if(args[0].equalsIgnoreCase("hardreset")) {
+								CustomEnchantments.shutdown = true;
+								CustomEnchantments.maintenance = true;
+								for(Player p : Bukkit.getOnlinePlayers()) {
+									if(p != null) {
+										p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
+									}
+								}
+								for(OfflinePlayer temp : Bukkit.getOfflinePlayers()) {
+									Player p = m.convertOfflinePlayer(temp.getUniqueId());
+									if(p.getName() != null) {
+										p.getInventory().clear();
+										p.getEnderChest().clear();
+										p.saveData();
+									}
+								}
+								MultiverseCore mul = multi.getMultiverseCore();
+								if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") != null) {
+									mul.deleteWorld("FactionWorld-1");
+									long mapSeed = new Random().nextLong();
+									mul.getMVWorldManager().addWorld("FactionWorld-1", Environment.NORMAL, mapSeed + "", WorldType.NORMAL, false, "World");
+								}
+								else if(mul.getMVWorldManager().getMVWorld("FactionWorld-1") == null) {
+									long mapSeed = new Random().nextLong();
+									mul.getMVWorldManager().addWorld("FactionWorld-1", Environment.NORMAL, mapSeed + "", WorldType.NORMAL, false, "World");
+								}
+								World world = Bukkit.getWorld("FactionWorld-1");
+								world.getWorldBorder().setSize(5000.00);
+								new BukkitRunnable() {
+									@Override
+									public void run() {
+										Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
+										Bukkit.getServer().shutdown();
+									}
+								}.runTaskLater(CustomEnchantments.getInstance(), 3000L);
 							}
 						}
-						else if(args[0].equalsIgnoreCase("maintenance")) {
-							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
-								Staff staff = sManager.get(player.getUniqueId());
-								if(staff.getRank() >= 7) {
-									if(args[1].equalsIgnoreCase("on")) {
-										CustomEnchantments.maintenance = true;
-										for(Player p : Bukkit.getOnlinePlayers()) {
-											if(p != player) {
-												if(sManager.contains(p.getUniqueId()) && sManager.get(p.getUniqueId()).getRank() == 0) {
-													p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode was initiated, standby."));
-													
-												}
+						else if(args.length == 2) {
+							if(args[0].equalsIgnoreCase("clear")) {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aProcedure clearinv initiated."));
+								Player p = m.convertOfflinePlayer(args[1]);
+								if(p.getName() != null) {
+									Player p1 = Bukkit.getPlayer(args[1]);
+									if(p1 != null) {
+										p1.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cA protocol procedure was activated, standby."));
+									}
+									p.getInventory().clear();
+									p.getEnderChest().clear();
+									p.saveData();
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aProcedure clear completed."));
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cProcedure clear failed, player doesn't exist."));
+								}
+							}
+							else if(args[0].equalsIgnoreCase("maintenance")) {
+								if(args[1].equalsIgnoreCase("on")) {
+									CustomEnchantments.maintenance = true;
+									for(Player p : Bukkit.getOnlinePlayers()) {
+										if(p != player) {
+											RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
+											if(oPlayer.isStaff()) {
+												p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode was initiated, standby."));
 											}
 										}
 									}
-									else if(args[1].equalsIgnoreCase("off")) {
-										CustomEnchantments.maintenance = false;
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode is disengaged. Player's can now join again."));
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCommand ussage: /procedure maintenance (Off | On)"));
-									}
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode is engaged. Player's can now not join."));
+								}
+								else if(args[1].equalsIgnoreCase("off")) {
+									CustomEnchantments.maintenance = false;
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode is disengaged. Player's can now join again."));
 								}
 								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCommand ussage: /procedure maintenance (Off | On)"));
 								}
 							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
-							}
 						}
-					}
-					else if(args.length == 3) {
-						if(args[0].equalsIgnoreCase("profile")) {
-							if(sManager.contains(player.getUniqueId()) && sManager.get(player.getUniqueId()).getRank() != 0) {
-								Staff staff = sManager.get(player.getUniqueId());
-								if(staff.getRank() >= 7) {
-									@SuppressWarnings("deprecation")
-									OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
-									if(p.getName() != null) {
-										if(args[2].equalsIgnoreCase("reset")) {
-											if(dfManager.contains(p.getUniqueId())) {
-												Player p1 = (Player) p;
-												dfManager.resetEntity(p1.getUniqueId());
-												p1.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
-												p1.closeInventory();
-												menu.ClassSelect(p1);
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have reset &6" + p1.getName() + "!"));
-												p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas reset your player profile!"));
-											}
-											else {
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cprofile could not be reset!"));
-											}
+						else if(args.length == 3) {
+							if(args[0].equalsIgnoreCase("profile")) {
+								OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
+								if(p.getName() != null) {
+									if(args[2].equalsIgnoreCase("reset")) {
+										if(dfManager.contains(p.getUniqueId())) {
+											Player p1 = (Player) p;
+											dfManager.resetEntity(p1.getUniqueId());
+											p1.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
+											p1.closeInventory();
+											menu.ClassSelect(p1);
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have reset &6" + p1.getName() + "!"));
+											p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas reset your player profile!"));
 										}
 										else {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /procedure profile (Player Name) reset"));
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player has never joined DF!"));
 										}
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /procedure profile (Player Name) reset"));
 									}
 								}
 								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're rank is not high enough to use this command!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 								}
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
 							}
 						}
 					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to execute this command!"));
+					}
+				}
+				else {
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou aren't staff!"));
 				}
 			}
 		}
@@ -797,18 +605,32 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args){
         if(command.getName().equalsIgnoreCase("procedure")) { 
             if(sender instanceof Player) { 
-            	if(args.length == 1) {
-            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset", "hardreset", "profile");
-            	}
-            	else if(args.length == 2) {
-            		if(args[0].equalsIgnoreCase("maintenance")) {
-            			return Arrays.asList("on", "off");
-            		}
+            	Player player = (Player) sender;
+            	RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
+            	if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+	            	if(args.length == 1) {
+	            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset", "hardreset", "profile");
+	            	}
+	            	else if(args.length == 2) {
+	            		if(args[0].equalsIgnoreCase("maintenance")) {
+	            			return Arrays.asList("on", "off");
+	            		}
+	            	}
             	}
             }
         }
         return null;
     }
+	@EventHandler
+	public void staff(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if(rManager.contains(player.getUniqueId())) {
+			RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
+			if(rPlayer.isStaff()) {
+				sManager.add(player.getUniqueId(), new Staff());
+			}
+		}
+	}
 	@EventHandler
 	public void onPingChange(ServerListPingEvent event) {
 		if(CustomEnchantments.maintenance == true) {
@@ -829,7 +651,14 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			event.setKickMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server is loading, try to join back in a few seconds."));
 		}
 		else if(CustomEnchantments.maintenance == true) {
-			if(!sManager.contains(event.getPlayerProfile().getId()) || sManager.get(event.getPlayerProfile().getId()).getRank() == 0) {
+			if(rManager.contains(event.getUniqueId())) {
+				RankedPlayer rPlayer = rManager.getRankedPlayer(event.getUniqueId());
+				if(!rPlayer.isStaff()) {
+					event.disallow(Result.KICK_OTHER, "");
+					event.setKickMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server is in maintenance mode, try to join again later."));
+				}
+			}
+			else {
 				event.disallow(Result.KICK_OTHER, "");
 				event.setKickMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server is in maintenance mode, try to join again later."));
 			}
@@ -958,44 +787,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			Punish pu = new Punish(p.getUniqueId());
 			pManager.add(p.getUniqueId(), pu);
 		}
-		User user = luck.loadUser(p.getUniqueId());
-		if(user != null) {
-			Staff s = null;
-			if(luck.containsParrent(user, "owner")) {
-				s = new Staff(p.getUniqueId(), 10);
-			}
-			else if(luck.containsParrent(user, "manager")) {
-				s = new Staff(p.getUniqueId(), 9);
-			}
-			else if(luck.containsParrent(user, "headadmin")) {
-				s = new Staff(p.getUniqueId(), 8);
-			}
-			else if(luck.containsParrent(user, "admin")) {
-				s = new Staff(p.getUniqueId(), 7);
-			}
-			else if(luck.containsParrent(user, "headmod")) {
-				s = new Staff(p.getUniqueId(), 6);
-			}
-			else if(luck.containsParrent(user, "moderator")) {
-				s = new Staff(p.getUniqueId(), 5);
-			}
-			else if(luck.containsParrent(user, "helper+")) {
-				s = new Staff(p.getUniqueId(), 4);
-			}
-			else if(luck.containsParrent(user, "helper")) {
-				s = new Staff(p.getUniqueId(), 3);
-			}
-			else if(luck.containsParrent(user, "qualityassuranceadmin")) {
-				s = new Staff(p.getUniqueId(), 2);
-			}
-			else if(luck.containsParrent(user, "qualityassurance")) {
-				s = new Staff(p.getUniqueId(), 1);
-			}
-			else {
-				s = new Staff(p.getUniqueId(), 0);
-			}
-			sManager.add(p.getUniqueId(), s);
-		}
 	}
 	@EventHandler
 	public void punishJoin(PlayerJoinEvent event) {
@@ -1030,13 +821,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		if(sManager.contains(player.getUniqueId())) {
 			Staff staff = sManager.get(player.getUniqueId());
 			if(staff.getStaffMode() == true) {
-				ItemStack item = player.getInventory().getItemInMainHand();
-				if(item != null) {
-					NBTItem i = new NBTItem(item);
-					if(i.hasKey("SpawnerItem") && i.hasKey("LootItem")) {
-						event.setCancelled(true);
-					}
-				}
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -1136,7 +921,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			    String time = diffDays + " " + diffHours + ":" + diffMinutes + ":" + diffSeconds;
 				p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't chat because you are muted! You can chat again in: &6" + time));
 			}
-			
 			else {
 				pun.setMuteTime(0L);
 			}
@@ -1296,8 +1080,8 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							gui.ExamineMenu(player, clicked);
 						}
 						else if(item.hasKey("PunishItem")) {
-							gui.PunishMenu(player, clicked);
-							target.put(player.getUniqueId(), clicked.getUniqueId());
+							gui.PunishMenu(player, clicked.getName());
+							target.put(player.getUniqueId(), new Pair<UUID, String>(clicked.getUniqueId(), clicked.getName()));
 						}
 					}
 					else {
@@ -1365,23 +1149,30 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		Player player = (Player) event.getWhoClicked();
 		ItemStack item = event.getCurrentItem();
 		String title = player.getOpenInventory().getTitle();
+		RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
 		if(player.getOpenInventory() != null) {
-			if(ChatColor.stripColor(title).contains("Punish")) {
+			if(ChatColor.stripColor(title).contains("Punish Menu")) {
 				if(item != null) {
-					if(item.hasItemMeta()) {
-						if(item.getItemMeta().hasDisplayName()) {
-							String name = item.getItemMeta().getDisplayName();
-							if(name.contains("Ban")) {
-								if(target.containsKey(player.getUniqueId())) {
-									gui.BanChoice(player, Bukkit.getPlayer(target.get(player.getUniqueId())));
-									player.closeInventory();
-								}
+					NBTItem i = new NBTItem(item);
+					if(i.hasKey("Ban Option")) {
+						if(target.containsKey(player.getUniqueId())) {
+							if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+								gui.BanChoice(player, target.get(player.getUniqueId()).getValue());
+								player.closeInventory();
 							}
-							else if(name.contains("Mute")) {
-								if(target.containsKey(player.getUniqueId())) {
-									gui.MuteChoice(player, Bukkit.getPlayer(target.get(player.getUniqueId())));
-									player.closeInventory();
-								}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to ban players!"));
+							}
+						}
+					}
+					else if(i.hasKey("Mute Option")) {
+						if(target.containsKey(player.getUniqueId())) {
+							if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+								gui.MuteChoice(player, target.get(player.getUniqueId()).getValue());
+								player.closeInventory();
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to mute players!"));
 							}
 						}
 					}
@@ -1394,40 +1185,45 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		Player player = (Player) event.getWhoClicked();
 		ItemStack item = event.getCurrentItem();
 		String title = player.getOpenInventory().getTitle();
+		RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
 		if(player.getOpenInventory() != null) {
-			if(ChatColor.stripColor(title).contains("Punish")) {
+			if(ChatColor.stripColor(title).contains("Punish, Ban Choice")) {
 				if(item != null) {
-					if(item.hasItemMeta()) {
-						if(item.getItemMeta().hasDisplayName()) {
-							Punish pun = pManager.get(target.get(player.getUniqueId()));
-							String name = item.getItemMeta().getDisplayName();
-							if(name.contains("Ban")) {
-								if(target.containsKey(player.getUniqueId())) {
-									player.closeInventory();
-									if(!pun.isBanned()) {
-										gui.BanReason(player, Bukkit.getPlayer(target.get(player.getUniqueId())));
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is already banned!"));
-									}
+					NBTItem i = new NBTItem(item);
+					Punish pun = pManager.get(target.get(player.getUniqueId()).getKey());
+					if(i.hasKey("Ban")) {
+						if(target.containsKey(player.getUniqueId())) {
+							if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+								player.closeInventory();
+								if(!pun.isBanned()) {
+									gui.BanReason(player, target.get(player.getUniqueId()).getValue());
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is already banned!"));
 								}
 							}
-							else if(name.contains("Unban")) {
-								if(target.containsKey(player.getUniqueId())) {
-									player.closeInventory();
-									if(pun.isBanned()) {
-										pun.setBanTime(0L);
-										pun.removeBannedBy(pun.getBanOffense() - 1);
-										pun.removeBanReason(pun.getBanOffense() - 1);
-										Player offender = Bukkit.getPlayer(target.get(player.getUniqueId()));
-										if(offender != null && offender.isOnline()) {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + offender.getName()));
-										}
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not banned!"));
-									}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to ban players!"));
+							}
+						}
+					}
+					else if(i.hasKey("Unban")) {
+						if(target.containsKey(player.getUniqueId())) {
+							if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+								player.closeInventory();
+								if(pun.isBanned()) {
+									pun.setBanTime(0L);
+									pun.setBanPerm(false);
+									pun.removeBannedBy(pun.getBanOffense() - 1);
+									pun.removeBanReason(pun.getBanOffense() - 1);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + target.get(player.getUniqueId()).getValue()));
 								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not banned!"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to unban players!"));
 							}
 						}
 					}
@@ -1441,200 +1237,124 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		ItemStack i = event.getCurrentItem();
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
-			if(ChatColor.stripColor(title).contains("Punish")) {
+			if(ChatColor.stripColor(title).contains("Punish, Ban Reason")) {
 				if(i != null) {
 					NBTItem item = new NBTItem(i);
 					if(target.containsKey(player.getUniqueId())) {
-						Player p = m.convertOfflinePlayer(target.get(player.getUniqueId()));
+						OfflinePlayer p = Bukkit.getOfflinePlayer(target.get(player.getUniqueId()).getKey());
 						if(p.getName() != null) {
 							Punish pun = pManager.get(p.getUniqueId());
 							if(item.hasKey("Combat Related")) {
 								pun.setBanPerm(true);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have banned &6" + p.getName() + " &cpermanently."));
-								player.closeInventory();
 								pun.addBannedBy(player.getName());
 								pun.addBanReason("Combat Related");
-								Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-										"&cYou have been banned!"
-										+ "\n&cYou can join back in: &c&lNever"
-										+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)		
-										+ "\n&cBanned By: &6" + player.getName()
-										+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-								));
 							}
 							else if(item.hasKey("Auto Related")) {
 								if(pun.getBanOffense() == 0) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("Auto Related");
 									pun.setBanTime(System.currentTimeMillis() + 5184000000L);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have banned &6" + p.getName() + " &cfor: &b60 Days"));
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &b&l60 Days"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
 								else if(pun.getBanOffense() >= 1) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("Auto Related");
 									pun.setBanPerm(true);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &c&lNever"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
-								player.closeInventory();
 							}
-							if(item.hasKey("Movement Related")) {
+							else if(item.hasKey("Movement Related")) {
 								if(pun.getBanOffense() == 0) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("Movement Related");
 									pun.setBanTime(System.currentTimeMillis() + 5184000000L);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &b&l60 Days"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
 								else if(pun.getBanOffense() >= 1) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("Movement Related");
 									pun.setBanPerm(true);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &c&lNever"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
 								player.closeInventory();
 							}
-							if(item.hasKey("ESP Related")) {
+							else if(item.hasKey("ESP Related")) {
 								if(pun.getBanOffense() == 0) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("ESP Related");
 									pun.setBanTime(System.currentTimeMillis() + 2592000000L);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &b&l30 Days"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
 								else if(pun.getBanOffense() >= 1) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("ESP Related");
 									pun.setBanPerm(true);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &c&lNever"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
-								player.closeInventory();
 							}
-							if(item.hasKey("Health Related")) {
+							else if(item.hasKey("Health Related")) {
 								pun.setBanPerm(true);
-								player.closeInventory();
 								pun.addBannedBy(player.getName());
 								pun.addBanReason("Health Related");
-								Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-										"&cYou have been banned!"
-										+ "\n&cYou can join back in: &c&lNever"
-										+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-										+ "\n&cBanned By: &6" + player.getName()
-										+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-								));
 							}
-							if(item.hasKey("Building Related")) {
+							else if(item.hasKey("Building Related")) {
 								if(pun.getBanOffense() == 0) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("Building Related");
 									pun.setBanTime(System.currentTimeMillis() + 2592000000L);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &b&l30 Days"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
 								else if(pun.getBanOffense() >= 1) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("Building Related");
 									pun.setBanPerm(true);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &c&lNever"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
-								player.closeInventory();
 							}
-							if(item.hasKey("Wallhack Related")) {
+							else if(item.hasKey("Wallhack Related")) {
 								pun.setBanPerm(true);
 								pun.addBannedBy(player.getName());
 								pun.addBanReason("Wallhack Related");
-								Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-										"&cYou have been banned!"
-										+ "\n&cYou can join back in: &b&l30 Days"
-										+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-										+ "\n&cBanned By: &6" + player.getName()
-										+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-								));
-								player.closeInventory();
 							}
-							if(item.hasKey("Party Related")) {
+							else if(item.hasKey("Party Related")) {
 								if(pun.getBanOffense() == 0) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("Party Related");
 									pun.setBanTime(System.currentTimeMillis() + 604800000L);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &b&l7 Days"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
 								if(pun.getBanOffense() == 1) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("Party Related");
 									pun.setBanTime(System.currentTimeMillis() + 2592000000L);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &b&l30 Days"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
 								else if(pun.getBanOffense() >= 2) {
 									pun.addBannedBy(player.getName());
 									pun.addBanReason("Party Related");
 									pun.setBanPerm(true);
-									Bukkit.getPlayer(target.get(player.getUniqueId())).kickPlayer(new CCT().colorize(
-											"&cYou have been banned!"
-											+ "\n&cYou can join back in: &c&lNever"
-											+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)
-											+ "\n&cBanned By: &6" + player.getName()
-											+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
-									));
 								}
-								player.closeInventory();
+							}
+							int year = Calendar.getInstance().get(Calendar.YEAR);
+							int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK_IN_MONTH);
+							int month = Calendar.getInstance().get(Calendar.MONTH);
+							int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+							int minute = Calendar.getInstance().get(Calendar.MINUTE);
+							int second = Calendar.getInstance().get(Calendar.SECOND);
+							String superTime = hour + ":" + minute + ":" + second + " " + day + "-" + month + "-" + year;
+							pun.addBanDate(superTime);
+							String time = "";
+							if(!pun.getBanPerm()) {
+								Long timeLeft = pun.getBanTime() - System.currentTimeMillis();
+								long diffSeconds = timeLeft / 1000 % 60;
+						        long diffMinutes = timeLeft / (60 * 1000) % 60;
+						        long diffHours = timeLeft / (60 * 60 * 1000) % 24;
+						        long diffDays = timeLeft / (24 * 60 * 60 * 1000);
+							    time = diffDays + " " + diffHours + ":" + diffMinutes + ":" + diffSeconds;
+							}
+							else {
+								time = "&c&lNever";
+							}
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have banned &6" + p.getName() + " &cfor: &b" + time));
+							player.closeInventory();
+							if(Bukkit.getPlayer(target.get(player.getUniqueId()).getKey()) != null) {
+								Bukkit.getPlayer(target.get(player.getUniqueId()).getKey()).kickPlayer(new CCT().colorize(
+										"&cYou have been banned!"
+										+ "\n&cYou can join back in: &b&l" + time
+										+ "\n&cBan Reason: &c&l" + pun.getBanReason(pun.getBanReasonsList().size() - 1)		
+										+ "\n&cBanned By: &6" + player.getName()
+										+ "\n&cAppeal at: &6https://www.dungeonforge.eu/forums/ban-appeals.72/"
+								));
 							}
 						}
 					}
@@ -1647,42 +1367,49 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		Player player = (Player) event.getWhoClicked();
 		ItemStack item = event.getCurrentItem();
 		String title = player.getOpenInventory().getTitle();
+		RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
 		if(player.getOpenInventory() != null) {
-			if(ChatColor.stripColor(title).contains("Punish")) {
+			if(ChatColor.stripColor(title).contains("Punish, Mute Choice")) {
 				if(item != null) {
-					if(item.hasItemMeta()) {
-						if(item.getItemMeta().hasDisplayName()) {
-							Punish pun = pManager.get(target.get(player.getUniqueId()));
-							String name = item.getItemMeta().getDisplayName();
-							if(name.contains("Mute")) {
-								if(target.containsKey(player.getUniqueId())) {
-									player.closeInventory();
-									if(!pun.isMuted()) {
-										gui.MuteReason(player, Bukkit.getPlayer(target.get(player.getUniqueId())));
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is already banned!"));
-									}
+					NBTItem i = new NBTItem(item);
+					Punish pun = pManager.get(target.get(player.getUniqueId()).getKey());
+					if(i.hasKey("Mute")) {
+						if(target.containsKey(player.getUniqueId())) {
+							if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+								player.closeInventory();
+								if(!pun.isMuted()) {
+									gui.MuteReason(player, target.get(player.getUniqueId()).getValue());
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is already banned!"));
 								}
 							}
-							else if(name.contains("Unmute")) {
-								if(target.containsKey(player.getUniqueId())) {
-									player.closeInventory();
-									if(pun.isMuted()) {
-										pun.setMuteTime(0L);
-										pun.setMutePerm(false);
-										pun.removeMutedBy(pun.getMuteOffense() - 1);
-										pun.removeMuteReason(pun.getMuteOffense() - 1);
-										Player offender = Bukkit.getPlayer(target.get(player.getUniqueId()));
-										if(offender != null && offender.isOnline()) {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + offender.getName()));
-										}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to mute players!"));
+							}
+						}
+					}
+					else if(i.hasKey("Unmute")) {
+						if(target.containsKey(player.getUniqueId())) {
+							if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+								player.closeInventory();
+								if(pun.isMuted()) {
+									pun.setMuteTime(0L);
+									pun.setMutePerm(false);
+									pun.removeMutedBy(pun.getMuteOffense() - 1);
+									pun.removeMuteReason(pun.getMuteOffense() - 1);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + target.get(player.getUniqueId()).getValue()));
+									Player offender = Bukkit.getPlayer(target.get(player.getUniqueId()).getKey());
+									if(offender != null) {
+										offender.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas unmuted you!"));
 									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not muted!"));
-									}
-									
 								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not muted!"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to unmute players!"));
 							}
 						}
 					}
@@ -1696,55 +1423,57 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		ItemStack i = event.getCurrentItem();
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
-			if(ChatColor.stripColor(title).contains("Punish")) {
+			if(ChatColor.stripColor(title).contains("Punish, Mute Reason")) {
 				if(i != null) {
 					NBTItem item = new NBTItem(i);
 					if(target.containsKey(player.getUniqueId())) {
-						Player p = m.convertOfflinePlayer(target.get(player.getUniqueId()));
+						OfflinePlayer p = Bukkit.getOfflinePlayer(target.get(player.getUniqueId()).getKey());
 						if(p.getName() != null) {
 							Punish pun = pManager.get(p.getUniqueId());
+							String mMe = "";
+							String mThem = "";
 							if(item.hasKey("Spamming Related")) {
 								if(pun.getMuteOffense() == 0) {
 									pun.addMutedBy(player.getName());
-									pun.addMuteReason("Spamming/Bypassing the chat filter.");
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have warned &6" + p.getName() + " &cfor spamming/bypassing the chat filter."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been warned by: &6" + player.getName() + " &cfor spamming/bypassing the chat filter"));
+									pun.addMuteReason("Spamming/Bypassing the chat filter. (Warn)");
+									mMe = "&2&l[DungeonForge]: &cYou have warned &6" + p.getName() + " &cfor spamming/bypassing the chat filter.";
+									mThem = "&2&l[DungeonForge]: &cYou have been warned by: &6" + player.getName() + " &cfor spamming/bypassing the chat filter";
 								}
 								else if(pun.getMuteOffense() == 1) {
 									pun.addMutedBy(player.getName());
 									pun.addMuteReason("Spamming/Bypassing the chat filter.");
 									pun.setMuteTime(System.currentTimeMillis() + 86400000L);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have muted &6" + p.getName() + " &cfor spamming/bypassing the chat filter for 24 hours."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been muted by: &6" + player.getName() + " &cfor spamming/bypassing the chat filter for 24 hours."));
+									mMe = "&2&l[DungeonForge]: &cYou have muted &6" + p.getName() + " &cfor spamming/bypassing the chat filter for 24 hours.";
+									mThem = "&2&l[DungeonForge]: &cYou have been muted by: &6" + player.getName() + " &cfor spamming/bypassing the chat filter for 24 hours.";
 								}
 								else if(pun.getMuteOffense() >= 2) {
 									pun.addMutedBy(player.getName());
 									pun.addMuteReason("Spamming/Bypassing the chat filter.");
 									pun.setMutePerm(true);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor spamming/bypassing the chat filter."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor spamming/bypassing the chat filter."));
+									mMe = "&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor spamming/bypassing the chat filter.";
+									mThem = "&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor spamming/bypassing the chat filter.";
 								}
 							}
 							else if(item.hasKey("Insult Related")) {
 								if(pun.getMuteOffense() == 0) {
 									pun.addMutedBy(player.getName());
-									pun.addMuteReason("Insulting a player.");
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have warned &6" + p.getName() + " &cfor insulting a player."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been warned by: &6" + player.getName() + " &cfor insulting a player."));
+									pun.addMuteReason("Insulting a player. (Warn)");
+									mMe = "&2&l[DungeonForge]: &cYou have warned &6" + p.getName() + " &cfor insulting a player.";
+									mThem = "&2&l[DungeonForge]: &cYou have been warned by: &6" + player.getName() + " &cfor insulting a player.";
 								}
 								else if(pun.getMuteOffense() == 1) {
 									pun.addMutedBy(player.getName());
 									pun.addMuteReason("Insulting a player.");
 									pun.setMuteTime(System.currentTimeMillis() + 604800000L);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have muted &6" + p.getName() + " &cfor insulting a player for 7 days."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been muted by: &6" + player.getName() + " &cfor insulting a player for 7 days."));
+									mMe = "&2&l[DungeonForge]: &cYou have muted &6" + p.getName() + " &cfor insulting a player for 7 days.";
+									mThem = "&2&l[DungeonForge]: &cYou have been muted by: &6" + player.getName() + " &cfor insulting a player for 7 days.";
 								}
 								else if(pun.getMuteOffense() >= 2) {
 									pun.addMutedBy(player.getName());
 									pun.addMuteReason("Insulting a player.");
 									pun.setMutePerm(true);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor insulting a player."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor insulting a player."));
+									mMe = "&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor insulting a player.";
+									mThem = "&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor insulting a player.";
 								}
 							}
 							else if(item.hasKey("Slur Related")) {
@@ -1752,44 +1481,50 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									pun.addMutedBy(player.getName());
 									pun.addMuteReason("using Racist/Sexual/Pedopholic slurs.");
 									pun.setMuteTime(System.currentTimeMillis() + 1209600000L);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have muted &6" + p.getName() + " &cfor using racist/sexual/pedopholic slurs for 14 days."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been muted by: &6" + player.getName() + " &cfor using racist/sexual/pedopholic slurs for 14 days."));
+									mMe = "&2&l[DungeonForge]: &cYou have muted &6" + p.getName() + " &cfor using racist/sexual/pedopholic slurs for 14 days.";
+									mThem = "&2&l[DungeonForge]: &cYou have been muted by: &6" + player.getName() + " &cfor using racist/sexual/pedopholic slurs for 14 days.";
 								}
 								else if(pun.getMuteOffense() >= 1) {
 									pun.addMutedBy(player.getName());
 									pun.addMuteReason("Using Racist/Sexual/Pedopholic slurs.");
 									pun.setMutePerm(true);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor using racist/sexual/pedopholic slurs."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor using racist/sexual/pedopholic slurs."));
+									mMe = "&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor using racist/sexual/pedopholic slurs.";
+									mThem = "&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor using racist/sexual/pedopholic slurs.";
 								}
 							}
 							else if(item.hasKey("Threat Related")) {
 								pun.addMutedBy(player.getName());
 								pun.addMuteReason("Threatening.");
 								pun.setMutePerm(true);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor threatening someone."));
-								p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor threatening someone."));
+								mMe = "&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor threatening someone.";
+								mThem = "&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor threatening someone.";
 							}
 							else if(item.hasKey("Chat Related")) {
 								if(pun.getMuteOffense() == 0) {
 									pun.addMutedBy(player.getName());
-									pun.addMuteReason("Using Chat Modifications.");
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have warned &6" + p.getName() + " &cfor using Chat Modifications."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been warned by: &6" + player.getName() + " &cfor using Chat Modifications."));
+									pun.addMuteReason("Using Chat Modifications. (Warn)");
+									mMe = "&2&l[DungeonForge]: &cYou have warned &6" + p.getName() + " &cfor using Chat Modifications.";
+									mThem = "&2&l[DungeonForge]: &cYou have been warned by: &6" + player.getName() + " &cfor using Chat Modifications.";
 								}
 								else if(pun.getMuteOffense() == 1) {
 									pun.addMutedBy(player.getName());
 									pun.addMuteReason("Using Chat Modifications.");
 									pun.setMuteTime(System.currentTimeMillis() + 86400000L);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have muted &6" + p.getName() + " &cfor using Chat Modifications for 24 hours."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been muted by: &6" + player.getName() + " &cfor using Chat Modifications for 24 hours."));
+									mMe = "&2&l[DungeonForge]: &cYou have muted &6" + p.getName() + " &cfor using Chat Modifications for 24 hours.";
+									mThem = "&2&l[DungeonForge]: &cYou have been muted by: &6" + player.getName() + " &cfor using Chat Modifications for 24 hours.";
 								}
 								else if(pun.getMuteOffense() >= 2) {
 									pun.addMutedBy(player.getName());
 									pun.addMuteReason("Using Chat Modifications.");
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor Chat Modifications."));
-									p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor Chat Modifications."));
+									mMe = "&2&l[DungeonForge]: &cYou have permanently muted &6" + p.getName() + " &cfor Chat Modifications.";
+									mThem = "&2&l[DungeonForge]: &cYou have been permanently muted by: &6" + player.getName() + " &cfor Chat Modifications.";
 								}
+							}
+							player.closeInventory();
+							player.sendMessage(new CCT().colorize(mMe));
+							if(Bukkit.getPlayer(target.get(player.getUniqueId()).getKey()) != null) {
+								Player pp = Bukkit.getPlayer(target.get(player.getUniqueId()).getKey());
+								pp.sendMessage(new CCT().colorize(mThem));
 							}
 						}
 					}

@@ -29,19 +29,24 @@ public class Chat implements Listener{
 	public void chatFeature(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 		DFPlayer dfPlayer = dfManager.getEntity(player);
+		String totalMessage = event.getMessage();
+		totalMessage = totalMessage.replace("%", "%%");
 		if(player.getWorld().getName().equalsIgnoreCase("DFWarzone-1") || player.getWorld().getName().equalsIgnoreCase("factionworld-1")) {
 			int level = dfPlayer.getLevel();
 			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
 			DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 			if(faction != null) {
-				event.setFormat("§6" + faction.getName() + " §a| §b§l"  + level + "§a | §7" + player.getName() + ": " + event.getMessage());
+				event.setFormat("§6" + faction.getName() + " §a| §b§l"  + level + "§a | §7" + player.getName() + ": " + totalMessage);
+				event.setMessage(event.getMessage());
 			}
 			else {
-				event.setFormat("§b§l" + level + " §a| §7" + player.getName() + ": " + event.getMessage());
+				event.setFormat("§b§l" + level + " §a| §7" + player.getName() + ": " + totalMessage);
+				event.setMessage(event.getMessage());
 			}
 		}
 		else {
-			event.setFormat("§7" + player.getName() + ": " + event.getMessage());
+			event.setFormat("§7" + player.getName() + ": " + totalMessage);
+			event.setMessage(event.getMessage());
 		}
 		for(Player p : event.getRecipients()) {
 			if(p != null) {

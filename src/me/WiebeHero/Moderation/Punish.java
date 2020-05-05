@@ -7,10 +7,10 @@ public class Punish {
 	public UUID uuid;
 	public ArrayList<String> banReason;
 	public ArrayList<String> muteReason;
-	public ArrayList<String> warnReason;
 	public ArrayList<String> bannedBy;
 	public ArrayList<String> mutedBy;
-	public ArrayList<String> warnedBy;
+	public ArrayList<String> banDate;
+	public ArrayList<String> muteDate;
 	public Long banTime;
 	public Long muteTime;
 	public boolean banPerm;
@@ -19,9 +19,10 @@ public class Punish {
 		this.uuid = uuid;
 		this.banReason = new ArrayList<String>();
 		this.muteReason = new ArrayList<String>();
-		this.warnReason = new ArrayList<String>();
 		this.bannedBy = new ArrayList<String>();
 		this.mutedBy = new ArrayList<String>();
+		this.banDate = new ArrayList<String>();
+		this.muteDate = new ArrayList<String>();
 		this.banTime = 0L;
 		this.muteTime = 0L;
 		this.banPerm = false;
@@ -74,6 +75,37 @@ public class Punish {
 		this.banReason.clear();
 	}
 	/*
+	 * Ban Date methods
+	 */
+	public ArrayList<String> getBanDateList() {
+		return this.banDate;
+	}
+	public String getBanDate(int index) {
+		if(banDate.get(index) != null) {
+			return banDate.get(index);
+		}
+		return null;
+	}
+	public void removeBanDate(int index) {
+		if(banDate.get(index) != null) {
+			banDate.remove(index);
+		}
+	}
+	public void setBanDate(int index, String s) {
+		if(banDate.size() < index && index > -1) {
+			banDate.set(index, s);
+		}
+	}
+	public void addBanDate(String date) {
+		this.banDate.add(date);
+	}
+	public void setBanDate(ArrayList<String> dates) {
+		this.banDate = dates;
+	}
+	public void clearBanDates() {
+		this.banDate.clear();
+	}
+	/*
 	 * Mute Reason Methods
 	 */
 	public ArrayList<String> getMuteReasonsList() {
@@ -111,41 +143,35 @@ public class Punish {
 		this.muteReason.clear();
 	}
 	/*
-	 * Warning Reason Methods
+	 * Mute Date methods
 	 */
-	public ArrayList<String> getWarnReasonsList() {
-		return this.warnReason;
+	public ArrayList<String> getMuteDateList() {
+		return this.muteDate;
 	}
-	public String getWarnReason(int index) {
-		if(warnReason.get(index) != null) {
-			return warnReason.get(index);
+	public String getMuteDate(int index) {
+		if(muteDate.get(index) != null) {
+			return muteDate.get(index);
 		}
 		return null;
 	}
-	public String getWarnReason(String s) {
-		if(warnReason.contains(s)) {
-			return s;
-		}
-		return null;
-	}
-	public void editWarnReason(String replace, int index) {
-		if(warnReason.get(index) != null) {
-			warnReason.set(index, replace);
+	public void removeMuteDate(int index) {
+		if(muteDate.get(index) != null) {
+			muteDate.remove(index);
 		}
 	}
-	public void removeWarnReason(int index) {
-		if(warnReason.get(index) != null) {
-			warnReason.remove(index);
+	public void setMuteDate(int index, String s) {
+		if(muteDate.size() < index && index > -1) {
+			muteDate.set(index, s);
 		}
 	}
-	public void addWarnReason(String reason) {
-		this.warnReason.add(reason);
+	public void addMuteDate(String date) {
+		this.muteDate.add(date);
 	}
-	public void setWarnReason(ArrayList<String> reason) {
-		this.warnReason = reason;
+	public void setMuteDate(ArrayList<String> dates) {
+		this.muteDate = dates;
 	}
-	public void clearWarnReasons() {
-		this.warnReason.clear();
+	public void clearMuteDates() {
+		this.muteDate.clear();
 	}
 	/*
 	 * Banned By Methods
@@ -183,75 +209,38 @@ public class Punish {
 	 * Muted By Methods
 	 */
 	public ArrayList<String> getMutedByList() {
-		return this.warnReason;
+		return this.mutedBy;
 	}
 	public String getMutedBy(int index) {
-		if(warnReason.get(index) != null) {
-			return warnReason.get(index);
+		if(mutedBy.get(index) != null) {
+			return mutedBy.get(index);
 		}
 		return null;
 	}
 	public String getMutedBy(String s) {
-		if(warnReason.contains(s)) {
+		if(mutedBy.contains(s)) {
 			return s;
 		}
 		return null;
 	}
 	public void editMutedBy(String replace, int index) {
-		if(warnReason.get(index) != null) {
-			warnReason.set(index, replace);
+		if(mutedBy.get(index) != null) {
+			mutedBy.set(index, replace);
 		}
 	}
 	public void removeMutedBy(int index) {
-		if(warnReason.get(index) != null) {
-			warnReason.remove(index);
+		if(mutedBy.get(index) != null) {
+			mutedBy.remove(index);
 		}
 	}
 	public void addMutedBy(String reason) {
-		this.warnReason.add(reason);
+		this.mutedBy.add(reason);
 	}
 	public void setMutedBy(ArrayList<String> reason) {
 		this.mutedBy = reason;
 	}
 	public void clearMutedBy() {
-		this.warnReason.clear();
-	}
-	/*
-	 * Warned By Methods
-	 */
-	public ArrayList<String> getWarnedByList() {
-		return this.warnReason;
-	}
-	public String getWarnedBy(int index) {
-		if(warnReason.get(index) != null) {
-			return warnReason.get(index);
-		}
-		return null;
-	}
-	public String getWarnedBy(String s) {
-		if(warnReason.contains(s)) {
-			return s;
-		}
-		return null;
-	}
-	public void editWarnedBy(String replace, int index) {
-		if(warnReason.get(index) != null) {
-			warnReason.set(index, replace);
-		}
-	}
-	public void removeWarnedBy(int index) {
-		if(warnReason.get(index) != null) {
-			warnReason.remove(index);
-		}
-	}
-	public void addWarnedBy(String reason) {
-		this.warnReason.add(reason);
-	}
-	public void setWarnedBy(ArrayList<String> reason) {
-		this.mutedBy = reason;
-	}
-	public void clearWarnedBy() {
-		this.warnReason.clear();
+		this.mutedBy.clear();
 	}
 	/*
 	 * Ban Time Methods

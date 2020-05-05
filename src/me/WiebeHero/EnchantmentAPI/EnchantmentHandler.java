@@ -50,31 +50,34 @@ public class EnchantmentHandler extends SwordSwingProgress{
 				if(!event.isCancelled()) {
 					LivingEntity damager = (LivingEntity) event.getDamager();
 					LivingEntity victim = (LivingEntity) event.getEntity();
-					if(!wg.isInZone(damager, "spawn")) {
-						double d = 0.0;
-						if(swordSwingProgress.containsKey(damager.getName())) {
-							d = swordSwingProgress.get(damager.getName());
-						}
-						else {
-							d = 1.0;
-						}
-						DamageCause damageCause = event.getCause();
-						if(damageCause != null && damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.ENTITY_SWEEP_ATTACK) {
-							if(d == 1.0) {
-								if(damager.getEquipment().getItemInMainHand() != null) {
-									if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
-										if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
-											for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-												String enchant = ChatColor.stripColor(s1);
-												String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-												if(enchantment.getMeleeEnchantments().containsKey(check)) {
-													if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.ENTITY_DAMAGE_BY_ENTITY) {
+					double d = 0.0;
+					if(swordSwingProgress.containsKey(damager.getName())) {
+						d = swordSwingProgress.get(damager.getName());
+					}
+					else {
+						d = 1.0;
+					}
+					DamageCause damageCause = event.getCause();
+					if(damageCause != null && damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.ENTITY_SWEEP_ATTACK) {
+						if(d == 1.0) {
+							if(damager.getEquipment().getItemInMainHand() != null) {
+								if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
+									if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
+										for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+											String enchant = ChatColor.stripColor(s1);
+											String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+											if(enchantment.getMeleeEnchantments().containsKey(check)) {
+												if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.ENTITY_DAMAGE_BY_ENTITY) {
+													if(!wg.isInZone(damager, "spawn")) {
 														enchant = enchant.replaceAll("[^\\d.]", "");
 														int level = Integer.parseInt(enchant) - 1;
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
+													}
+													else {
+														damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 													}
 												}
 											}
@@ -95,30 +98,33 @@ public class EnchantmentHandler extends SwordSwingProgress{
 				if(!event.isCancelled()) {
 					LivingEntity damager = (LivingEntity) event.getEntity().getKiller();
 					LivingEntity victim = (LivingEntity) event.getEntity();
-					if(!wg.isInZone(damager, "spawn")) {
-						double d = 0.0;
-						if(swordSwingProgress.containsKey(damager.getName())) {
-							d = swordSwingProgress.get(damager.getName());
-						}
-						else {
-							d = 1.0;
-						}
-						if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK || victim.getLastDamageCause().getCause() == DamageCause.ENTITY_SWEEP_ATTACK) {
-							if(d == 1.0) {
-								if(damager.getEquipment().getItemInMainHand() != null) {
-									if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
-										if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
-											for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-												String enchant = ChatColor.stripColor(s1);
-												String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-												if(enchantment.getMeleeEnchantments().containsKey(check)) {
-													if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.ENTITY_DEATH_MELEE) {
+					double d = 0.0;
+					if(swordSwingProgress.containsKey(damager.getName())) {
+						d = swordSwingProgress.get(damager.getName());
+					}
+					else {
+						d = 1.0;
+					}
+					if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK || victim.getLastDamageCause().getCause() == DamageCause.ENTITY_SWEEP_ATTACK) {
+						if(d == 1.0) {
+							if(damager.getEquipment().getItemInMainHand() != null) {
+								if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
+									if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
+										for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+											String enchant = ChatColor.stripColor(s1);
+											String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+											if(enchantment.getMeleeEnchantments().containsKey(check)) {
+												if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.ENTITY_DEATH_MELEE) {
+													if(!wg.isInZone(damager, "spawn")) {
 														enchant = enchant.replaceAll("[^\\d.]", "");
 														int level = Integer.parseInt(enchant) - 1;
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
+													}
+													else {
+														damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 													}
 												}
 											}
@@ -139,30 +145,33 @@ public class EnchantmentHandler extends SwordSwingProgress{
 				if(!event.isCancelled()) {
 					Player damager = (Player) event.getEntity().getKiller();
 					Player victim = (Player) event.getEntity();
-					if(!wg.isInZone(damager, "spawn")) {
-						double d = 0.0;
-						if(swordSwingProgress.containsKey(damager.getName())) {
-							d = swordSwingProgress.get(damager.getName());
-						}
-						else {
-							d = 1.0;
-						}
-						if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK || victim.getLastDamageCause().getCause() == DamageCause.ENTITY_SWEEP_ATTACK) {
-							if(d == 1.0) {
-								if(damager.getEquipment().getItemInMainHand() != null) {
-									if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
-										if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
-											for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-												String enchant = ChatColor.stripColor(s1);
-												String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-												if(enchantment.getMeleeEnchantments().containsKey(check)) {
-													if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.PLAYER_DEATH_MELEE) {
+					double d = 0.0;
+					if(swordSwingProgress.containsKey(damager.getName())) {
+						d = swordSwingProgress.get(damager.getName());
+					}
+					else {
+						d = 1.0;
+					}
+					if(victim.getLastDamageCause() != null && victim.getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK || victim.getLastDamageCause().getCause() == DamageCause.ENTITY_SWEEP_ATTACK) {
+						if(d == 1.0) {
+							if(damager.getEquipment().getItemInMainHand() != null) {
+								if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
+									if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
+										for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+											String enchant = ChatColor.stripColor(s1);
+											String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+											if(enchantment.getMeleeEnchantments().containsKey(check)) {
+												if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.PLAYER_DEATH_MELEE) {
+													if(!wg.isInZone(damager, "spawn")) {
 														enchant = enchant.replaceAll("[^\\d.]", "");
 														int level = Integer.parseInt(enchant) - 1;
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
+													}
+													else {
+														damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 													}
 												}
 											}
@@ -183,27 +192,30 @@ public class EnchantmentHandler extends SwordSwingProgress{
 				if(!event.isCancelled()) {
 					LivingEntity damager = (LivingEntity) event.getDamager();
 					LivingEntity victim = (LivingEntity) event.getEntity();
-					if(!wg.isInZone(damager, "spawn")) {
-						DamageCause damageCause = event.getCause();
-						if(damageCause != null && damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.ENTITY_SWEEP_ATTACK || damageCause == DamageCause.PROJECTILE) {
-							if(victim.getEquipment().getArmorContents() != null && victim.getEquipment().getItemInOffHand() != null) {
-								ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getEquipment().getArmorContents()));
-								items.add(victim.getEquipment().getItemInOffHand());
-								for(ItemStack item : items) {
-									if(item != null) {
-										if(item.hasItemMeta()) {
-											if(item.getItemMeta().hasLore()) {
-												for(String s1 : item.getItemMeta().getLore()){
-													String enchant = ChatColor.stripColor(s1);
-													String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-													if(enchantment.getArmorEnchantments().containsKey(check)) {
-														if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.ENTITY_DAMAGE_BY_ENTITY) {
+					DamageCause damageCause = event.getCause();
+					if(damageCause != null && damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.ENTITY_SWEEP_ATTACK || damageCause == DamageCause.PROJECTILE) {
+						if(victim.getEquipment().getArmorContents() != null && victim.getEquipment().getItemInOffHand() != null) {
+							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getEquipment().getArmorContents()));
+							items.add(victim.getEquipment().getItemInOffHand());
+							for(ItemStack item : items) {
+								if(item != null) {
+									if(item.hasItemMeta()) {
+										if(item.getItemMeta().hasLore()) {
+											for(String s1 : item.getItemMeta().getLore()){
+												String enchant = ChatColor.stripColor(s1);
+												String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+												if(enchantment.getArmorEnchantments().containsKey(check)) {
+													if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.ENTITY_DAMAGE_BY_ENTITY) {
+														if(!wg.isInZone(victim, "spawn")) {
 															enchant = enchant.replaceAll("[^\\d.]", "");
 															int level = Integer.parseInt(enchant) - 1;
 															enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, level);
 															enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 															enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 															enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
+														}
+														else {
+															victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 														}
 													}
 												}
@@ -225,25 +237,28 @@ public class EnchantmentHandler extends SwordSwingProgress{
 				if(!event.isCancelled()) {
 					LivingEntity damager = (LivingEntity) event.getEntity().getKiller();
 					LivingEntity victim = (LivingEntity) event.getEntity();
-					if(!wg.isInZone(damager, "spawn")) {
-						if(victim.getEquipment().getArmorContents() != null && victim.getEquipment().getItemInOffHand() != null) {
-							ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getEquipment().getArmorContents()));
-							items.add(victim.getEquipment().getItemInOffHand());
-							for(ItemStack item : items) {
-								if(item != null) {
-									if(item.hasItemMeta()) {
-										if(item.getItemMeta().hasLore()) {
-											for(String s1 : item.getItemMeta().getLore()){
-												String enchant = ChatColor.stripColor(s1);
-												String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-												if(enchantment.getArmorEnchantments().containsKey(check)) {
-													if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.KILLED_ENTITY) {
+					if(victim.getEquipment().getArmorContents() != null && victim.getEquipment().getItemInOffHand() != null) {
+						ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getEquipment().getArmorContents()));
+						items.add(victim.getEquipment().getItemInOffHand());
+						for(ItemStack item : items) {
+							if(item != null) {
+								if(item.hasItemMeta()) {
+									if(item.getItemMeta().hasLore()) {
+										for(String s1 : item.getItemMeta().getLore()){
+											String enchant = ChatColor.stripColor(s1);
+											String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+											if(enchantment.getArmorEnchantments().containsKey(check)) {
+												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.KILLED_ENTITY) {
+													if(!wg.isInZone(victim, "spawn")) {
 														enchant = enchant.replaceAll("[^\\d.]", "");
 														int level = Integer.parseInt(enchant) - 1;
 														enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, level);
 														enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 														enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 														enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
+													}
+													else {
+														victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 													}
 												}
 											}
@@ -264,26 +279,29 @@ public class EnchantmentHandler extends SwordSwingProgress{
 				if(!event.isCancelled()) {
 					LivingEntity damager = (LivingEntity) event.getDamager();
 					Player victim = (Player) event.getEntity();
-					if(!wg.isInZone(damager, "spawn")) {
-						DamageCause damageCause = event.getCause();
-						if(damageCause != null && damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.ENTITY_SWEEP_ATTACK || damageCause == DamageCause.PROJECTILE) {
-							if(victim.isBlocking()) {
-								if(victim.getEquipment().getItemInOffHand() != null) {
-									ItemStack item = victim.getEquipment().getItemInOffHand();
-									if(item != null) {
-										if(item.hasItemMeta()) {
-											if(item.getItemMeta().hasLore()) {
-												for(String s1 : item.getItemMeta().getLore()){
-													String enchant = ChatColor.stripColor(s1);
-													String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-													if(enchantment.getShieldEnchantments().containsKey(check)) {
-														if(enchantment.getShieldEnchantments().get(check).getKey() == Condition.BLOCKING) {
+					DamageCause damageCause = event.getCause();
+					if(damageCause != null && damageCause == DamageCause.ENTITY_ATTACK || damageCause == DamageCause.ENTITY_SWEEP_ATTACK || damageCause == DamageCause.PROJECTILE) {
+						if(victim.isBlocking()) {
+							if(victim.getEquipment().getItemInOffHand() != null) {
+								ItemStack item = victim.getEquipment().getItemInOffHand();
+								if(item != null) {
+									if(item.hasItemMeta()) {
+										if(item.getItemMeta().hasLore()) {
+											for(String s1 : item.getItemMeta().getLore()){
+												String enchant = ChatColor.stripColor(s1);
+												String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+												if(enchantment.getShieldEnchantments().containsKey(check)) {
+													if(enchantment.getShieldEnchantments().get(check).getKey() == Condition.BLOCKING) {
+														if(!wg.isInZone(victim, "spawn")) {
 															enchant = enchant.replaceAll("[^\\d.]", "");
 															int level = Integer.parseInt(enchant) - 1;
 															enchantment.getShieldEnchantments().get(check).getValue().activateEnchantment(damager, level);
 															enchantment.getShieldEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 															enchantment.getShieldEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 															enchantment.getShieldEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
+														}
+														else {
+															victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 														}
 													}
 												}
@@ -307,24 +325,27 @@ public class EnchantmentHandler extends SwordSwingProgress{
 					if(!event.isCancelled()) {
 						LivingEntity damager = (LivingEntity) arrow.getShooter();
 						LivingEntity victim = (LivingEntity) event.getEntity();
-						if(!wg.isInZone(damager, "spawn") && !wg.isInZone(arrow, "spawn")) {
-							DamageCause damageCause = event.getCause();
-							if(damageCause != null && damageCause == DamageCause.PROJECTILE) {
-								if(arrow.hasMetadata("AttackStrength") && arrow.getMetadata("AttackStrength").get(0).asDouble() == 1.00) {
-									if(damager.getEquipment().getItemInMainHand() != null) {
-										if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
-											if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
-												for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-													String enchant = ChatColor.stripColor(s1);
-													String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-													if(enchantment.getBowEnchantments().containsKey(check)) {
-														if(enchantment.getBowEnchantments().get(check).getKey() == Condition.PROJECTILE_DAMAGE) {
+						DamageCause damageCause = event.getCause();
+						if(damageCause != null && damageCause == DamageCause.PROJECTILE) {
+							if(arrow.hasMetadata("AttackStrength") && arrow.getMetadata("AttackStrength").get(0).asDouble() == 1.00) {
+								if(damager.getEquipment().getItemInMainHand() != null) {
+									if(damager.getEquipment().getItemInMainHand().hasItemMeta()) {
+										if(damager.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
+											for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+												String enchant = ChatColor.stripColor(s1);
+												String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+												if(enchantment.getBowEnchantments().containsKey(check)) {
+													if(enchantment.getBowEnchantments().get(check).getKey() == Condition.PROJECTILE_DAMAGE) {
+														if(!wg.isInZone(damager, "spawn") && !wg.isInZone(arrow, "spawn")) {
 															enchant = enchant.replaceAll("[^\\d.]", "");
 															int level = Integer.parseInt(enchant) - 1;
 															enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
 															enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 															enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 															enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
+														}
+														else {
+															damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 														}
 													}
 												}
@@ -345,20 +366,23 @@ public class EnchantmentHandler extends SwordSwingProgress{
 			if(!event.isCancelled()) {
 				LivingEntity damager = (LivingEntity) event.getShooter();
 				ItemStack item = event.getBow();
-				if(!wg.isInZone(damager, "spawn")) {
-					if(event.getAttackCharge() == 1.0F) {
-						if(item != null) {
-							if(item.hasItemMeta()) {
-								if(item.getItemMeta().hasLore()) {
-									for(String s1 : item.getItemMeta().getLore()){
-										String enchant = ChatColor.stripColor(s1);
-										String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-										if(enchantment.getBowEnchantments().containsKey(check)) {
-											if(enchantment.getBowEnchantments().get(check).getKey() == Condition.PROJECTILE_SHOOT) {
+				if(event.getAttackCharge() == 1.0F) {
+					if(item != null) {
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().hasLore()) {
+								for(String s1 : item.getItemMeta().getLore()){
+									String enchant = ChatColor.stripColor(s1);
+									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+									if(enchantment.getBowEnchantments().containsKey(check)) {
+										if(enchantment.getBowEnchantments().get(check).getKey() == Condition.PROJECTILE_SHOOT) {
+											if(!wg.isInZone(damager, "spawner") && !wg.isInZone(event.getProjectile(), "spawn")) {
 												enchant = enchant.replaceAll("[^\\d.]", "");
 												int level = Integer.parseInt(enchant) - 1;
 												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
 												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+											}
+											else {
+												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 											}
 										}
 									}
@@ -376,20 +400,23 @@ public class EnchantmentHandler extends SwordSwingProgress{
 			Arrow arrow = (Arrow) event.getEntity();
 			if(arrow.getShooter() instanceof LivingEntity) {
 				LivingEntity damager = (LivingEntity) arrow.getShooter();
-				if(!wg.isInZone(damager, "spawn") && wg.isInZone(arrow, "spawn")) {
-					if(arrow.hasMetadata("AttackStrength") && arrow.getMetadata("AttackStrength").get(0).asDouble() == 1.00) {
-						if(damager.getEquipment().getItemInMainHand() != null) {
-							if(damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
-								if(damager.getEquipment().getItemInMainHand().getItemMeta().getLore() != null) {
-									for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
-										String enchant = ChatColor.stripColor(s1);
-										String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-										if(enchantment.getBowEnchantments().containsKey(check)) {
-											if(enchantment.getBowEnchantments().get(check).getKey() == Condition.PROJECTILE_LAND) {
+				if(arrow.hasMetadata("AttackStrength") && arrow.getMetadata("AttackStrength").get(0).asDouble() == 1.00) {
+					if(damager.getEquipment().getItemInMainHand() != null) {
+						if(damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
+							if(damager.getEquipment().getItemInMainHand().getItemMeta().getLore() != null) {
+								for(String s1 : damager.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+									String enchant = ChatColor.stripColor(s1);
+									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+									if(enchantment.getBowEnchantments().containsKey(check)) {
+										if(enchantment.getBowEnchantments().get(check).getKey() == Condition.PROJECTILE_LAND) {
+											if(!wg.isInZone(damager, "spawn") && !wg.isInZone(arrow, "spawn")) {
 												enchant = enchant.replaceAll("[^\\d.]", "");
 												int level = Integer.parseInt(enchant) - 1;
 												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
 												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+											}
+											else {
+												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 											}
 										}
 									}
@@ -415,10 +442,15 @@ public class EnchantmentHandler extends SwordSwingProgress{
 									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
 									if(enchantment.getMeleeEnchantments().containsKey(check)) {
 										if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.RIGHT_CLICK) {
-											enchant = enchant.replaceAll("[^\\d.]", "");
-											int level = Integer.parseInt(enchant) - 1;
-											enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level);
-											enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+											if(!wg.isInZone(damager, "spawn")) {
+												enchant = enchant.replaceAll("[^\\d.]", "");
+												int level = Integer.parseInt(enchant) - 1;
+												enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level);
+												enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+											}
+											else {
+												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+											}
 										}
 									}
 								}
@@ -437,10 +469,15 @@ public class EnchantmentHandler extends SwordSwingProgress{
 									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
 									if(enchantment.getBowEnchantments().containsKey(check)) {
 										if(enchantment.getBowEnchantments().get(check).getKey() == Condition.LEFT_CLICK) {
-											enchant = enchant.replaceAll("[^\\d.]", "");
-											int level = Integer.parseInt(enchant) - 1;
-											enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
-											enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+											if(!wg.isInZone(damager, "spawn")) {
+												enchant = enchant.replaceAll("[^\\d.]", "");
+												int level = Integer.parseInt(enchant) - 1;
+												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
+												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+											}
+											else {
+												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+											}
 										}
 									}
 								}
@@ -449,97 +486,137 @@ public class EnchantmentHandler extends SwordSwingProgress{
 					}
 				}
 			}
-			else {
-				damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-			}
 		}
 	}
 	@EventHandler
 	public void damageEnchantmentHandler(EntityDamageEvent event) {
 		if(event.getEntity() instanceof LivingEntity) {
 			LivingEntity victim = (LivingEntity) event.getEntity();
-			if(!wg.isInZone(victim, "spawn")) {
-				if(victim.getEquipment().getArmorContents() != null && victim.getEquipment().getItemInOffHand() != null) {
-					ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getEquipment().getArmorContents()));
-					items.add(victim.getEquipment().getItemInOffHand());
-					for(ItemStack item : items) {
-						if(item != null) {
-							if(item.hasItemMeta()) {
-								if(item.getItemMeta().hasLore()) {
-									for(String s1 : item.getItemMeta().getLore()){
-										String enchant = ChatColor.stripColor(s1);
-										String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-										if(enchantment.getArmorEnchantments().containsKey(check)) {
-											if(event.getCause() == DamageCause.FALL) {
-												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.FALL) {
+			if(victim.getEquipment().getArmorContents() != null && victim.getEquipment().getItemInOffHand() != null) {
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getEquipment().getArmorContents()));
+				items.add(victim.getEquipment().getItemInOffHand());
+				for(ItemStack item : items) {
+					if(item != null) {
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().hasLore()) {
+								for(String s1 : item.getItemMeta().getLore()){
+									String enchant = ChatColor.stripColor(s1);
+									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+									if(enchantment.getArmorEnchantments().containsKey(check)) {
+										if(event.getCause() == DamageCause.FALL) {
+											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.FALL) {
+												if(!wg.isInZone(victim, "spawn")) {
 													enchant = enchant.replaceAll("[^\\d.]", "");
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
+												else {
+													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+												}
 											}
-											else if(event.getCause() == DamageCause.WITHER) {
-												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.WITHER) {
+										}
+										else if(event.getCause() == DamageCause.WITHER) {
+											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.WITHER) {
+												if(!wg.isInZone(victim, "spawn")) {
 													enchant = enchant.replaceAll("[^\\d.]", "");
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
+												else {
+													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+												}
 											}
-											else if(event.getCause() == DamageCause.POISON) {
-												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.POISON) {
+										}
+										else if(event.getCause() == DamageCause.POISON) {
+											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.POISON) {
+												if(!wg.isInZone(victim, "spawn")) {
 													enchant = enchant.replaceAll("[^\\d.]", "");
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
+												else {
+													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+												}
 											}
-											else if(event.getCause() == DamageCause.FIRE) {
-												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.LAVA) {
+										}
+										else if(event.getCause() == DamageCause.FIRE) {
+											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.LAVA) {
+												if(!wg.isInZone(victim, "spawn")) {
 													enchant = enchant.replaceAll("[^\\d.]", "");
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
+												else {
+													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+												}
 											}
-											else if(event.getCause() == DamageCause.FIRE_TICK) {
-												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.FIRE) {
+										}
+										else if(event.getCause() == DamageCause.FIRE_TICK) {
+											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.FIRE) {
+												if(!wg.isInZone(victim, "spawn")) {
 													enchant = enchant.replaceAll("[^\\d.]", "");
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
+												else {
+													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+												}
 											}
-											else if(event.getCause() == DamageCause.LIGHTNING) {
-												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.LIGHTNING) {
+										}
+										else if(event.getCause() == DamageCause.LIGHTNING) {
+											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.LIGHTNING) {
+												if(!wg.isInZone(victim, "spawn")) {
 													enchant = enchant.replaceAll("[^\\d.]", "");
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
+												else {
+													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+												}
 											}
-											else if(event.getCause() == DamageCause.DROWNING) {
-												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.DROWNING) {
+										}
+										else if(event.getCause() == DamageCause.DROWNING) {
+											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.DROWNING) {
+												if(!wg.isInZone(victim, "spawn")) {
 													enchant = enchant.replaceAll("[^\\d.]", "");
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
+												else {
+													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+												}
 											}
-											else if(event.getCause() == DamageCause.HOT_FLOOR) {
-												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.HOT_FLOOR) {
+										}
+										else if(event.getCause() == DamageCause.HOT_FLOOR) {
+											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.HOT_FLOOR) {
+												if(!wg.isInZone(victim, "spawn")) {
 													enchant = enchant.replaceAll("[^\\d.]", "");
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
+												else {
+													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+												}
 											}
-											else if(event.getCause() == DamageCause.MAGIC) {
-												if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.MAGIC) {
+										}
+										else if(event.getCause() == DamageCause.MAGIC) {
+											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.MAGIC) {
+												if(!wg.isInZone(victim, "spawn")) {
 													enchant = enchant.replaceAll("[^\\d.]", "");
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
+												}
+												else {
+													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 												}
 											}
 										}
@@ -556,23 +633,26 @@ public class EnchantmentHandler extends SwordSwingProgress{
 	public void normalDamageEnchantmentHandler(EntityDamageEvent event) {
 		if(event.getEntity() instanceof LivingEntity) {
 			LivingEntity victim = (LivingEntity) event.getEntity();
-			if(!wg.isInZone(victim, "spawn")) {
-				if(victim.getEquipment().getArmorContents() != null && victim.getEquipment().getItemInOffHand() != null) {
-					ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getEquipment().getArmorContents()));
-					items.add(victim.getEquipment().getItemInOffHand());
-					for(ItemStack item : items) {
-						if(item != null) {
-							if(item.hasItemMeta()) {
-								if(item.getItemMeta().hasLore()) {
-									for(String s1 : item.getItemMeta().getLore()){
-										String enchant = ChatColor.stripColor(s1);
-										String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
-										if(enchantment.getArmorEnchantments().containsKey(check)) {
-											if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.ENTITY_DAMAGE) {
+			if(victim.getEquipment().getArmorContents() != null && victim.getEquipment().getItemInOffHand() != null) {
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(victim.getEquipment().getArmorContents()));
+				items.add(victim.getEquipment().getItemInOffHand());
+				for(ItemStack item : items) {
+					if(item != null) {
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().hasLore()) {
+								for(String s1 : item.getItemMeta().getLore()){
+									String enchant = ChatColor.stripColor(s1);
+									String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+									if(enchantment.getArmorEnchantments().containsKey(check)) {
+										if(enchantment.getArmorEnchantments().get(check).getKey() == Condition.ENTITY_DAMAGE) {
+											if(wg.isInZone(victim, "spawn")) {
 												enchant = enchant.replaceAll("[^\\d.]", "");
 												int level = Integer.parseInt(enchant) - 1;
 												enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 												enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
+											}
+											else {
+												victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 											}
 										}
 									}

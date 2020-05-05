@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -278,7 +277,7 @@ public class DFFactions implements Listener,CommandExecutor{
 												int rank = facPlayer.getRank();
 												if(rank >= 3) {
 													int chunkTotal = faction.getChunkList().size();
-													int maxChunks = 16;
+													int maxChunks = 20;
 													if(chunkTotal == 0) {
 														if(faction.getChunkList().size() < maxChunks) {
 															if(faction.getEnergy() > faction.getChunkList().size() + 1) {
@@ -627,7 +626,7 @@ public class DFFactions implements Listener,CommandExecutor{
 													if(entry.getValue().getFactionId() != null) {
 														UUID id = entry.getKey();
 														Player p = Bukkit.getPlayer(id);
-														if(player != null) {
+														if(p != null) {
 															p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas left the faction!"));
 														}
 													}
@@ -659,7 +658,8 @@ public class DFFactions implements Listener,CommandExecutor{
 										if(p != null) {
 											if(p != player) {
 												if(faction.isMember(p.getUniqueId())) {
-													int rankOther = facPlayer.getRank();
+													DFFactionPlayer facP = facPlayerManager.getFactionPlayer(p);
+													int rankOther = facP.getRank();
 													if(rank > rankOther) {
 														faction.removeMember(p);
 														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + p.getName() + " &afrom the faction!"));
@@ -909,19 +909,23 @@ public class DFFactions implements Listener,CommandExecutor{
 															faction.addAlly(fac.getFactionId());
 															fac.addAlly(faction.getFactionId());
 															for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
-																if(entry.getValue().getFactionId().equals(faction.getFactionId())) {
-																	Player p = Bukkit.getPlayer(entry.getKey());
-																	if(p.isOnline()) {
-																		p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYour faction is now allies with &6" + fac.getName()));
-																		
+																if(entry.getValue().getFactionId() != null) {
+																	if(entry.getValue().getFactionId().equals(faction.getFactionId())) {
+																		Player p = Bukkit.getPlayer(entry.getKey());
+																		if(p != null) {
+																			p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYour faction is now allies with &6" + fac.getName()));
+																			
+																		}
 																	}
 																}
 															}
 															for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
-																if(entry.getValue().getFactionId().equals(fac.getFactionId())) {
-																	Player p = Bukkit.getPlayer(entry.getKey());
-																	if(p.isOnline()) {
-																		p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYour faction is now allies with &6" + faction.getName()));
+																if(entry.getValue().getFactionId() != null) {
+																	if(entry.getValue().getFactionId().equals(fac.getFactionId())) {
+																		Player p = Bukkit.getPlayer(entry.getKey());
+																		if(p != null) {
+																			p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYour faction is now allies with &6" + faction.getName()));
+																		}
 																	}
 																}
 															}
@@ -930,23 +934,27 @@ public class DFFactions implements Listener,CommandExecutor{
 															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have requested to ally with &6" + allyName + "&a!"));
 															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTheir leader/officers have 60 seconds to accept!"));
 															for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
-																if(faction.getFactionId().equals(entry.getValue().getFactionId())) {
-																	Player p = Bukkit.getPlayer(entry.getKey());
-																	if(p.isOnline()) {
-																		if(entry.getValue().getRank() >= 3) {
-																			p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &arequested to be allies with &6" + allyName));
+																if(entry.getValue().getFactionId() != null) {
+																	if(faction.getFactionId().equals(entry.getValue().getFactionId())) {
+																		Player p = Bukkit.getPlayer(entry.getKey());
+																		if(p.isOnline()) {
+																			if(entry.getValue().getRank() >= 3) {
+																				p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &arequested to be allies with &6" + allyName));
+																			}
 																		}
 																	}
 																}
 															}
 															for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
-																if(fac.getFactionId().equals(entry.getValue().getFactionId())) {
-																	Player p = Bukkit.getPlayer(entry.getKey());
-																	if(p.isOnline()) {
-																		if(entry.getValue().getRank() >= 3) {
-																			p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + faction.getName() + " &arequested to be allies with your faction!"));
-																			p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aDo /f ally &6" + faction.getName() + " &ato ally them, if you don't want to be allies then just don't do /f ally &6" + faction.getName()));
-																			p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have 60 seconds to accept!"));
+																if(entry.getValue().getFactionId() != null) {
+																	if(fac.getFactionId().equals(entry.getValue().getFactionId())) {
+																		Player p = Bukkit.getPlayer(entry.getKey());
+																		if(p.isOnline()) {
+																			if(entry.getValue().getRank() >= 3) {
+																				p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + faction.getName() + " &arequested to be allies with your faction!"));
+																				p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aDo /f ally &6" + faction.getName() + " &ato ally them, if you don't want to be allies then just don't do /f ally &6" + faction.getName()));
+																				p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have 60 seconds to accept!"));
+																			}
 																		}
 																	}
 																}
@@ -993,19 +1001,23 @@ public class DFFactions implements Listener,CommandExecutor{
 												faction.removeAlly(fac.getFactionId());
 												fac.removeAlly(faction.getFactionId());
 												for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
-													if(faction.getFactionId().equals(entry.getValue().getFactionId())) {
-														Player p = Bukkit.getPlayer(entry.getKey());
-														if(p.isOnline()) {
-															p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction has unallied with &6" + fac.getName()));
-															
+													if(entry.getValue().getFactionId() != null) {
+														if(faction.getFactionId().equals(entry.getValue().getFactionId())) {
+															Player p = Bukkit.getPlayer(entry.getKey());
+															if(p != null) {
+																p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction has unallied with &6" + fac.getName()));
+																
+															}
 														}
 													}
 												}
 												for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
-													if(fac.getFactionId().equals(entry.getValue().getFactionId())) {
-														Player p = Bukkit.getPlayer(entry.getKey());
-														if(p.isOnline()) {
-															p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction has unallied with &6" + faction.getName()));
+													if(entry.getValue().getFactionId() != null) {
+														if(fac.getFactionId().equals(entry.getValue().getFactionId())) {
+															Player p = Bukkit.getPlayer(entry.getKey());
+															if(p != null) {
+																p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction has unallied with &6" + faction.getName()));
+															}
 														}
 													}
 												}

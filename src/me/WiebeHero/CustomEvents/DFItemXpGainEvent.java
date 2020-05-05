@@ -189,7 +189,6 @@ public class DFItemXpGainEvent extends Event{
 					i = item.getItem();
 					ItemMeta im = i.getItemMeta();
 		    		ArrayList<String> lore = new ArrayList<String>(im.getLore());
-					lore.set(lore.size() - 4, new CCT().colorize("&7Upgrade Progress: " + "&a[&b&l" + (this.getXP()) + " &6/ " + "&b&l" + maxxp + "&a]"));
 					double barprogress = (double) xp / (double) maxxp * 100.0;
 					String loreString = "&7[&a";
 					boolean canStop = true;
@@ -213,6 +212,7 @@ public class DFItemXpGainEvent extends Event{
 						size = 4;
 					}
 					lore.set(lore.size() - size, new CCT().colorize(loreString));
+					lore.set(lore.size() - (size + 1), new CCT().colorize("&7Upgrade Progress: " + "&a[&b&l" + (this.getXP()) + " &6/ " + "&b&l" + maxxp + "&a]"));
 		    		im.setLore(lore);
 		    		i.setItemMeta(im);
 		    		if(this.getEquipmentSlot() == EquipmentSlot.HEAD) {
@@ -231,6 +231,8 @@ public class DFItemXpGainEvent extends Event{
 		    			this.getPlayer().getInventory().setItemInOffHand(i);
 		    		}
 		    		else if(this.getEquipmentSlot() == EquipmentSlot.HAND) {
+		    			Bukkit.broadcastMessage(this.getXP() + "");
+		    			Bukkit.broadcastMessage("Yes");
 		    			this.getPlayer().getInventory().setItemInMainHand(i);
 		    		}
 		    		else {

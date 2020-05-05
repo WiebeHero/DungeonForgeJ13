@@ -32,6 +32,7 @@ import net.md_5.bungee.api.ChatColor;
 public class SetHomeSystem implements Listener,CommandExecutor{
 	
 	private RankedManager rManager;
+	public String command1 = "delhome";
 	public String command = "sethome";
 	public String homeCommand = "home";
 	public String homesCommand = "homes";
@@ -94,17 +95,7 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 			else if(cmd.getName().equalsIgnoreCase(homeCommand)) {
 				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
 					if(args.length >= 1 && args.length <= 2) {
-						if(args[0].equalsIgnoreCase("remove")) {
-							if(innerList.containsKey(args[1])) {
-								innerList.remove(args[1]);
-								outerList.put(player.getUniqueId(), innerList);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cHome &6" + args[1] + " &chas been removed."));
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
-							}
-						}
-						else if(innerList.containsKey(args[0])) {
+						if(innerList.containsKey(args[0])) {
 							final Location loc = innerList.get(args[0]);
 							double locX = player.getLocation().getX();
 							double locY = player.getLocation().getY();
@@ -172,7 +163,7 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 			}
 			else if(cmd.getName().equalsIgnoreCase(homesCommand)) {
 				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
-					if(args.length == 0) {
+					if(args.length == 1) {
 						for(Entry<String, Location> entry : innerList.entrySet()) {
 							if(innerList.isEmpty()) {
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cNo homes have been set!"));
@@ -181,6 +172,26 @@ public class SetHomeSystem implements Listener,CommandExecutor{
 							else {
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome Name: &6" + entry.getKey()) + " X: " + (int)entry.getValue().getX() + " Y: " + (int)entry.getValue().getY() + " Z: " + (int)entry.getValue().getZ());
 							}
+						}
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments!: /homes"));
+					}
+				}
+				else {
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use this command! You are in combat!"));
+				}
+			}
+			else if(cmd.getName().equalsIgnoreCase(command1)) {
+				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
+					if(args.length == 1) {
+						if(innerList.containsKey(args[0])) {
+							innerList.remove(args[0]);
+							outerList.put(player.getUniqueId(), innerList);
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cHome &6" + args[0] + " &chas been removed."));
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis home doesn't exist!"));
 						}
 					}
 					else {

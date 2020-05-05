@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -30,7 +29,6 @@ public class PunishManager {
 			e.printStackTrace();
 		}
 		if(yml.getConfigurationSection("Mod.Punishments") != null) {
-			Bukkit.getConsoleSender().sendMessage("Its not null");
 			Set<String> set = yml.getConfigurationSection("Mod.Punishments").getKeys(false);
 			ArrayList<String> uuids = new ArrayList<String>(set);
 			for(int i = 0; i < uuids.size(); i++) {
@@ -38,11 +36,13 @@ public class PunishManager {
 				
 				ArrayList<String> banReason = (ArrayList<String>) yml.getStringList("Mod.Punishments." + uuid + ".Ban Data.Reason");
 				ArrayList<String> muteReason = (ArrayList<String>) yml.getStringList("Mod.Punishments." + uuid + ".Mute Data.Reason");
-				ArrayList<String> warnReason = (ArrayList<String>) yml.getStringList("Mod.Punishments." + uuid + ".Warn Data.Reason");
+				
 				
 				ArrayList<String> bannedBy = (ArrayList<String>) yml.getStringList("Mod.Punishments." + uuid + ".Ban Data.By");
 				ArrayList<String> mutedBy = (ArrayList<String>) yml.getStringList("Mod.Punishments." + uuid + ".Mute Data.By");
-				ArrayList<String> warnedBy = (ArrayList<String>) yml.getStringList("Mod.Punishments." + uuid + ".Warn Data.By");
+				
+				ArrayList<String> banDates = (ArrayList<String>) yml.getStringList("Mod.Punishments." + uuid + ".Ban Data.When");
+				ArrayList<String> muteDates = (ArrayList<String>) yml.getStringList("Mod.Punishments." + uuid + ".Mute Data.When");
 				
 				Long banTime = yml.getLong("Mod.Punishments." + uuid + ".Ban Data.Temp");
 				Long muteTime = yml.getLong("Mod.Punishments." + uuid + ".Mute Data.Temp");
@@ -51,11 +51,16 @@ public class PunishManager {
 				
 				Punish pun = new Punish(uuid);
 				pun.setBanReason(banReason);
-				pun.setMuteReason(muteReason);
-				pun.setWarnReason(warnReason);
+				pun.setMuteReason(muteReason); 
+				
+				pun.setBanDate(banDates);
+				
+				pun.setMuteDate(muteDates);
+				
+				
 				pun.setBannedBy(bannedBy);
 				pun.setMutedBy(mutedBy);
-				pun.setWarnedBy(warnedBy);
+				
 				pun.setBanTime(banTime);
 				pun.setMuteTime(muteTime);
 				pun.setBanPerm(banPerm);
@@ -81,6 +86,14 @@ public class PunishManager {
 			if(entry != null && entry.getKey() != null && entry.getValue() != null && this.contains(entry.getKey())) {
 				UUID uuid = entry.getKey();
 				Punish pun = this.punishList.get(uuid);
+				for(int i = 0; i < pun.getBanDateList().size(); i++) {
+					String s = pun.getBanDate(i).replace(":", ";");
+					pun.setBanDate(i, s);
+				}
+				for(int i = 0; i < pun.getMuteDateList().size(); i++) {
+					String s = pun.getMuteDate(i).replace(":", ";");
+					pun.setMuteDate(i, s);
+				}
 				yml.createSection("Mod.Punishments." + uuid);
 				yml.set("Mod.Punishments." + uuid + ".Mute Data.Perm", pun.getMutePerm());
 				yml.set("Mod.Punishments." + uuid + ".Mute Data.Temp", pun.getMuteTime());
@@ -88,10 +101,10 @@ public class PunishManager {
 				yml.set("Mod.Punishments." + uuid + ".Ban Data.Temp", pun.getBanTime());
 				yml.set("Mod.Punishments." + uuid + ".Mute Data.Reason", pun.getMuteReasonsList());
 				yml.set("Mod.Punishments." + uuid + ".Ban Data.Reason", pun.getBanReasonsList());
-				yml.set("Mod.Punishments." + uuid + ".Warn Data.Reason", pun.getWarnReasonsList());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.When", pun.getBanDateList());
 				yml.set("Mod.Punishments." + uuid + ".Ban Data.By", pun.getBannedByList());
 				yml.set("Mod.Punishments." + uuid + ".Mute Data.By", pun.getMutedByList());
-				yml.set("Mod.Punishments." + uuid + ".Warn Data.By", pun.getWarnedByList());
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.When", pun.getMuteDateList());
 			}
 		}
 		try{
@@ -125,10 +138,10 @@ public class PunishManager {
 				yml.set("Mod.Punishments." + uuid + ".Ban Data.Temp", pun.getBanTime());
 				yml.set("Mod.Punishments." + uuid + ".Mute Data.Reason", pun.getMuteReasonsList());
 				yml.set("Mod.Punishments." + uuid + ".Ban Data.Reason", pun.getBanReasonsList());
-				yml.set("Mod.Punishments." + uuid + ".Warn Data.Reason", pun.getWarnReasonsList());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.When", pun.getBanDateList());
 				yml.set("Mod.Punishments." + uuid + ".Ban Data.By", pun.getBannedByList());
 				yml.set("Mod.Punishments." + uuid + ".Mute Data.By", pun.getMutedByList());
-				yml.set("Mod.Punishments." + uuid + ".Warn Data.By", pun.getWarnedByList());
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.When", pun.getMuteDateList());
 			}
 		}
 		try{

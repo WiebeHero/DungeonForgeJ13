@@ -119,10 +119,10 @@ public class Enchantment extends CommandFile implements Listener{
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 2, (float) 1.2);
 					if(dfManager.contains(damager)) {
 						DFPlayer dfPlayer = dfManager.getEntity(damager);
-						dfPlayer.addAtkCal(200.0 + 50.0 * level, 1);
+						dfPlayer.addAtkCal(50.0 + 25.0 * level, 1);
 						new BukkitRunnable() {
 							public void run() {
-								damager.damage(event.getDamage() / 100 * 60 - (5 * level));
+								damager.damage(event.getDamage() / 100 * (55 - 5 * level));
 								if(damager instanceof Player) {
 									damager.setKiller((Player)damager);
 								}
@@ -1231,7 +1231,7 @@ public class Enchantment extends CommandFile implements Listener{
 				 		((Player) victim1).playSound(victim.getLocation(), Sound.BLOCK_ANVIL_PLACE, 2, (float) 1);
 				 	}
 			 		DFPlayer dfPlayer = dfManager.getEntity(damager);
-			 		dfPlayer.addAtkCal(150 + level * 50, 1);
+			 		dfPlayer.addAtkCal(25 + level * 25, 1);
 				}
 			}
 			@Override
@@ -1732,12 +1732,12 @@ public class Enchantment extends CommandFile implements Listener{
 		this.listMelee.put("Phantom", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
 			ArrayList<UUID> list = new ArrayList<UUID>();
 			@Override
-			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level) {
+			public void activateEnchantment(LivingEntity damager, int level) {
 				if(!list.contains(damager.getUniqueId())) {
-					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
+					Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 1.5D, damager.getLocation().getZ() + 0D);
 					damager.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, locCF, 50, 0.2, 0.2, 0.2, 0.2);
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
-						((Player) victim1).playSound(victim.getLocation(), Sound.BLOCK_LAVA_EXTINGUISH, 2, (float) 0.5);
+						((Player) victim1).playSound(damager.getLocation(), Sound.BLOCK_LAVA_EXTINGUISH, 2, (float) 0.5);
 					}
 					for(Player p : Bukkit.getOnlinePlayers()) {
 						if(p != null) {
@@ -2537,7 +2537,12 @@ public class Enchantment extends CommandFile implements Listener{
 				list.put(victim.getUniqueId(), list.get(victim.getUniqueId()) + 1);
 				if(list.get(victim.getUniqueId()) == 8 - level) {
 					EntityLiving l = ((CraftLivingEntity)victim).getHandle();
-					l.setAbsorptionHearts(l.getAbsorptionHearts() + 3.00F + 1.50F * level);
+					if(l.getAbsorptionHearts() + + 3.00F + 1.50F * level > 40.00) {
+						l.setAbsorptionHearts(40.00F);
+					}
+					else {
+						l.setAbsorptionHearts(l.getAbsorptionHearts() + 3.00F + 1.50F * level);
+					}
 				}
 			}
 			@Override
@@ -2897,9 +2902,8 @@ public class Enchantment extends CommandFile implements Listener{
 					"&6Full Counter",
 					new ArrayList<String>(Arrays.asList(
 						"&7When the enemy attacks you, there is a chance",
-						"&7that you absorb all the incoming damage.",
-						"&7The next time you attack, you will return all",
-						"&7of the absorbed damage back to the enemy that you attack0."
+						"&7that you return all of the damage back to",
+						"&7the attacker."
 					))
 				);
 			}
@@ -3542,10 +3546,10 @@ public class Enchantment extends CommandFile implements Listener{
 				if(dfManager.contains(damager)) {
 					DFPlayer dfPlayer = dfManager.getEntity(damager);
 					if(equiped == true) {
-						dfPlayer.addSpdCal(7.5 + 7.5 * level, 0);
+						dfPlayer.addHpCal(7.5 + 7.5 * level, 0);
 					}
 					else if(equiped == false) {
-						dfPlayer.removeSpdCal(7.5 + 7.5 * level, 0);
+						dfPlayer.removeHpCal(7.5 + 7.5 * level, 0);
 					}
 				}
 			}
@@ -3619,7 +3623,7 @@ public class Enchantment extends CommandFile implements Listener{
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GENERIC_DRINK, 2, (float) 1.1);
 					}
 					int amp = 0 + level;
-					int durationAdd = 300 - 65 * level;
+					int durationAdd = 300 - 80 * level;
 					p.applyEffect(victim, PotionEffectType.REGENERATION, amp, durationAdd);
 				}
 			}
@@ -3855,8 +3859,8 @@ public class Enchantment extends CommandFile implements Listener{
 					int amp = 20;
 					int amp1 = (int)Math.floor(0 + (level) / 2);
 					int durationAdd = 140 + 20 * level;
-					p.applyEffect(victim, PotionEffectType.SLOW, amp, durationAdd);
-					p.applyEffect(victim, PotionEffectType.SLOW_DIGGING, amp1, durationAdd);
+					p.applyEffect(damager, PotionEffectType.SLOW, amp, durationAdd);
+					p.applyEffect(damager, PotionEffectType.SLOW_DIGGING, amp1, durationAdd);
 				}
 			}
 			@Override
@@ -4366,7 +4370,7 @@ public class Enchantment extends CommandFile implements Listener{
 							Location loc = new Location(entity.getWorld(), entity.getLocation().getX() + 0D, entity.getLocation().getY() + 0.0D, entity.getLocation().getZ() + 0D);
 							entity.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 60, 0.1, 0.1, 0.1, 0.1); 
 							for(Entity e : entity.getNearbyEntities(implodeRadius, implodeRadius, implodeRadius)) {
-								if(e != shooter && e != entity) {
+								if(e != shooter) {
 									if(e instanceof LivingEntity) {
 										LivingEntity ent = (LivingEntity) e;
 										if(!facManager.isFriendly(shooter, e)) {
@@ -4374,7 +4378,7 @@ public class Enchantment extends CommandFile implements Listener{
 												ent.setKiller((Player)shooter);
 											}
 											p.applyEffect(ent, new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.BLINDNESS, PotionEffectType.SLOW)), amp, durationAdd);
-											ent.damage(damage, shooter);
+											ent.damage(damage);
 											Location locCF = new Location(entity.getWorld(), entity.getLocation().getX() + 0D, entity.getLocation().getY() + 0.0D, entity.getLocation().getZ() + 0D);
 											entity.getWorld().spawnParticle(Particle.SMOKE_NORMAL, locCF, 15, 0.1, 0.1, 0.1, 0.1); 
 										}
@@ -6224,7 +6228,7 @@ public class Enchantment extends CommandFile implements Listener{
 				);
 			}
 		}));
-		this.listShield.put("Jelly Fish", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+		this.listShield.put("Jellyfish", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
@@ -6233,7 +6237,7 @@ public class Enchantment extends CommandFile implements Listener{
 					victim.getWorld().spawnParticle(Particle.WATER_BUBBLE, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_GUARDIAN_DEATH, 2, (float) 1.5);
 					int amp = (int)Math.floor(0 + (level) / 2);
-					int durationAdd = 180 + 40 * level;
+					int durationAdd = 140 + 20 * level;
 					ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.SLOW, PotionEffectType.POISON, PotionEffectType.SLOW_DIGGING));
 					p.applyEffect(damager, types, amp, durationAdd);
 				}
@@ -6243,7 +6247,7 @@ public class Enchantment extends CommandFile implements Listener{
 				return builder.constructItem(
 					Material.ENCHANTED_BOOK,
 					1,
-					"&6Jelly Fish",
+					"&6Jellyfish",
 					new ArrayList<String>(Arrays.asList(
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a jelly's sting will summon from the armor and",

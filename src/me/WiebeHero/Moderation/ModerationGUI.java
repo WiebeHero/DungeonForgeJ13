@@ -29,8 +29,8 @@ public class ModerationGUI implements Listener{
 	}
 	public HashMap<UUID, Integer> offenseList = new HashMap<UUID, Integer>();
 	public HashMap<UUID, Integer> reasonList = new HashMap<UUID, Integer>();
-	public void PunishMenu(Player reporter, Player offender) {
-		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, InventoryType.HOPPER, (new CCT().colorize("&6Punish: &c" + offender.getName())));
+	public void PunishMenu(Player reporter, String name) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, InventoryType.HOPPER, (new CCT().colorize("&6Punish Menu: &c" + name)));
 		i.setItem(0, nothing());
 		i.setItem(1, this.createDisplayItem(
 				Material.BOOK, 
@@ -39,7 +39,8 @@ public class ModerationGUI implements Listener{
 						"&7--------------------",
 						"&7Click this to go to the ban menu.",
 						"&7--------------------" 
-				))
+				)),
+				"Ban Option"
 		));
 		i.setItem(2, this.createDisplayItem(
 				Material.BOOKSHELF, 
@@ -49,7 +50,8 @@ public class ModerationGUI implements Listener{
 						"&7Click this to go to the history menu.",
 						"&7This shows a menu of previous punishments.",
 						"&7--------------------" 
-				))
+				)),
+				"History Option"
 		));
 		i.setItem(3, this.createDisplayItem(
 				Material.PAPER, 
@@ -58,22 +60,24 @@ public class ModerationGUI implements Listener{
 						"&7--------------------",
 						"&7Click this to go to the mute menu.",
 						"&7--------------------" 
-				))
+				)),
+				"Mute Option"
 		));
 		i.setItem(4, nothing());
 		reporter.openInventory(i);
 	}
-	public void BanChoice(Player reporter, Player offender) {
-		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, InventoryType.HOPPER, (new CCT().colorize("&6Punish: &c" + offender.getName())));
+	public void BanChoice(Player reporter, String name) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, InventoryType.HOPPER, (new CCT().colorize("&6Punish, Ban Choice: &c" + name)));
 		i.setItem(0, nothing());
 		i.setItem(1, this.createDisplayItem(
 				Material.ENCHANTED_BOOK, 
 				"&cBan", 
 				new ArrayList<String>(Arrays.asList(
 						"&7--------------------",
-						"&7Click this to ban &6" + offender.getName(),
+						"&7Click this to ban &6" + name,
 						"&7--------------------" 
-				))
+				)),
+				"Ban"
 		));
 		i.setItem(2, nothing());
 		i.setItem(3, this.createDisplayItem(
@@ -81,15 +85,16 @@ public class ModerationGUI implements Listener{
 				"&cUnban", 
 				new ArrayList<String>(Arrays.asList(
 						"&7--------------------",
-						"&7Click this to unban &6" + offender.getName(),
+						"&7Click this to unban &6" + name,
 						"&7--------------------" 
-				))
+				)),
+				"Unban"
 		));
 		i.setItem(4, nothing());
 		reporter.openInventory(i);
 	}
-	public void BanReason(Player reporter, Player offender) {
-		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 36, (new CCT().colorize("&6Punish Reason: &c" + offender.getName())));
+	public void BanReason(Player reporter, String name) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 36, (new CCT().colorize("&6Punish, Ban Reason: &c" + name)));
 		i.setItem(0, nothing());
 		i.setItem(1, nothing());
 		i.setItem(2, nothing());
@@ -186,17 +191,18 @@ public class ModerationGUI implements Listener{
 		i.setItem(35, nothing());
 		reporter.openInventory(i);
 	}
-	public void MuteChoice(Player reporter, Player offender) {
-		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, InventoryType.HOPPER, (new CCT().colorize("&6Punish: &c" + offender.getName())));
+	public void MuteChoice(Player reporter, String name) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, InventoryType.HOPPER, (new CCT().colorize("&6Punish, Mute Choice: &c" + name)));
 		i.setItem(0, nothing());
 		i.setItem(1, this.createDisplayItem(
 				Material.ENCHANTED_BOOK, 
 				"&cMute", 
 				new ArrayList<String>(Arrays.asList(
 						"&7--------------------",
-						"&7Click this to mute &6" + offender.getName(),
+						"&7Click this to mute &6" + name,
 						"&7--------------------" 
-				))
+				)),
+				"Mute"
 		));
 		i.setItem(2, nothing());
 		i.setItem(3, this.createDisplayItem(
@@ -204,15 +210,16 @@ public class ModerationGUI implements Listener{
 				"&cUnmute", 
 				new ArrayList<String>(Arrays.asList(
 						"&7--------------------",
-						"&7Click this to unmute &6" + offender.getName(),
+						"&7Click this to unmute &6" + name,
 						"&7--------------------" 
-				))
+				)),
+				"Unmute"
 		));
 		i.setItem(4, nothing());
 		reporter.openInventory(i);
 	}
-	public void MuteReason(Player reporter, Player offender) {
-		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 27, (new CCT().colorize("&6Punish Reason: &c" + offender.getName())));
+	public void MuteReason(Player reporter, String name) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 27, (new CCT().colorize("&6Punish, Mute Reason: &c" + name)));
 		i.setItem(0, nothing());
 		i.setItem(1, nothing());
 		i.setItem(2, nothing());
@@ -245,16 +252,16 @@ public class ModerationGUI implements Listener{
 				new ArrayList<String>(Arrays.asList(
 						"&cSexual Slurs/Racist Slurs/Pedophilic Slurs."
 				)),
-				"Slur related"
+				"Slur Related"
 		));
 		i.setItem(13, this.createDisplayItem(
 				Material.RED_WOOL, 
 				"&cThreats",
 				new ArrayList<String>(Arrays.asList(
 						"&cDeath Threats/General Threats",
-						"(for example; I'M GOING TO FIND YOUR ADRESS AND I'LL KILL YOUR FAMILY)"
+						"&c(for example; I'M GOING TO FIND YOUR ADRESS AND I'LL KILL YOUR FAMILY)"
 				)),
-				"Threat related"
+				"Threat Related"
 		));
 		i.setItem(14, this.createDisplayItem(
 				Material.REDSTONE, 
@@ -262,7 +269,7 @@ public class ModerationGUI implements Listener{
 				new ArrayList<String>(Arrays.asList(
 						"&cFancy Chat/Chat Modifications/Autotext Spammer"
 				)),
-				"Chat related"
+				"Chat Related"
 		));
 		i.setItem(17, nothing());
 		i.setItem(18, nothing());
@@ -892,14 +899,14 @@ public class ModerationGUI implements Listener{
 		lore.add(new CCT().colorize("&7--------------------"));
 		lore.add(new CCT().colorize("&7Class: &6" + dfPlayer.getPlayerClass()));
 		lore.add(new CCT().colorize("&7Level: &b" + dfPlayer.getLevel()));
-		lore.add(new CCT().colorize("&7XP to levelup: &b" + (dfPlayer.getExperience() - dfPlayer.getMaxExperience())));
+		lore.add(new CCT().colorize("&7XP to levelup: &b" + (dfPlayer.getMaxExperience() - dfPlayer.getExperience())));
 		lore.add(new CCT().colorize("&7--------------------"));
-		lore.add(new CCT().colorize("&7Attack Damage: &6"));
-		lore.add(new CCT().colorize("&7Attack Speed: &6"));
-		lore.add(new CCT().colorize("&7Critical Chance: &6"));
-		lore.add(new CCT().colorize("&7Ranged Damage: &6"));
-		lore.add(new CCT().colorize("&7Health: &6"));
-		lore.add(new CCT().colorize("&7Defense: &6"));
+		lore.add(new CCT().colorize("&7Attack Damage: &6" + dfPlayer.getAtk()));
+		lore.add(new CCT().colorize("&7Attack Speed: &6" + dfPlayer.getSpd()));
+		lore.add(new CCT().colorize("&7Critical Chance: &6" + dfPlayer.getCrt()));
+		lore.add(new CCT().colorize("&7Ranged Damage: &6" + dfPlayer.getRnd()));
+		lore.add(new CCT().colorize("&7Health: &6" + dfPlayer.getHp()));
+		lore.add(new CCT().colorize("&7Defense: &6" + dfPlayer.getDf()));
 		lore.add(new CCT().colorize("&7--------------------"));
 		meta.setLore(lore);
 		item.setItemMeta(meta);

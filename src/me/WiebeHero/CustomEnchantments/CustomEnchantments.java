@@ -51,7 +51,6 @@ import me.WiebeHero.AuctionHouse.AHManager;
 import me.WiebeHero.Consumables.Consumable;
 import me.WiebeHero.Consumables.ConsumableHandler;
 import me.WiebeHero.Consumables.CustomDurability;
-import me.WiebeHero.CraftRecipes.CallRecipe;
 import me.WiebeHero.CraftRecipes.UnblockBrewing;
 import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomHitDelay.HitDelay;
@@ -88,6 +87,7 @@ import me.WiebeHero.LootChest.LootRewards;
 import me.WiebeHero.LootChest.MoneyNotes;
 import me.WiebeHero.Moderation.ModerationEvents;
 import me.WiebeHero.Moderation.ModerationGUI;
+import me.WiebeHero.Moderation.Punish;
 import me.WiebeHero.Moderation.PunishManager;
 import me.WiebeHero.Moderation.StaffManager;
 import me.WiebeHero.MoreStuff.AFKSystem;
@@ -119,6 +119,7 @@ import me.WiebeHero.RankedPlayerPackage.KitListener;
 import me.WiebeHero.RankedPlayerPackage.KitMenu;
 import me.WiebeHero.RankedPlayerPackage.RankEnum;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
+import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
 import me.WiebeHero.RankedPlayerPackage.RankedPlayerListener;
 import me.WiebeHero.Scoreboard.DFScoreboard;
 import me.WiebeHero.Scoreboard.WGMethods;
@@ -189,6 +190,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private KitCommand kitCommand = new KitCommand(rankedManager, rEnum, menu);
 	private EnchantmentGuideInventory enchantmentGuideInv;
 	private SetHomeSystem sethome = new SetHomeSystem(rankedManager);
+	private RankedPlayerListener rListener = new RankedPlayerListener(rankedManager, luck);
 	// General Variables
 	public static boolean hardSave = false;
 	public static boolean shutdown = false;
@@ -226,6 +228,18 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		dfManager.loadPlayers();
 		maintenance = yml.getBoolean("General.Values.Maintenance");
 		ahManager.start();
+		new BukkitRunnable() {
+			public void run() {
+				try {
+					for(OfflinePlayer p : Bukkit.getOfflinePlayers()) {
+						rListener.loadRankedPlayers(p);
+					}
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 3L);
 		Enums en = new Enums(dfManager, facManager);
 		//Config Manager
 		ModerationEvents mod = new ModerationEvents(facManager, dfManager, rankedManager, punishManager, staffManager, spawnerManager, lootChestManager, gui, multi, luck, method, score, classMenu);
@@ -255,7 +269,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new MoneyNotes(dfManager, score), this);
 		//Brewing Recipes
 		getServer().getPluginManager().registerEvents(new UnblockBrewing(), this);
-		getServer().getPluginManager().registerEvents(new CallRecipe(), this);
 		//AFKSystem
 		getServer().getPluginManager().registerEvents(new AFKSystem(), this);
 		//Scoreboard
@@ -275,11 +288,20 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new MSGEvents(msgManager), this);
 		getServer().getPluginManager().registerEvents(new AHEvents(ahInv, ahManager, dfManager), this);
 		getServer().getPluginManager().registerEvents(new ConsumableHandler(dfManager, con), this);
-		getServer().getPluginManager().registerEvents(new RankedPlayerListener(rankedManager, luck), this);
-		getServer().getPluginManager().registerEvents(new DFMobHealth(), this);
+		getServer().getPluginManager().registerEvents(rListener, this);
+		getServer().getPluginManager().registerEvents(new DFMobHealth(dfManager), this);
 		//Seasonal Events
 		getServer().getPluginManager().registerEvents(new ChristmasInventoryEvents(), this);
 		punishManager.loadPunishList();
+		new BukkitRunnable() {
+			public void run() {
+				for(OfflinePlayer p : Bukkit.getOfflinePlayers()) {
+					if(!punishManager.contains(p.getUniqueId())) {
+						punishManager.add(p.getUniqueId(), new Punish(p.getUniqueId()));
+					}
+				}
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 3L);
 		File f6 =  new File("plugins/CustomEnchantments/setHomeConfig.yml");
 		YamlConfiguration yml5 = YamlConfiguration.loadConfiguration(f6);
 		try{
@@ -344,6 +366,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(pay.balance).setExecutor(pay);
 		getCommand(pay.money).setExecutor(pay);
 		getCommand(sethome.command).setExecutor(sethome);
+		getCommand(sethome.command1).setExecutor(sethome);
 		getCommand(sethome.homeCommand).setExecutor(sethome);
 		getCommand(sethome.homesCommand).setExecutor(sethome);
 		getCommand(tpa.tpa).setExecutor(tpa);
@@ -359,6 +382,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(skillCommand.level).setExecutor(skillCommand);
 		getCommand(ahCommand.ah).setExecutor(ahCommand);
 		//Moderation
+		getCommand(mod.rank).setExecutor(mod);
 		getCommand(mod.ban).setExecutor(mod);
 		getCommand(mod.unban).setExecutor(mod);
 		getCommand(mod.mute).setExecutor(mod);

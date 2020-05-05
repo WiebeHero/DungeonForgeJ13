@@ -1,25 +1,19 @@
 package me.WiebeHero.Moderation;
 
-import java.util.UUID;
-
 import org.bukkit.inventory.ItemStack;
 
-public class Staff {;
-	public UUID uuid;
+public class Staff {
 	public boolean staff;
 	public boolean spawner;
 	public boolean loot;
 	public boolean vanish;
-	public int staffRank;
 	public ItemStack contents[];
 	
-	public Staff(UUID uuid, int rank) {
-		this.uuid = uuid;
+	public Staff() {
 		this.staff = false;
 		this.spawner = false;
 		this.loot = false;
 		this.vanish = false;
-		this.staffRank = rank;
 	}
 	
 	public void switchStaffMode(boolean s) {
@@ -48,13 +42,6 @@ public class Staff {;
 	}
 	public boolean getVanishMode() {
 		return this.vanish;
-	}
-	
-	public void setRank(int rank) {
-		this.staffRank = rank;
-	}
-	public int getRank() {
-		return this.staffRank;
 	}
 	
 	public void saveInv(ItemStack items[]) {

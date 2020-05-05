@@ -1,22 +1,17 @@
 package me.WiebeHero.CustomClasses;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_13_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import com.mojang.authlib.GameProfile;
 
-import de.tr7zw.nbtapi.NBTItem;
-import me.WiebeHero.CustomEnchantments.CCT;
+import javafx.util.Pair;
 import net.minecraft.server.v1_13_R2.DimensionManager;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.MinecraftServer;
@@ -68,6 +63,19 @@ public class Methods {
 		}
 		else {
 			return null;
+		}
+	}
+	public Pair<Player, OfflinePlayer> getPlayer(String name){
+		if(Bukkit.getPlayer(name) != null) {
+			return new Pair<Player, OfflinePlayer>(Bukkit.getPlayer(name), Bukkit.getOfflinePlayer(name));
+		}
+		else {
+			if(Bukkit.getOfflinePlayer(name).getName() != null) {
+				return new Pair<Player, OfflinePlayer>(null, Bukkit.getOfflinePlayer(name));
+			}
+			else {
+				return new Pair<Player, OfflinePlayer>(null, null);
+			}
 		}
 	}
 }
