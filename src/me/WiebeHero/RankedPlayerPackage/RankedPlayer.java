@@ -90,7 +90,14 @@ public class RankedPlayer {
 		this.kitUnlock.remove(rank);
 	}
 	public void addRank(Rank rank) {
-		this.ranks.add(rank);
+		if(!this.hasRank(rank)) {
+			this.ranks.add(rank);
+		}
+	}
+	public void removeRank(Rank rank) {
+		if(this.hasRank(rank)) {
+			this.ranks.remove(rank);
+		}
 	}
 	public void setAHCount(int count) {
 		this.ahCount = count;

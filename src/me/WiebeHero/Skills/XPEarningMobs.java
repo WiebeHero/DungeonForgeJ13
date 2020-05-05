@@ -4,18 +4,15 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtinjector.NBTInjector;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
@@ -82,13 +79,11 @@ public class XPEarningMobs implements Listener{
 		}
 	}
 	@EventHandler
-	public void cancelXpSpawning(EntitySpawnEvent event) {
-		if(event.getEntityType() == EntityType.EXPERIENCE_ORB) {
-			new BukkitRunnable() {
-				public void run() {
-					event.getEntity().remove();
-				}
-			}.runTaskLater(CustomEnchantments.getInstance(), 1L);
-		}
+	public void blockBreak(BlockBreakEvent event) {
+		event.setExpToDrop(0);
+	}
+	@EventHandler
+	public void entityDie(EntityDeathEvent event) {
+		event.setDroppedExp(0);
 	}
 }
