@@ -150,18 +150,20 @@ public class FactionsHandler implements Listener{
 						damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
 					}
 					else {
-						if(oPlayer.isInFaction()) {
-							if(faction.isAlly(oPlayer.getFactionId())) {
-								event.setCancelled(true);
-								damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+						if(oPlayer != null) {
+							if(oPlayer.getFactionId() != null) {
+								if(faction.isAlly(oPlayer.getFactionId())) {
+									event.setCancelled(true);
+									damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-		if(event.getDamager() instanceof Arrow) {
-			Arrow arrow = (Arrow) event.getDamager();
+		if(event.getDamager() instanceof Projectile) {
+			Projectile arrow = (Projectile) event.getDamager();
 			if(arrow.getShooter() instanceof Player) {
 				if(event.getEntity() instanceof Player) {
 					Player damager = (Player) arrow.getShooter();
@@ -179,10 +181,12 @@ public class FactionsHandler implements Listener{
 							damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
 						}
 						else {
-							if(oPlayer.isInFaction()) {
-								if(faction.isAlly(oPlayer.getFactionId())) {
-									event.setCancelled(true);
-									damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+							if(oPlayer != null) {
+								if(oPlayer.getFactionId() != null) {
+									if(faction.isAlly(oPlayer.getFactionId())) {
+										event.setCancelled(true);
+										damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+									}
 								}
 							}
 						}
