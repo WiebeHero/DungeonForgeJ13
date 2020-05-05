@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
@@ -61,6 +62,7 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.CustomMethods.MethodMulti;
+import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.LootChest.LootChest;
@@ -522,6 +524,24 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									}
 								}.runTaskLater(CustomEnchantments.getInstance(), 3000L);
 							}
+							if(args[0].equalsIgnoreCase("updatexpvalues")) {
+								CustomEnchantments.maintenance = true;
+								for(Entry<UUID, DFPlayer> entry : dfManager.getDFEntityList().entrySet()) {
+									if(Bukkit.getOfflinePlayer(entry.getKey()).getName() != null) {
+										DFPlayer dfPlayer = entry.getValue();
+										int level = dfPlayer.getLevel();
+										dfPlayer.setLevel(1);
+										dfPlayer.setMaxExperience(750);
+										for(int i = 1; i < level; i++) {
+									        if(dfPlayer.getLevel() < 100) {
+												dfPlayer.addLevel(1);
+												dfPlayer.setMaxExperience((int)(double)(dfPlayer.getMaxExperience() / 100.00 * (dfPlayer.getExperienceMultiplier() * 100.00)));
+											}
+								        }
+									}
+								}
+								CustomEnchantments.maintenance = false;
+							}
 						}
 						else if(args.length == 2) {
 							if(args[0].equalsIgnoreCase("clear")) {
@@ -609,7 +629,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
             	RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
             	if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
 	            	if(args.length == 1) {
-	            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset", "hardreset", "profile");
+	            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset", "hardreset", "profile", "updatexpvalues");
 	            	}
 	            	else if(args.length == 2) {
 	            		if(args[0].equalsIgnoreCase("maintenance")) {

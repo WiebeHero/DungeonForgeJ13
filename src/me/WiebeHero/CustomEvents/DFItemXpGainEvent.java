@@ -231,8 +231,6 @@ public class DFItemXpGainEvent extends Event{
 		    			this.getPlayer().getInventory().setItemInOffHand(i);
 		    		}
 		    		else if(this.getEquipmentSlot() == EquipmentSlot.HAND) {
-		    			Bukkit.broadcastMessage(this.getXP() + "");
-		    			Bukkit.broadcastMessage("Yes");
 		    			this.getPlayer().getInventory().setItemInMainHand(i);
 		    		}
 		    		else {
