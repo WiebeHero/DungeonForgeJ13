@@ -139,6 +139,7 @@ public class FactionsHandler implements Listener{
 				Player victim = (Player) event.getEntity();
 				String fName = "";
 				DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
+				DFFactionPlayer oPlayer = facPlayerManager.getFactionPlayer(victim);
 				DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 				if(faction != null) {
 					fName = faction.getName();
@@ -147,6 +148,14 @@ public class FactionsHandler implements Listener{
 					if(faction.isMember(victim.getUniqueId())) {
 						event.setCancelled(true);
 						damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+					}
+					else {
+						if(oPlayer.isInFaction()) {
+							if(faction.isAlly(oPlayer.getFactionId())) {
+								event.setCancelled(true);
+								damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+							}
+						}
 					}
 				}
 			}
@@ -159,6 +168,7 @@ public class FactionsHandler implements Listener{
 					Player victim = (Player) event.getEntity();
 					String fName = "";
 					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
+					DFFactionPlayer oPlayer = facPlayerManager.getFactionPlayer(victim);
 					DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 					if(faction != null) {
 						fName = faction.getName();
@@ -167,6 +177,14 @@ public class FactionsHandler implements Listener{
 						if(faction.isMember(victim.getUniqueId())) {
 							event.setCancelled(true);
 							damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+						}
+						else {
+							if(oPlayer.isInFaction()) {
+								if(faction.isAlly(oPlayer.getFactionId())) {
+									event.setCancelled(true);
+									damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+								}
+							}
 						}
 					}
 				}

@@ -326,6 +326,7 @@ public class Enums implements Listener{
 				long cooldown = (long)(statList.get(Stats.COOLDOWN) * 20);
 				double damage = statList.get(Stats.ATK_INC);
 				dfPlayer.addAtkCal(damage, 0);
+				dfPlayer.addRndCal(damage, 0);
 				Location loc = player.getLocation();
 				loc.setY(loc.getY() + 2.5);
 				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 2.0F, 1.0F);
@@ -336,6 +337,7 @@ public class Enums implements Listener{
 						if(dfPlayer.getActivation() == true) {
 							dfPlayer.setActivation(false);
 							dfPlayer.removeAtkCal(damage, 0);
+							dfPlayer.removeRndCal(damage, 0);
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have failed to use &6Special Attack!"));
 							new BukkitRunnable() {
 								public void run() {

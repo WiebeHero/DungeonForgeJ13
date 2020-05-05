@@ -3352,7 +3352,7 @@ public class Enchantment extends CommandFile implements Listener{
 				);
 			}
 		}));
-		this.listArmor.put("Jelly Fish", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+		this.listArmor.put("Jellyfish", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
@@ -3361,7 +3361,7 @@ public class Enchantment extends CommandFile implements Listener{
 					victim.getWorld().spawnParticle(Particle.WATER_BUBBLE, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_GUARDIAN_DEATH, 2, (float) 1.5);
 					int amp = (int)Math.floor(0 + (level) / 2);
-					int durationAdd = 180 + 40 * level;
+					int durationAdd = 140 + 40 * level;
 					ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.SLOW, PotionEffectType.POISON, PotionEffectType.SLOW_DIGGING));
 					p.applyEffect(damager, types, amp, durationAdd);
 				}

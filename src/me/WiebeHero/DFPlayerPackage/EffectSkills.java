@@ -53,6 +53,10 @@ public class EffectSkills implements Listener{
 					int amp = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier();
 					damage = damage - ((amp + 1) * 2.25);
 				}
+				if(damager.hasPotionEffect(PotionEffectType.WEAKNESS)) {
+					int amp = damager.getPotionEffect(PotionEffectType.WEAKNESS).getAmplifier();
+					damage = damage + ((amp + 1) * 3.25);
+				}
 				event.setDamage(damage);
 			}
 		}
@@ -64,7 +68,11 @@ public class EffectSkills implements Listener{
 					double damage = event.getDamage();
 					if(damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
 						int amp = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier();
-						damage = damage + 0.75 * (amp + 1);
+						damage = damage - ((amp + 1) * 2.25);
+					}
+					if(damager.hasPotionEffect(PotionEffectType.WEAKNESS)) {
+						int amp = damager.getPotionEffect(PotionEffectType.WEAKNESS).getAmplifier();
+						damage = damage + ((amp + 1) * 3.25);
 					}
 					event.setDamage(damage);
 				}
