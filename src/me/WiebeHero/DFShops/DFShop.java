@@ -433,6 +433,7 @@ public class DFShop implements Listener{
 					stripped = stripped.replaceAll(" ", "_");
 					Block bl = event.getBlock();
 	                CreatureSpawner s = (CreatureSpawner) bl.getState();
+	                s.setRequiredPlayerRange(30);
 	                if(!stripped.contains("SPAWNER_SETUP")) {
 	                	s.setSpawnedType(EntityType.valueOf(stripped));
 	                }

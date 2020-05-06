@@ -732,8 +732,8 @@ public class SkillMenu {
 			}
 			else {
 				int cLevel = dfPlayer.getAtkMod();
-				double inc = cLevel * 1.5;
-				double inc1 = (cLevel + 1) * 1.5;
+				double inc = cLevel * 0.1;
+				double inc1 = (cLevel + 1) * 0.1;
 				int pLevelReq = 10 + (10 * dfPlayer.getAtkMod());
 				int levelReq = 20 + (20 * dfPlayer.getAtkMod());
 				double moneyReq = 20000.00 + (20000.00 * dfPlayer.getAtkMod());
@@ -755,8 +755,8 @@ public class SkillMenu {
 			}
 			else {
 				int cLevel = dfPlayer.getSpdMod();
-				double inc = cLevel * 10;
-				double inc1 = (cLevel + 1) * 10;
+				double inc = cLevel * 5;
+				double inc1 = (cLevel + 1) * 5;
 				int pLevelReq = 10 + (10 * dfPlayer.getSpdMod());
 				int levelReq = 20 + (20 * dfPlayer.getSpdMod());
 				double moneyReq = 20000.00 + (20000.00 * dfPlayer.getSpdMod());
@@ -781,13 +781,13 @@ public class SkillMenu {
 			}
 			else {
 				int cLevel = dfPlayer.getRndMod();
-				double inc = cLevel * 10;
-				double inc1 = (cLevel + 1) * 10;
+				double inc = cLevel * 6;
+				double inc1 = (cLevel + 1) * 6;
 				int pLevelReq = 10 + (10 * dfPlayer.getRndMod());
 				int levelReq = 20 + (20 * dfPlayer.getRndMod());
 				double moneyReq = 20000.00 + (20000.00 * dfPlayer.getRndMod());
 				i.setItem(23, modCreator(player, Material.ICE, "&dPassive Ability, Deflection: &7[&b" + cLevel + " &6/ &b5&7]", new ArrayList<String>(Arrays.asList(
-				"&7Decrease damage from ranged attacks.",
+				"&7Decrease the Ranged Attack skill from someone who shot you with a projectile.",
 				"&7-------------------",
 				"&dRanged Increase: " + String.format("%.2f", inc) + "% ---> " + String.format("%.2f", inc1) + "%",
 				"&7-------------------",
@@ -807,8 +807,8 @@ public class SkillMenu {
 			}
 			else {
 				int cLevel = dfPlayer.getDfMod();
-				double inc = cLevel * 10;
-				double inc1 = (cLevel + 1) * 10;
+				double inc = cLevel * 7.5;
+				double inc1 = (cLevel + 1) * 7.5;
 				int pLevelReq = 10 + (10 * dfPlayer.getDfMod());
 				int levelReq = 20 + (20 * dfPlayer.getDfMod());
 				double moneyReq = 20000.00 + (20000.00 * dfPlayer.getDfMod());

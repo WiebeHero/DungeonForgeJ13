@@ -27,6 +27,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
@@ -590,7 +591,7 @@ public class Enums implements Listener{
 				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have used &6Quick Attack!"));
 				if(dfPlayer.getSpdMod() > 0) {
 					int cLevel = dfPlayer.getSpdMod();
-					double inc = cLevel * 10;
+					double inc = cLevel * 5;
 					dfPlayer.addSpdCal(attackS + inc, duration);
 				}
 				else {
@@ -598,7 +599,7 @@ public class Enums implements Listener{
 				}
 				if(dfPlayer.getDfMod() > 0) {
 					int cLevel = dfPlayer.getDfMod();
-					double inc = cLevel * 10;
+					double inc = cLevel * 7.5;
 					dfPlayer.addDfCal(defense + inc, duration);
 				}
 				else {
@@ -635,12 +636,12 @@ public class Enums implements Listener{
 									DFPlayer dfPlayer = dfManager.getEntity(player);
 									if(dfPlayer != null) {
 										if(dfPlayer.getPlayerClass() == Classes.PRIDE) {
-											int level = dfPlayer.getLevel();
-											long duration = 200 + level * 1;
 											if(dfPlayer.getAtkMod() > 0) {
 												int cLevel = dfPlayer.getAtkMod();
-												double inc = cLevel * 1.5;
-												dfPlayer.addAtkCal(inc, duration);
+												double inc = cLevel * 0.15;
+												Pair<Double, Double> pair = dfPlayer.getAbsoluteArmorPoints();
+												double finalInc = (pair.getKey() + pair.getValue()) * inc;
+												dfPlayer.addAtkCal(finalInc, 1);
 											}
 										}
 									}
@@ -665,7 +666,7 @@ public class Enums implements Listener{
 										if(dfVictim.getPlayerClass() == Classes.PRIDE) {
 											if(dfVictim.getRndMod() > 0) {
 												int cLevel = dfVictim.getRndMod();
-												double inc = cLevel * 10;
+												double inc = cLevel * 6;
 												dfPlayer.removeRndCal(inc, 1);
 											}
 										}

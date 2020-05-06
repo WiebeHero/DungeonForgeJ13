@@ -194,9 +194,10 @@ public class CustomDurability implements Listener{
 				if(item != null && cursor != null) {
 					NBTItem i = new NBTItem(item);
 					if(i.hasKey("ItemKey")) {
+						int maxDura = i.getInteger("MaxDurability");
 						int slot = event.getSlot();
 						if(i.getString("ItemKey").contains("Wooden") && (cursor.getType() == Material.OAK_PLANKS || cursor.getType() == Material.BIRCH_PLANKS || cursor.getType() == Material.SPRUCE_PLANKS || cursor.getType() == Material.JUNGLE_LOG || cursor.getType() == Material.DARK_OAK_LOG || cursor.getType() == Material.ACACIA_LOG)) {
-							ItemStack newItem = this.repairDurability(player, item, 30);
+							ItemStack newItem = this.repairDurability(player, item, maxDura / 100 * 50);
 							if(newItem != null) {
 								event.setCancelled(true);
 								player.getInventory().setItem(slot, newItem);
@@ -205,16 +206,7 @@ public class CustomDurability implements Listener{
 							}
 						}
 						else if(i.getString("ItemKey").contains("Stone") && cursor.getType() == Material.COBBLESTONE) {
-							ItemStack newItem = this.repairDurability(player, item, 35);
-							if(newItem != null) {
-								event.setCancelled(true);
-								player.getInventory().setItem(slot, newItem);
-								player.getOpenInventory().getCursor().setAmount(event.getCursor().getAmount() - 1);
-								player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 2.0F, 1.0F);
-							}
-						}
-						else if(i.getString("ItemKey").contains("Chain") && cursor.getType() == Material.IRON_INGOT) {
-							ItemStack newItem = this.repairDurability(player, item, 40);
+							ItemStack newItem = this.repairDurability(player, item, maxDura / 100 * 45);
 							if(newItem != null) {
 								event.setCancelled(true);
 								player.getInventory().setItem(slot, newItem);
@@ -223,7 +215,7 @@ public class CustomDurability implements Listener{
 							}
 						}
 						else if(i.getString("ItemKey").contains("Iron") && cursor.getType() == Material.IRON_INGOT) {
-							ItemStack newItem = this.repairDurability(player, item, 40);
+							ItemStack newItem = this.repairDurability(player, item, maxDura / 100 * 40);
 							if(newItem != null) {
 								event.setCancelled(true);
 								player.getInventory().setItem(slot, newItem);
@@ -232,7 +224,7 @@ public class CustomDurability implements Listener{
 							}
 						}
 						else if(i.getString("ItemKey").contains("Golden") && cursor.getType() == Material.GOLD_INGOT) {
-							ItemStack newItem = this.repairDurability(player, item, 45);
+							ItemStack newItem = this.repairDurability(player, item, maxDura / 100 * 50);
 							if(newItem != null) {
 								event.setCancelled(true);
 								player.getInventory().setItem(slot, newItem);
@@ -241,7 +233,7 @@ public class CustomDurability implements Listener{
 							}
 						}
 						else if(i.getString("ItemKey").contains("Diamond") && cursor.getType() == Material.DIAMOND) {
-							ItemStack newItem = this.repairDurability(player, item, 50);
+							ItemStack newItem = this.repairDurability(player, item, maxDura / 100 * 35);
 							if(newItem != null) {
 								event.setCancelled(true);
 								player.getInventory().setItem(slot, newItem);

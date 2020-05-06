@@ -2561,15 +2561,15 @@ public class Enchantment extends CommandFile implements Listener{
 		this.listArmor.put("Absorbing Comeback", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			HashMap<UUID, Double> extraDamage = new HashMap<UUID, Double>();
 			@Override
-			public void activateEnchantment(LivingEntity victim, int level, EntityDamageByEntityEvent event) {
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				if(i <= 7 + level) {
+				if(i <= 100/*7 + level*/) {
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
-					victim.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
+					victim.getWorld().spawnParticle(Particle.CRIT_MAGIC, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_DEATH, 2, (float) 1.3);
 					}
-					extraDamage.put(victim.getUniqueId(), event.getDamage() * (0.10 + 0.05 * level));
+					extraDamage.put(victim.getUniqueId(), event.getDamage() * (0.20 + 0.075 * level));
 				}
 			}
 			@EventHandler
@@ -2855,7 +2855,7 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				if(i <= 1 + 1 * level) {
+				if(i <= 1.5 + 1.5 * level) {
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
 					victim.getWorld().spawnParticle(Particle.CLOUD, locCF, 60, 0.1, 0.1, 0.1, 0.1); 
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2, (float) 1.5);
@@ -2871,7 +2871,7 @@ public class Enchantment extends CommandFile implements Listener{
 					new ArrayList<String>(Arrays.asList(
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you evade the attack. Causing you to recieve",
-						"&7Causing nearby enemies to recieve damage."
+						"&7no damage at all."
 					))
 				);
 			}
@@ -3594,7 +3594,7 @@ public class Enchantment extends CommandFile implements Listener{
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, (float) 0.8);
 					}
 					int amp = 0 + level;
-					int durationAdd = 60 + 8 * level;
+					int durationAdd = 50 + 8 * level;
 					p.applyEffect(victim, PotionEffectType.INCREASE_DAMAGE, amp, durationAdd);
 				}
 			}
@@ -4467,7 +4467,7 @@ public class Enchantment extends CommandFile implements Listener{
 						Player shooter = (Player) arrow.getShooter();
 						if(arrows.containsKey(arrow.getUniqueId())) {
 							arrow.setPickupStatus(PickupStatus.DISALLOWED);
-							if(event.getHitEntity() != null) {
+							if(event.getHitEntity() == null) {
 								this.loop(shooter, arrow, arrow);
 							}
 							else {

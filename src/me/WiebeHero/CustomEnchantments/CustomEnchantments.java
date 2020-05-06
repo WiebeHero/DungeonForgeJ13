@@ -63,6 +63,7 @@ import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.DFPlayerPackage.DFPlayerRegister;
 import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.DFPlayerPackage.Enums;
+import me.WiebeHero.DFPlayerPackage.Enums.Classes;
 import me.WiebeHero.DFShops.DFShop;
 import me.WiebeHero.DFShops.PayCommand;
 import me.WiebeHero.DungeonInstances.DungeonMaxima;
@@ -241,6 +242,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 3L);
 		Enums en = new Enums(dfManager, facManager);
+		for(Classes e : Classes.values()) {
+			Bukkit.getPluginManager().registerEvents(e, CustomEnchantments.getInstance());
+		}
 		//Config Manager
 		ModerationEvents mod = new ModerationEvents(facManager, dfManager, rankedManager, punishManager, staffManager, spawnerManager, lootChestManager, gui, multi, luck, method, score, classMenu);
 		//Custom Weapons
