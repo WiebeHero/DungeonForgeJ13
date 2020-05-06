@@ -768,7 +768,8 @@ public class Enchantment extends CommandFile implements Listener{
 			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
 				if(!playerStuff.contains(damager.getUniqueId())) {
 					playerStuff.add(damager.getUniqueId()); // set to "true"
-					damager.launchProjectile(DragonFireball.class);
+					DragonFireball fireball = damager.launchProjectile(DragonFireball.class);
+					fireball.setShooter(damager);
 					Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 1.7D, damager.getLocation().getZ() + 0D);
 					damager.getWorld().spawnParticle(Particle.DRAGON_BREATH, locCF, 60, 0.05, 0.1, 0.05, 0.1); 
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {

@@ -126,12 +126,12 @@ public class RankedPlayerListener implements Listener{
 			RankedPlayer r = null;
 			if(rManager.contains(player.getUniqueId())) {
 				r = rManager.getRankedPlayer(player.getUniqueId());
-				r.addRank(Rank.HELPER_PLUS);
+				r.addRank(Rank.HELPER);
 				r.setAHCount(1);
 				r.setHomeCount(1);
 			}
 			else {
-				r = new RankedPlayer(Rank.HELPER_PLUS, "&aHelper", 1, 1);
+				r = new RankedPlayer(Rank.HELPER, "&aHelper", 1, 1);
 			}
 			rManager.add(player.getUniqueId(), r);
 			mod = true;

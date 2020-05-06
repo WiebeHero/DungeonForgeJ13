@@ -1413,8 +1413,10 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								if(pun.isMuted()) {
 									pun.setMuteTime(0L);
 									pun.setMutePerm(false);
-									pun.removeMutedBy(pun.getMuteOffense() - 1);
-									pun.removeMuteReason(pun.getMuteOffense() - 1);
+									int offense = pun.getMuteOffense();
+									pun.removeMutedBy(offense - 1);
+									pun.removeMuteReason(offense - 1);
+									pun.removeMuteDate(offense - 1);
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unmuted &6" + target.get(player.getUniqueId()).getValue()));
 									Player offender = Bukkit.getPlayer(target.get(player.getUniqueId()).getKey());
 									if(offender != null) {
