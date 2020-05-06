@@ -219,14 +219,22 @@ public class DFFactionManager {
 				}
 			}
 			ArrayList<Long> list = new ArrayList<Long>();
-			for(long c : fac.getChunkList()) {
-				list.add(c);
+			if(!list.isEmpty()) {
+				for(long c : fac.getChunkList()) {
+					list.add(c);
+				}
+			}
+			ArrayList<String> uuids = new ArrayList<String>();
+			if(!fac.getAllyList().isEmpty()) {
+				for(UUID uuid : fac.getAllyList()) {
+					uuids.add(uuid.toString());
+				}
 			}
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Home", fac.getFactionHome());
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Name", fac.getName());
 			yml.set("Factions.List." + fac.getFactionId() + ".Chunks List", list);
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Points", fac.getFactionPoints());
-			yml.set("Factions.List." + fac.getFactionId() + ".Allies", fac.getAllyList());
+			yml.set("Factions.List." + fac.getFactionId() + ".Allies", uuids);
 			yml.set("Factions.List." + fac.getFactionId() + ".Energy", fac.getEnergy());
 			yml.set("Factions.List." + fac.getFactionId() + ".Bank", fac.getBank());
 		}
