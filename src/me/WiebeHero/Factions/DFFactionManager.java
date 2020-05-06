@@ -219,7 +219,7 @@ public class DFFactionManager {
 				}
 			}
 			ArrayList<Long> list = new ArrayList<Long>();
-			if(!list.isEmpty()) {
+			if(!fac.getChunkList().isEmpty()) {
 				for(long c : fac.getChunkList()) {
 					list.add(c);
 				}
