@@ -28,8 +28,8 @@ public class Portals implements Listener,CommandExecutor{
 		if(p.getWorld().getName().equals("DFWarzone-1")) {
 			if(p.getLocation().getX() >= 167 && p.getLocation().getX() <= 168 && p.getLocation().getZ() >= 862 && p.getLocation().getZ() <= 865 && p.getLocation().getY() >= 64 && p.getLocation().getY() <= 67){
 				Location loc = Bukkit.getWorld("FactionWorld-1").getSpawnLocation();
-				int x = new Random().nextInt(250) - 250;
-				int z = new Random().nextInt(250) - 250;
+				int x = new Random().nextInt(1500) - 1500;
+				int z = new Random().nextInt(1500) - 1500;
 				loc = Bukkit.getWorld("FactionWorld-1").getSpawnLocation().add(x, 0, z);
 				for(double y1 = 256.00; y1 > 0;) {
 					y1--;
@@ -42,8 +42,8 @@ public class Portals implements Listener,CommandExecutor{
 						}
 						else {
 							y1 = 256.00;
-							int tempX = new Random().nextInt(250) - 250;
-							int tempZ = new Random().nextInt(250) - 250;
+							int tempX = new Random().nextInt(1500) - 1500;
+							int tempZ = new Random().nextInt(1500) - 1500;
 							loc.set(tempX, y1, tempZ);
 						}
 					}
@@ -70,8 +70,8 @@ public class Portals implements Listener,CommandExecutor{
 									if(count == 0) {
 										userUsed.add(player.getUniqueId().toString());
 										Location loc = Bukkit.getWorld("FactionWorld-1").getSpawnLocation();
-										int x = new Random().nextInt(250) - 250;
-										int z = new Random().nextInt(250) - 250;
+										int x = new Random().nextInt(1500) - 1500;
+										int z = new Random().nextInt(1500) - 1500;
 										loc = Bukkit.getWorld("FactionWorld-1").getSpawnLocation().add(x, 0, z);
 										for(double y1 = 256.00; y1 > 0;) {
 											y1--;
@@ -84,8 +84,8 @@ public class Portals implements Listener,CommandExecutor{
 												}
 												else {
 													y1 = 256.00;
-													int tempX = new Random().nextInt(250) - 250;
-													int tempZ = new Random().nextInt(250) - 250;
+													int tempX = new Random().nextInt(1500) - 1500;
+													int tempZ = new Random().nextInt(1500) - 1500;
 													loc.set(tempX, y1, tempZ);
 												}
 											}

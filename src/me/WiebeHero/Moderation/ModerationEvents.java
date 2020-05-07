@@ -391,8 +391,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
 									Punish pun = pManager.get(p.getUniqueId());
 									if(pun.isMuted()) {
+										pun.setMutePerm(false);
 										pun.setMuteTime(0L);
-										int offense = pun.getBanOffense();
+										int offense = pun.getMuteOffense();
 										if(!pun.getMuteReasonsList().isEmpty()) {
 											pun.removeMuteReason(offense - 1);
 										}
