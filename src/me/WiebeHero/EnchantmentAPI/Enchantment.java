@@ -565,12 +565,12 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				if(i <= 3 + level) {
+				if(i <= 8 + level * 2) {
 					Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 1.5D, damager.getLocation().getZ() + 0D);
 					damager.getWorld().spawnParticle(Particle.DRIP_WATER, locCF, 30, 0.1, 0.1, 0.1, 0.1);
 					damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_ANVIL_FALL, 2, (float) 1);
 					int amp = (int)Math.floor(0 + (level) / 2);
-					int durationAdd = 100 + 20 * level;
+					int durationAdd = 60 + 10 * level;
 					PotionEffectType type = PotionEffectType.DAMAGE_RESISTANCE;
 					p.applyEffect(damager, type, amp, durationAdd);
 				}
@@ -1952,7 +1952,7 @@ public class Enchantment extends CommandFile implements Listener{
 					}
 					new BukkitRunnable() {
 						  public void run() {
-							  victim.setVelocity(new Vector(0, 1.2 + 0.1 * level, 0));
+							  victim.setVelocity(new Vector(0, 1.5 + 0.3 * level, 0));
 						  }
 					}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 				}
@@ -2030,7 +2030,7 @@ public class Enchantment extends CommandFile implements Listener{
 								int level = snowball.get(pro.getUniqueId());
 								snowball.remove(pro.getUniqueId());
 								LivingEntity ent = (LivingEntity) event.getHitEntity();
-								int amp = level;
+								int amp = (int)Math.floor(0 + (level) / 2);
 								int durationAdd = 100 + 20 * level;
 								ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.SLOW, PotionEffectType.BLINDNESS));
 								p.applyEffect(ent, types, amp, durationAdd);
@@ -2389,7 +2389,7 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				if(i <= 4 + level) {
+				if(i <= 4 + level * 1.5) {
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.5D, victim.getLocation().getZ() + 0D);
 					damager.getWorld().spawnParticle(Particle.SMOKE_NORMAL, locCF, 60, 0, 0, 0, 0.1); 
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
@@ -3126,15 +3126,13 @@ public class Enchantment extends CommandFile implements Listener{
 					double range = 3.00 + 1.25 * level;
 					for(Entity entity : victim.getNearbyEntities(range, range, range)) {
 						if(entity != null) {
-							if(entity instanceof LivingEntity) {
+							if(entity instanceof LivingEntity && entity != victim) {
 								LivingEntity attacked = (LivingEntity) entity;
-								if(attacked != victim) {
-									if(facManager.isFriendly(victim, attacked)) {
-										if(victim instanceof Player) {
-											attacked.setKiller((Player)victim);
-										}
-										attacked.setFireTicks(attacked.getFireTicks() + (140 + 20 * level));
+								if(!facManager.isFriendly(victim, attacked)) {
+									if(victim instanceof Player) {
+										attacked.setKiller((Player)victim);
 									}
+									attacked.setFireTicks(attacked.getFireTicks() + (140 + 20 * level));
 								}
 							}
 						}
@@ -4488,7 +4486,7 @@ public class Enchantment extends CommandFile implements Listener{
 				for(Entity e : en.getNearbyEntities(range, range, range)) {
 					if(e != shooter) {
 						if(e instanceof LivingEntity) {
-							if(facManager.isFriendly(shooter, e)) {
+							if(!facManager.isFriendly(shooter, e)) {
 								LivingEntity ent = (LivingEntity) e;
 								double finalDamage = damage - (e.getLocation().distance(en.getLocation())) / 2.5;
 								if(shooter instanceof Player) {
@@ -6038,9 +6036,9 @@ public class Enchantment extends CommandFile implements Listener{
 					double range = 3.00 + 1.25 * level;
 					for(Entity entity : victim.getNearbyEntities(range, range, range)) {
 						if(entity != null) {
-							if(entity instanceof LivingEntity) {
+							if(entity instanceof LivingEntity && entity != victim) {
 								LivingEntity attacked = (LivingEntity) entity;
-								if(attacked != victim) {
+								if(facManager.isFriendly(victim, attacked)) {
 									attacked.setFireTicks(attacked.getFireTicks() + (140 + 20 * level));
 								}
 							}

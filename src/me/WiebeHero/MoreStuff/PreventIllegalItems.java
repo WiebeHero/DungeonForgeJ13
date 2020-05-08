@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +29,7 @@ public class PreventIllegalItems implements Listener{
 					event.setCurrentItem(null);
 				}
 			}
-			else if(item.getType() == Material.BOW || item.getType() == Material.ENDER_EYE || item.getType() == Material.END_CRYSTAL || item.getType() == Material.ENDER_CHEST || item.getType() == Material.HOPPER || item.getType() == Material.BEACON) {
+			else if(item.getType() == Material.BOW || item.getType() == Material.ENDER_EYE || item.getType() == Material.END_CRYSTAL) {
 				if(!item.getItemMeta().hasDisplayName()) {
 					event.setCurrentItem(null);
 				}
@@ -108,6 +109,15 @@ public class PreventIllegalItems implements Listener{
 	public void cancelTrade(PlayerInteractEntityEvent event) {
 		if(event.getRightClicked() instanceof Villager) {
 			event.setCancelled(true);
+		}
+	}
+	@EventHandler
+	public void cancelCraft(CraftItemEvent event) {
+		if(event.getCurrentItem() != null) {
+			Material type = event.getCurrentItem().getType();
+			if(type == Material.HOPPER || type == Material.BEACON || type == Material.ENDER_EYE || type == Material.END_CRYSTAL) {
+				event.setCancelled(true);
+			}
 		}
 	}
 }

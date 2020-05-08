@@ -1176,7 +1176,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						if(target.containsKey(player.getUniqueId())) {
 							if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
 								gui.BanChoice(player, target.get(player.getUniqueId()).getValue());
-								player.closeInventory();
 							}
 							else {
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to ban players!"));
@@ -1187,7 +1186,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						if(target.containsKey(player.getUniqueId())) {
 							if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
 								gui.MuteChoice(player, target.get(player.getUniqueId()).getValue());
-								player.closeInventory();
 							}
 							else {
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to mute players!"));
