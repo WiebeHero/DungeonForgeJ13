@@ -25,8 +25,10 @@ public class ExtraExperience implements Listener{
 		if(facPlayer.getFactionId() != null) {
 			double xpMultiplier = event.getXPMultiplier();
 			for(CapturePoint point : cpManager.getCapturePointList().values()) {
-				if(point.getCapturedId().equals(facPlayer.getFactionId())) {
-					xpMultiplier += point.getXPMultiplier();
+				if(point.getCapturedId() != null) {
+					if(point.getCapturedId().equals(facPlayer.getFactionId())) {
+						xpMultiplier += point.getXPMultiplier();
+					}
 				}
 			}
 			event.setXPMultiplier(xpMultiplier);
