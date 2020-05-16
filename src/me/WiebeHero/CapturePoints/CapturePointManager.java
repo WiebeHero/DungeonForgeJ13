@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -77,7 +78,10 @@ public class CapturePointManager {
 				ArrayList<String> uuidStrings = new ArrayList<String>(yml.getConfigurationSection("Capture Points").getKeys(false));
 				for(int i = 0; i < uuidStrings.size(); i++) {
 					UUID cUuid = UUID.fromString(uuidStrings.get(i));
-					UUID fUuid = UUID.fromString(yml.getString("Capture Points." + cUuid + ".Captured ID"));
+					UUID fUuid = null;
+					if(yml.get("Capture Points." + cUuid + ".Captured ID") != null) {
+						fUuid = UUID.fromString(yml.getString("Capture Points." + cUuid + ".Captured ID"));
+					} 
 					Location loc = (Location)yml.get("Capture Points." + cUuid + ".Capture Point Location");
 					int progress = yml.getInt("Capture Points." + cUuid + ".Capture Point Progress");
 					double radius = yml.getDouble("Capture Points." + cUuid + ".Capture Point Radius");
@@ -103,8 +107,10 @@ public class CapturePointManager {
 		yml.set("Capture Points", null);
 		for(CapturePoint cp : this.capturePointList.values()) {
 			if(cp != null) {
-				yml.set("Capture Points", cp.getCaptureId().toString());
-				yml.set("Capture Points." + cp.getCaptureId().toString() + ".Captured ID", cp.getCapturedId().toString());
+				yml.createSection("Capture Points." + cp.getCaptureId().toString());
+				if(cp.getCapturedId() != null) {
+					yml.set("Capture Points." + cp.getCaptureId().toString() + ".Captured ID", cp.getCapturedId().toString());
+				}
 				yml.set("Capture Points." + cp.getCaptureId().toString() + ".Capture Point Location", cp.getCaptureLocation());
 				yml.set("Capture Points." + cp.getCaptureId().toString() + ".Capture Point Progress", cp.getCaptureProgress());
 				yml.set("Capture Points." + cp.getCaptureId().toString() + ".Capture Point Radius", cp.getCaptureRadius());

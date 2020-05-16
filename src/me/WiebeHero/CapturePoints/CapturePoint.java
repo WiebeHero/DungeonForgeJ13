@@ -26,6 +26,7 @@ public class CapturePoint {
 		this.captureLocation = loc;
 		this.captureProgress = progress;
 		this.progressBar = Bukkit.getServer().createBossBar("Capture Point", BarColor.GREEN, BarStyle.SEGMENTED_10);
+		this.progressBar.setProgress((double)this.captureProgress / 10.00);
 	}
 	
 	public CapturePoint(UUID capturedFac, Location loc, double captureRadius, double xpMultiplier) {

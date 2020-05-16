@@ -588,7 +588,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			ex.printStackTrace();
 		}
 		try {
-			cpManager.saveCapturePoints();;
+			cpManager.saveCapturePoints();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
