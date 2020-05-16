@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -19,13 +20,18 @@ import org.bukkit.inventory.meta.SkullMeta;
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 
 public class ModerationGUI implements Listener{
 	private DFPlayerManager dfManager;
-	public ModerationGUI(DFPlayerManager dfManager) {
+	private ItemStackBuilder builder;
+	private PunishManager pManager;
+	public ModerationGUI(DFPlayerManager dfManager, ItemStackBuilder builder, PunishManager pManager) {
 		this.dfManager = dfManager;
+		this.builder = builder;
+		this.pManager = pManager;
 	}
 	public HashMap<UUID, Integer> offenseList = new HashMap<UUID, Integer>();
 	public HashMap<UUID, Integer> reasonList = new HashMap<UUID, Integer>();
@@ -112,7 +118,7 @@ public class ModerationGUI implements Listener{
 					"&cAimbot, Bowaimbot, Forcefield",
 					"&cor other combat related modifications."
 				)),
-				"Combat Related"
+				"Combat Modifications"
 		));
 		i.setItem(11, this.createDisplayItem(
 				Material.REDSTONE, 
@@ -121,7 +127,7 @@ public class ModerationGUI implements Listener{
 					"&cAutoarmor, Autosword, Automine, Autoeat, Autofish, Autoswim, Autosoup, Autosteal",
 					"&cor other auto related modifications."
 				)),
-				"Auto Related"
+				"Auto Modifications"
 		));
 		i.setItem(12, this.createDisplayItem(
 				Material.FEATHER, 
@@ -130,7 +136,7 @@ public class ModerationGUI implements Listener{
 					"&cTeleport, Fly, Bunny Hop, Blink, Safewalk, Speed, Anit Knockback, Sneak, Freecam",
 					"&cor other movement related modifications."
 				)),
-				"Movement Related"
+				"Movement Modifications"
 		));
 		i.setItem(13, this.createDisplayItem(
 				Material.COMPASS, 
@@ -139,7 +145,7 @@ public class ModerationGUI implements Listener{
 					"&cPlayer ESP, Player Tracer, Item ESP, Mob ESP, Chest ESP, Block ESP, Minimap",
 					"&cor other ESP related modifications."
 				)),
-				"ESP Related"
+				"ESP Modifications"
 		));
 		i.setItem(14, this.createDisplayItem(
 				Material.APPLE, 
@@ -148,7 +154,7 @@ public class ModerationGUI implements Listener{
 					"&cGodmode, Antipotion, Zoot, Health Hacks",
 					"&cor other health related modifications."
 				)),
-				"Health Related"
+				"Health Modifications"
 		));
 		i.setItem(15, this.createDisplayItem(
 				Material.GLASS, 
@@ -157,7 +163,7 @@ public class ModerationGUI implements Listener{
 					"&cNuker, Fastbuild, Fastbreak, Scaffold",
 					"&cor other building related modifications."
 				)),
-				"Building Related"
+				"Building Modifications"
 		));
 		i.setItem(16, this.createDisplayItem(
 				Material.OBSIDIAN, 
@@ -166,7 +172,7 @@ public class ModerationGUI implements Listener{
 					"&cXray, Wallhack",
 					"&cor other wallhack related modifications."
 				)),
-				"Wallhack Related"
+				"Wallhack Modifications"
 		));
 		i.setItem(17, nothing());
 		i.setItem(18, nothing());
@@ -177,7 +183,50 @@ public class ModerationGUI implements Listener{
 					"&cFullbright, Twerk, Derp",
 					"&cor other party related modifications."
 				)),
-				"Party Related"
+				"Party Modifications"
+		));
+		i.setItem(20, this.createDisplayItem(
+				Material.TNT, 
+				"&cIllegal Raiding",
+				new ArrayList<String>(Arrays.asList(
+					"&cBugraiding/Trickraiding",
+					"&cor other illegal raid options."
+				)),
+				"Illegal Raiding"
+		));
+		i.setItem(21, this.createDisplayItem(
+				Material.GRASS, 
+				"&cMap Glitching",
+				new ArrayList<String>(Arrays.asList(
+					"&cGlitching out of any world/Abusing Map glitches",
+					"&cor other Map glitches."
+				)),
+				"Map Glitching"
+		));	
+		i.setItem(22, this.createDisplayItem(
+				Material.GOLDEN_PICKAXE, 
+				"&cDuplicating Items/Glitching Items",
+				new ArrayList<String>(Arrays.asList(
+					"&cDuplicating Items/Glitching Items",
+					"&cor other Dupe/Glitch bugs."
+				)),
+				"Item Duplication/Glitching"
+		));
+		i.setItem(23, this.createDisplayItem(
+				Material.BARRIER, 
+				"&cAbusing selfmade/other plugins",
+				new ArrayList<String>(Arrays.asList(
+					"&cAbusing selfmade/other plugins to gain an advantage"
+				)),
+				"Abusing selfmade/other plugins"
+		));
+		i.setItem(24, this.createDisplayItem(
+				Material.JUKEBOX, 
+				"&cKeep/Using forbidden items",
+				new ArrayList<String>(Arrays.asList(
+					"&cKeep/Using forbidden items"
+				)),
+				"Forbidden Items"
 		));
 		i.setItem(26, nothing());
 		i.setItem(27, nothing());
@@ -281,6 +330,172 @@ public class ModerationGUI implements Listener{
 		i.setItem(24, nothing());
 		i.setItem(25, nothing());
 		i.setItem(26, nothing());
+		reporter.openInventory(i);
+	}
+	public void PunishHistory(Player reporter, String name) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 45, (new CCT().colorize("&6Punish History: &c" + name)));
+		for(int x = 0; x < 45; x++) {
+			i.setItem(x, nothing());
+		}
+		OfflinePlayer p = Bukkit.getOfflinePlayer(name);
+		Punish punish = pManager.get(p.getUniqueId());
+		ArrayList<String> replacedLore = new ArrayList<String>();
+		if(punish.isBanned()) {
+			replacedLore.add("&7Currently Banned: Yes");
+			if(punish.getBanTime() > System.currentTimeMillis()) {
+				Long timeLeft = punish.getBanTime() - System.currentTimeMillis();
+				long diffSeconds = timeLeft / 1000 % 60;
+		        long diffMinutes = timeLeft / (60 * 1000) % 60;
+		        long diffHours = timeLeft / (60 * 60 * 1000) % 24;
+		        long diffDays = timeLeft / (24 * 60 * 60 * 1000);
+		        String time = diffDays + " Days " + diffHours + ":" + diffMinutes + ":" + diffSeconds;
+				replacedLore.add("&7Can come back in: &b" + time);
+			}
+			else if(punish.getBanPerm()){
+				replacedLore.add("&7Can come back in: &bNever");
+			}
+		}
+		else {
+			replacedLore.add("&7Currently Banned: No");
+		}
+		if(punish.isMuted()) {
+			replacedLore.add("&7Currently Muted: Yes");
+			if(punish.getMuteTime() > System.currentTimeMillis()) {
+				Long timeLeft = punish.getMuteTime() - System.currentTimeMillis();
+				long diffSeconds = timeLeft / 1000 % 60;
+		        long diffMinutes = timeLeft / (60 * 1000) % 60;
+		        long diffHours = timeLeft / (60 * 60 * 1000) % 24;
+		        long diffDays = timeLeft / (24 * 60 * 60 * 1000);
+		        String time = diffDays + " Days " + diffHours + ":" + diffMinutes + ":" + diffSeconds;
+				replacedLore.add("&7Can chat again in: &b" + time);
+			}
+			else if(punish.getBanPerm()){
+				replacedLore.add("&7Can chat again in: &bNever");
+			}
+		}
+		else {
+			replacedLore.add("&7Currently Muted: No");
+		}
+		ItemStack head = this.builder.constructItem(
+				Material.PLAYER_HEAD,
+				1,
+				"&6" + name,
+				replacedLore
+		);
+		SkullMeta meta = (SkullMeta) head.getItemMeta();
+		meta.setOwningPlayer(p);
+		head.setItemMeta(meta);
+		i.setItem(15, head);
+		ArrayList<String> banReasons = punish.getBanReasonsList();
+		ArrayList<String> bannedBy = punish.getBannedByList();
+		ArrayList<String> banDates = punish.getBanDateList();
+		ArrayList<String> total = new ArrayList<String>();
+		total.add("&7----------------------------");
+		if(!banReasons.isEmpty()) {
+			for(int x = 0; x < banReasons.size(); x++) {
+				total.add("&7Banned on: " + banDates.get(x));
+				total.add("&7Banned by: " + bannedBy.get(x));
+				total.add("&7Banned reason: " + banReasons.get(x));
+				total.add("&7----------------------------");
+			}
+		}
+		else {
+			total.add("&7This player has not been banned yet!");
+			total.add("&7----------------------------");
+		}
+		i.setItem(24, this.builder.constructItem(
+				Material.BOOK,
+				"&cBan History",
+				total
+		));
+		ArrayList<String> muteReasons = punish.getMuteReasonsList();
+		ArrayList<String> mutedBy = punish.getMutedByList();
+		ArrayList<String> muteDates = punish.getMuteDateList();
+		total = new ArrayList<String>();
+		total.add("&7----------------------------");
+		if(!muteReasons.isEmpty()) {
+			for(int x = 0; x < muteReasons.size(); x++) {
+				total.add("&7Muted on: " + muteDates.get(x));
+				total.add("&7Muted by: " + mutedBy.get(x));
+				total.add("&7Muted reason: " + muteReasons.get(x));
+				total.add("&7----------------------------");
+			}
+		}
+		else {
+			total.add("&7This player has not been muted yet!");
+			total.add("&7----------------------------");
+		}
+		i.setItem(33, this.builder.constructItem(
+				Material.BOOK,
+				"&cMute History",
+				total
+		));
+		
+		i.setItem(11, this.builder.constructItem(
+				Material.PAPER,
+				"&cRemove first ban punishment.",
+				new ArrayList<String>(Arrays.asList(
+					"&7Remove the first ban punishment",
+					"&7that is currently present in the",
+					"&7list. Other punishments will move",
+					"&7appriopiatly."
+				)),
+				"Remove First Ban"
+		));
+		
+		i.setItem(12, this.builder.constructItem(
+				Material.PAPER,
+				"&cRemove first mute punishment.",
+				new ArrayList<String>(Arrays.asList(
+					"&7Remove the first mute punishment",
+					"&7that is currently present in the",
+					"&7list. Other punishments will move",
+					"&7appriopiatly."
+				)),
+				"Remove First Mute"
+		));
+		
+		i.setItem(20, this.builder.constructItem(
+				Material.PAPER,
+				"&cRemove last ban punishment.",
+				new ArrayList<String>(Arrays.asList(
+					"&7Remove the last ban punishment",
+					"&7that is currently present in the",
+					"&7list. Other punishments will move",
+					"&7appriopiatly."
+				)),
+				"Remove Last Ban"
+		));
+		
+		i.setItem(21, this.builder.constructItem(
+				Material.PAPER,
+				"&cRemove last mute punishment.",
+				new ArrayList<String>(Arrays.asList(
+					"&7Remove the last mute punishment",
+					"&7that is currently present in the",
+					"&7list. Other punishments will move",
+					"&7appriopiatly."
+				)),
+				"Remove Last Mute"
+		));
+		
+		i.setItem(29, this.builder.constructItem(
+				Material.PAPER,
+				"&c&lClear ban punishments.",
+				new ArrayList<String>(Arrays.asList(
+					"&7Clear all ban punishments"
+				)),
+				"Clear Bans"
+		));
+		
+		i.setItem(30, this.builder.constructItem(
+				Material.PAPER,
+				"&c&lClear mute punishments.",
+				new ArrayList<String>(Arrays.asList(
+					"&7Clear all mute punishments"
+				)),
+				"Clear Mutes"
+		));
 		reporter.openInventory(i);
 	}
 	public void SpawnerCreate(Player player) {
@@ -817,6 +1032,242 @@ public class ModerationGUI implements Listener{
 		));
 		reporter.openInventory(i);
 	}
+	public void CapturePointMenu(Player player) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 27, (new CCT().colorize("&6Capture Point Create")));
+		for(int x = 0; x < i.getSize(); x++) {
+			i.setItem(x, nothing());
+		}
+		ItemStack stack = this.createDisplayItem(
+				Material.WHITE_STAINED_GLASS_PANE, 
+				"&fNew Capture Point",
+				new ArrayList<String>(Arrays.asList(
+						"&7--------------------",
+						"&7Click this to create a new spawner.",
+						"&7--------------------" 
+				)),
+				"CapturePointSlot"
+		);
+		if(player.getInventory().getItem(3) == null) {
+			i.setItem(12, stack);
+		}
+		else {
+			i.setItem(12, player.getInventory().getItem(3));
+		}
+		if(player.getInventory().getItem(4) == null) {
+			i.setItem(13, stack);
+		}
+		else {
+			i.setItem(13, player.getInventory().getItem(4));
+		}
+		if(player.getInventory().getItem(5) == null) {
+			i.setItem(14, stack);
+		}
+		else {
+			i.setItem(14, player.getInventory().getItem(5));
+		}
+		if(player.getInventory().getItem(6) == null) {
+			i.setItem(15, stack);
+		}
+		else {
+			i.setItem(15, player.getInventory().getItem(6));
+		}
+		if(player.getInventory().getItem(7) == null) {
+			i.setItem(16, stack);
+		}
+		else {
+			i.setItem(16, player.getInventory().getItem(7));
+		}
+		player.openInventory(i);
+	}
+	public void CapturePointMultiplier(Player player) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 27, (new CCT().colorize("&6Capture Point Multiplier")));
+		for(int x = 0; x < i.getSize(); x++) {
+			i.setItem(x, nothing());
+		}
+		i.setItem(10, this.builder.constructItem(
+				Material.PAPER,
+				"&aXP Increase: 10%",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will increase XP gain by 10%",
+					"&7--------------------"
+				)),
+				"CapturePointMultiplier",
+				10
+		));
+		i.setItem(11, this.builder.constructItem(
+				Material.PAPER,
+				"&aXP Increase: 15%",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will increase XP gain by 15%",
+					"&7--------------------"
+				)),
+				"CapturePointMultiplier",
+				15
+		));
+		i.setItem(12, this.builder.constructItem(
+				Material.PAPER,
+				"&aXP Increase: 20%",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will increase XP gain by 20%",
+					"&7--------------------"
+				)),
+				"CapturePointMultiplier",
+				20
+		));
+		i.setItem(13, this.builder.constructItem(
+				Material.PAPER,
+				"&aXP Increase: 25%",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will increase XP gain by 25%",
+					"&7--------------------"
+				)),
+				"CapturePointMultiplier",
+				25
+		));
+		i.setItem(14, this.builder.constructItem(
+				Material.PAPER,
+				"&aXP Increase: 30%",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will increase XP gain by 30%",
+					"&7--------------------"
+				)),
+				"CapturePointMultiplier",
+				30
+		));
+		i.setItem(15, this.builder.constructItem(
+				Material.PAPER,
+				"&aXP Increase: 35%",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will increase XP gain by 35%",
+					"&7--------------------"
+				)),
+				"CapturePointMultiplier",
+				35
+		));
+		i.setItem(16, this.builder.constructItem(
+				Material.PAPER,
+				"&aXP Increase: 40%",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will increase XP gain by 40%",
+					"&7--------------------"
+				)),
+				"CapturePointMultiplier",
+				40
+		));
+		player.openInventory(i);
+	}
+	public void CapturePointRadius(Player player) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 27, (new CCT().colorize("&6Capture Point Radius")));
+		for(int x = 0; x < i.getSize(); x++) {
+			i.setItem(x, nothing());
+		}
+		i.setItem(10, this.builder.constructItem(
+				Material.PAPER,
+				"&aCapture Point Radius: 5 Blocks",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will activate in a",
+					"&75 block radius",
+					"&7--------------------"
+				)),
+				"CapturePointRadius",
+				5
+		));
+		i.setItem(11, this.builder.constructItem(
+				Material.PAPER,
+				"&aCapture Point Radius: 7.5 Blocks",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will activate in a",
+					"&77.5 block radius",
+					"&7--------------------"
+				)),
+				"CapturePointRadius",
+				7.5
+		));
+		i.setItem(12, this.builder.constructItem(
+				Material.PAPER,
+				"&aCapture Point Radius: 10 Blocks",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will activate in a",
+					"&710 block radius",
+					"&7--------------------"
+				)),
+				"CapturePointRadius",
+				10
+		));
+		i.setItem(13, this.builder.constructItem(
+				Material.PAPER,
+				"&aCapture Point Radius: 12.5 Blocks",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will activate in a",
+					"&712.5 block radius",
+					"&7--------------------"
+				)),
+				"CapturePointRadius",
+				12.5
+		));
+		i.setItem(14, this.builder.constructItem(
+				Material.PAPER,
+				"&aCapture Point Radius: 15 Blocks",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will activate in a",
+					"&715 block radius",
+					"&7--------------------"
+				)),
+				"CapturePointRadius",
+				15
+		));
+		i.setItem(15, this.builder.constructItem(
+				Material.PAPER,
+				"&aCapture Point Radius: 17.5 Blocks",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will activate in a",
+					"&717.5 block radius",
+					"&7--------------------"
+				)),
+				"CapturePointRadius",
+				17.5
+		));
+		i.setItem(16, this.builder.constructItem(
+				Material.PAPER,
+				"&aCapture Point Radius: 20 Blocks",
+				new ArrayList<String>(Arrays.asList(
+					"&7--------------------",
+					"&7Click this to make it so that this",
+					"&7capture point will activate in a",
+					"&720 block radius",
+					"&7--------------------"
+				)),
+				"CapturePointRadius",
+				20
+		));
+		player.openInventory(i);
+	}
 	public void InventoryTeleport(Player player, int currentpage) {
 		int size = Bukkit.getOnlinePlayers().size();
 		int currentPage = currentpage;
@@ -1051,7 +1502,7 @@ public class ModerationGUI implements Listener{
 	public ItemStack nothing() {
 		ItemStack i = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
 		ItemMeta m = i.getItemMeta();
-		m.setDisplayName("");
+		m.setDisplayName(" ");
 		i.setItemMeta(m);
 		return i;
 	}

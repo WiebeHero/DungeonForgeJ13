@@ -116,13 +116,26 @@ public class ItemStackBuilder {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new CCT().colorize(display));
-		meta.setLore(lore);
 		for(int i = 0; i < lore.size(); i++) {
 			lore.set(i, new CCT().colorize(lore.get(i)));
 		}
+		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem i = new NBTItem(item);
 		i.setInteger(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key, double value) {
+		ItemStack item = new ItemStack(mat, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setDouble(key, value);
 		return i.getItem();
 	}
 	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key, Object value) {

@@ -4,16 +4,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
@@ -178,7 +181,14 @@ public class DFFactionManager {
 					UUID uuid = UUID.fromString(tempfAllyList.get(i1));
 					fAllyList.add(uuid);
 				}
-				fac.allyList = fAllyList;
+				ItemStack banner = yml.getItemStack("Factions.List." + list.get(i) + ".Faction Banner");
+				if(banner == null) {
+					fac.setBanner(new ItemStack(Material.BLACK_BANNER, 1));
+				}
+				else {
+					fac.setBanner(banner);
+				}
+				fac.setAllyList(fAllyList);
 				int fPoints = yml.getInt("Factions.List." + list.get(i) + ".Faction Points");
 				fac.setFactionPoints(fPoints);
 				fac.setEnergy(yml.getDouble("Factions.List." + list.get(i) + ".Energy"));
@@ -230,6 +240,7 @@ public class DFFactionManager {
 					uuids.add(uuid.toString());
 				}
 			}
+			yml.set("Factions.List." + fac.getFactionId() + ".Faction Banner", fac.getBanner());
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Home", fac.getFactionHome());
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Name", fac.getName());
 			yml.set("Factions.List." + fac.getFactionId() + ".Chunks List", list);

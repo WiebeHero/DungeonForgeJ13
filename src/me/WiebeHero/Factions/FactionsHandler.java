@@ -6,7 +6,6 @@ import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -17,22 +16,32 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
 
 public class FactionsHandler implements Listener{
 	private DFFactionManager facManager;
 	private DFFactionPlayerManager facPlayerManager;
-	public FactionsHandler(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager) {
+	private FactionInventory facInventory;
+	public FactionsHandler(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, FactionInventory facInventory) {
 		this.facManager = facManager;
 		this.facPlayerManager = facPlayerManager;
+		this.facInventory = facInventory;
 	}
 	private ArrayList<Material> blockAcces = new ArrayList<Material>(Arrays.asList(Material.CHEST, Material.FURNACE, Material.MINECART, Material.CHEST_MINECART, Material.HOPPER_MINECART, Material.FURNACE_MINECART, Material.CRAFTING_TABLE, Material.ENDER_CHEST, Material.DISPENSER, Material.DROPPER, Material.HOPPER, Material.SHULKER_BOX, Material.JUKEBOX, Material.BREWING_STAND));
 	private ArrayList<Material> plates = new ArrayList<Material>(Arrays.asList(Material.ACACIA_PRESSURE_PLATE, Material.BIRCH_PRESSURE_PLATE, Material.DARK_OAK_PRESSURE_PLATE, Material.HEAVY_WEIGHTED_PRESSURE_PLATE, Material.JUNGLE_PRESSURE_PLATE, Material.LIGHT_WEIGHTED_PRESSURE_PLATE, Material.OAK_PRESSURE_PLATE, Material.SPRUCE_PRESSURE_PLATE, Material.STONE_PRESSURE_PLATE));
@@ -259,6 +268,70 @@ public class FactionsHandler implements Listener{
 		if(faction != null) {
 			faction.removeEnergy(2.0);
 			event.getEntity().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have died and your faction has lost 2 power!"));
+		}
+	}
+	
+	@EventHandler
+	public void dragInventory(InventoryDragEvent event) {
+		Player player = (Player)event.getWhoClicked();
+		InventoryView view = player.getOpenInventory();
+		if(view.getTitle().contains("Faction Banner")) {
+			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void clickInventory(InventoryClickEvent event) {
+		Player player = (Player)event.getWhoClicked();
+		DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
+		DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
+		ItemStack stack = event.getCurrentItem();
+		ItemStack cursor = event.getCursor();
+		Inventory inv = event.getClickedInventory();
+		InventoryView view = player.getOpenInventory();
+		ClickType click = event.getClick();
+		if(view.getTitle().contains("Faction Banner")) {
+			if(inv.getType() == InventoryType.CHEST) {
+				event.setCancelled(true);
+				if(click == ClickType.LEFT) {
+					if(stack != null && cursor != null) {
+						NBTItem item = new NBTItem(stack);
+						if(item.hasKey("BannerSet")) {
+							if(cursor.getType().toString().contains("BANNER")) {
+								faction.setBanner(cursor);
+								view.setCursor(new ItemStack(Material.AIR));
+								player.getInventory().addItem(cursor);
+								facInventory.FactionBannerInventory(player, faction);
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe item that needs to replaced needs to be a banner!"));
+							}
+						}
+					}
+				}
+				else if(click == ClickType.RIGHT) {
+					if(stack != null && cursor != null) {
+						if(cursor.getType() == Material.AIR) {
+							NBTItem item = new NBTItem(stack);
+							if(item.hasKey("BannerRemove")) {
+								faction.setBanner(new ItemStack(Material.BLACK_BANNER, 1));
+								facInventory.FactionBannerInventory(player, faction);
+							}
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou must have nothing in your cursor while resetting the banner!"));
+						}
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou must have nothing in your cursor while resetting the banner!"));
+					}
+				}
+			}
+			else if(inv.getType() == InventoryType.PLAYER) {
+				if(click != ClickType.LEFT && click != ClickType.RIGHT) {
+					event.setCancelled(true);
+				}
+			}
 		}
 	}
 }

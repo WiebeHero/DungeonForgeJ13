@@ -228,4 +228,7 @@ public class RankedManager {
 		}
 		return null;
 	}
+	public HashMap<UUID, RankedPlayer> getRankedPlayerList(){
+		return this.ranked;
+	}
 }

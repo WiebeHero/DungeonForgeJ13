@@ -32,13 +32,15 @@ public class DFFactions implements Listener,CommandExecutor{
 	private DFScoreboard board;
 	private DFPlayerManager dfManager;
 	private WGMethods wg;
+	private FactionInventory facInventory;
 	private ArrayList<String> spawning;
-	public DFFactions(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, DFScoreboard board, DFPlayerManager dfManager, WGMethods wg) {
+	public DFFactions(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, DFScoreboard board, DFPlayerManager dfManager, WGMethods wg, FactionInventory facInventory) {
 		this.facManager = facManager;
 		this.facPlayerManager = facPlayerManager;
 		this.board = board;
 		this.dfManager = dfManager;
 		this.wg = wg;
+		this.facInventory = facInventory;
 		this.spawning = new ArrayList<String>();
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -209,7 +211,15 @@ public class DFFactions implements Listener,CommandExecutor{
 							}
 						}
 						else if(args[0].equalsIgnoreCase("bank")) {
-							if(args.length == 3) {
+							if(args.length == 1) {
+								if(facPlayer.getRank() >= 2) {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction bank contains " + faction.getBank() + "$!"));
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to perform this action!"));
+								}
+							}
+							else if(args.length == 2) {
 								if(args[1].equalsIgnoreCase("deposit")) {
 									if(facPlayer.getRank() >= 2) {
 										DFPlayer dfPlayer = dfManager.getEntity(player);
@@ -453,7 +463,25 @@ public class DFFactions implements Listener,CommandExecutor{
 								}
 							}
 							else {
-								player.sendMessage(new CCT().colorize("&cInvalid Arguments! Use /f or /f help to see the faction commands!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
+							}
+						}
+						else if(args[0].equalsIgnoreCase("banner")) {
+							if(args.length == 1) {
+								if(faction != null) {
+									if(facPlayer.getRank() >= 3) {
+										facInventory.FactionBannerInventory(player, faction);
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough that you can set a faction banner!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
 							}
 						}
 						else if(args[0].equalsIgnoreCase("sethome")) {
@@ -483,7 +511,7 @@ public class DFFactions implements Listener,CommandExecutor{
 								}
 							}
 							else {
-								player.sendMessage(new CCT().colorize("&cInvalid Arguments! Use /f or /f help to see the faction commands!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
 							}
 						}
 						else if(args[0].equalsIgnoreCase("home")) {

@@ -75,6 +75,7 @@ public class XPEarningMobs implements Listener{
 				}
 				DFPlayerXpGainEvent ev = new DFPlayerXpGainEvent(player, finalXP, this.dfManager, this.board);
 				Bukkit.getServer().getPluginManager().callEvent(ev);
+				ev.proceed();
 			}
 		}
 	}

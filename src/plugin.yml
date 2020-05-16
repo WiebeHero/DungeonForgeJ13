@@ -116,3 +116,31 @@ commands:
   level:
     ussage: /<command>
     description: 'Command for setting levels'
+  punish:
+    ussage: /<command>
+    description: 'Command for giving custom items'
+  history:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  stafflist:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  staffchat:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [sc]
+  checkmute:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  checkban:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  clearchat:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  freeze:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  unfreeze:
+    ussage: /<command>
+    description: 'Command for setting levels'

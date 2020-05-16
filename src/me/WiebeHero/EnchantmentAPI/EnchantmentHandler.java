@@ -216,6 +216,7 @@ public class EnchantmentHandler extends SwordSwingProgress{
 														}
 														else {
 															victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
+															break;
 														}
 													}
 												}
@@ -443,10 +444,12 @@ public class EnchantmentHandler extends SwordSwingProgress{
 									if(enchantment.getMeleeEnchantments().containsKey(check)) {
 										if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.RIGHT_CLICK) {
 											if(!wg.isInZone(damager, "spawn")) {
-												enchant = enchant.replaceAll("[^\\d.]", "");
-												int level = Integer.parseInt(enchant) - 1;
-												enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level);
-												enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+												if(!damager.hasCooldown(damager.getEquipment().getItemInMainHand().getType())) {
+													enchant = enchant.replaceAll("[^\\d.]", "");
+													int level = Integer.parseInt(enchant) - 1;
+													enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level);
+													enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+												}
 											}
 											else {
 												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
@@ -470,10 +473,12 @@ public class EnchantmentHandler extends SwordSwingProgress{
 									if(enchantment.getBowEnchantments().containsKey(check)) {
 										if(enchantment.getBowEnchantments().get(check).getKey() == Condition.LEFT_CLICK) {
 											if(!wg.isInZone(damager, "spawn")) {
-												enchant = enchant.replaceAll("[^\\d.]", "");
-												int level = Integer.parseInt(enchant) - 1;
-												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
-												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+												if(!damager.hasCooldown(damager.getEquipment().getItemInMainHand().getType())) {
+													enchant = enchant.replaceAll("[^\\d.]", "");
+													int level = Integer.parseInt(enchant) - 1;
+													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
+													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
+												}
 											}
 											else {
 												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));

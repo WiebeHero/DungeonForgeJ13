@@ -410,20 +410,16 @@ public class Enchantment extends CommandFile implements Listener{
 			}
 		}));
 		this.listMelee.put("Charge", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
-			ArrayList<UUID> playerStuff = new ArrayList<UUID>();
 			@Override
 			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
-				if(!playerStuff.contains(damager.getUniqueId())) {
-					int amp = (int)Math.floor(0 + (level) / 2);
-					int durationAdd = 100 + 33 * level;
-					ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.SPEED, PotionEffectType.INCREASE_DAMAGE));
-					p.applyEffect(damager, types, amp, durationAdd);
-					new BukkitRunnable() {
-						public void run() {
-							playerStuff.remove(damager.getUniqueId());
-						}
-					}.runTaskLater(CustomEnchantments.getInstance(), 800 - 120 * level);
+				if(damager instanceof Player) {
+					Player p = (Player) damager;
+					p.setCooldown(p.getInventory().getItemInMainHand().getType(), 800 - 120 * level);
 				}
+				int amp = (int)Math.floor(0 + (level) / 2);
+				int durationAdd = 100 + 33 * level;
+				ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.SPEED, PotionEffectType.INCREASE_DAMAGE));
+				p.applyEffect(damager, types, amp, durationAdd);
 			}
 			@Override
 			public ItemStack getStack() {

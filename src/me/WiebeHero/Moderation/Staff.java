@@ -3,17 +3,19 @@ package me.WiebeHero.Moderation;
 import org.bukkit.inventory.ItemStack;
 
 public class Staff {
-	public boolean staff;
-	public boolean spawner;
-	public boolean loot;
-	public boolean vanish;
-	public ItemStack contents[];
+	private boolean staff;
+	private boolean spawner;
+	private boolean loot;
+	private boolean vanish;
+	private boolean capturePoints;
+	private ItemStack contents[];
 	
 	public Staff() {
 		this.staff = false;
 		this.spawner = false;
 		this.loot = false;
 		this.vanish = false;
+		this.capturePoints = false;
 	}
 	
 	public void switchStaffMode(boolean s) {
@@ -42,6 +44,13 @@ public class Staff {
 	}
 	public boolean getVanishMode() {
 		return this.vanish;
+	}
+	
+	public void switchCapturePointMode(boolean s) {
+		this.capturePoints = s;
+	}
+	public boolean getCapturePointMode() {
+		return this.capturePoints;
 	}
 	
 	public void saveInv(ItemStack items[]) {

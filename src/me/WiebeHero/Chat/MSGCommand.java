@@ -1,4 +1,4 @@
-package me.WiebeHero.GeneralCommands;
+package me.WiebeHero.Chat;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -12,11 +12,12 @@ import org.bukkit.entity.Player;
 import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.MoreStuff.CombatTag;
+import me.WiebeHero.RankedPlayerPackage.RankedManager;
 
 public class MSGCommand implements CommandExecutor{
 	private MSGManager msgManager;
 	private Methods method;
-	public MSGCommand(MSGManager msgManager, Methods method) {
+	public MSGCommand(MSGManager msgManager, Methods method, RankedManager rManager) {
 		this.msgManager = msgManager;
 		this.method = method;
 	}
@@ -44,8 +45,8 @@ public class MSGCommand implements CommandExecutor{
 												message = message + " " + args[i];
 											}
 										}
-										p.sendMessage("§6" + player.getName() + " whispers to §6" + p.getName() + ": §7" + message);
-										player.sendMessage("§6" + player.getName() + " whispers to §6" + p.getName() + ": §7" + message);
+										p.sendMessage("§6[§a" + player.getName() + "§6->§a" + p.getName() + "§6]: §f" + message);
+										player.sendMessage("§6[§a" + player.getName() + "§6->§a" + p.getName() + "§6]: §f" + message);
 									}
 									else {
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't send an MSG to &6" + p.getName() + " &cbecause they have you in their ignore list."));

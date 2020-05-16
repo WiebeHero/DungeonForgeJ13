@@ -1,4 +1,4 @@
-package me.WiebeHero.GeneralCommands;
+package me.WiebeHero.Chat;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

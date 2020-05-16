@@ -1,4 +1,4 @@
-package me.WiebeHero.GeneralCommands;
+package me.WiebeHero.Chat;
 
 import java.util.HashMap;
 import java.util.UUID;

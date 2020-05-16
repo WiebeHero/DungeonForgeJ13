@@ -1,11 +1,13 @@
-package me.WiebeHero.GeneralCommands;
+package me.WiebeHero.Chat;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class MSG {
-	public ArrayList<UUID> ignoreList;
+	private ArrayList<UUID> ignoreList;
+	private boolean staffChat;
 	public MSG() {
+		this.staffChat = false;
 		this.ignoreList = new ArrayList<UUID>();
 	}
 	public void addIgnore(UUID uuid) {
@@ -24,5 +26,11 @@ public class MSG {
 	}
 	public void setIgnoreList(ArrayList<UUID> list) {
 		this.ignoreList = list;
+	}
+	public void setStaffChat(boolean staff) {
+		this.staffChat = staff;
+	}
+	public boolean getStaffChat() {
+		return this.staffChat;
 	}
 }

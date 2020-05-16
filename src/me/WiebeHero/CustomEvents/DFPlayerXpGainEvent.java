@@ -20,20 +20,25 @@ public class DFPlayerXpGainEvent extends Event{
 	private boolean leveled;
 	private DFPlayer dfPlayer;
 	private DFScoreboard board;
+	private double xpMultiplier;
 	
 	public DFPlayerXpGainEvent(Player leveled, int totalXP, DFPlayerManager manager, DFScoreboard board){
         this.player = leveled;
         this.manager = manager;
         this.totalXP = totalXP;
+        this.xpMultiplier = 100.00;
         this.dfPlayer = manager.getEntity(player.getUniqueId());
-        if(this.dfPlayer.getLevel() < 100) {
-	        this.xpBefore = dfPlayer.getExperience();
-	        this.board = board;
-	        this.dfPlayer.addExperience(totalXP);
-	        this.manager.addEntity(leveled.getUniqueId(), this.dfPlayer);
+        this.xpBefore = dfPlayer.getExperience();
+        this.board = board;
+    }
+	
+	public void proceed() {
+		if(this.dfPlayer.getLevel() < 100) {
+	        this.dfPlayer.addExperience(totalXP / 100 * (int)this.xpMultiplier);
+	        this.manager.addEntity(player.getUniqueId(), this.dfPlayer);
 	        if(this.dfPlayer.getExperience() >= this.dfPlayer.getMaxExperience()) {
 	        	this.leveled = true;
-	        	DFPlayerLevelUpEvent event = new DFPlayerLevelUpEvent(leveled, manager, this.board);
+	        	DFPlayerLevelUpEvent event = new DFPlayerLevelUpEvent(player, manager, this.board);
 				Bukkit.getServer().getPluginManager().callEvent(event);
 	        }
 	        else {
@@ -56,7 +61,7 @@ public class DFPlayerXpGainEvent extends Event{
         else {
         	this.dfPlayer.setExperience(0);
         }
-    }
+	}
 	
 	public int getXPBefore() {
 		return this.xpBefore;
@@ -80,6 +85,14 @@ public class DFPlayerXpGainEvent extends Event{
 	
 	public DFPlayer getDFPlayer() {
 		return this.dfPlayer;
+	}
+	
+	public double getXPMultiplier() {
+		return this.xpMultiplier;
+	}
+	
+	public void setXPMultiplier(double xpMultiplier) {
+		this.xpMultiplier = xpMultiplier;
 	}
 
 	@Override public HandlerList getHandlers() { return handlers; }

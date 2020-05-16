@@ -5,21 +5,24 @@ import java.util.UUID;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class DFFaction {
 	private UUID facId;
 	private DFFactionManager facManager;
 	private DFFactionPlayerManager memberManager;
-	public String facName;
-	public ArrayList<Long> chunkList;
-	public ArrayList<UUID> invitedList;
-	public ArrayList<UUID> invitedAllyList;
-	public ArrayList<UUID> allyList;
-	public Location facHome;
-	public int facP;
-	public double bank;
-	public double energy;
+	private String facName;
+	private ArrayList<Long> chunkList;
+	private ArrayList<UUID> invitedList;
+	private ArrayList<UUID> invitedAllyList;
+	private ArrayList<UUID> allyList;
+	private Location facHome;
+	private int facP;
+	private double bank;
+	private double energy;
+	private ItemStack banner;
 	public DFFaction(String facName, Player p, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
 		this.facId = UUID.randomUUID();
 		this.chunkList = new ArrayList<Long>();
@@ -32,6 +35,7 @@ public class DFFaction {
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
+		this.banner = new ItemStack(Material.BLACK_BANNER);
 		DFFactionPlayer df = memberManager.getFactionPlayer(p.getUniqueId());
 		df.setFactionId(this.getFactionId());
 		df.setRank(4);
@@ -48,6 +52,7 @@ public class DFFaction {
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
+		this.banner = new ItemStack(Material.BLACK_BANNER);
 	}
 	public DFFaction(String facName, UUID facId, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
 		this.facId = facId;
@@ -61,6 +66,7 @@ public class DFFaction {
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
+		this.banner = new ItemStack(Material.BLACK_BANNER);
 	}
 	public void addMember(Player player) {
 		if(memberManager.contains(player.getUniqueId())){
@@ -112,12 +118,24 @@ public class DFFaction {
 		return this.chunkList;
 	}
 	
+	public void setAllyList(ArrayList<UUID> allyList) {
+		this.allyList = allyList;
+	}
+	
 	public ArrayList<UUID> getAllyList() {
 		return this.allyList;
 	}
 	
 	public ArrayList<UUID> getInvitedList() {
 		return this.invitedList;
+	}
+	
+	public void setBanner(ItemStack banner) {
+		this.banner = banner;
+	}
+	
+	public ItemStack getBanner() {
+		return this.banner;
 	}
 	
 	public String getName() {
