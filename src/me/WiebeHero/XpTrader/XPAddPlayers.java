@@ -36,6 +36,7 @@ public class XPAddPlayers implements Listener {
 					int xpAdd = i.getInteger("XPBottle");
 					DFPlayerXpGainEvent ev = new DFPlayerXpGainEvent(player, xpAdd, this.dfManager, this.board);
 					Bukkit.getServer().getPluginManager().callEvent(ev);
+					ev.proceed();
 					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, 2, (float) 1.0);
 					player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 				}
