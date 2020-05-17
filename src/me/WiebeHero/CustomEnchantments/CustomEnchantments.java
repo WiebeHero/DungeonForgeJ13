@@ -408,6 +408,17 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(mod.staffchat).setExecutor(mod);
 		getCommand(mod.freeze).setExecutor(mod);
 		getCommand(mod.unfreeze).setExecutor(mod);
+		getCommand(mod.fly).setExecutor(mod);
+		getCommand(mod.feed).setExecutor(mod);
+		getCommand(mod.heal).setExecutor(mod);
+		getCommand(mod.time).setExecutor(mod);
+		getCommand(mod.weather).setExecutor(mod);
+		getCommand(mod.checkmode).setExecutor(mod);
+		getCommand(mod.clearinventory).setExecutor(mod);
+		getCommand(mod.tp).setExecutor(mod);
+		getCommand(mod.tptp).setExecutor(mod);
+		getCommand(mod.tphere).setExecutor(mod);
+		getCommand(mod.af).setExecutor(mod);
 		//Dungeon Parties
 		getCommand(party.comParty).setExecutor(party);
 		//

@@ -34,7 +34,7 @@ public class DFPlayerXpGainEvent extends Event{
 	
 	public void proceed() {
 		if(this.dfPlayer.getLevel() < 100) {
-	        this.dfPlayer.addExperience(totalXP / 100 * (int)this.xpMultiplier);
+	        this.dfPlayer.addExperience((int)((double)totalXP / 100.00 * (double)this.xpMultiplier));
 	        this.manager.addEntity(player.getUniqueId(), this.dfPlayer);
 	        if(this.dfPlayer.getExperience() >= this.dfPlayer.getMaxExperience()) {
 	        	this.leveled = true;

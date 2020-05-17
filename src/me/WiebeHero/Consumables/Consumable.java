@@ -14,6 +14,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.craftbukkit.v1_13_R2.CraftServer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
@@ -43,8 +45,8 @@ import me.WiebeHero.CustomMethods.PotionM;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFactionManager;
-import me.WiebeHero.Factions.DFFactionPlayerManager;
 import net.md_5.bungee.api.ChatColor;
+import net.minecraft.server.v1_13_R2.MinecraftKey;
 
 public class Consumable {
 	private PotionM p;
@@ -2366,17 +2368,15 @@ public class Consumable {
 	}
 	public void registerRecipes() {
 		Consumable con = this;
-		ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
 		Iterator<Recipe> iter = Bukkit.recipeIterator();
-		iter.forEachRemaining(recipeList::add); 
-		for(int i = 0; i < recipeList.size(); i++) {
-			Recipe r = recipeList.get(i);
+		ArrayList<Recipe> recipesReplace = new ArrayList<Recipe>();
+		ArrayList<Recipe> recipesNew = new ArrayList<Recipe>();
+		while(iter.hasNext()) {
+			Recipe r = iter.next();
 			if(r instanceof ShapedRecipe) {
 				ShapedRecipe rec = (ShapedRecipe) r;
-				//-----------------------------------------------------------------------------------
-				//Swords
-				//-----------------------------------------------------------------------------------
 				if(rec.getResult().getType() == Material.WOODEN_SWORD) {
+					recipesReplace.add(rec);
 					ItemStack item = con.equipment(Material.WOODEN_SWORD, "&7Wooden Sword", EquipmentSlot.HAND, 2.7, 0.8, 80, null);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), item);
 					recipe.shape(rec.getShape());
@@ -2384,10 +2384,11 @@ public class Consumable {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.STONE_SWORD) {
+				else if(rec.getResult().getType() == Material.STONE_SWORD) {
+					recipesReplace.add(rec);
 					ItemStack item = con.equipment(Material.STONE_SWORD, "&7Stone Sword", EquipmentSlot.HAND, 3.0, 0.83, 120, null);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), item);
 					recipe.shape(rec.getShape());
@@ -2395,10 +2396,11 @@ public class Consumable {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.IRON_SWORD) {
+				else if(rec.getResult().getType() == Material.IRON_SWORD) {
+					recipesReplace.add(rec);
 					ItemStack item = con.equipment(Material.IRON_SWORD, "&7Iron Sword", EquipmentSlot.HAND, 3.3, 0.86, 220, null);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), item);
 					recipe.shape(rec.getShape());
@@ -2406,10 +2408,11 @@ public class Consumable {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.GOLDEN_SWORD) {
+				else if(rec.getResult().getType() == Material.GOLDEN_SWORD) {
+					recipesReplace.add(rec);
 					ItemStack item = con.equipment(Material.GOLDEN_SWORD, "&7Golden Sword", EquipmentSlot.HAND, 2.4, 1.1, 40, null);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), item);
 					recipe.shape(rec.getShape());
@@ -2417,413 +2420,473 @@ public class Consumable {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.DIAMOND_SWORD) {
+				else if(rec.getResult().getType() == Material.DIAMOND_SWORD) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_SWORD, "&7Diamond Sword", EquipmentSlot.HAND, 3.9, 0.92, 400, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				//-----------------------------------------------------------------------------------
 				//Pickaxes
 				//-----------------------------------------------------------------------------------
-				if(rec.getResult().getType() == Material.WOODEN_PICKAXE) {
+				else if(rec.getResult().getType() == Material.WOODEN_PICKAXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.WOODEN_PICKAXE, "&7Wooden Pickaxe", EquipmentSlot.HAND, 1.8, 0.8, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.STONE_PICKAXE) {
+				else if(rec.getResult().getType() == Material.STONE_PICKAXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.STONE_PICKAXE, "&7Stone Pickaxe", EquipmentSlot.HAND, 2.0, 0.75, 120, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.IRON_PICKAXE) {
+				else if(rec.getResult().getType() == Material.IRON_PICKAXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_PICKAXE, "&7Iron Pickaxe", EquipmentSlot.HAND, 2.2, 0.7, 220, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.GOLDEN_PICKAXE) {
+				else if(rec.getResult().getType() == Material.GOLDEN_PICKAXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_PICKAXE, "&7Golden Pickaxe", EquipmentSlot.HAND, 1.6, 0.9, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.DIAMOND_PICKAXE) {
+				else if(rec.getResult().getType() == Material.DIAMOND_PICKAXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_PICKAXE, "&7Diamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 400, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				//-----------------------------------------------------------------------------------
 				//Axes
 				//-----------------------------------------------------------------------------------
-				if(rec.getResult().getType() == Material.WOODEN_AXE) {
+				else if(rec.getResult().getType() == Material.WOODEN_AXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.WOODEN_AXE, "&7Wooden Axe", EquipmentSlot.HAND, 5.0, 0.32, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.STONE_AXE) {
+				else if(rec.getResult().getType() == Material.STONE_AXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.STONE_AXE, "&7Stone Axe", EquipmentSlot.HAND, 5.25, 0.33, 120, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.IRON_AXE) {
+				else if(rec.getResult().getType() == Material.IRON_AXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_AXE, "&7Iron Axe", EquipmentSlot.HAND, 5.5, 0.35, 220, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.GOLDEN_AXE) {
+				else if(rec.getResult().getType() == Material.GOLDEN_AXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_AXE, "&7Golden Axe", EquipmentSlot.HAND, 4.25, 0.42, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.DIAMOND_AXE) {
+				else if(rec.getResult().getType() == Material.DIAMOND_AXE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_AXE, "&7Diamond Axe", EquipmentSlot.HAND, 6.0, 0.38, 400, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				//-----------------------------------------------------------------------------------
 				//Shovel
 				//-----------------------------------------------------------------------------------
-				if(rec.getResult().getType() == Material.WOODEN_SHOVEL) {
+				else if(rec.getResult().getType() == Material.WOODEN_SHOVEL) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.WOODEN_SHOVEL, "&7Wooden Shovel", EquipmentSlot.HAND, 2.3, 0.94, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.STONE_SHOVEL) {
+				else if(rec.getResult().getType() == Material.STONE_SHOVEL) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.STONE_SHOVEL, "&7Stone Shovel", EquipmentSlot.HAND, 2.45, 0.93, 120, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.IRON_SHOVEL) {
+				else if(rec.getResult().getType() == Material.IRON_SHOVEL) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_SHOVEL, "&7Iron Shovel", EquipmentSlot.HAND, 2.6, 0.96, 220, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.GOLDEN_SHOVEL) {
+				else if(rec.getResult().getType() == Material.GOLDEN_SHOVEL) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_SHOVEL, "&7Golden Shovel", EquipmentSlot.HAND, 1.8, 1.1, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.DIAMOND_SHOVEL) {
+				else if(rec.getResult().getType() == Material.DIAMOND_SHOVEL) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_SHOVEL, "&7Diamond Shovel", EquipmentSlot.HAND, 3.2, 1.02, 400, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				//-----------------------------------------------------------------------------------
 				//Hoes
 				//-----------------------------------------------------------------------------------
-				if(rec.getResult().getType() == Material.WOODEN_HOE) {
+				else if(rec.getResult().getType() == Material.WOODEN_HOE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.WOODEN_HOE, "&7Wooden Hoe", EquipmentSlot.HAND, 1.5, 1.2, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.STONE_HOE) {
+				else if(rec.getResult().getType() == Material.STONE_HOE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.STONE_HOE, "&7Stone Hoe", EquipmentSlot.HAND, 1.6, 1.24, 120, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.IRON_HOE) {
+				else if(rec.getResult().getType() == Material.IRON_HOE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_HOE, "&7Iron Hoe", EquipmentSlot.HAND, 1.7, 1.28, 220, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.GOLDEN_HOE) {
+				else if(rec.getResult().getType() == Material.GOLDEN_HOE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_HOE, "&7Golden Hoe", EquipmentSlot.HAND, 1.3, 1.44, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.DIAMOND_HOE) {
+				else if(rec.getResult().getType() == Material.DIAMOND_HOE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_HOE, "&7Diamond Hoe", EquipmentSlot.HAND, 1.9, 1.36, 400, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				//-----------------------------------------------------------------------------------
 				//Leather Armor
 				//-----------------------------------------------------------------------------------
-				if(rec.getResult().getType() == Material.LEATHER_HELMET) {
+				else if(rec.getResult().getType() == Material.LEATHER_HELMET) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_HELMET, "&7Leather Helmet", EquipmentSlot.HEAD, 1.5, 0.75, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.LEATHER_CHESTPLATE) {
+				else if(rec.getResult().getType() == Material.LEATHER_CHESTPLATE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_CHESTPLATE, "&7Leather Chestplate", EquipmentSlot.CHEST, 1.5, 0.75, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.LEATHER_LEGGINGS) {
+				else if(rec.getResult().getType() == Material.LEATHER_LEGGINGS) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_LEGGINGS, "&7Leather Leggings", EquipmentSlot.LEGS, 1.5, 0.75, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.LEATHER_BOOTS) {
+				else if(rec.getResult().getType() == Material.LEATHER_BOOTS) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.LEATHER_BOOTS, "&7Leather Boots", EquipmentSlot.FEET, 1.5, 0.75, 80, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				//-----------------------------------------------------------------------------------
 				//Golden Armor
 				//-----------------------------------------------------------------------------------
-				if(rec.getResult().getType() == Material.GOLDEN_HELMET) {
+				else if(rec.getResult().getType() == Material.GOLDEN_HELMET) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_HELMET, "&7Golden Helmet", EquipmentSlot.HEAD, 1.2, 1.25, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.GOLDEN_CHESTPLATE) {
+				else if(rec.getResult().getType() == Material.GOLDEN_CHESTPLATE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_CHESTPLATE, "&7Golden Chestplate", EquipmentSlot.CHEST, 1.2, 1.25, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.GOLDEN_LEGGINGS) {
+				else if(rec.getResult().getType() == Material.GOLDEN_LEGGINGS) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_LEGGINGS, "&7Golden Leggings", EquipmentSlot.LEGS, 1.2, 1.25, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.GOLDEN_BOOTS) {
+				else if(rec.getResult().getType() == Material.GOLDEN_BOOTS) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.GOLDEN_BOOTS, "&7Golden Boots", EquipmentSlot.FEET, 1.2, 1.25, 40, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				//-----------------------------------------------------------------------------------
 				//Iron Armor
 				//-----------------------------------------------------------------------------------
-				if(rec.getResult().getType() == Material.IRON_HELMET) {
+				else if(rec.getResult().getType() == Material.IRON_HELMET) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_HELMET, "&7Iron Helmet", EquipmentSlot.HEAD, 1.8, 0.98, 220, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.IRON_CHESTPLATE) {
+				else if(rec.getResult().getType() == Material.IRON_CHESTPLATE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_CHESTPLATE, "&7Iron Chestplate", EquipmentSlot.CHEST, 1.8, 0.98, 220, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.IRON_LEGGINGS) {
+				else if(rec.getResult().getType() == Material.IRON_LEGGINGS) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_LEGGINGS, "&7Iron Leggings", EquipmentSlot.LEGS, 1.8, 0.98, 220, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.IRON_BOOTS) {
+				else if(rec.getResult().getType() == Material.IRON_BOOTS) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.IRON_BOOTS, "&7Iron Boots", EquipmentSlot.FEET, 1.8, 0.98, 220, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
 				//-----------------------------------------------------------------------------------
 				//Iron Armor
 				//-----------------------------------------------------------------------------------
-				if(rec.getResult().getType() == Material.DIAMOND_HELMET) {
+				else if(rec.getResult().getType() == Material.DIAMOND_HELMET) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 400, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.DIAMOND_CHESTPLATE) {
+				else if(rec.getResult().getType() == Material.DIAMOND_CHESTPLATE) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_CHESTPLATE, "&7Diamond Chestplate", EquipmentSlot.CHEST, 2.0, 1.1, 400, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.DIAMOND_LEGGINGS) {
+				else if(rec.getResult().getType() == Material.DIAMOND_LEGGINGS) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_LEGGINGS, "&7Diamond Leggings", EquipmentSlot.LEGS, 2.0, 1.1, 400, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
-				if(rec.getResult().getType() == Material.DIAMOND_BOOTS) {
+				else if(rec.getResult().getType() == Material.DIAMOND_BOOTS) {
+					recipesReplace.add(rec);
 					ShapedRecipe recipe = new ShapedRecipe(rec.getKey(), con.equipment(Material.DIAMOND_BOOTS, "&7Diamond Boots", EquipmentSlot.FEET, 2.0, 1.1, 400, null));
 					recipe.shape(rec.getShape());
 					for(Entry<Character, RecipeChoice> entry : rec.getChoiceMap().entrySet()) {
 						recipe.setIngredient(entry.getKey(), entry.getValue());
 					}
 					recipe.setGroup(rec.getGroup());
-					recipeList.set(i, recipe);
+					recipesNew.add(recipe);
 					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				}
+				else {
+					listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), r));
+				}
+			}
+			else {
+				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), r));
 			}
 		}
-		Bukkit.clearRecipes();
-		for(Recipe rec : recipeList) {
-			Bukkit.addRecipe(rec);
+		for(Recipe r : recipesReplace) {
+			if(r instanceof ShapelessRecipe) {
+				ShapelessRecipe rec = (ShapelessRecipe) r;
+				this.removeRecipeByKey(rec.getResult().getType().toString().toLowerCase());
+			}
+			else if(r instanceof ShapedRecipe) {
+				ShapedRecipe rec = (ShapedRecipe) r;
+				this.removeRecipeByKey(rec.getResult().getType().toString().toLowerCase());
+			}
 		}
+		for(Recipe r : recipesNew) {
+			Bukkit.addRecipe(r);
+		}
+		
 		for(Entry<String, Pair<Condition, CommandFile>> entry : this.listConsumables.entrySet()) {
 			entry.getValue().getValue().registerRecipe();
 		}
 		
+	}
+	
+	private void removeRecipeByKey(String recipeKey) {
+	    MinecraftKey key = new MinecraftKey(recipeKey);
+	    if(((CraftServer) Bukkit.getServer()).getServer().getCraftingManager().recipes.containsKey(key)) {
+	    	((CraftServer) Bukkit.getServer()).getServer().getCraftingManager().recipes.remove(key);
+	    }
 	}
 	
 	public HashMap<String, Pair<Condition, CommandFile>> getConsumables(){

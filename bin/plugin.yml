@@ -144,3 +144,36 @@ commands:
   unfreeze:
     ussage: /<command>
     description: 'Command for setting levels'
+  fly:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  feed:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  heal:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  time:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  weather:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  checkmode:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  clearinventory:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  tp:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  tptp:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  tphere:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  af:
+    ussage: /<command>
+    description: 'Command for setting levels'

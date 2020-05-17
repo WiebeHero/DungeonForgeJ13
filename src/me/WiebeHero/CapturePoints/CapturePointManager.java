@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactionManager;
@@ -184,6 +184,7 @@ public class CapturePointManager {
 										point.setCapturedId(null);
 										Location loc = point.getCaptureLocation();
 										loc.getBlock().setType(Material.BLACK_BANNER);
+										point.getBossBar().setTitle(new CCT().colorize("&aCapture Point"));
 									}
 									else {
 										point.setCaptureProgress(point.getCaptureProgress() - decrease);
@@ -198,6 +199,7 @@ public class CapturePointManager {
 									point.setCaptureProgress(10);
 									point.setCapturedId(facsNear.get(0));
 									DFFaction fac = facManager.getFaction(facsNear.get(0));
+									point.getBossBar().setTitle(new CCT().colorize("&aCapture Point: &6" + fac.getName()));
 									Location loc = point.getCaptureLocation();
 									ItemStack bannerItem = fac.getBanner();
 									BannerMeta m = (BannerMeta)bannerItem.getItemMeta();

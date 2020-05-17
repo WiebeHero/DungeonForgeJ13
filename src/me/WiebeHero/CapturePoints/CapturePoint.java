@@ -8,6 +8,8 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 
+import me.WiebeHero.CustomEnchantments.CCT;
+
 public class CapturePoint {
 	
 	private double captureRadius;
@@ -25,7 +27,7 @@ public class CapturePoint {
 		this.xpMultiplier = xpMultiplier;
 		this.captureLocation = loc;
 		this.captureProgress = progress;
-		this.progressBar = Bukkit.getServer().createBossBar("Capture Point", BarColor.GREEN, BarStyle.SEGMENTED_10);
+		this.progressBar = Bukkit.getServer().createBossBar(new CCT().colorize("&aCapture Point"), BarColor.GREEN, BarStyle.SEGMENTED_10);
 		this.progressBar.setProgress((double)this.captureProgress / 10.00);
 	}
 	
@@ -35,7 +37,7 @@ public class CapturePoint {
 		this.captureRadius = captureRadius;
 		this.xpMultiplier = xpMultiplier;
 		this.captureLocation = loc;
-		this.progressBar = Bukkit.getServer().createBossBar("Capture Point", BarColor.GREEN, BarStyle.SEGMENTED_10);
+		this.progressBar = Bukkit.getServer().createBossBar(new CCT().colorize("&aCapture Point"), BarColor.GREEN, BarStyle.SEGMENTED_10);
 	}
 	
 	public CapturePoint(Location loc, UUID capturedFac, double captureRadius) {
@@ -43,7 +45,7 @@ public class CapturePoint {
 		this.captureLocation = loc;
 		this.capturedFac = capturedFac;
 		this.captureRadius = captureRadius;
-		this.progressBar = Bukkit.getServer().createBossBar("Capture Point", BarColor.GREEN, BarStyle.SEGMENTED_10);
+		this.progressBar = Bukkit.getServer().createBossBar(new CCT().colorize("&aCapture Point"), BarColor.GREEN, BarStyle.SEGMENTED_10);
 	}
 	
 	public CapturePoint(Location loc, double captureRadius, double xpMultiplier) {
@@ -51,7 +53,7 @@ public class CapturePoint {
 		this.captureLocation = loc;
 		this.captureRadius = captureRadius;
 		this.xpMultiplier = xpMultiplier;
-		this.progressBar = Bukkit.getServer().createBossBar("Capture Point", BarColor.GREEN, BarStyle.SEGMENTED_10);
+		this.progressBar = Bukkit.getServer().createBossBar(new CCT().colorize("&aCapture Point"), BarColor.GREEN, BarStyle.SEGMENTED_10);
 	}
 	
 	public CapturePoint(double captureRadius) {

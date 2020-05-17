@@ -2,6 +2,7 @@ package me.WiebeHero.Consumables;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -9,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -74,12 +76,12 @@ public class ConsumableHandler implements Listener{
 							if(!p.hasCooldown(item.getType())) {
 								con.getConsumables().get(contain).getValue().activateConsumable(p);
 								con.getConsumables().get(contain).getValue().activateConsumable(p, event);
-								event.getItem().setAmount(event.getItem().getAmount() - 1);
 								NBTItem i = new NBTItem(item);
 								if(i.hasKey("Cooldown")) {
 									int cooldown = i.getInteger("Cooldown");
 									p.setCooldown(item.getType(), cooldown);
 								}
+								event.getItem().setAmount(event.getItem().getAmount() - 1);
 							}
 						}
 					}

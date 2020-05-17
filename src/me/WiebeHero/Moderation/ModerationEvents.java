@@ -147,6 +147,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public String tptp = "tptp";
 	public String tphere = "tphere";
 	public String af = "af";
+	public String a = "a";
 	
 	public ModerationEvents(DFFactionManager facManager, DFPlayerManager dfManager, RankedManager rManager, PunishManager pManager, StaffManager sManager, DFSpawnerManager spManager, LootChestManager lcManager, ModerationGUI gui, MethodMulti multi, MethodLuck luck, Methods m, DFScoreboard board, ClassMenu menu, MSGManager msgManager, CapturePointManager cpManager, DFFactionPlayerManager facPlayerManager) {
 		this.facManager = facManager;
@@ -258,12 +259,12 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				if(rPlayer.isStaff()) {
 					if(args.length == 0) {
 						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
-							if(player.isFlying()) {
-								player.setFlying(false);
+							if(player.getAllowFlight()) {
+								player.setAllowFlight(false);
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannnot fly anymore!"));
 							}
 							else {
-								player.setFlying(true);
+								player.setAllowFlight(true);
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are now flying!"));
 							}
 						}
@@ -484,6 +485,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								else if(args[1].equalsIgnoreCase("thunder")) {
 									player.getWorld().setThundering(true);
 								}
+								else if(args[1].equalsIgnoreCase("clear")) {
+									player.getWorld().setThundering(true);
+								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can only set the weather to rain, snow or thunder!"));
 								}
@@ -497,7 +501,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /weather set (day/night/number)"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /weather set (rain/snow/thunder/clear)"));
 					}
 				}
 				else {
@@ -840,6 +844,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &c&lVanish Disabled."));
 						}
 						staff.switchSpawnerMode(false);
+						player.setAllowFlight(false);
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &c&lStaffmode Disabled."));
 					}
 					else if(staff.getStaffMode() == false) {
@@ -858,7 +863,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 						player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 						player.setFoodLevel(20);
-						player.setFlying(true);
+						player.setAllowFlight(true);
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &a&lStaffmode Enabled."));
 					}
 					else {
@@ -1188,9 +1193,14 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									if(facPlayerManager.contains(p.getUniqueId())) {
 										DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(p.getUniqueId());
 										if(facPlayer.getFactionId() != null) {
-											DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-											faction.removeMember(p.getUniqueId());
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + p.getName() + " &afrom the faction &6" + faction.getName()));
+											if(facPlayer.getRank() != 4) {
+												DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
+												faction.removeMember(p.getUniqueId());
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + p.getName() + " &afrom the faction &6" + faction.getName()));
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't kick a leader from his faction! Use /af abandon (Faction Name)"));
+											}
 										}
 										else {
 											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not part of a faction!"));
@@ -1302,16 +1312,157 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								    Matcher m = p.matcher(facName);
 								    if(m.find() == false && facName.indexOf("_-=+[]{}:;''<>/?!@#$%^&*()") == -1) {
 								    	if(facName.length() >= 4 || facName.length() <= 20) {
-								    		if(faction == null) {
-								    			if(facManager.isNameAvailable(facName)) {
-								    				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unclaimed this chunk!"));
-								    			}
-							    				else {
-									    			player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction name is already taken!"));
-									    		}
-									        }
-								    		else {
-								    			player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are already in a faction!"));
+							    			if(facManager.isNameAvailable(facName)) {
+							    				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have renamed the faction &6" + faction.getName() + " &ato &6" + facName));
+							    				faction.setName(facName);
+							    			}
+						    				else {
+								    			player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction name is already taken!"));
+								    		}
+							    		}
+								    	else {
+								    		player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction name MUST be more then 4 characters!"));
+								    	}
+							    	}
+								    else{
+								    	player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction MUST NOT contain any strange symbols!"));
+								    }
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction does not exist!"));
+								}
+							}
+						}
+					}
+				}
+				else {
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are not staff!"));
+				}	
+			}
+			else if(cmd.getName().equalsIgnoreCase(a)) {
+				if(rPlayer.isStaff()) {
+					if(args.length == 4) {
+						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+							if(args[0].equalsIgnoreCase("money")) {
+								if(args[1].equalsIgnoreCase("set")) {
+									OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
+									if(p.getName() != null) {
+										if(dfManager.contains(p.getUniqueId())) {
+											DFPlayer dfPlayer = dfManager.getEntity(p.getUniqueId());
+											double amount = 0.00;
+											try {
+												amount = Double.parseDouble(args[3]);
+											}
+											catch(NumberFormatException ex) {
+												ex.printStackTrace();
+											}
+											if(amount <= 0.00) {
+												dfPlayer.setMoney(amount);
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis value is invalid!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis has never joined!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
+									}
+								}
+								else if(args[1].equalsIgnoreCase("give")) {
+									OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
+									if(p.getName() != null) {
+										if(dfManager.contains(p.getUniqueId())) {
+											DFPlayer dfPlayer = dfManager.getEntity(p.getUniqueId());
+											double amount = 0.00;
+											try {
+												amount = Double.parseDouble(args[3]);
+											}
+											catch(NumberFormatException ex) {
+												ex.printStackTrace();
+											}
+											if(amount <= 0.00) {
+												dfPlayer.addMoney(amount);;
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis value is invalid!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis has never joined!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
+									}
+								}
+								else if(args[1].equalsIgnoreCase("give")) {
+									OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
+									if(p.getName() != null) {
+										if(dfManager.contains(p.getUniqueId())) {
+											DFPlayer dfPlayer = dfManager.getEntity(p.getUniqueId());
+											double amount = 0.00;
+											try {
+												amount = Double.parseDouble(args[3]);
+											}
+											catch(NumberFormatException ex) {
+												ex.printStackTrace();
+											}
+											if(amount <= 0.00) {
+												dfPlayer.removeMoney(amount);
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis value is invalid!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis has never joined!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /a money give/set/remove (Player Name) (Amount)"));
+								}
+							}
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use admin faction commands!"));
+						}
+					}
+					else if(args.length == 3) {
+						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+							if(args[0].equalsIgnoreCase("unclaim")) {
+								if(args[1].equalsIgnoreCase("all")) {
+									String facName = args[2];
+									if(facManager.getFaction(facName) != null) {
+										DFFaction faction = facManager.getFaction(facName);
+										faction.clearChunks();
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unclaimed this chunk!"));
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction does not exist!"));
+									}
+								}
+							}
+							else if(args[0].equalsIgnoreCase("rename")) {
+								String facName = args[1];
+								if(facManager.getFaction(facName) != null) {
+									DFFaction faction = facManager.getFaction(facName);
+									Pattern p = Pattern.compile( "[0-9]" );
+								    Matcher m = p.matcher(facName);
+								    if(m.find() == false && facName.indexOf("_-=+[]{}:;''<>/?!@#$%^&*()") == -1) {
+								    	if(facName.length() >= 4 || facName.length() <= 20) {
+							    			if(facManager.isNameAvailable(facName)) {
+							    				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have renamed the faction &6" + faction.getName() + " &ato &6" + facName));
+							    				faction.setName(facName);
+							    			}
+						    				else {
+								    			player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction name is already taken!"));
 								    		}
 							    		}
 								    	else {
