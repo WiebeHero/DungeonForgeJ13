@@ -112,8 +112,8 @@ public class RankEnum {
 				tier.put("Efficiency", 2);
 				tier.put("Unbreaking", 2);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&6Bronze Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 235, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&6Bronze Shovel", EquipmentSlot.HAND, 3.2, 1.06, 235, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&6Bronze Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 500, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&6Bronze Shovel", EquipmentSlot.HAND, 3.2, 1.06, 500, tier));
 				items.add(common(2));
 				items.add(rare(1));
 				items.add(builder.constructItem(Material.TNT, 16));
@@ -138,8 +138,8 @@ public class RankEnum {
 				tier.put("Efficiency", 3);
 				tier.put("Unbreaking", 2);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Silver Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 270, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Silver Shovel", EquipmentSlot.HAND, 3.2, 1.06, 270, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Silver Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 570, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Silver Shovel", EquipmentSlot.HAND, 3.2, 1.06, 570, tier));
 				items.add(rare(2));
 				items.add(epic(1));
 				items.add(builder.constructItem(Material.TNT, 32));
@@ -164,8 +164,8 @@ public class RankEnum {
 				tier.put("Efficiency", 3);
 				tier.put("Unbreaking", 3);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&eGold Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 305, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&eGold Shovel", EquipmentSlot.HAND, 3.2, 1.06, 305, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&eGold Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 640, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&eGold Shovel", EquipmentSlot.HAND, 3.2, 1.06, 640, tier));
 				items.add(rare(3));
 				items.add(epic(2));
 				items.add(builder.constructItem(Material.TNT, 64));
@@ -190,8 +190,8 @@ public class RankEnum {
 				tier.put("Efficiency", 4);
 				tier.put("Unbreaking", 3);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&3Platinum Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 340, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&3Platinum Shovel", EquipmentSlot.HAND, 3.2, 1.06, 340, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&3Platinum Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 710, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&3Platinum Shovel", EquipmentSlot.HAND, 3.2, 1.06, 710, tier));
 				items.add(rare(3));
 				items.add(epic(3));
 				items.add(legendary(1));
@@ -220,8 +220,8 @@ public class RankEnum {
 				tier.put("Unbreaking", 4);
 				tier.put("Fortune", 1);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&bDiamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 375, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&bDiamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 375, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&bDiamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 780, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&bDiamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 780, tier));
 				items.add(epic(3));
 				items.add(legendary(2));
 				items.add(mythic(1));
@@ -250,8 +250,8 @@ public class RankEnum {
 				tier.put("Unbreaking", 5);
 				tier.put("Fortune", 2);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&aEmerald Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 405, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&aEmerald Shovel", EquipmentSlot.HAND, 3.2, 1.06, 405, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&aEmerald Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 850, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&aEmerald Shovel", EquipmentSlot.HAND, 3.2, 1.06, 850, tier));
 				items.add(epic(3));
 				items.add(legendary(3));
 				items.add(mythic(2));
