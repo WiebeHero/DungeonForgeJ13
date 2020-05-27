@@ -56,9 +56,9 @@ public class ChatEvents implements Listener{
 		String format = "";
 		if(!myMsg.getStaffChat()) {
 			if(faction != null) {
-				format += "§6" + faction.getName();
+				format += "§6" + faction.getName() + " §a| ";
 			}
-			format += " §a| §b§l"  + level;
+			format += "§b§l"  + level;
 			if(rPlayer.getHighestRank().rank > Rank.USER.rank) {
 				format += "§a | " + rPlayer.getHighestRank().display + "§a | §f" + player.getName() + ": ";
 			}
@@ -92,20 +92,13 @@ public class ChatEvents implements Listener{
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void chatItemEvent(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
-		String message = event.getFormat();
+		String message = event.getMessage();
+		String format = event.getFormat();
 		ItemStack item1 = player.getInventory().getItemInMainHand();
-		RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
 		if(message.contains("[i]")) {
 			if(item1 != null) {
-				NBTItem i = new NBTItem(item1);
 				event.setCancelled(true);
-				String color = "§7";
-				ChatColor chatColor = ChatColor.GRAY;
-				if(rPlayer.getHighestRank().rank > Rank.USER.rank) {
-					color += "§f";
-					chatColor = ChatColor.WHITE;
-				}
-				String split[] = message.split(Pattern.quote("[i]"));
+				String split[] = format.split(Pattern.quote("[i]"));
 				net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item1);
 		        NBTTagCompound compound = new NBTTagCompound();
 		        nmsItemStack.save(compound);
@@ -114,18 +107,11 @@ public class ChatEvents implements Listener{
 		            new TextComponent(json) // The only element of the hover events basecomponents is the item json
 		        };
 		        HoverEvent hover_event = new HoverEvent(HoverEvent.Action.SHOW_ITEM, hoverEventComponents);
-		        TextComponent component = new TextComponent(CraftItemStack.asNMSCopy(item1).getName().getText() + " " + chatColor + item1.getAmount() + "x");
+		        TextComponent component = new TextComponent(TextComponent.fromLegacyText(CraftItemStack.asNMSCopy(item1).getName().getText() + " §f" + item1.getAmount() + "x"));
 		        component.setHoverEvent(hover_event);
-		        if(i.hasKey("Rarity")) {
-		        	Rarity rarity = Rarity.valueOf(ChatColor.stripColor(new CCT().colorize(i.getString("Rarity"))).toUpperCase());
-		        	component.setColor(rarity.getChatColor());
-		        }
-		        else {
-		        	component.setColor(chatColor);
-		        }
-		        TextComponent before = new TextComponent(color + (split.length < 1 ? "" : split[0]) + color);
+		        TextComponent before = new TextComponent(TextComponent.fromLegacyText(split.length < 1 ? "" : split[0]));
 		        before.setHoverEvent(null);
-		        TextComponent after = new TextComponent(color + (split.length < 2 ? "" : split[1]) + color);
+		        TextComponent after = new TextComponent(TextComponent.fromLegacyText(split.length < 2 ? "" : split[1]));
 		        after.setHoverEvent(null);
 		        after.setColor(before.getColor());
 		        before.addExtra(component);

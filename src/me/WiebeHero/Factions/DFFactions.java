@@ -62,12 +62,13 @@ public class DFFactions implements Listener,CommandExecutor{
 							player.sendMessage(new CCT().colorize("&b/f invite/add (Player Name) | Invite a player to your faction."));
 							player.sendMessage(new CCT().colorize("&b/f kick/remove (Player Name) | Kick a player from your faction."));
 							player.sendMessage(new CCT().colorize("&b/f leave | Leave a faction."));
-							player.sendMessage(new CCT().colorize("&b/f abandon | Abandon/Delete your faction."));
+							player.sendMessage(new CCT().colorize("&b/f abandon/disband | Abandon/Delete your faction."));
 							player.sendMessage(new CCT().colorize("&b/f join/accept | Join a faction that you have been invited to."));
 							player.sendMessage(new CCT().colorize("&b/f decline/refuse | Refuse to join a faction that invited you."));
 							player.sendMessage(new CCT().colorize("&b/f list | Check current information about your faction."));
 							player.sendMessage(new CCT().colorize("&b/f sethome | Sets the home of your faction."));
 							player.sendMessage(new CCT().colorize("&b/f home | Teleports you to the faction home, if there is one."));
+							player.sendMessage(new CCT().colorize("&b/f bank (Optional)withdraw/deposit (Amount)| Deposits/Withdraws money to/from the faction bank."));
 							player.sendMessage(new CCT().colorize("&6)------------------=[&bHelp&6]=------------------("));
 						}
 						else if(args[0].equalsIgnoreCase("create")) {
@@ -104,7 +105,7 @@ public class DFFactions implements Listener,CommandExecutor{
 						    	player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction name can NOT be nothing!"));
 							}
 						}
-						else if(args[0].equalsIgnoreCase("abandon")) {
+						else if(args[0].equalsIgnoreCase("abandon") || args[0].equalsIgnoreCase("disband")) {
 							if(args.length == 1) {
 								if(faction != null) {
 									int rank = facPlayer.getRank();
@@ -213,28 +214,28 @@ public class DFFactions implements Listener,CommandExecutor{
 						else if(args[0].equalsIgnoreCase("bank")) {
 							if(args.length == 1) {
 								if(facPlayer.getRank() >= 2) {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction bank contains " + faction.getBank() + "$!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYour faction bank contains " + String.format("%.2f", faction.getBank()) + "$!"));
 								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to perform this action!"));
 								}
 							}
-							else if(args.length == 2) {
+							else if(args.length == 3) {
 								if(args[1].equalsIgnoreCase("deposit")) {
 									if(facPlayer.getRank() >= 2) {
 										DFPlayer dfPlayer = dfManager.getEntity(player);
 										double money = 0.00;
 										try {
-											money = Double.parseDouble(args[1]);
+											money = Double.parseDouble(args[2]);
 										}
 										catch(NumberFormatException ex){
 											System.out.print(ex);
 										}
-										if(money <= 0.00) {
+										if(money > 0.00) {
 											if(dfPlayer.getMoney() >= money) {
 												dfPlayer.removeMoney(money);
 												faction.addBank(money);
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have deposited " + money + "$!"));
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have deposited " + String.format("%.2f", money) + "$!"));
 											}
 											else {
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
@@ -253,19 +254,19 @@ public class DFFactions implements Listener,CommandExecutor{
 										DFPlayer dfPlayer = dfManager.getEntity(player);
 										double money = 0.00;
 										try {
-											money = Double.parseDouble(args[1]);
+											money = Double.parseDouble(args[2]);
 										}
 										catch(NumberFormatException ex){
 											System.out.print(ex);
 										}
-										if(money <= 0.00) {
+										if(money > 0.00) {
 											if(faction.getBank() >= money) {
 												dfPlayer.addMoney(money);
 												faction.removeBank(money);
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have deposited " + money + "$!"));
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have deposited " + String.format("%.2f", money) + "$!"));
 											}
 											else {
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe faction bank doesn't have enough money!"));
 											}
 										}
 										else {
@@ -276,6 +277,12 @@ public class DFFactions implements Listener,CommandExecutor{
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to perform this action!"));
 									}
 								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage! Correct usage: /f bank (Optional)deposit/withdraw (Amount)"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage! Correct usage: /f bank (Optional)deposit/withdraw (Amount)"));
 							}
 						}
 						else if(args[0].equalsIgnoreCase("claim")) {

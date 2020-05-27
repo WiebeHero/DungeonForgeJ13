@@ -42,17 +42,17 @@ public class RankEnum {
 		PLATINUM(4, "&3Platinum"),
 		DIAMOND(5, "&bDiamond"),
 		EMERALD(6, "&aEmerald"),
-		YOUTUBER(6, "&cY&fo&cu&ft&cu&fb&ce&fr"),
-		QA(7, "&bQA"),
-		QA_ADMIN(8, "&cQA Admin"),
-		HELPER(9, "&aHelper"),
-		HELPER_PLUS(10, "&aHelper+"),
-		MOD(11, "&9Mod"),
-		HEAD_MOD(12, "&1Head Mod"),
-		ADMIN(13, "&4Admin"),
-		HEAD_ADMIN(14, "&4Head Admin"),
-		MANAGER(15, "&5Manager"),
-		OWNER(16, "&2Owner");
+		YOUTUBER(7, "&cY&fo&cu&ft&cu&fb&ce&fr"),
+		QA(8, "&bQA"),
+		QA_ADMIN(9, "&cQA Admin"),
+		HELPER(10, "&aHelper"),
+		HELPER_PLUS(11, "&2Helper+"),
+		MOD(12, "&9Mod"),
+		HEAD_MOD(13, "&1Head Mod"),
+		ADMIN(14, "&cAdmin"),
+		HEAD_ADMIN(15, "&4Head Admin"),
+		MANAGER(16, "&5Manager"),
+		OWNER(17, "&2Owner");
 		public final int rank;
 		public final String display;
 		
@@ -109,16 +109,18 @@ public class RankEnum {
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
-				tier.put("Efficiency", 1);
+				tier.put("Efficiency", 2);
+				tier.put("Unbreaking", 2);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Diamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 235, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Diamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 235, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&6Bronze Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 235, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&6Bronze Shovel", EquipmentSlot.HAND, 3.2, 1.06, 235, tier));
 				items.add(common(2));
 				items.add(rare(1));
 				items.add(builder.constructItem(Material.TNT, 16));
-				items.add(builder.constructItem(Material.OBSIDIAN, 16));
-				items.add(playerXPBottle(75));
+				items.add(builder.constructItem(Material.OBSIDIAN, 4));
+				items.add(playerXPBottle(50));
 				items.add(moneyNote(1500));
+				items.add(builder.constructItem(Material.GOLDEN_APPLE, 1));
 				for(ItemStack item : items) {
 					if(p.getInventory().firstEmpty() != -1) {
 						p.getInventory().addItem(item);
@@ -133,17 +135,18 @@ public class RankEnum {
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
-				tier.put("Efficiency", 2);
-				tier.put("Unbreaking", 1);
+				tier.put("Efficiency", 3);
+				tier.put("Unbreaking", 2);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Diamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 270, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Diamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 270, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Silver Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 270, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Silver Shovel", EquipmentSlot.HAND, 3.2, 1.06, 270, tier));
 				items.add(rare(2));
 				items.add(epic(1));
 				items.add(builder.constructItem(Material.TNT, 32));
-				items.add(builder.constructItem(Material.OBSIDIAN, 32));
-				items.add(playerXPBottle(150));
+				items.add(builder.constructItem(Material.OBSIDIAN, 6));
+				items.add(playerXPBottle(100));
 				items.add(moneyNote(2500));
+				items.add(builder.constructItem(Material.GOLDEN_APPLE, 3));
 				for(ItemStack item : items) {
 					if(p.getInventory().firstEmpty() != -1) {
 						p.getInventory().addItem(item);
@@ -159,17 +162,17 @@ public class RankEnum {
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
 				tier.put("Efficiency", 3);
-				tier.put("Unbreaking", 1);
-				tier.put("Fortune", 1);
+				tier.put("Unbreaking", 3);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Diamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 305, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Diamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 305, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&eGold Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 305, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&eGold Shovel", EquipmentSlot.HAND, 3.2, 1.06, 305, tier));
 				items.add(rare(3));
 				items.add(epic(2));
-				items.add(builder.constructItem(Material.TNT, 48));
-				items.add(builder.constructItem(Material.OBSIDIAN, 48));
-				items.add(playerXPBottle(300));
+				items.add(builder.constructItem(Material.TNT, 64));
+				items.add(builder.constructItem(Material.OBSIDIAN, 10));
+				items.add(playerXPBottle(200));
 				items.add(moneyNote(5500));
+				items.add(builder.constructItem(Material.GOLDEN_APPLE, 6));
 				for(ItemStack item : items) {
 					if(p.getInventory().firstEmpty() != -1) {
 						p.getInventory().addItem(item);
@@ -185,18 +188,20 @@ public class RankEnum {
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
 				tier.put("Efficiency", 4);
-				tier.put("Unbreaking", 2);
-				tier.put("Fortune", 2);
+				tier.put("Unbreaking", 3);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Diamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 340, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Diamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 340, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&3Platinum Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 340, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&3Platinum Shovel", EquipmentSlot.HAND, 3.2, 1.06, 340, tier));
 				items.add(rare(3));
 				items.add(epic(3));
 				items.add(legendary(1));
 				items.add(builder.constructItem(Material.TNT, 64));
-				items.add(builder.constructItem(Material.OBSIDIAN, 64));
-				items.add(playerXPBottle(600));
+				items.add(builder.constructItem(Material.TNT, 16));
+				items.add(builder.constructItem(Material.OBSIDIAN, 16));
+				items.add(playerXPBottle(400));
 				items.add(moneyNote(8500));
+				items.add(builder.constructItem(Material.GOLDEN_APPLE, 15));
+				items.add(builder.constructItem(Material.CREEPER_SPAWN_EGG, 1));
 				for(ItemStack item : items) {
 					if(p.getInventory().firstEmpty() != -1) {
 						p.getInventory().addItem(item);
@@ -211,21 +216,22 @@ public class RankEnum {
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
-				tier.put("Efficiency", 5);
-				tier.put("Unbreaking", 3);
-				tier.put("Fortune", 3);
+				tier.put("Efficiency", 4);
+				tier.put("Unbreaking", 4);
+				tier.put("Fortune", 1);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Diamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 375, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Diamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 375, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&bDiamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 375, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&bDiamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 375, tier));
 				items.add(epic(3));
 				items.add(legendary(2));
 				items.add(mythic(1));
 				items.add(builder.constructItem(Material.TNT, 64));
-				items.add(builder.constructItem(Material.TNT, 32));
-				items.add(builder.constructItem(Material.OBSIDIAN, 64));
-				items.add(builder.constructItem(Material.OBSIDIAN, 32));
-				items.add(playerXPBottle(1000));
+				items.add(builder.constructItem(Material.TNT, 48));
+				items.add(builder.constructItem(Material.OBSIDIAN, 24));
+				items.add(playerXPBottle(600));
 				items.add(moneyNote(10000));
+				items.add(builder.constructItem(Material.GOLDEN_APPLE, 24));
+				items.add(builder.constructItem(Material.CREEPER_SPAWN_EGG, 2));
 				for(ItemStack item : items) {
 					if(p.getInventory().firstEmpty() != -1) {
 						p.getInventory().addItem(item);
@@ -241,20 +247,22 @@ public class RankEnum {
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
 				tier.put("Efficiency", 5);
-				tier.put("Unbreaking", 4);
-				tier.put("Fortune", 4);
+				tier.put("Unbreaking", 5);
+				tier.put("Fortune", 2);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Diamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 405, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Diamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 405, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&aEmerald Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 405, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&aEmerald Shovel", EquipmentSlot.HAND, 3.2, 1.06, 405, tier));
 				items.add(epic(3));
 				items.add(legendary(3));
 				items.add(mythic(2));
 				items.add(builder.constructItem(Material.TNT, 64));
 				items.add(builder.constructItem(Material.TNT, 64));
-				items.add(builder.constructItem(Material.OBSIDIAN, 64));
-				items.add(builder.constructItem(Material.OBSIDIAN, 64));
-				items.add(playerXPBottle(1500));
+				items.add(builder.constructItem(Material.TNT, 48));
+				items.add(builder.constructItem(Material.OBSIDIAN, 32));
+				items.add(playerXPBottle(800));
 				items.add(moneyNote(12500));
+				items.add(builder.constructItem(Material.GOLDEN_APPLE, 32));
+				items.add(builder.constructItem(Material.CREEPER_SPAWN_EGG, 4));
 				for(ItemStack item : items) {
 					if(p.getInventory().firstEmpty() != -1) {
 						p.getInventory().addItem(item);
@@ -270,20 +278,22 @@ public class RankEnum {
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
 				tier.put("Efficiency", 5);
-				tier.put("Unbreaking", 4);
-				tier.put("Fortune", 4);
+				tier.put("Unbreaking", 5);
+				tier.put("Fortune", 2);
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&7Diamond Pickaxe", EquipmentSlot.HAND, 2.6, 0.6, 405, tier));
-				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&7Diamond Shovel", EquipmentSlot.HAND, 3.2, 1.06, 405, tier));
+				items.add(con.equipment(Material.DIAMOND_PICKAXE, "&cY&fo&cu&ft&cu&fb&ce&fr &cP&fi&cc&fk&ca&fx&ce", EquipmentSlot.HAND, 2.6, 0.6, 405, tier));
+				items.add(con.equipment(Material.DIAMOND_SHOVEL, "&cY&fo&cu&ft&cu&fb&ce&fr &cS&fh&co&fv&ce&fl&c", EquipmentSlot.HAND, 3.2, 1.06, 405, tier));
 				items.add(epic(3));
 				items.add(legendary(3));
 				items.add(mythic(2));
 				items.add(builder.constructItem(Material.TNT, 64));
 				items.add(builder.constructItem(Material.TNT, 64));
-				items.add(builder.constructItem(Material.OBSIDIAN, 64));
-				items.add(builder.constructItem(Material.OBSIDIAN, 64));
-				items.add(playerXPBottle(1500));
+				items.add(builder.constructItem(Material.TNT, 48));
+				items.add(builder.constructItem(Material.OBSIDIAN, 32));
+				items.add(playerXPBottle(800));
 				items.add(moneyNote(12500));
+				items.add(builder.constructItem(Material.GOLDEN_APPLE, 32));
+				items.add(builder.constructItem(Material.CREEPER_SPAWN_EGG, 4));
 				for(ItemStack item : items) {
 					if(p.getInventory().firstEmpty() != -1) {
 						p.getInventory().addItem(item);
@@ -710,12 +720,15 @@ public class RankEnum {
 	}
 	public static ItemStack playerXPBottle(int xp) {
 		ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE, 1);
+		NBTItem i = new NBTItem(item);
+		i.setInteger("XPBottle", xp);
+		item = i.getItem();
 		ItemMeta itemmeta = item.getItemMeta();
 		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle (Player)"));
 		ArrayList<String> lore1 = new ArrayList<String>();
 		lore1.add(new CCT().colorize("&7When you combine your item with this bottle,"));
 		lore1.add(new CCT().colorize("&7It will add the XP on this bottle to your weapon."));
-		lore1.add(new CCT().colorize("&7XP Amount: " + xp));
+		lore1.add(new CCT().colorize("&7XP Amount: &6" + xp));
 		itemmeta.setLore(lore1);
 		item.setItemMeta(itemmeta);
 		return item;

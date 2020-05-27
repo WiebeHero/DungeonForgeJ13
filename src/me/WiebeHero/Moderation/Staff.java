@@ -4,6 +4,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class Staff {
 	private boolean staff;
+	private boolean godMode;
 	private boolean spawner;
 	private boolean loot;
 	private boolean vanish;
@@ -15,6 +16,7 @@ public class Staff {
 		this.spawner = false;
 		this.loot = false;
 		this.vanish = false;
+		this.godMode = false;
 		this.capturePoints = false;
 	}
 	
@@ -23,6 +25,13 @@ public class Staff {
 	}
 	public boolean getStaffMode() {
 		return this.staff;
+	}
+	
+	public void switchGodModeMode(boolean s) {
+		this.godMode = s;
+	}
+	public boolean getGodMode() {
+		return this.godMode;
 	}
 	
 	public void switchSpawnerMode(boolean s) {

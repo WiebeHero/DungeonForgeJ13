@@ -110,9 +110,6 @@ commands:
   kits:
     ussage: /<command>
     description: 'Command for kit'
-  customitem:
-    ussage: /<command>
-    description: 'Command for giving custom items'
   level:
     ussage: /<command>
     description: 'Command for setting levels'
@@ -175,5 +172,18 @@ commands:
     ussage: /<command>
     description: 'Command for setting levels'
   af:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  a:
+    ussage: /<command>
+    description: 'Command for admins'
+  god:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  gamemode:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [gm]
+  item:
     ussage: /<command>
     description: 'Command for setting levels'

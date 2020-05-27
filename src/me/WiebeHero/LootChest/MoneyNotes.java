@@ -26,9 +26,15 @@ public class MoneyNotes implements Listener{
 			if(player.getInventory().getItemInMainHand() != null) {
 				NBTItem i = new NBTItem(player.getInventory().getItemInMainHand());
 				if(i.hasKey("Money")) {
-					int money = i.getInteger("Money");
+					int money1 = i.getInteger("Money");
+					double money2 = i.getDouble("Money");
 					DFPlayer dfPlayer = dfManager.getEntity(player);
-					dfPlayer.addMoney(money);
+					if(money1 > 0) {
+						dfPlayer.addMoney(money1);
+					}
+					else if(money2 > 0.00) {
+						dfPlayer.addMoney(money2);
+					}
 					score.updateScoreboard(player);
 					player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 2.0F);

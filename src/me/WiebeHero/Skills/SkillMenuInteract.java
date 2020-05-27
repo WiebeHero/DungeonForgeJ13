@@ -41,7 +41,7 @@ public class SkillMenuInteract implements Listener{
 				NBTItem i = new NBTItem(item);
 				if(i.hasKey("Confirm")) {
 					if(dfPlayer.getLevel() >= 10 && dfPlayer.getMoney() >= 10000) {
-						dfManager.resetEntity(player);
+						dfManager.softResetEntity(player);
 						player.teleport(Bukkit.getWorld("DFWarzone-1").getSpawnLocation());
 						player.closeInventory();
 						cMenu.ClassSelect(player);

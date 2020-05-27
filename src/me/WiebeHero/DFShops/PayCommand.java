@@ -52,8 +52,8 @@ public class PayCommand implements Listener,CommandExecutor{
 									double newMoneyThem = moneyThem + amount;
 									dfPlayerMe.setMoney(newMoneyMe);
 									dfPlayerThem.setMoney(newMoneyThem);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have paid &6" + amount + "$ &a&lto " + newPlayer.getName() + "!"));
-									newPlayer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &a&l" + player.getName() + " &ahas paid you &6" + amount + "$!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have paid &6" + String.format("%.2f", amount) + "$ &a&lto " + newPlayer.getName() + "!"));
+									newPlayer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &a&l" + player.getName() + " &ahas paid you &6" + String.format("%.2f", amount) + "$!"));
 								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money!"));
@@ -80,7 +80,7 @@ public class PayCommand implements Listener,CommandExecutor{
 					UUID uuid1 = player.getUniqueId();
 					DFPlayer dfPlayer = dfManager.getEntity(uuid1);
 					double moneyMe = dfPlayer.getMoney();
-					player.sendMessage(new CCT().colorize("&aYou're balance is: &6" + moneyMe + "$"));
+					player.sendMessage(new CCT().colorize("&aYou're balance is: &6" + String.format("%.2f", moneyMe) + "$"));
 				}
 				else if(args.length == 1) {
 					Player target = Bukkit.getPlayer(args[0]);
@@ -88,7 +88,7 @@ public class PayCommand implements Listener,CommandExecutor{
 						UUID uuid1 = target.getUniqueId();
 						DFPlayer dfPlayer = dfManager.getEntity(uuid1);
 						double moneyMe = dfPlayer.getMoney();
-						player.sendMessage(new CCT().colorize("&a" + target.getName() + "'s balance is: &6" + moneyMe + "$"));
+						player.sendMessage(new CCT().colorize("&a" + target.getName() + "'s balance is: &6" + String.format("%.2f", moneyMe) + "$"));
 					}
 					else {
 						player.sendMessage(new CCT().colorize("&cThis player has not logged online, or is offline!"));

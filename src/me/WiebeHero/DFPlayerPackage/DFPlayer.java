@@ -60,7 +60,7 @@ public class DFPlayer {
 	private double bAtkInc = 1.50;
 	private double bSpdInc = 0.50;
 	private double bCrtInc = 0.50;
-	private double bRndInc = 2.0;
+	private double bRndInc = 1.25;
 	private double bHpInc = 5.00;
 	private double bDfInc = 1.25;
 	
@@ -1192,20 +1192,22 @@ public class DFPlayer {
 	}
 	public void changeHealth() {
 		Entity entity = Bukkit.getEntity(this.getUUID());
-		if(entity instanceof LivingEntity) {
-			LivingEntity ent = (LivingEntity) entity;
-			if(!ent.isDead()) {
-				double baseHealth = 20.00;
-				if(entity instanceof Player) {
-					baseHealth = 20.00;
+		if(entity != null) {
+			if(entity instanceof LivingEntity) {
+				LivingEntity ent = (LivingEntity) entity;
+				if(!ent.isDead()) {
+					double baseHealth = 20.00;
+					if(entity instanceof Player) {
+						baseHealth = 20.00;
+					}
+					else {
+						baseHealth = 25.00;
+					}
+					double newHealth = baseHealth;
+					newHealth = baseHealth / 100.00 * (this.getHpCal() + 100.00);
+					double roundOff1 = (double) Math.round(newHealth * 100.00) / 100.00;
+					ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
 				}
-				else {
-					baseHealth = 25.00;
-				}
-				double newHealth = baseHealth;
-				newHealth = baseHealth / 100.00 * (this.getHpCal() + 100.00);
-				double roundOff1 = (double) Math.round(newHealth * 100.00) / 100.00;
-				ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(roundOff1);
 			}
 		}
 	}
@@ -1214,56 +1216,58 @@ public class DFPlayer {
 		new BukkitRunnable() {
 			public void run() {
 				Entity entity = Bukkit.getEntity(dfPlayer.getUUID());
-				if(entity instanceof LivingEntity) {
-					LivingEntity ent = (LivingEntity) entity;
-					double armorD = 0.0;
-					double armorT = 0.0;
-					for(ItemStack item : ent.getEquipment().getArmorContents()) {
+				if(entity != null) {
+					if(entity instanceof LivingEntity) {
+						LivingEntity ent = (LivingEntity) entity;
+						double armorD = 0.0;
+						double armorT = 0.0;
+						for(ItemStack item : ent.getEquipment().getArmorContents()) {
+							if(item != null) {
+								if(item.hasItemMeta()) {
+									if(item.getItemMeta().hasLore()) {
+										if(item.getItemMeta().getLore().toString().contains("Armor Defense") && item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
+											String check1 = "";
+											String check2 = "";
+											for(String s : item.getItemMeta().getLore()) {
+												if(s.contains("Armor Defense")) {
+													check1 = ChatColor.stripColor(s);
+												}
+												else if(s.contains("Armor Toughness")){
+													check2 = ChatColor.stripColor(s);
+												}
+											}
+											check1 = check1.replaceAll("[^\\d.]", "");
+											check2 = check2.replaceAll("[^\\d.]", "");
+											double armorDT = Double.parseDouble(check1);
+											double armorTT = Double.parseDouble(check2);
+											armorD = armorD + armorDT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+											armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+										}
+									}
+								}
+							}
+						}
+						ItemStack item = ent.getEquipment().getItemInOffHand();
 						if(item != null) {
 							if(item.hasItemMeta()) {
 								if(item.getItemMeta().hasLore()) {
-									if(item.getItemMeta().getLore().toString().contains("Armor Defense") && item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
+									if(item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
 										String check1 = "";
-										String check2 = "";
 										for(String s : item.getItemMeta().getLore()) {
-											if(s.contains("Armor Defense")) {
+											if(s.contains("Armor Toughness")) {
 												check1 = ChatColor.stripColor(s);
-											}
-											else if(s.contains("Armor Toughness")){
-												check2 = ChatColor.stripColor(s);
 											}
 										}
 										check1 = check1.replaceAll("[^\\d.]", "");
-										check2 = check2.replaceAll("[^\\d.]", "");
-										double armorDT = Double.parseDouble(check1);
-										double armorTT = Double.parseDouble(check2);
-										armorD = armorD + armorDT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+										double armorTT = Double.parseDouble(check1);
 										armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
 									}
 								}
 							}
 						}
+						ent.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(armorD);
+						ent.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(armorT);
 					}
-					ItemStack item = ent.getEquipment().getItemInOffHand();
-					if(item != null) {
-						if(item.hasItemMeta()) {
-							if(item.getItemMeta().hasLore()) {
-								if(item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
-									String check1 = "";
-									for(String s : item.getItemMeta().getLore()) {
-										if(s.contains("Armor Toughness")) {
-											check1 = ChatColor.stripColor(s);
-										}
-									}
-									check1 = check1.replaceAll("[^\\d.]", "");
-									double armorTT = Double.parseDouble(check1);
-									armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
-								}
-							}
-						}
-					}
-					ent.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(armorD);
-					ent.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(armorT);
 				}
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 1L);
@@ -1273,48 +1277,50 @@ public class DFPlayer {
 		Entity entity = Bukkit.getEntity(dfPlayer.getUUID());
 		double armorD = 0.0;
 		double armorT = 0.0;
-		if(entity instanceof LivingEntity) {
-			LivingEntity ent = (LivingEntity) entity;
-			for(ItemStack item : ent.getEquipment().getArmorContents()) {
-				if(item != null) {
-					if(item.hasItemMeta()) {
-						if(item.getItemMeta().hasLore()) {
-							if(item.getItemMeta().getLore().toString().contains("Armor Defense") && item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
-								String check1 = "";
-								String check2 = "";
-								for(String s : item.getItemMeta().getLore()) {
-									if(s.contains("Armor Defense")) {
-										check1 = ChatColor.stripColor(s);
+		if(entity != null) {
+			if(entity instanceof LivingEntity) {
+				LivingEntity ent = (LivingEntity) entity;
+				for(ItemStack item : ent.getEquipment().getArmorContents()) {
+					if(item != null) {
+						if(item.hasItemMeta()) {
+							if(item.getItemMeta().hasLore()) {
+								if(item.getItemMeta().getLore().toString().contains("Armor Defense") && item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
+									String check1 = "";
+									String check2 = "";
+									for(String s : item.getItemMeta().getLore()) {
+										if(s.contains("Armor Defense")) {
+											check1 = ChatColor.stripColor(s);
+										}
+										else if(s.contains("Armor Toughness")){
+											check2 = ChatColor.stripColor(s);
+										}
 									}
-									else if(s.contains("Armor Toughness")){
-										check2 = ChatColor.stripColor(s);
-									}
+									check1 = check1.replaceAll("[^\\d.]", "");
+									check2 = check2.replaceAll("[^\\d.]", "");
+									double armorDT = Double.parseDouble(check1);
+									double armorTT = Double.parseDouble(check2);
+									armorD = armorD + armorDT / 100.00 * (dfPlayer.getDfCal() + 100.00);
+									armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
 								}
-								check1 = check1.replaceAll("[^\\d.]", "");
-								check2 = check2.replaceAll("[^\\d.]", "");
-								double armorDT = Double.parseDouble(check1);
-								double armorTT = Double.parseDouble(check2);
-								armorD = armorD + armorDT / 100.00 * (dfPlayer.getDfCal() + 100.00);
-								armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
 							}
 						}
 					}
 				}
-			}
-			ItemStack item = ent.getEquipment().getItemInOffHand();
-			if(item != null) {
-				if(item.hasItemMeta()) {
-					if(item.getItemMeta().hasLore()) {
-						if(item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
-							String check1 = "";
-							for(String s : item.getItemMeta().getLore()) {
-								if(s.contains("Armor Toughness")) {
-									check1 = ChatColor.stripColor(s);
+				ItemStack item = ent.getEquipment().getItemInOffHand();
+				if(item != null) {
+					if(item.hasItemMeta()) {
+						if(item.getItemMeta().hasLore()) {
+							if(item.getItemMeta().getLore().toString().contains("Armor Toughness")) {
+								String check1 = "";
+								for(String s : item.getItemMeta().getLore()) {
+									if(s.contains("Armor Toughness")) {
+										check1 = ChatColor.stripColor(s);
+									}
 								}
+								check1 = check1.replaceAll("[^\\d.]", "");
+								double armorTT = Double.parseDouble(check1);
+								armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
 							}
-							check1 = check1.replaceAll("[^\\d.]", "");
-							double armorTT = Double.parseDouble(check1);
-							armorT = armorT + armorTT / 100.00 * (dfPlayer.getDfCal() + 100.00);
 						}
 					}
 				}

@@ -66,9 +66,9 @@ public class CombatTag implements Listener {
 								sendActionbar(p1, new CCT().colorize("&2&l[DungeonForge]: &cCombat Tag: &6" + duration));
 								combatTag.put(p1.getUniqueId(), duration);
 								if (duration <= 0) {
-									cancel();
 									combatRunnable.remove(p1.getUniqueId());
 									sendActionbar(p1, new CCT().colorize("&2&l[DungeonForge]: &aOut of combat!"));
+									cancel();
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
@@ -81,9 +81,9 @@ public class CombatTag implements Listener {
 								sendActionbar(p2, new CCT().colorize("&2&l[DungeonForge]: &cCombat Tag: &6" + duration));
 								combatTag.put(p2.getUniqueId(), duration);
 								if (duration <= 0) {
-									cancel();
 									combatRunnable.remove(p2.getUniqueId());
 									sendActionbar(p2, new CCT().colorize("&2&l[DungeonForge]: &aOut of combat!"));
+									cancel();
 								}
 							}
 						}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);

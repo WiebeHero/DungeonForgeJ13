@@ -1,20 +1,14 @@
 package me.WiebeHero.CustomEnchantments;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class CCT {
 	public CCT() {
 		
 	}
 	public String colorize(String msg)
     {
-        String coloredMsg = "";
-        for(int i = 0; i < msg.length(); i++)
-        {
-            if(msg.charAt(i) == '&') {
-            	coloredMsg += '§';
-            }     
-            else
-                coloredMsg += msg.charAt(i);
-        }
+        String coloredMsg = ChatColor.translateAlternateColorCodes('&', msg);
         return coloredMsg;
     }
 }

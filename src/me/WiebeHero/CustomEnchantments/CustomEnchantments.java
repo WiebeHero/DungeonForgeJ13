@@ -59,7 +59,6 @@ import me.WiebeHero.Consumables.ConsumableHandler;
 import me.WiebeHero.Consumables.CustomDurability;
 import me.WiebeHero.CraftRecipes.UnblockBrewing;
 import me.WiebeHero.CustomClasses.Methods;
-import me.WiebeHero.CustomHitDelay.HitDelay;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.CustomMethods.MethodMulti;
@@ -99,6 +98,7 @@ import me.WiebeHero.MoreStuff.AFKSystem;
 import me.WiebeHero.MoreStuff.CancelJoinLeaveAdvancementMessages;
 import me.WiebeHero.MoreStuff.CancelLootSteal;
 import me.WiebeHero.MoreStuff.CombatTag;
+import me.WiebeHero.MoreStuff.DisableCollision;
 import me.WiebeHero.MoreStuff.DisableThings;
 import me.WiebeHero.MoreStuff.Disparitys;
 import me.WiebeHero.MoreStuff.EnderPearlCooldown;
@@ -113,10 +113,10 @@ import me.WiebeHero.MoreStuff.SpawnCommand;
 import me.WiebeHero.MoreStuff.SwordSwingProgress;
 import me.WiebeHero.MoreStuff.TNTExplodeCovered;
 import me.WiebeHero.MoreStuff.TPACommand;
-import me.WiebeHero.Novis.ItemCommand;
 import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import me.WiebeHero.Novis.NovisInventory;
 import me.WiebeHero.Novis.NovisRewards;
+import me.WiebeHero.OtherClasses.SignMenuFactory;
 import me.WiebeHero.RankedPlayerPackage.KitCommand;
 import me.WiebeHero.RankedPlayerPackage.KitListener;
 import me.WiebeHero.RankedPlayerPackage.KitMenu;
@@ -175,7 +175,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ItemStackBuilder builder = new ItemStackBuilder();
 	private ClassMenu classMenu = new ClassMenu(dfManager);
 	private SkillMenu skill = new SkillMenu(dfManager, builder, classMenu);
-	private SkillCommand skillCommand = new SkillCommand(skill, dfManager, rankedManager);
+	private SkillCommand skillCommand = new SkillCommand(skill);
 	private DFScoreboard score = new DFScoreboard(dfManager, facManager, facPlayerManager, rankedManager, wg);
 	private FactionInventory facInv = new FactionInventory(builder);
 	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager, wg, facInv);
@@ -195,6 +195,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private SetHomeSystem sethome = new SetHomeSystem(rankedManager);
 	private RankedPlayerListener rListener = new RankedPlayerListener(rankedManager, luck);
 	private CapturePointManager cpManager = new CapturePointManager(facManager, facPlayerManager);
+	private SignMenuFactory signFactory;
 	// General Variables
 	public static boolean hardSave = false;
 	public static boolean shutdown = false;
@@ -207,8 +208,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "\n\nThe plugin CustomEnchantments has been enabled!\n\n");
 		
 		NovisRewards rewards = new NovisRewards(nEnchant);
-		ItemCommand itemCommand = new ItemCommand(rewards, rankedManager, nEnchant);
-		
+		this.signFactory = new SignMenuFactory(this);
 		enchantmentGuideInv = new EnchantmentGuideInventory(enchant, builder);
 		AHCommand ahCommand = new AHCommand(ahManager, rankedManager, ahInv);
 		MSGCommand msgCommand = new MSGCommand(msgManager, null, rankedManager);
@@ -251,7 +251,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Bukkit.getPluginManager().registerEvents(e, CustomEnchantments.getInstance());
 		}
 		//Config Manager
-		ModerationEvents mod = new ModerationEvents(facManager, dfManager, rankedManager, punishManager, staffManager, spawnerManager, lootChestManager, gui, multi, luck, method, score, classMenu, msgManager, cpManager, facPlayerManager);
+		ModerationEvents mod = new ModerationEvents(facManager, dfManager, rankedManager, punishManager, staffManager, spawnerManager, lootChestManager, gui, multi, luck, method, score, classMenu, msgManager, cpManager, facPlayerManager, rewards, nEnchant, builder);
 		//Custom Weapons
 		getServer().getPluginManager().registerEvents(en, this);
 		getServer().getPluginManager().registerEvents(new ActivateAbility(dfManager, facManager), this);
@@ -300,6 +300,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new ConsumableHandler(dfManager, con), this);
 		getServer().getPluginManager().registerEvents(rListener, this);
 		getServer().getPluginManager().registerEvents(new DFMobHealth(dfManager), this);
+		getServer().getPluginManager().registerEvents(new DisableCollision(), this);
 		//Seasonal Events
 		getServer().getPluginManager().registerEvents(new ChristmasInventoryEvents(), this);
 		punishManager.loadPunishList();
@@ -365,8 +366,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new CancelJoinLeaveAdvancementMessages(), this);
 		//Shop
 		getServer().getPluginManager().registerEvents(new DFShop(dfManager, score), this);
-		//HitDelay
-		getServer().getPluginManager().registerEvents(new HitDelay(), this);
 		//Commands
 		getCommand(fac.faction).setExecutor(fac);
 		getCommand(p.rtp).setExecutor(p);
@@ -419,12 +418,15 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(mod.tptp).setExecutor(mod);
 		getCommand(mod.tphere).setExecutor(mod);
 		getCommand(mod.af).setExecutor(mod);
+		getCommand(mod.a).setExecutor(mod);
+		getCommand(mod.god).setExecutor(mod);
+		getCommand(mod.gamemode).setExecutor(mod);
+		getCommand(mod.item).setExecutor(mod);
 		//Dungeon Parties
 		getCommand(party.comParty).setExecutor(party);
 		//
 		getCommand(kitCommand.kit).setExecutor(kitCommand);
 		getCommand(kitCommand.kits).setExecutor(kitCommand);
-		getCommand(itemCommand.itemCmd).setExecutor(itemCommand);
 		getServer().getPluginManager().registerEvents(mod, this);
 		getServer().getPluginManager().registerEvents(new ModerationGUI(dfManager, builder, punishManager), this);
 		//Glowing Drops

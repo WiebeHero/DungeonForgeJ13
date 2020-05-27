@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -21,7 +22,6 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.block.Banner;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -70,6 +70,7 @@ import me.WiebeHero.Chat.MSGManager;
 import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.CustomMethods.MethodMulti;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
@@ -80,6 +81,10 @@ import me.WiebeHero.Factions.DFFactionPlayer;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
 import me.WiebeHero.LootChest.LootChest;
 import me.WiebeHero.LootChest.LootChestManager;
+import me.WiebeHero.Novis.NovisEnchantmentGetting;
+import me.WiebeHero.Novis.NovisRewards;
+import me.WiebeHero.Novis.RarityEnum;
+import me.WiebeHero.Novis.RarityEnum.Rarity;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Rank;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
 import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
@@ -107,6 +112,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	private ClassMenu menu;
 	private MSGManager msgManager;
 	private CapturePointManager cpManager;
+	private NovisRewards rewards;
+	private ItemStackBuilder builder;
+	private NovisEnchantmentGetting enchant;
 	private HashMap<UUID, Pair<UUID, String>> target = new HashMap<UUID, Pair<UUID, String>>();
 	private HashMap<UUID, String> reason = new HashMap<UUID, String>();
 	private HashMap<UUID, EntityType> spawnerType = new HashMap<UUID, EntityType>();
@@ -148,8 +156,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public String tphere = "tphere";
 	public String af = "af";
 	public String a = "a";
+	public String god = "god";
+	public String gamemode = "gamemode";
+	public String item = "item";
 	
-	public ModerationEvents(DFFactionManager facManager, DFPlayerManager dfManager, RankedManager rManager, PunishManager pManager, StaffManager sManager, DFSpawnerManager spManager, LootChestManager lcManager, ModerationGUI gui, MethodMulti multi, MethodLuck luck, Methods m, DFScoreboard board, ClassMenu menu, MSGManager msgManager, CapturePointManager cpManager, DFFactionPlayerManager facPlayerManager) {
+	public ModerationEvents(DFFactionManager facManager, DFPlayerManager dfManager, RankedManager rManager, PunishManager pManager, StaffManager sManager, DFSpawnerManager spManager, LootChestManager lcManager, ModerationGUI gui, MethodMulti multi, MethodLuck luck, Methods m, DFScoreboard board, ClassMenu menu, MSGManager msgManager, CapturePointManager cpManager, DFFactionPlayerManager facPlayerManager, NovisRewards rewards, NovisEnchantmentGetting enchant, ItemStackBuilder builder) {
 		this.facManager = facManager;
 		this.dfManager = dfManager;
 		this.rManager = rManager;
@@ -166,6 +177,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		this.msgManager = msgManager;
 		this.cpManager = cpManager;
 		this.facPlayerManager = facPlayerManager;
+		this.rewards = rewards;
+		this.enchant = enchant;
+		this.builder = builder;
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -261,11 +275,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
 							if(player.getAllowFlight()) {
 								player.setAllowFlight(false);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannnot fly anymore!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have enabled fly mode!"));
 							}
 							else {
 								player.setAllowFlight(true);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are now flying!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have disabled fly mode!"));
 							}
 						}
 						else {
@@ -278,13 +292,13 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							if(p != null) {
 								RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
 								if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
-									if(p.isFlying()) {
-										p.setFlying(false);
-										p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas turned off your ability to fly!"));
+									if(p.getAllowFlight()) {
+										p.setAllowFlight(false);
+										p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas turned off fly mode!"));
 									}
 									else {
-										p.setFlying(true);
-										p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas turned on your ability to fly!"));
+										p.setAllowFlight(true);
+										p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas turned on fly mode!"));
 									}
 								}
 								else {
@@ -666,7 +680,16 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								if(pManager.contains(p.getUniqueId())) {
 									Punish pun = pManager.get(p.getUniqueId());
 									if(pun.isBanned()) {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cis currently banned!"));
+										Long timeLeft = pun.getMuteTime() - System.currentTimeMillis();
+										long diffSeconds = timeLeft / 1000 % 60;
+								        long diffMinutes = timeLeft / (60 * 1000) % 60;
+								        long diffHours = timeLeft / (60 * 60 * 1000) % 24;
+								        long diffDays = timeLeft / (24 * 60 * 60 * 1000);
+										String time = diffDays + " Days " + diffHours + ":" + diffMinutes + ":" + diffSeconds;
+										if(timeLeft <= 0) {
+											time = "&c&lNever";
+										}
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cis currently banned! Banned by: &6" + pun.getBannedBy(pun.getBannedByList().size() - 1) + " &cBan Reason: &6" + pun.getBanReason(pun.getBanReasonsList().size() - 1) + " &cCan join again: &6" + time));
 									}
 									else {
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cis not banned!"));
@@ -702,7 +725,16 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								if(pManager.contains(p.getUniqueId())) {
 									Punish pun = pManager.get(p.getUniqueId());
 									if(pun.isMuted()) {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cis currently muted!"));
+										Long timeLeft = pun.getMuteTime() - System.currentTimeMillis();
+										long diffSeconds = timeLeft / 1000 % 60;
+								        long diffMinutes = timeLeft / (60 * 1000) % 60;
+								        long diffHours = timeLeft / (60 * 60 * 1000) % 24;
+								        long diffDays = timeLeft / (24 * 60 * 60 * 1000);
+										String time = diffDays + " Days " + diffHours + ":" + diffMinutes + ":" + diffSeconds;
+										if(timeLeft <= 0) {
+											time = "&c&lNever";
+										}
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cis currently muted! Muted by: &6" + pun.getMutedBy(pun.getMutedByList().size() - 1) + " &cMute Reason: &6" + pun.getMuteReason(pun.getMuteReasonsList().size() - 1) + " &cCan chat again: &6" + time));
 									}
 									else {
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &cis not muted!"));
@@ -874,6 +906,124 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou're not staff!"));
 				}
 			}
+			else if(cmd.getName().equalsIgnoreCase(god)) {
+				if(rPlayer.isStaff()) {
+					if(args.length == 0) {
+						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+							Staff staff = sManager.get(player.getUniqueId());
+							if(staff.getGodMode()) {
+								staff.switchGodModeMode(false);
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aGod mode enabled!"));
+							}
+							else if(!staff.getGodMode()) {
+								staff.switchGodModeMode(true);
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cGod mode disabled!"));
+							}
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to clear chat!"));
+						}
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /god"));
+					}
+				}
+				else {
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are not staff!"));
+				}	
+			}
+			else if(cmd.getName().equalsIgnoreCase(gamemode)) {
+				if(rPlayer.isStaff()) {
+					if(args.length == 1) {
+						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+							int mode = -1;
+							try {
+								mode = Integer.parseInt(args[0]);
+							}
+							catch(NumberFormatException ex) {
+								ex.printStackTrace();
+							}
+							if(mode > -1 && mode < 4) {
+								if(mode != player.getGameMode().getValue()) {
+									player.setGameMode(GameMode.getByValue(mode));
+									String origin = player.getGameMode().toString().toLowerCase();
+									String newMode = origin.substring(0, 1).toUpperCase() + origin.substring(1);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have entered the gamemode: &6" + newMode));
+								}
+								else {
+									String origin = GameMode.getByValue(mode).toString().toLowerCase();
+									String newMode = origin.substring(0, 1).toUpperCase() + origin.substring(1);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are already in the gamemode: &6" + newMode));
+								}
+							}
+							else {
+								if(GameMode.valueOf(args[0].toUpperCase()) != null) {
+									player.setGameMode(GameMode.valueOf(args[0].toUpperCase()));
+									String origin = player.getGameMode().toString().toLowerCase();
+									String newMode = origin.substring(0, 1).toUpperCase() + origin.substring(1);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have entered the gamemode: &6" + newMode));
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cGamemode is invalid! Valid gamemodes: 0/1/2/3 survival/creative/spectator/adventure"));
+								}
+							}
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to set your own gamemode!"));
+						}
+					}
+					else if(args.length == 2) {
+						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+							Player p = Bukkit.getPlayer(args[0]);
+							if(p != null) {
+								int mode = -1;
+								try {
+									mode = Integer.parseInt(args[1]);
+								}
+								catch(NumberFormatException ex) {
+									ex.printStackTrace();
+								}
+								if(mode > -1 && mode < 4) {
+									if(mode != player.getGameMode().getValue()) {
+										p.setGameMode(GameMode.getByValue(mode));
+										String origin = player.getGameMode().toString().toLowerCase();
+										String newMode = origin.substring(0, 1).toUpperCase() + origin.substring(1);
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have entered the gamemode: &6" + newMode));
+									}
+									else {
+										String origin = GameMode.getByValue(mode).toString().toLowerCase();
+										String newMode = origin.substring(0, 1).toUpperCase() + origin.substring(1);
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are already in the gamemode: &6" + newMode));
+									}
+								}
+								else {
+									if(GameMode.valueOf(args[1].toUpperCase()) != null) {
+										p.setGameMode(GameMode.valueOf(args[1].toUpperCase()));
+										String origin = player.getGameMode().toString().toLowerCase();
+										String newMode = origin.substring(0, 1).toUpperCase() + origin.substring(1);
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have entered the gamemode: &6" + newMode));
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cGamemode is invalid! Valid gamemodes: 0/1/2/3 survival/creative/spectator/adventure"));
+									}
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not online!"));
+							}
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to set your someones gamemode!"));
+						}
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /gamemode (Optional)(Player Name) (0/1/2/3) or (survival/creative/spectator/adventure)"));
+					}
+				}
+				else {
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are not staff!"));
+				}	
+			}
 			else if(cmd.getName().equalsIgnoreCase(checkmode)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
@@ -897,7 +1047,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /clearchat"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /checkmode (Player Name)"));
 					}
 				}
 				else {
@@ -1187,7 +1337,83 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				if(rPlayer.isStaff()) {
 					if(args.length == 2) {
 						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
-							if(args[0].equalsIgnoreCase("kick")) {
+							if(args[0].equalsIgnoreCase("leader")) {
+								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
+									if(p.getName() != null) {
+										if(facPlayerManager.contains(p.getUniqueId())) {
+											DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(p.getUniqueId());
+											if(facPlayer.getFactionId() != null) {
+												DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
+												if(facPlayer.getRank() - 1 >= 1) {
+													for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
+														DFFactionPlayer facP = entry.getValue();
+														if(facP.getFactionId().equals(faction.getFactionId())) {
+															if(facP.getRank() == 4) {
+																faction.demoteMember(entry.getKey());
+															}
+														}
+													}
+													facPlayer.setRank(4);
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have given &6" + p.getName() + " &aleadership of the faction &6" + faction.getName()));
+												}
+												else {
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + " &ccannot be demoted any more!"));
+												}
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not part of a faction!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not part of a faction!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
+								}
+							}
+							else if(args[0].equalsIgnoreCase("abandon") || args[0].equalsIgnoreCase("disband")) {
+								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									String facName = args[1];
+									if(facManager.getFaction(facName) != null) {
+										DFFaction faction = facManager.getFaction(facName);
+										board.updateScoreboard(player);
+										for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
+											if(entry.getValue().getFactionId() != null) {
+												if(faction.getFactionId().equals(entry.getValue().getFactionId())) {
+													Player p = Bukkit.getPlayer(entry.getKey());
+													if(p != null && p != player) {
+														p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " has abandoned the faction!"));
+														DFFactionPlayer facP = facPlayerManager.getFactionPlayer(p);
+														facP.setFactionId(null);
+														facP.setRank(1);
+														board.updateScoreboard(player);
+													}
+													else {
+														DFFactionPlayer facP = facPlayerManager.getFactionPlayer(p);
+														facP.setFactionId(null);
+														facP.setRank(1);
+														board.updateScoreboard(player);
+													}
+												}
+											}
+										}
+										facManager.remove(faction.getFactionId());
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction does not exist!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
+								}
+							}
+							else if(args[0].equalsIgnoreCase("kick")) {
 								OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
 								if(p.getName() != null) {
 									if(facPlayerManager.contains(p.getUniqueId())) {
@@ -1248,7 +1474,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(p.getUniqueId());
 										if(facPlayer.getFactionId() != null) {
 											DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-											if(facPlayer.getRank() - 1 >= 1) {
+											if(facPlayer.getRank() - 1 >= 1 && facPlayer.getRank() != 4) {
 												faction.demoteMember(p.getUniqueId());
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have demoted &6" + p.getName()));
 											}
@@ -1285,9 +1511,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								}
 							}
 						}
-						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use admin faction commands!"));
-						}
 					}
 					else if(args.length == 3) {
 						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
@@ -1297,7 +1520,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									if(facManager.getFaction(facName) != null) {
 										DFFaction faction = facManager.getFaction(facName);
 										faction.clearChunks();
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unclaimed this chunk!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unclaimed all &6" + faction.getName() + "'s &achunks!"));
 									}
 									else {
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction does not exist!"));
@@ -1332,6 +1555,37 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction does not exist!"));
 								}
 							}
+						}
+					}
+					else if(args.length == 5) {
+						if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+							if(args[0].equalsIgnoreCase("bank")) {
+								if(args[1].equalsIgnoreCase("set")) {
+									String facName = args[2];
+									String a = args[3];
+									if(facManager.getFaction(facName) != null) {
+										double amount = 0.00;
+										try {
+											amount = Double.parseDouble(a);
+										}
+										catch(NumberFormatException e) {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis money value is invalid!"));
+											e.printStackTrace();
+										}
+										if(amount > 0.00) {
+											DFFaction faction = facManager.getFaction(facName);
+											faction.setBank(amount);
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou set &6" + faction.getName() + "'s &abank balance to &6" + faction.getBank() + "$!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction does not exist!"));
+									}
+								}
+							}
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
 						}
 					}
 				}
@@ -1341,10 +1595,514 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			}
 			else if(cmd.getName().equalsIgnoreCase(a)) {
 				if(rPlayer.isStaff()) {
+					if(args.length == 2) {
+						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+							if(args[0].equalsIgnoreCase("item")) {
+								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									HashMap<String, ItemStack> stacks = this.rewards.getItemList();
+									if(stacks.containsKey(args[1])) {
+										ItemStack i = stacks.get(args[1]).clone();
+										player.getInventory().addItem(i);
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis item doesn't exist! Try to type the specific item in full lowercase and replace all spaces with _"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
+								}
+							}
+							else if(args[0].equalsIgnoreCase("spawner")) {
+								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									String type = args[1].toUpperCase();
+									EntityType newType = null;
+									try {
+										newType = EntityType.valueOf(type);
+									}
+									catch(IllegalArgumentException ex) {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis spawner type doesn't exist!"));
+										ex.printStackTrace();
+									}
+									if(newType != null) {
+										String name = args[1].substring(0, 1).toUpperCase() + args[1].substring(1);
+										String finalName = new CCT().colorize("&a&l" + name + " Spawner");
+										ItemStack spawner = this.builder.constructItem(
+												Material.SPAWNER,
+												1,
+												finalName
+										);
+										player.getInventory().addItem(spawner);
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
+								}
+							}
+							else if(args[0].equalsIgnoreCase("moneynote")) {
+								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									double amount = 0.00;
+									try {
+										amount = Double.parseDouble(args[1]);
+									}
+									catch(NumberFormatException ex) {
+										ex.printStackTrace();
+									}
+									if(amount > 0.00) {
+										ItemStack note = this.builder.constructItem(
+												Material.PAPER,
+												1,
+												"&aMoney Note: $" + amount,
+												new ArrayList<String>(),
+												"Money",
+												amount
+										);
+										player.getInventory().addItem(note);
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid amount of money!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
+								}
+							}
+							else if(args[0].equalsIgnoreCase("xpbottle")) {
+								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									int amount = 0;
+									try {
+										amount = Integer.parseInt(args[1]);
+									}
+									catch(NumberFormatException ex) {
+										ex.printStackTrace();
+									}
+									if(amount > 0) {
+										ItemStack note = this.builder.constructItem(
+												Material.EXPERIENCE_BOTTLE,
+												1,
+												"&a&lXP Bottle (Player)",
+												new ArrayList<String>(Arrays.asList(
+														"&7When you combine your item with this bottle,",
+														"&7It will add the XP on this bottle to your weapon.",
+														"&7XP Amount: &6" + amount
+												)),
+												"XPBottle",
+												amount
+										);
+										player.getInventory().addItem(note);
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid amount of xp!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
+								}
+							}
+							else if(args[0].equalsIgnoreCase("crystal")) {
+								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									String rarity = args[1].toUpperCase();
+									if(RarityEnum.getIfPresent(rarity) != null) {
+										Rarity rar = RarityEnum.getIfPresent(rarity);
+										ItemStack item = builder.constructItem(
+											Material.NETHER_STAR,
+											1,
+											rar.getColorCode() + rar.getDisplay() + " Crystal",
+											new ArrayList<String>(Arrays.asList(
+												"&7Bring me to &6&lNOVIS &7to get some",
+												"&7really nice rewards!",
+												"&7Rarity: " + rar.getColorCode() + rar.getDisplay()
+											)),
+											new ArrayList<String>(Arrays.asList(
+												"CrystalObject",
+												"Rarity"
+											)),
+											new ArrayList<String>(Arrays.asList(
+												"",
+												rar.getDisplay()
+											))
+										);
+										player.getInventory().addItem(item);
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis rarity doesn't exist!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
+								}
+							}
+						}
+					}
+					if(args.length == 3) {
+						if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+							if(args[0].equalsIgnoreCase("item")) {
+								HashMap<String, ItemStack> stacks = this.rewards.getItemList();
+								if(stacks.containsKey(args[1])) {
+									ItemStack i = stacks.get(args[1]).clone();
+									NBTItem item = new NBTItem(i);
+									boolean valid = true;
+									int level = 0;
+									try {
+										level = Integer.parseInt(args[2]);
+									}
+									catch(NumberFormatException ex) {
+										valid = false;
+										ex.printStackTrace();
+									}
+									if(valid) {
+										if(level > 0 && level <= 15) {
+											if(item.hasKey("WeaponKey") || item.hasKey("BowKey")) {
+												int itemLevel = item.getInteger("Level");
+												int maxxp = item.getInteger("MAXXP");
+												int total = item.getInteger("TotalXP");	
+												String name = item.getString("ItemName");
+												String rarity = item.getString("Rarity");
+												String enchantmentString = item.getString("EnchantmentString");
+												double baseDamage = item.getDouble("Base Attack Damage");
+												double baseSpeed = item.getDouble("Base Attack Speed");
+												double incDamage = item.getDouble("Inc Attack Damage");
+												double incSpeed = item.getDouble("Inc Attack Speed");
+												for(int x = itemLevel + 1; x <= level; x++) {
+													itemLevel = x;
+													total = total + maxxp;
+													maxxp = maxxp / 100 * 135;
+												}
+												double value1 = baseDamage + incDamage * (itemLevel - 1);
+								            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+												//Config Data
+												//Weapon Data
+								            	item.setInteger("Level", itemLevel);
+								            	item.setInteger("XP", 0);
+								            	item.setInteger("MAXXP", maxxp);
+								            	item.setInteger("TotalXP", total);
+								            	item.setDouble("Attack Damage", value1);
+								            	item.setDouble("Attack Speed", value2);
+								            	i = item.getItem();
+												ItemMeta meta = i.getItemMeta();
+												meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+												ArrayList<String> newLore = new ArrayList<String>();
+												newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+												double roundOff1 = (double) Math.round(value1 * 100) / 100;
+												double roundOff2 = (double) Math.round(value2 * 100) / 100;
+												newLore.add(new CCT().colorize("&7-----------------------"));
+												newLore.add(new CCT().colorize("&7Attack Damage: &6" + roundOff1));
+												newLore.add(new CCT().colorize("&7Attack Speed: &6" + roundOff2));
+												newLore.add(new CCT().colorize("&7-----------------------"));
+												if(itemLevel < 15) {
+													newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + 0 + " &6/ &b&l" + maxxp + "&a]"));
+													newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
+												}
+												else if(itemLevel == 15) {
+													newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+												}
+												newLore.add(new CCT().colorize("&7-----------------------"));
+												if(itemLevel >= 6) {
+													int loreRequired = itemLevel - 4;
+													int levelRequired = loreRequired * 5;
+													newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+												}
+												newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+												meta.setLore(newLore);
+												i.setItemMeta(meta);
+											}
+											else if(item.hasKey("ArmorKey")) {
+												if(i.getType().toString().contains("HELMET")) {
+													int itemLevel = item.getInteger("Level");
+													int maxxp = item.getInteger("MAXXP");
+													int total = item.getInteger("TotalXP");	
+													String name = item.getString("ItemName");
+													String rarity = item.getString("Rarity");
+													String enchantmentString = item.getString("EnchantmentString");
+													double baseDamage = item.getDouble("Base Armor Defense");
+													double baseSpeed = item.getDouble("Base Armor Toughness");
+													double incDamage = item.getDouble("Inc Armor Defense");
+													double incSpeed = item.getDouble("Inc Armor Toughness");
+													for(int x = itemLevel + 1; x <= level; x++) {
+														itemLevel = x;
+														total = total + maxxp;
+														maxxp = maxxp / 100 * 135;
+													}
+													double value1 = baseDamage + incDamage * (itemLevel - 1);
+									            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+													//Config Data
+													//Weapon Data
+									            	item.setInteger("Level", itemLevel);
+									            	item.setInteger("XP", 0);
+									            	item.setInteger("MAXXP", maxxp);
+									            	item.setInteger("TotalXP", total);
+									            	item.setDouble("Armor Defense", value1);
+									            	item.setDouble("Armor Toughness", value2);
+									            	i = item.getItem();
+													ItemMeta meta = i.getItemMeta();
+													meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+													ArrayList<String> newLore = new ArrayList<String>();
+													newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+													double roundOff1 = (double) Math.round(value1 * 100) / 100;
+													double roundOff2 = (double) Math.round(value2 * 100) / 100;
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
+													newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													if(itemLevel < 15) {
+														newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + 0 + " &6/ &b&l" + maxxp + "&a]"));
+														newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
+													}
+													else if(itemLevel == 15) {
+														newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+													}
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													if(itemLevel >= 6) {
+														int loreRequired = itemLevel - 4;
+														int levelRequired = loreRequired * 5;
+														newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+													}
+													newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+													meta.setLore(newLore);
+													i.setItemMeta(meta);
+												}
+												else if(i.getType().toString().contains("CHESTPLATE")) {
+													int itemLevel = item.getInteger("Level");
+													int maxxp = item.getInteger("MAXXP");
+													int total = item.getInteger("TotalXP");	
+													String name = item.getString("ItemName");
+													String rarity = item.getString("Rarity");
+													String enchantmentString = item.getString("EnchantmentString");
+													double baseDamage = item.getDouble("Base Armor Defense");
+													double baseSpeed = item.getDouble("Base Armor Toughness");
+													double incDamage = item.getDouble("Inc Armor Defense");
+													double incSpeed = item.getDouble("Inc Armor Toughness");
+													for(int x = itemLevel + 1; x <= level; x++) {
+														itemLevel = x;
+														total = total + maxxp;
+														maxxp = maxxp / 100 * 135;
+													}
+													double value1 = baseDamage + incDamage * (itemLevel - 1);
+									            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+													//Config Data
+													//Weapon Data
+									            	item.setInteger("Level", itemLevel);
+									            	item.setInteger("XP", 0);
+									            	item.setInteger("MAXXP", maxxp);
+									            	item.setInteger("TotalXP", total);
+									            	item.setDouble("Armor Defense", value1);
+									            	item.setDouble("Armor Toughness", value2);
+									            	i = item.getItem();
+													ItemMeta meta = i.getItemMeta();
+													meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+													ArrayList<String> newLore = new ArrayList<String>();
+													newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+													double roundOff1 = (double) Math.round(value1 * 100) / 100;
+													double roundOff2 = (double) Math.round(value2 * 100) / 100;
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
+													newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													if(itemLevel < 15) {
+														newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + 0 + " &6/ &b&l" + maxxp + "&a]"));
+														newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
+													}
+													else if(itemLevel == 15) {
+														newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+													}
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													if(itemLevel >= 6) {
+														int loreRequired = itemLevel - 4;
+														int levelRequired = loreRequired * 5;
+														newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+													}
+													newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+													meta.setLore(newLore);
+													i.setItemMeta(meta);
+												}
+												else if(i.getType().toString().contains("LEGGINGS")) {
+													int itemLevel = item.getInteger("Level");
+													int maxxp = item.getInteger("MAXXP");
+													int total = item.getInteger("TotalXP");	
+													String name = item.getString("ItemName");
+													String rarity = item.getString("Rarity");
+													String enchantmentString = item.getString("EnchantmentString");
+													double baseDamage = item.getDouble("Base Armor Defense");
+													double baseSpeed = item.getDouble("Base Armor Toughness");
+													double incDamage = item.getDouble("Inc Armor Defense");
+													double incSpeed = item.getDouble("Inc Armor Toughness");
+													for(int x = itemLevel + 1; x <= level; x++) {
+														itemLevel = x;
+														total = total + maxxp;
+														maxxp = maxxp / 100 * 135;
+													}
+													double value1 = baseDamage + incDamage * (itemLevel - 1);
+									            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+													//Config Data
+													//Weapon Data
+									            	item.setInteger("Level", itemLevel);
+									            	item.setInteger("XP", 0);
+									            	item.setInteger("MAXXP", maxxp);
+									            	item.setInteger("TotalXP", total);
+									            	item.setDouble("Armor Defense", value1);
+									            	item.setDouble("Armor Toughness", value2);
+									            	i = item.getItem();
+													ItemMeta meta = i.getItemMeta();
+													meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+													ArrayList<String> newLore = new ArrayList<String>();
+													newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+													double roundOff1 = (double) Math.round(value1 * 100) / 100;
+													double roundOff2 = (double) Math.round(value2 * 100) / 100;
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
+													newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													if(itemLevel < 15) {
+														newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + 0 + " &6/ &b&l" + maxxp + "&a]"));
+														newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
+													}
+													else if(itemLevel == 15) {
+														newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+													}
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													if(itemLevel >= 6) {
+														int loreRequired = itemLevel - 4;
+														int levelRequired = loreRequired * 5;
+														newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+													}
+													newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+													meta.setLore(newLore);
+													i.setItemMeta(meta);
+												}
+												else if(i.getType().toString().contains("BOOTS")) {
+													int itemLevel = item.getInteger("Level");
+													int maxxp = item.getInteger("MAXXP");
+													int total = item.getInteger("TotalXP");	
+													String name = item.getString("ItemName");
+													String rarity = item.getString("Rarity");
+													String enchantmentString = item.getString("EnchantmentString");
+													double baseDamage = item.getDouble("Base Armor Defense");
+													double baseSpeed = item.getDouble("Base Armor Toughness");
+													double incDamage = item.getDouble("Inc Armor Defense");
+													double incSpeed = item.getDouble("Inc Armor Toughness");
+													for(int x = itemLevel + 1; x <= level; x++) {
+														itemLevel = x;
+														total = total + maxxp;
+														maxxp = maxxp / 100 * 135;
+													}
+													double value1 = baseDamage + incDamage * (itemLevel - 1);
+									            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+													//Config Data
+													//Weapon Data
+									            	item.setInteger("Level", itemLevel);
+									            	item.setInteger("XP", 0);
+									            	item.setInteger("MAXXP", maxxp);
+									            	item.setInteger("TotalXP", total);
+									            	item.setDouble("Armor Defense", value1);
+									            	item.setDouble("Armor Toughness", value2);
+									            	i = item.getItem();
+													ItemMeta meta = i.getItemMeta();
+													meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+													ArrayList<String> newLore = new ArrayList<String>();
+													newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+													double roundOff1 = (double) Math.round(value1 * 100) / 100;
+													double roundOff2 = (double) Math.round(value2 * 100) / 100;
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
+													newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													if(itemLevel < 15) {
+														newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + 0 + " &6/ &b&l" + maxxp + "&a]"));
+														newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
+													}
+													else if(itemLevel == 15) {
+														newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+													}
+													newLore.add(new CCT().colorize("&7-----------------------"));
+													if(itemLevel >= 6) {
+														int loreRequired = itemLevel - 4;
+														int levelRequired = loreRequired * 5;
+														newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+													}
+													newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+													meta.setLore(newLore);
+													i.setItemMeta(meta);
+												}
+											}
+											else if(item.hasKey("ShieldKey")) {
+												int itemLevel = item.getInteger("Level");
+												int maxxp = item.getInteger("MAXXP");
+												int total = item.getInteger("TotalXP");	
+												String name = item.getString("ItemName");
+												String rarity = item.getString("Rarity");
+												String enchantmentString = item.getString("EnchantmentString");
+												double baseDamage = item.getDouble("Base Armor Toughness");
+												double baseSpeed = item.getDouble("Base Cooldown");
+												double incDamage = item.getDouble("Inc Armor Toughness");
+												double incSpeed = item.getDouble("Inc Cooldown");
+												for(int x = itemLevel + 1; x <= level; x++) {
+													itemLevel = x;
+													total = total + maxxp;
+													maxxp = maxxp / 100 * 135;
+												}
+												double value1 = baseDamage + incDamage * (itemLevel - 1);
+								            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+												//Config Data
+												//Weapon Data
+								            	item.setInteger("Level", itemLevel);
+								            	item.setInteger("XP", 0);
+								            	item.setInteger("MAXXP", maxxp);
+								            	item.setInteger("TotalXP", total);
+								            	item.setDouble("Armor Toughness", value1);
+								            	item.setDouble("Cooldown", value2);
+								            	i = item.getItem();
+												ItemMeta meta = i.getItemMeta();
+												meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+												ArrayList<String> newLore = new ArrayList<String>();
+												newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+												double roundOff1 = (double) Math.round(value1 * 100) / 100;
+												double roundOff2 = (double) Math.round(value2 * 100) / 100;
+												newLore.add(new CCT().colorize("&7-----------------------"));
+												newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff1));
+												newLore.add(new CCT().colorize("&7Cooldown: &b" + roundOff2 + " Seconds"));
+												newLore.add(new CCT().colorize("&7-----------------------"));
+												if(itemLevel < 15) {
+													newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + 0 + " &6/ &b&l" + maxxp + "&a]"));
+													newLore.add(new CCT().colorize("&7[::::::::::::::::::::::::::::::::::::::::::::::::::&7] &a0%"));
+												}
+												else if(itemLevel == 15) {
+													newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+												}
+												newLore.add(new CCT().colorize("&7-----------------------"));
+												if(itemLevel >= 6) {
+													int loreRequired = itemLevel - 4;
+													int levelRequired = loreRequired * 5;
+													newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+												}
+												newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+												meta.setLore(newLore);
+												i.setItemMeta(meta);
+											}
+											player.getInventory().addItem(i);
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe level must be in between 1 and 15!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis input as level is not valid! The level needs to be a number!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis item doesn't exist! Try to type the specific item in full lowercase and replace all spaces with _"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /a item (Item Name) (Level)"));
+							}
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
+						}
+					}
 					if(args.length == 4) {
 						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
 							if(args[0].equalsIgnoreCase("money")) {
-								if(args[1].equalsIgnoreCase("set")) {
+								if(args[1].equalsIgnoreCase("give")) {
 									OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
 									if(p.getName() != null) {
 										if(dfManager.contains(p.getUniqueId())) {
@@ -1356,8 +2114,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											catch(NumberFormatException ex) {
 												ex.printStackTrace();
 											}
-											if(amount <= 0.00) {
-												dfPlayer.setMoney(amount);
+											if(amount > 0.00) {
+												dfPlayer.addMoney(amount);
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have given &6" + p.getName() + " &6" + amount + "$!"));
 											}
 											else {
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis value is invalid!"));
@@ -1371,111 +2130,513 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
 									}
 								}
-								else if(args[1].equalsIgnoreCase("give")) {
-									OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
-									if(p.getName() != null) {
-										if(dfManager.contains(p.getUniqueId())) {
-											DFPlayer dfPlayer = dfManager.getEntity(p.getUniqueId());
-											double amount = 0.00;
-											try {
-												amount = Double.parseDouble(args[3]);
-											}
-											catch(NumberFormatException ex) {
-												ex.printStackTrace();
-											}
-											if(amount <= 0.00) {
-												dfPlayer.addMoney(amount);;
+								else if(args[1].equalsIgnoreCase("set")) {
+									if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+										OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
+										if(p.getName() != null) {
+											if(dfManager.contains(p.getUniqueId())) {
+												DFPlayer dfPlayer = dfManager.getEntity(p.getUniqueId());
+												double amount = 0.00;
+												try {
+													amount = Double.parseDouble(args[3]);
+												}
+												catch(NumberFormatException ex) {
+													ex.printStackTrace();
+												}
+												if(amount >= 0.00) {
+													dfPlayer.setMoney(amount);
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have set &6" + p.getName() + " &cmoney to &6" + amount + "$!"));
+												}
+												else {
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis value is invalid!"));
+												}
 											}
 											else {
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis value is invalid!"));
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis has never joined!"));
 											}
 										}
 										else {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis has never joined!"));
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
 										}
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is to low to set someones money!"));
 									}
 								}
-								else if(args[1].equalsIgnoreCase("give")) {
-									OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
-									if(p.getName() != null) {
-										if(dfManager.contains(p.getUniqueId())) {
-											DFPlayer dfPlayer = dfManager.getEntity(p.getUniqueId());
-											double amount = 0.00;
-											try {
-												amount = Double.parseDouble(args[3]);
-											}
-											catch(NumberFormatException ex) {
-												ex.printStackTrace();
-											}
-											if(amount <= 0.00) {
-												dfPlayer.removeMoney(amount);
+								else if(args[1].equalsIgnoreCase("remove")) {
+									if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+										OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
+										if(p.getName() != null) {
+											if(dfManager.contains(p.getUniqueId())) {
+												DFPlayer dfPlayer = dfManager.getEntity(p.getUniqueId());
+												double amount = 0.00;
+												try {
+													amount = Double.parseDouble(args[3]);
+												}
+												catch(NumberFormatException ex) {
+													ex.printStackTrace();
+												}
+												if(amount > 0.00) {
+													if(dfPlayer.getMoney() >= amount) {
+														dfPlayer.removeMoney(amount);
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have removed &6" + amount + "$ &cfrom &6" + p.getName()));
+													}
+													else {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't remove more money! Else their balance will gon into the negative!"));
+													}
+												}
+												else {
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis value is invalid!"));
+												}
 											}
 											else {
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis value is invalid!"));
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis has never joined!"));
 											}
 										}
 										else {
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis has never joined!"));
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
 										}
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player does not exist!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is to low to set someones money!"));
 									}
 								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /a money give/set/remove (Player Name) (Amount)"));
 								}
 							}
-						}
-						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use admin faction commands!"));
-						}
-					}
-					else if(args.length == 3) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
-							if(args[0].equalsIgnoreCase("unclaim")) {
-								if(args[1].equalsIgnoreCase("all")) {
-									String facName = args[2];
-									if(facManager.getFaction(facName) != null) {
-										DFFaction faction = facManager.getFaction(facName);
-										faction.clearChunks();
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unclaimed this chunk!"));
+							else if(args[0].equalsIgnoreCase("level")) {
+								if(args[1].equalsIgnoreCase("set")) {
+									OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
+									if(p.getName() != null) {
+										int level = -1;
+										try {
+											level = Integer.parseInt(args[3]);
+										}
+										catch(NumberFormatException ex) {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe level you gave is not a valid number!"));
+											ex.printStackTrace();
+										}
+										if(level > 0 && level <= 100) {
+											dfManager.softResetEntity(p.getUniqueId());
+											DFPlayer dfPlayer = dfManager.getEntity(p.getUniqueId());
+											for(int i = 1; i < level; i++) {
+										        if(dfPlayer.getLevel() < 100) {
+													dfPlayer.addLevel(1);
+													dfPlayer.setExperience(0);
+													dfPlayer.setMaxExperience((int)(double)(dfPlayer.getMaxExperience() / 100.00 * (dfPlayer.getExperienceMultiplier() * 100.00)));
+													dfPlayer.addSkillPoints(3);
+												}
+									        }
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have set &6" + p.getName() + "'s &alevel to &6" + level + "!"));
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe level can only be between 1 and 100!"));
+										}
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction does not exist!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player doesn't exist!"));
 									}
 								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! /level set (Player Name)"));
+								}
 							}
-							else if(args[0].equalsIgnoreCase("rename")) {
-								String facName = args[1];
-								if(facManager.getFaction(facName) != null) {
-									DFFaction faction = facManager.getFaction(facName);
-									Pattern p = Pattern.compile( "[0-9]" );
-								    Matcher m = p.matcher(facName);
-								    if(m.find() == false && facName.indexOf("_-=+[]{}:;''<>/?!@#$%^&*()") == -1) {
-								    	if(facName.length() >= 4 || facName.length() <= 20) {
-							    			if(facManager.isNameAvailable(facName)) {
-							    				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have renamed the faction &6" + faction.getName() + " &ato &6" + facName));
-							    				faction.setName(facName);
-							    			}
-						    				else {
-								    			player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction name is already taken!"));
-								    		}
-							    		}
-								    	else {
-								    		player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction name MUST be more then 4 characters!"));
-								    	}
-							    	}
-								    else{
-								    	player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction MUST NOT contain any strange symbols!"));
-								    }
+							else if(args[0].equalsIgnoreCase("item")) {
+								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									HashMap<String, ItemStack> stacks = this.rewards.getItemList();
+									if(stacks.containsKey(args[1])) {
+										ItemStack i = stacks.get(args[1]).clone();
+										NBTItem item = new NBTItem(i);
+										boolean validLevel = true;
+										boolean validXp = true;
+										int level = 0;
+										int xp = 0;
+										try {
+											level = Integer.parseInt(args[2]);
+										}
+										catch(NumberFormatException ex) {
+											validLevel = false;
+											ex.printStackTrace();
+										}
+										try {
+											xp = Integer.parseInt(args[3]);
+										}
+										catch(NumberFormatException ex) {
+											validXp = false;
+											ex.printStackTrace();
+										}
+										if(validLevel) {
+											if(level > 0 && level <= 15) {
+												if(validXp) {
+													if(item.hasKey("WeaponKey") || item.hasKey("BowKey")) {
+														int itemLevel = item.getInteger("Level");
+														int maxxp = item.getInteger("MAXXP");
+														int total = item.getInteger("TotalXP");	
+														String name = item.getString("ItemName");
+														String rarity = item.getString("Rarity");
+														String enchantmentString = item.getString("EnchantmentString");
+														double baseDamage = item.getDouble("Base Attack Damage");
+														double baseSpeed = item.getDouble("Base Attack Speed");
+														double incDamage = item.getDouble("Inc Attack Damage");
+														double incSpeed = item.getDouble("Inc Attack Speed");
+														for(int x = itemLevel + 1; x <= level; x++) {
+															itemLevel = x;
+															total = total + maxxp;
+															maxxp = maxxp / 100 * 135;
+														}
+														double value1 = baseDamage + incDamage * (itemLevel - 1);
+										            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+										            	if(xp >= maxxp) {
+										            		xp = maxxp - 1;
+										            	}
+														//Config Data
+														//Weapon Data
+										            	item.setInteger("Level", itemLevel);
+										            	item.setInteger("XP", xp);
+										            	item.setInteger("MAXXP", maxxp);
+										            	item.setInteger("TotalXP", total);
+										            	item.setDouble("Attack Damage", value1);
+										            	item.setDouble("Attack Speed", value2);
+										            	i = item.getItem();
+														ItemMeta meta = i.getItemMeta();
+														meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+														ArrayList<String> newLore = new ArrayList<String>();
+														newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+														double roundOff1 = (double) Math.round(value1 * 100) / 100;
+														double roundOff2 = (double) Math.round(value2 * 100) / 100;
+														newLore.add(new CCT().colorize("&7-----------------------"));
+														newLore.add(new CCT().colorize("&7Attack Damage: &6" + roundOff1));
+														newLore.add(new CCT().colorize("&7Attack Speed: &6" + roundOff2));
+														newLore.add(new CCT().colorize("&7-----------------------"));
+														if(itemLevel < 15) {
+															newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + xp + " &6/ &b&l" + maxxp + "&a]"));
+															newLore.add(new CCT().colorize(this.getNewXPBar(xp, maxxp)));
+														}
+														else if(itemLevel == 15) {
+															newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+														}
+														newLore.add(new CCT().colorize("&7-----------------------"));
+														if(itemLevel >= 6) {
+															int loreRequired = itemLevel - 4;
+															int levelRequired = loreRequired * 5;
+															newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+														}
+														newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+														meta.setLore(newLore);
+														i.setItemMeta(meta);
+													}
+													else if(item.hasKey("ArmorKey")) {
+														if(i.getType().toString().contains("HELMET")) {
+															int itemLevel = item.getInteger("Level");
+															int maxxp = item.getInteger("MAXXP");
+															int total = item.getInteger("TotalXP");	
+															String name = item.getString("ItemName");
+															String rarity = item.getString("Rarity");
+															String enchantmentString = item.getString("EnchantmentString");
+															double baseDamage = item.getDouble("Base Armor Defense");
+															double baseSpeed = item.getDouble("Base Armor Toughness");
+															double incDamage = item.getDouble("Inc Armor Defense");
+															double incSpeed = item.getDouble("Inc Armor Toughness");
+															for(int x = itemLevel + 1; x <= level; x++) {
+																itemLevel = x;
+																total = total + maxxp;
+																maxxp = maxxp / 100 * 135;
+															}
+															double value1 = baseDamage + incDamage * (itemLevel - 1);
+											            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+															//Config Data
+															//Weapon Data
+											            	if(xp >= maxxp) {
+											            		xp = maxxp - 1;
+											            	}
+											            	item.setInteger("Level", itemLevel);
+											            	item.setInteger("XP", xp);
+											            	item.setInteger("MAXXP", maxxp);
+											            	item.setInteger("TotalXP", total);
+											            	item.setDouble("Armor Defense", value1);
+											            	item.setDouble("Armor Toughness", value2);
+											            	i = item.getItem();
+															ItemMeta meta = i.getItemMeta();
+															meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+															ArrayList<String> newLore = new ArrayList<String>();
+															newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+															double roundOff1 = (double) Math.round(value1 * 100) / 100;
+															double roundOff2 = (double) Math.round(value2 * 100) / 100;
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
+															newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															if(itemLevel < 15) {
+																newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + xp + " &6/ &b&l" + maxxp + "&a]"));
+																newLore.add(new CCT().colorize(this.getNewXPBar(xp, maxxp)));
+															}
+															else if(itemLevel == 15) {
+																newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+															}
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															if(itemLevel >= 6) {
+																int loreRequired = itemLevel - 4;
+																int levelRequired = loreRequired * 5;
+																newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+															}
+															newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+															meta.setLore(newLore);
+															i.setItemMeta(meta);
+														}
+														if(i.getType().toString().contains("CHESTPLATE")) {
+															int itemLevel = item.getInteger("Level");
+															int maxxp = item.getInteger("MAXXP");
+															int total = item.getInteger("TotalXP");	
+															String name = item.getString("ItemName");
+															String rarity = item.getString("Rarity");
+															String enchantmentString = item.getString("EnchantmentString");
+															double baseDamage = item.getDouble("Base Armor Defense");
+															double baseSpeed = item.getDouble("Base Armor Toughness");
+															double incDamage = item.getDouble("Inc Armor Defense");
+															double incSpeed = item.getDouble("Inc Armor Toughness");
+															for(int x = itemLevel + 1; x <= level; x++) {
+																itemLevel = x;
+																total = total + maxxp;
+																maxxp = maxxp / 100 * 135;
+															}
+															double value1 = baseDamage + incDamage * (itemLevel - 1);
+											            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+															//Config Data
+															//Weapon Data
+											            	if(xp >= maxxp) {
+											            		xp = maxxp - 1;
+											            	}
+											            	item.setInteger("Level", itemLevel);
+											            	item.setInteger("XP", xp);
+											            	item.setInteger("MAXXP", maxxp);
+											            	item.setInteger("TotalXP", total);
+											            	item.setDouble("Armor Defense", value1);
+											            	item.setDouble("Armor Toughness", value2);
+											            	i = item.getItem();
+															ItemMeta meta = i.getItemMeta();
+															meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+															ArrayList<String> newLore = new ArrayList<String>();
+															newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+															double roundOff1 = (double) Math.round(value1 * 100) / 100;
+															double roundOff2 = (double) Math.round(value2 * 100) / 100;
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
+															newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															if(itemLevel < 15) {
+																newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + xp + " &6/ &b&l" + maxxp + "&a]"));
+																newLore.add(new CCT().colorize(this.getNewXPBar(xp, maxxp)));
+															}
+															else if(itemLevel == 15) {
+																newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+															}
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															if(itemLevel >= 6) {
+																int loreRequired = itemLevel - 4;
+																int levelRequired = loreRequired * 5;
+																newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+															}
+															newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+															meta.setLore(newLore);
+															i.setItemMeta(meta);
+														}
+														if(i.getType().toString().contains("LEGGINGS")) {
+															int itemLevel = item.getInteger("Level");
+															int maxxp = item.getInteger("MAXXP");
+															int total = item.getInteger("TotalXP");	
+															String name = item.getString("ItemName");
+															String rarity = item.getString("Rarity");
+															String enchantmentString = item.getString("EnchantmentString");
+															double baseDamage = item.getDouble("Base Armor Defense");
+															double baseSpeed = item.getDouble("Base Armor Toughness");
+															double incDamage = item.getDouble("Inc Armor Defense");
+															double incSpeed = item.getDouble("Inc Armor Toughness");
+															for(int x = itemLevel + 1; x <= level; x++) {
+																itemLevel = x;
+																total = total + maxxp;
+																maxxp = maxxp / 100 * 135;
+															}
+															double value1 = baseDamage + incDamage * (itemLevel - 1);
+											            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+															//Config Data
+															//Weapon Data
+											            	if(xp >= maxxp) {
+											            		xp = maxxp - 1;
+											            	}
+											            	item.setInteger("Level", itemLevel);
+											            	item.setInteger("XP", xp);
+											            	item.setInteger("MAXXP", maxxp);
+											            	item.setInteger("TotalXP", total);
+											            	item.setDouble("Armor Defense", value1);
+											            	item.setDouble("Armor Toughness", value2);
+											            	i = item.getItem();
+															ItemMeta meta = i.getItemMeta();
+															meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+															ArrayList<String> newLore = new ArrayList<String>();
+															newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+															double roundOff1 = (double) Math.round(value1 * 100) / 100;
+															double roundOff2 = (double) Math.round(value2 * 100) / 100;
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
+															newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															if(itemLevel < 15) {
+																newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + xp + " &6/ &b&l" + maxxp + "&a]"));
+																newLore.add(new CCT().colorize(this.getNewXPBar(xp, maxxp)));
+															}
+															else if(itemLevel == 15) {
+																newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+															}
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															if(itemLevel >= 6) {
+																int loreRequired = itemLevel - 4;
+																int levelRequired = loreRequired * 5;
+																newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+															}
+															newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+															meta.setLore(newLore);
+															i.setItemMeta(meta);
+														}
+														if(i.getType().toString().contains("BOOTS")) {
+															int itemLevel = item.getInteger("Level");
+															int maxxp = item.getInteger("MAXXP");
+															int total = item.getInteger("TotalXP");	
+															String name = item.getString("ItemName");
+															String rarity = item.getString("Rarity");
+															String enchantmentString = item.getString("EnchantmentString");
+															double baseDamage = item.getDouble("Base Armor Defense");
+															double baseSpeed = item.getDouble("Base Armor Toughness");
+															double incDamage = item.getDouble("Inc Armor Defense");
+															double incSpeed = item.getDouble("Inc Armor Toughness");
+															for(int x = itemLevel + 1; x <= level; x++) {
+																itemLevel = x;
+																total = total + maxxp;
+																maxxp = maxxp / 100 * 135;
+															}
+															double value1 = baseDamage + incDamage * (itemLevel - 1);
+											            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+															//Config Data
+															//Weapon Data
+											            	if(xp >= maxxp) {
+											            		xp = maxxp - 1;
+											            	}
+											            	item.setInteger("Level", itemLevel);
+											            	item.setInteger("XP", xp);
+											            	item.setInteger("MAXXP", maxxp);
+											            	item.setInteger("TotalXP", total);
+											            	item.setDouble("Armor Defense", value1);
+											            	item.setDouble("Armor Toughness", value2);
+											            	i = item.getItem();
+															ItemMeta meta = i.getItemMeta();
+															meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+															ArrayList<String> newLore = new ArrayList<String>();
+															newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+															double roundOff1 = (double) Math.round(value1 * 100) / 100;
+															double roundOff2 = (double) Math.round(value2 * 100) / 100;
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															newLore.add(new CCT().colorize("&7Armor Defense: &6" + roundOff1));
+															newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff2));
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															if(itemLevel < 15) {
+																newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + xp + " &6/ &b&l" + maxxp + "&a]"));
+																newLore.add(new CCT().colorize(this.getNewXPBar(xp, maxxp)));
+															}
+															else if(itemLevel == 15) {
+																newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+															}
+															newLore.add(new CCT().colorize("&7-----------------------"));
+															if(itemLevel >= 6) {
+																int loreRequired = itemLevel - 4;
+																int levelRequired = loreRequired * 5;
+																newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+															}
+															newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+															meta.setLore(newLore);
+															i.setItemMeta(meta);
+														}
+													}
+													else if(item.hasKey("ShieldKey")) {
+														int itemLevel = item.getInteger("Level");
+														int maxxp = item.getInteger("MAXXP");
+														int total = item.getInteger("TotalXP");	
+														String name = item.getString("ItemName");
+														String rarity = item.getString("Rarity");
+														String enchantmentString = item.getString("EnchantmentString");
+														double baseDamage = item.getDouble("Base Armor Toughness");
+														double baseSpeed = item.getDouble("Base Cooldown");
+														double incDamage = item.getDouble("Inc Armor Toughness");
+														double incSpeed = item.getDouble("Inc Cooldown");
+														for(int x = itemLevel + 1; x <= level; x++) {
+															itemLevel = x;
+															total = total + maxxp;
+															maxxp = maxxp / 100 * 135;
+														}
+														double value1 = baseDamage + incDamage * (itemLevel - 1);
+										            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+														//Config Data
+														//Weapon Data
+										            	if(xp >= maxxp) {
+										            		xp = maxxp - 1;
+										            	}
+										            	item.setInteger("Level", itemLevel);
+										            	item.setInteger("XP", xp);
+										            	item.setInteger("MAXXP", maxxp);
+										            	item.setInteger("TotalXP", total);
+										            	item.setDouble("Armor Toughness", value1);
+										            	item.setDouble("Cooldown", value2);
+										            	i = item.getItem();
+														ItemMeta meta = i.getItemMeta();
+														meta.setDisplayName(new CCT().colorize(name + " &a[&6Lv " + itemLevel + "&a]"));
+														ArrayList<String> newLore = new ArrayList<String>();
+														newLore = enchant.setEnchantments(itemLevel, enchantmentString, newLore);
+														double roundOff1 = (double) Math.round(value1 * 100) / 100;
+														double roundOff2 = (double) Math.round(value2 * 100) / 100;
+														newLore.add(new CCT().colorize("&7-----------------------"));
+														newLore.add(new CCT().colorize("&7Armor Toughness: &6" + roundOff1));
+														newLore.add(new CCT().colorize("&7Cooldown: &b" + roundOff2 + " Seconds"));
+														newLore.add(new CCT().colorize("&7-----------------------"));
+														if(itemLevel < 15) {
+															newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&l" + xp + " &6/ &b&l" + maxxp + "&a]"));
+															newLore.add(new CCT().colorize(this.getNewXPBar(xp, maxxp)));
+														}
+														else if(itemLevel == 15) {
+															newLore.add(new CCT().colorize("&7Upgrade Progress: &a[&b&lMAX &6/ &b&lMAX&a]"));
+														}
+														newLore.add(new CCT().colorize("&7-----------------------"));
+														if(itemLevel >= 6) {
+															int loreRequired = itemLevel - 4;
+															int levelRequired = loreRequired * 5;
+															newLore.add(new CCT().colorize("&7Level Required: &6" + levelRequired));
+														}
+														newLore.add(new CCT().colorize("&7Rarity: " + rarity));
+														meta.setLore(newLore);
+														i.setItemMeta(meta);
+													}
+													player.getInventory().addItem(i);
+												}
+												else {
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis input as xp is not valid! The xp needs to be a number!"));
+												}
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe level must be in between 1 and 15!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis input as level is not valid! The level needs to be a number!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis item doesn't exist! Try to type the specific item in full lowercase and replace all spaces with _"));
+									}
 								}
 								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis faction does not exist!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
 								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cWrong ussage: /item (Item Name) (Level)"));
 							}
 						}
 					}
@@ -1483,6 +2644,60 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				else {
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou are not staff!"));
 				}	
+			}
+			else if(cmd.getName().equalsIgnoreCase(item)) {
+				if(rPlayer.isStaff()) {
+					if(args.length == 1) {
+						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+							String itemName = args[0].toUpperCase();
+							if(Material.getMaterial(itemName) != null) {
+								ItemStack stack = new ItemStack(Material.getMaterial(itemName), 1);
+								player.getInventory().addItem(stack);
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aItem has been given!"));
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis item does not exist! Try to type the name with the spaces replaced with _"));
+							}
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use admin item commands!"));
+						}
+					}
+					if(args.length == 2) {
+						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+							String itemName = args[0].toUpperCase();
+							int amount = 0;
+							try {
+								amount = Integer.parseInt(args[1]);
+							}
+							catch(NumberFormatException ex) {
+								ex.printStackTrace();
+							}
+							if(Material.getMaterial(itemName) != null) {
+								if(amount > 0) {
+									ItemStack stack = new ItemStack(Material.getMaterial(itemName), amount);
+									player.getInventory().addItem(stack);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aItem has been given!"));
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe amount cannot be 0 or below!"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis item does not exist! Try to type the name with the spaces replaced with _"));
+							}
+						}
+						else {
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use admin item commands!"));
+						}
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /item (item_name) (Optional)(Amount)"));
+					}
+				}
+				else {
+					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is to low to use this command!"));
+				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(protocol)) {
 				if(rPlayer.isStaff()) {
@@ -1870,9 +3085,45 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			pManager.add(p.getUniqueId(), pu);
 		}
 	}
+	
+	@EventHandler
+	public void damageGod(EntityDamageEvent event) {
+		if(event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			if(sManager.contains(player.getUniqueId())) {
+				Staff staff = sManager.get(player.getUniqueId());
+				if(staff.getGodMode()) {
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
 	@EventHandler
 	public void punishJoin(PlayerJoinEvent event) {
 		this.punishJoin(event.getPlayer());
+	}
+	
+	private String getNewXPBar(double xp, double maxxp) {
+		double barprogress = (double) xp / (double) maxxp * 100.0;
+		String loreString = "&7[&a";
+		boolean canStop = true;
+		for(double x = 0.00; x <= 100.00; x+=2.00) {
+			if(barprogress >= x) {
+				loreString = loreString + ":";
+			}
+			else if(canStop) {
+				loreString = loreString + "&7:";
+				canStop = false;
+			}
+			else {
+				loreString = loreString + ":";
+			}
+			if(x == 100) {
+				loreString = loreString + "&7] &a" + String.format("%.2f", barprogress) + "%";
+			}
+		}
+		return new CCT().colorize(loreString);
 	}
 
 	@EventHandler

@@ -46,8 +46,9 @@ public class EffectSkills implements Listener{
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void nerfStrength(EntityDamageByEntityEvent event) {
 		if(event.getCause() == DamageCause.ENTITY_ATTACK) {
-			if(event.getDamager() instanceof LivingEntity) {
+			if(event.getDamager() instanceof LivingEntity && event.getEntity() instanceof LivingEntity) {
 				LivingEntity damager = (LivingEntity) event.getDamager();
+				LivingEntity victim = (LivingEntity) event.getEntity();
 				double damage = event.getDamage();
 				if(damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
 					int amp = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier();
@@ -57,13 +58,21 @@ public class EffectSkills implements Listener{
 					int amp = damager.getPotionEffect(PotionEffectType.WEAKNESS).getAmplifier();
 					damage = damage + ((amp + 1) * 3.25);
 				}
+				if(dfManager.contains(damager)) {
+					DFPlayer dfPlayer = dfManager.getEntity(damager);
+					new BukkitRunnable() {
+						public void run() {
+							victim.setNoDamageTicks((int)(20.00 - (dfPlayer.getSpdCal() / 12.50)));
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+				}
 				event.setDamage(damage);
 			}
 		}
 		else if(event.getCause() == DamageCause.PROJECTILE) {
 			if(event.getDamager() instanceof Arrow) {
 				Arrow arrow = (Arrow) event.getDamager();
-				if(arrow.getShooter() instanceof LivingEntity) {
+				if(arrow.getShooter() instanceof LivingEntity  && event.getEntity() instanceof LivingEntity) {
 					LivingEntity damager = (LivingEntity) arrow.getShooter();
 					double damage = event.getDamage();
 					if(damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
@@ -73,6 +82,15 @@ public class EffectSkills implements Listener{
 					if(damager.hasPotionEffect(PotionEffectType.WEAKNESS)) {
 						int amp = damager.getPotionEffect(PotionEffectType.WEAKNESS).getAmplifier();
 						damage = damage + ((amp + 1) * 3.25);
+					}
+					if(dfManager.contains(damager)) {
+						DFPlayer dfPlayer = dfManager.getEntity(damager);
+						LivingEntity victim = (LivingEntity) event.getEntity();
+						new BukkitRunnable() {
+							public void run() {
+								victim.setNoDamageTicks((int)(20.00 - (dfPlayer.getSpdCal() / 12.50)));
+							}
+						}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 					}
 					event.setDamage(damage);
 				}

@@ -80,6 +80,25 @@ public class DFPlayerManager {
 			dfPlayer.setSkillPoints(3);
 			dfPlayer.setExperience(0);
 			dfPlayer.setMaxExperience(750);
+			dfPlayer.changeHealth();
+			dfPlayer.runDefense();
+			dfPlayer.attackSpeed();
+		}
+	}
+	public void softResetEntity(UUID uuid) {
+		if(this.contains(uuid)) {
+			DFPlayer dfPlayer = this.dfPlayerList.get(uuid);
+			dfPlayer.setLevel(1);
+			dfPlayer.setAtk(0);
+			dfPlayer.setSpd(0);
+			dfPlayer.setCrt(0);
+			dfPlayer.setRnd(0);
+			dfPlayer.setHp(0);
+			dfPlayer.setDf(0);
+			dfPlayer.setSkillPoints(3);
+			dfPlayer.setExperience(0);
+			dfPlayer.setMaxExperience(750);
+			dfPlayer.changeHealth();
 			dfPlayer.runDefense();
 			dfPlayer.attackSpeed();
 		}

@@ -1571,7 +1571,7 @@ public class Enchantment extends CommandFile implements Listener{
 						List<ItemStack> stacks = event.getDrops();
 						for(int i1 = 0; i1 < stacks.size(); i1++) {
 							if(stacks.get(i1).getMaxStackSize() != 1) {
-								stacks.get(i1).setAmount((int)(stacks.get(i1).getAmount() * (1.1 + 0.1 * level)));
+								stacks.get(i1).setAmount((int)(stacks.get(i1).getAmount() * (1.25 + 0.25 * level)));
 							}
 						}
 					}
@@ -3055,7 +3055,7 @@ public class Enchantment extends CommandFile implements Listener{
 				return builder.constructItem(
 					Material.ENCHANTED_BOOK,
 					1,
-					"&6Last Stand",
+					"&6Escape",
 					new ArrayList<String>(Arrays.asList(
 						"&7When the enemy attacks you and you are below a",
 						"&7certain amount of health, there is a chance",
@@ -3618,7 +3618,7 @@ public class Enchantment extends CommandFile implements Listener{
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_GENERIC_DRINK, 2, (float) 1.1);
 					}
 					int amp = 0 + level;
-					int durationAdd = 300 - 80 * level;
+					int durationAdd = 300 - 67 * level;
 					p.applyEffect(victim, PotionEffectType.REGENERATION, amp, durationAdd);
 				}
 			}
