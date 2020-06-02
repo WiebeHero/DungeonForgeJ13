@@ -10,9 +10,7 @@ commands:
   skill:
     ussage: /<command>
     description: 'Command for opening skills'
-  skills:
-    ussage: /<command>
-    description: 'Command for opening skills'
+    aliases: [skills]
   faction:
     ussage: /<command>
     description: 'Command for Factions'
@@ -110,9 +108,6 @@ commands:
   kits:
     ussage: /<command>
     description: 'Command for kit'
-  level:
-    ussage: /<command>
-    description: 'Command for setting levels'
   punish:
     ussage: /<command>
     description: 'Command for giving custom items'
@@ -185,5 +180,12 @@ commands:
     description: 'Command for setting levels'
     aliases: [gm]
   item:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  capturepoints:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [cp]
+  trade:
     ussage: /<command>
     description: 'Command for setting levels'

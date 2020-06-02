@@ -57,6 +57,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.StringUtil;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.onarandombox.MultiverseCore.MultiverseCore;
@@ -2886,10 +2887,10 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		return true;
 	}
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args){
-        if(command.getName().equalsIgnoreCase("procedure")) { 
-            if(sender instanceof Player) { 
-            	Player player = (Player) sender;
-            	RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
+        if(sender instanceof Player) { 
+        	Player player = (Player) sender;
+        	RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
+        	if(command.getName().equalsIgnoreCase(protocol)) { 
             	if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
 	            	if(args.length == 1) {
 	            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset", "hardreset", "profile", "updatexpvalues");
@@ -2901,6 +2902,126 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	            	}
             	}
             }
+        	else if(command.getName().equalsIgnoreCase(a)) { 
+        		if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+	            	if(args.length == 1) {
+	            		return Arrays.asList("money", "level", "item");
+	            	}
+	            	else if(args.length == 2) {
+	            		if(args[0].equalsIgnoreCase("money")) {
+	            			return Arrays.asList("give", "set", "remove");
+	            		}
+	            		else if(args[0].equalsIgnoreCase("level")) {
+	            			return Arrays.asList("set");
+	            		}
+	            		else if(args[0].equalsIgnoreCase("item")) {
+	            			ArrayList<String> itemNames = new ArrayList<String>(rewards.getItemList().keySet());
+	            			ArrayList<String> collection = new ArrayList<String>();
+	            			StringUtil.copyPartialMatches(args[1], itemNames, collection);
+	            			return collection;
+	            		}
+	            	}
+	            	else if(args.length == 4) {
+	            		if(args[0].equalsIgnoreCase("money")) {
+	            			return Arrays.asList("number");
+	            		}
+	            		else if(args[0].equalsIgnoreCase("level")) {
+	            			return Arrays.asList("number");
+	            		}
+	            	}
+            	}
+        		else if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+	            	if(args.length == 1) {
+	            		return Arrays.asList("money");
+	            	}
+	            	else if(args.length == 2) {
+	            		if(args[0].equalsIgnoreCase("money")) {
+	            			return Arrays.asList("give");
+	            		}
+	            	}
+	            	else if(args.length == 3) {
+	            		if(args[0].equalsIgnoreCase("money")) {
+	            			return Arrays.asList("number");
+	            		}
+	            	}
+            	}
+            }
+        	else if(command.getName().equalsIgnoreCase(af)) { 
+        		if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+        			if(args.length == 1) {
+        				ArrayList<String> list = new ArrayList<String>(Arrays.asList("kick", "promote", "demote", "unclaim", "rename", "leader", "disband", "bank"));
+        				ArrayList<String> found = new ArrayList<String>();
+        				StringUtil.copyPartialMatches(args[0], list, found);
+        				return found;
+        			}
+        			else if(args.length == 2) {
+        				if(args[0].equalsIgnoreCase("unclaim")) {
+        					ArrayList<String> list = facManager.getAllFactionNames();
+            				ArrayList<String> found = new ArrayList<String>();
+            				StringUtil.copyPartialMatches(args[0], list, found);
+            				return found;
+        				}
+        				else if(args[0].equalsIgnoreCase("rename")) {
+        					ArrayList<String> list = facManager.getAllFactionNames();
+            				ArrayList<String> found = new ArrayList<String>();
+            				StringUtil.copyPartialMatches(args[0], list, found);
+            				return found;
+        				}
+        				else if(args[0].equalsIgnoreCase("disband")) {
+        					ArrayList<String> list = facManager.getAllFactionNames();
+            				ArrayList<String> found = new ArrayList<String>();
+            				StringUtil.copyPartialMatches(args[0], list, found);
+            				return found;
+        				}
+        				else if(args[0].equalsIgnoreCase("bank")) {
+            				return Arrays.asList("set");
+        				}
+        			}
+        			else if(args.length == 3) {
+        				if(args[0].equalsIgnoreCase("rename")) {
+        					return Arrays.asList("");
+        				}
+        				else if(args[0].equalsIgnoreCase("bank")) {
+        					ArrayList<String> list = facManager.getAllFactionNames();
+            				ArrayList<String> found = new ArrayList<String>();
+            				StringUtil.copyPartialMatches(args[0], list, found);
+            				return found;
+        				}
+        			}
+        			else if(args.length == 4) {
+        				if(args[0].equalsIgnoreCase("bank")) {
+            				return Arrays.asList("amount");
+        				}
+        			}
+        		}
+        		else if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+        			if(args.length == 1) {
+        				ArrayList<String> list = new ArrayList<String>(Arrays.asList("kick", "promote", "demote", "unclaim", "rename"));
+        				ArrayList<String> found = new ArrayList<String>();
+        				StringUtil.copyPartialMatches(args[0], list, found);
+        				return found;
+        			}
+        			else if(args.length == 2) {
+        				if(args[0].equalsIgnoreCase("unclaim")) {
+        					ArrayList<String> list = facManager.getAllFactionNames();
+            				ArrayList<String> found = new ArrayList<String>();
+            				StringUtil.copyPartialMatches(args[0], list, found);
+            				return found;
+        				}
+        				else if(args[0].equalsIgnoreCase("rename")) {
+        					ArrayList<String> list = facManager.getAllFactionNames();
+            				ArrayList<String> found = new ArrayList<String>();
+            				StringUtil.copyPartialMatches(args[0], list, found);
+            				return found;
+        				}
+        			}
+        			else if(args.length == 3) {
+        				if(args[0].equalsIgnoreCase("rename")) {
+        					return Arrays.asList("");
+        				}
+        			}
+        		}
+        	}
         }
         return null;
     }

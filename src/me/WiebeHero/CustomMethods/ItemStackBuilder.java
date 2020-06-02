@@ -235,4 +235,238 @@ public class ItemStackBuilder {
 		i.setObject(key, value);
 		return i.getItem();
 	}
+	
+	public ItemStack constructItem(ItemStack stack) {
+		ItemStack item = new ItemStack(stack);
+		return item;
+	}
+	public ItemStack constructItem(ItemStack stack, String display) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		item.setItemMeta(meta);
+		return item;
+	}
+	public ItemStack constructItem(ItemStack stack, ArrayList<String> lore) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setString(key, "");
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, String value) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setString(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, Kit value) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setObject(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, ArrayList<String> key, ArrayList<String> value) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		for(int i1 = 0; i1 < key.size(); i1++) {
+			i.setString(key.get(i1), value.get(i1));
+		}
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, ArrayList<String> key, ArrayList<String> value) {
+		ItemStack item = new ItemStack(stack);
+		stack.setAmount(amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		for(int i1 = 0; i1 < key.size(); i1++) {
+			i.setString(key.get(i1), value.get(i1));
+		}
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, int value) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setInteger(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, double value) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setDouble(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, Object value) {
+		ItemStack item = new ItemStack(stack);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setObject(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, int amount) {
+		ItemStack item = new ItemStack(stack);
+		item.setAmount(amount);
+		return item;
+	}
+	public ItemStack constructItem(ItemStack stack, int amount, String display) {
+		ItemStack item = new ItemStack(stack);
+		item.setAmount(amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		item.setItemMeta(meta);
+		return item;
+	}
+	public ItemStack constructItem(ItemStack stack, int amount, ArrayList<String> lore) {
+		ItemStack item = new ItemStack(stack);
+		item.setAmount(amount);
+		ItemMeta meta = item.getItemMeta();
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore) {
+		ItemStack item = new ItemStack(stack);
+		item.setAmount(amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, String key) {
+		ItemStack item = new ItemStack(stack);
+		stack.setAmount(amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setString(key, "");
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, String key, String value) {
+		ItemStack item = new ItemStack(stack);
+		item.setAmount(amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setString(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, String key, int value) {
+		ItemStack item = new ItemStack(stack);
+		item.setAmount(amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setInteger(key, value);
+		return i.getItem();
+	}
+	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, String key, Object value) {
+		ItemStack item = new ItemStack(stack);
+		item.setAmount(amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		for(int i = 0; i < lore.size(); i++) {
+			lore.set(i, new CCT().colorize(lore.get(i)));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		i.setObject(key, value);
+		return i.getItem();
+	}
 }

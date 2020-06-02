@@ -207,7 +207,6 @@ public class AHEvents implements Listener{
 						if(item.hasKey("Confirm")) {
 							ItemStack purchasedItem = view.getItem(2);
 							event.setCancelled(true);
-							player.getOpenInventory().close();
 							if(purchasedItem != null) {
 								NBTItem pur = new NBTItem(purchasedItem);
 								if(pur.hasKey("AHItem")) {
@@ -224,6 +223,7 @@ public class AHEvents implements Listener{
 												dfSeller.addMoney(price);
 												ItemStack finalItem = ahManager.deconstructAHItem(purchasedItem);
 												player.getInventory().setItem(player.getInventory().firstEmpty(), finalItem);
+												ahInv.AHInv(player, 1);
 											}
 											else {
 												player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);

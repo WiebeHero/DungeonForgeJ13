@@ -3,17 +3,19 @@ package me.WiebeHero.CapturePoints;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.InventoryView;
 
 import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
 import me.WiebeHero.Factions.DFFactionPlayer;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
 
-public class ExtraExperience implements Listener{
+public class CapturePointEvents implements Listener{
 	
 	private DFFactionPlayerManager facPlayerManager;
 	private CapturePointManager cpManager;
 	
-	public ExtraExperience(DFFactionPlayerManager facPlayerManager, CapturePointManager cpManager) {
+	public CapturePointEvents(DFFactionPlayerManager facPlayerManager, CapturePointManager cpManager) {
 		this.facPlayerManager = facPlayerManager;
 		this.cpManager = cpManager;
 	}
@@ -32,6 +34,15 @@ public class ExtraExperience implements Listener{
 				}
 			}
 			event.setXPMultiplier(xpMultiplier);
+		}
+	}
+	
+	@EventHandler
+	public void cancelClick(InventoryClickEvent event) {
+		Player player = (Player) event.getWhoClicked();
+		InventoryView view = player.getOpenInventory();
+		if(view.getTitle().contains("Capture Points")) {
+			event.setCancelled(true);
 		}
 	}
 }

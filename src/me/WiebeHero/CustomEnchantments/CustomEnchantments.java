@@ -48,8 +48,10 @@ import me.WiebeHero.AuctionHouse.AHCommand;
 import me.WiebeHero.AuctionHouse.AHEvents;
 import me.WiebeHero.AuctionHouse.AHInventory;
 import me.WiebeHero.AuctionHouse.AHManager;
+import me.WiebeHero.CapturePoints.CapturePointCommand;
+import me.WiebeHero.CapturePoints.CapturePointEvents;
 import me.WiebeHero.CapturePoints.CapturePointManager;
-import me.WiebeHero.CapturePoints.ExtraExperience;
+import me.WiebeHero.CapturePoints.CapturePointMenu;
 import me.WiebeHero.Chat.ChatEvents;
 import me.WiebeHero.Chat.MSGCommand;
 import me.WiebeHero.Chat.MSGEvents;
@@ -137,6 +139,9 @@ import me.WiebeHero.Skills.XPEarningMobs;
 import me.WiebeHero.Spawners.DFMobHealth;
 import me.WiebeHero.Spawners.DFSpawnerManager;
 import me.WiebeHero.Spawners.DeathOfMob;
+import me.WiebeHero.Trade.TradeCommand;
+import me.WiebeHero.Trade.TradeEvents;
+import me.WiebeHero.Trade.TradeMenu;
 import me.WiebeHero.XpTrader.XPAddPlayers;
 import me.WiebeHero.XpTrader.XPTraderMenu;
 import net.luckperms.api.LuckPerms;
@@ -178,7 +183,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private SkillCommand skillCommand = new SkillCommand(skill);
 	private DFScoreboard score = new DFScoreboard(dfManager, facManager, facPlayerManager, rankedManager, wg);
 	private FactionInventory facInv = new FactionInventory(builder);
-	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager, wg, facInv);
 	private AHManager ahManager = new AHManager(availableSlots);
 	private AHInventory ahInv = new AHInventory(ahManager, builder);
 	private Enchantment enchant = new Enchantment(dfManager, facManager, potionM, pApi, facPlayerManager, builder, wg);
@@ -195,6 +199,10 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private SetHomeSystem sethome = new SetHomeSystem(rankedManager);
 	private RankedPlayerListener rListener = new RankedPlayerListener(rankedManager, luck);
 	private CapturePointManager cpManager = new CapturePointManager(facManager, facPlayerManager);
+	private CapturePointMenu cpMenu = new CapturePointMenu(cpManager, builder, facManager);
+	private CapturePointCommand cpCommand = new CapturePointCommand(cpMenu);
+	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager, wg, facInv, cpManager);
+	private TradeMenu tradeMenu = new TradeMenu(builder);
 	private SignMenuFactory signFactory;
 	// General Variables
 	public static boolean hardSave = false;
@@ -209,6 +217,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		
 		NovisRewards rewards = new NovisRewards(nEnchant);
 		this.signFactory = new SignMenuFactory(this);
+		TradeEvents tradeEvents = new TradeEvents(tradeMenu, signFactory, builder, dfManager);
+		TradeCommand tradeCmd = new TradeCommand(tradeMenu, tradeEvents);
 		enchantmentGuideInv = new EnchantmentGuideInventory(enchant, builder);
 		AHCommand ahCommand = new AHCommand(ahManager, rankedManager, ahInv);
 		MSGCommand msgCommand = new MSGCommand(msgManager, null, rankedManager);
@@ -264,7 +274,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new SkillMenuInteract(dfManager, skill, classMenu, score), this);
 		getServer().getPluginManager().registerEvents(new SkillJoin(dfManager, classMenu, rEnum), this);
 		getServer().getPluginManager().registerEvents(new ClassMenuSelection(dfManager, classMenu), this);
-		getServer().getPluginManager().registerEvents(new ExtraExperience(facPlayerManager, cpManager), this);
+		getServer().getPluginManager().registerEvents(new CapturePointEvents(facPlayerManager, cpManager), this);
 		getServer().getPluginManager().registerEvents(new XPEarningMobs(dfManager, score), this);
 		getServer().getPluginManager().registerEvents(new EffectSkills(dfManager, sword), this);
 		getServer().getPluginManager().registerEvents(new KitListener(menu, rankedManager), this);
@@ -290,7 +300,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//lootSteal
 		getServer().getPluginManager().registerEvents(new CancelLootSteal(), this);
 		//Factions
-		getServer().getPluginManager().registerEvents(new FactionsHandler(facManager, facPlayerManager, facInv), this);
+		getServer().getPluginManager().registerEvents(new FactionsHandler(facManager, facPlayerManager, facInv, cpManager), this);
 		getServer().getPluginManager().registerEvents(fac, this);
 		//Stuff
 		getServer().getPluginManager().registerEvents(sethome, this);
@@ -303,6 +313,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new DisableCollision(), this);
 		//Seasonal Events
 		getServer().getPluginManager().registerEvents(new ChristmasInventoryEvents(), this);
+		//Trader
+		getServer().getPluginManager().registerEvents(tradeEvents, this);
 		punishManager.loadPunishList();
 		new BukkitRunnable() {
 			public void run() {
@@ -386,8 +398,6 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(msgCommand.msg).setExecutor(msgCommand);
 		getCommand(msgCommand.ignore).setExecutor(msgCommand);
 		getCommand(skillCommand.skill).setExecutor(skillCommand);
-		getCommand(skillCommand.skills).setExecutor(skillCommand);
-		getCommand(skillCommand.level).setExecutor(skillCommand);
 		getCommand(ahCommand.ah).setExecutor(ahCommand);
 		//Moderation
 		getCommand(mod.rank).setExecutor(mod);
@@ -424,10 +434,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(mod.item).setExecutor(mod);
 		//Dungeon Parties
 		getCommand(party.comParty).setExecutor(party);
-		//
+		//Kits
 		getCommand(kitCommand.kit).setExecutor(kitCommand);
 		getCommand(kitCommand.kits).setExecutor(kitCommand);
+		//Capture Points
+		getCommand(cpCommand.capturepoints).setExecutor(cpCommand);
 		getServer().getPluginManager().registerEvents(mod, this);
+		//Trade Command
+		getCommand(tradeCmd.trade).setExecutor(tradeCmd);
 		getServer().getPluginManager().registerEvents(new ModerationGUI(dfManager, builder, punishManager), this);
 		//Glowing Drops
 	    Bukkit.getPluginManager().registerEvents(this, this);

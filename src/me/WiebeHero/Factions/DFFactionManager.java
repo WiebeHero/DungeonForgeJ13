@@ -120,6 +120,14 @@ public class DFFactionManager {
 		return true;
 	}
 	
+	public ArrayList<String> getAllFactionNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		for(DFFaction fac : this.factionList.values()) {
+			names.add(fac.getName());
+		}
+		return names;
+	}
+	
 	public HashMap<UUID, DFFaction> getFactionMap(){
 		return this.factionList;
 	}

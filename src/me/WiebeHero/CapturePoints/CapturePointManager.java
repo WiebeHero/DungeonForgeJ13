@@ -79,10 +79,13 @@ public class CapturePointManager {
 				for(int i = 0; i < uuidStrings.size(); i++) {
 					UUID cUuid = UUID.fromString(uuidStrings.get(i));
 					UUID fUuid = null;
+					Location loc = (Location)yml.get("Capture Points." + cUuid + ".Capture Point Location");
 					if(yml.get("Capture Points." + cUuid + ".Captured ID") != null) {
 						fUuid = UUID.fromString(yml.getString("Capture Points." + cUuid + ".Captured ID"));
 					} 
-					Location loc = (Location)yml.get("Capture Points." + cUuid + ".Capture Point Location");
+					else {
+						loc.getBlock().setType(Material.BLACK_BANNER);
+					}
 					int progress = yml.getInt("Capture Points." + cUuid + ".Capture Point Progress");
 					double radius = yml.getDouble("Capture Points." + cUuid + ".Capture Point Radius");
 					double multiplier = yml.getDouble("Capture Points." + cUuid + ".Capture Point Multiplier");

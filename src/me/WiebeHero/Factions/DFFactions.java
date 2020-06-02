@@ -9,7 +9,9 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Banner;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.WiebeHero.CapturePoints.CapturePoint;
+import me.WiebeHero.CapturePoints.CapturePointManager;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
@@ -33,14 +37,16 @@ public class DFFactions implements Listener,CommandExecutor{
 	private DFPlayerManager dfManager;
 	private WGMethods wg;
 	private FactionInventory facInventory;
+	private CapturePointManager cpManager;
 	private ArrayList<String> spawning;
-	public DFFactions(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, DFScoreboard board, DFPlayerManager dfManager, WGMethods wg, FactionInventory facInventory) {
+	public DFFactions(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, DFScoreboard board, DFPlayerManager dfManager, WGMethods wg, FactionInventory facInventory, CapturePointManager cpManager) {
 		this.facManager = facManager;
 		this.facPlayerManager = facPlayerManager;
 		this.board = board;
 		this.dfManager = dfManager;
 		this.wg = wg;
 		this.facInventory = facInventory;
+		this.cpManager = cpManager;
 		this.spawning = new ArrayList<String>();
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -130,6 +136,19 @@ public class DFFactions implements Listener,CommandExecutor{
 														facP.setRank(1);
 														board.updateScoreboard(player);
 													}
+												}
+											}
+										}
+										for(CapturePoint cp : cpManager.getCapturePointList().values()) {
+											if(cp.getCapturedId() != null) {
+												if(cp.getCapturedId().equals(faction.getFactionId())) {
+													Location loc = cp.getCaptureLocation();
+													loc.getBlock().setType(Material.BLACK_BANNER);
+													Banner banner = (Banner)loc.getBlock().getState();
+													banner.setPatterns(null);
+													banner.update();
+													cp.setCapturedId(faction.getFactionId());
+													cp.setCaptureProgress(0);
 												}
 											}
 										}

@@ -35,7 +35,7 @@ public class FactionInventory {
 				i.setItem(x, nothing);
 			}
 		}
-		ItemStack banner = faction.getBanner();
+		ItemStack banner = faction.getBanner().clone();
 		NBTItem item = new NBTItem(banner);
 		item.setString("BannerRemove", "");
 		item.setString("BannerSet", "");
@@ -43,8 +43,10 @@ public class FactionInventory {
 		ItemMeta meta = banner.getItemMeta();
 		meta.setDisplayName(new CCT().colorize("&6" + faction.getName() + "'s banner"));
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(new CCT().colorize("&7Drag and drop to set a new banner."));
-		lore.add(new CCT().colorize("&7Right click the banner to reset it."));
+		lore.add(new CCT().colorize("&7Left click a banner in your inventory"));
+		lore.add(new CCT().colorize("&7to set your faction banner."));
+		lore.add(new CCT().colorize("&7Right click this banner to reset your"));
+		lore.add(new CCT().colorize("&7faction banner."));
 		meta.setLore(lore);
 		banner.setItemMeta(meta);
 		i.setItem(13, banner);

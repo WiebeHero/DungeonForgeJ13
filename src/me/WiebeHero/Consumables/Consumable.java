@@ -1950,11 +1950,11 @@ public class Consumable {
 				tier2.put("Protection", 2);
 				tier2.put("Unbreaking", 1);
 				HashMap<String, Integer> tier3 = new HashMap<String, Integer>();
-				tier2.put("Protection", 3);
-				tier2.put("Unbreaking", 1);
+				tier3.put("Protection", 3);
+				tier3.put("Unbreaking", 1);
 				HashMap<String, Integer> tier4 = new HashMap<String, Integer>();
-				tier2.put("Protection", 4);
-				tier2.put("Unbreaking", 2);
+				tier4.put("Protection", 4);
+				tier4.put("Unbreaking", 2);
 				
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Helmet_1");
 				ShapedRecipe recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 435, tier1));
@@ -1966,10 +1966,10 @@ public class Consumable {
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
 				
 				key = new NamespacedKey(CustomEnchantments.getInstance(), "Diamond_Helmet_2");
-				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.CHEST, 2.0, 1.1, 470, tier2));
+				recipe = new ShapedRecipe(key, con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 470, tier2));
 				recipe.shape("XXX", "XYX", "XXX");
 				recipe.setIngredient('X', heart);
-				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.CHEST, 2.0, 1.1, 435, tier1));
+				recipe.setIngredient('Y', con.equipment(Material.DIAMOND_HELMET, "&7Diamond Helmet", EquipmentSlot.HEAD, 2.0, 1.1, 435, tier1));
 				recipe.setGroup("Diamond Helmet");
 				CustomEnchantments.getInstance().getServer().addRecipe(recipe);
 				listRecipes.add(new Pair<>(new ArrayList<UnlockCraftCondition>(Arrays.asList(UnlockCraftCondition.PLAYER_PICKUP_ITEM, UnlockCraftCondition.PLAYER_CLICK_INVENTORY)), recipe));
