@@ -248,7 +248,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		NovisRewards rewards = new NovisRewards(this.nEnchant);
 		this.signFactory = new SignMenuFactory(this);
 		TradeEvents tradeEvents = new TradeEvents(this.tradeMenu, this.signFactory, this.builder, this.dfManager);
-		TradeCommand tradeCmd = new TradeCommand(this.tradeMenu, tradeEvents, this.rankedManager);
+		TradeCommand tradeCmd = new TradeCommand(this.tradeMenu, tradeEvents);
 		this.enchantmentGuideInv = new EnchantmentGuideInventory(this.enchant, this.builder);
 		AHCommand ahCommand = new AHCommand(this.ahManager, this.rankedManager, this.ahInv);
 		MSGCommand msgCommand = new MSGCommand(this.msgManager, this.method, this.rankedManager);
