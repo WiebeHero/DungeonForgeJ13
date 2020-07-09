@@ -34,6 +34,7 @@ public class TradeEvents implements Listener{
 	
 	private TradeMenu menu;
 	private HashMap<Pair<UUID, UUID>, Inventory> trading;
+	private ArrayList<Pair<UUID, UUID>> doing;
 	private ArrayList<UUID> exceptions;
 	private SignMenuFactory sFactory;
 	private ItemStackBuilder builder;
@@ -115,126 +116,127 @@ public class TradeEvents implements Listener{
 								Inventory top1 = view.getTopInventory();
 								Inventory top2 = otherView.getTopInventory();
 								if(item.hasKey("Trade Start")) {
+									if(pair.getKey().equals(uuid)) {
+										ItemStack ready = this.builder.constructItem(
+												Material.LIME_DYE,
+												1,
+												"&7Status: &aReady",
+												new ArrayList<String>(),
+												new Pair<String, String>("Status", "Ready")
+										);
+										top1.setItem(46, ready);
+										if(!exceptions.contains(pair.getValue())) {
+											top2.setItem(46, ready);
+										}
+									}
+									else if(pair.getValue().equals(uuid)) {
+										ItemStack ready = this.builder.constructItem(
+												Material.LIME_DYE,
+												1,
+												"&7Status: &aReady",
+												new ArrayList<String>(),
+												new Pair<String, String>("Status", "Ready")
+										);
+										top1.setItem(52, ready);
+										if(!exceptions.contains(pair.getKey())) {
+											top2.setItem(52, ready);
+										}
+									}
 									ItemStack r1 = top1.getItem(46);
 									ItemStack r2 = top1.getItem(52);
 									NBTItem ready1 = new NBTItem(r1);
 									NBTItem ready2 = new NBTItem(r2);
-									if(ready1.hasKey("Status") && ready2.hasKey("Status")) {
-										if(!ready1.getString("Status").equals("Ready") && !ready2.getString("Status").equals("Ready")) {
-											if(pair.getKey().equals(uuid)) {
-												ItemStack ready = this.builder.constructItem(
-														Material.LIME_DYE,
-														1,
-														"&7Status: &aReady",
-														new ArrayList<String>(),
-														new Pair<String, String>("Status", "Ready")
-												);
-												top1.setItem(46, ready);
-												if(!exceptions.contains(pair.getValue())) {
-													top2.setItem(46, ready);
-												}
-											}
-											else if(pair.getValue().equals(uuid)) {
-												ItemStack ready = this.builder.constructItem(
-														Material.LIME_DYE,
-														1,
-														"&7Status: &aReady",
-														new ArrayList<String>(),
-														new Pair<String, String>("Status", "Ready")
-												);
-												top1.setItem(52, ready);
-												if(!exceptions.contains(pair.getKey())) {
-													top2.setItem(52, ready);
-												}
-											}
-											r1 = top1.getItem(46);
-											r2 = top1.getItem(52);
-											ready1 = new NBTItem(r1);
-											ready2 = new NBTItem(r2);
-											this.trading.put(pair, top1);
-											if(ready1.hasKey("Status") && ready2.hasKey("Status")) {
-												if(ready1.getString("Status").equals("Ready") && ready2.getString("Status").equals("Ready")) {
-													new BukkitRunnable() {
-														int seconds = 6;
-														public void run() {
-															seconds--;
-															if(trading.containsKey(pair)) {
-																if(seconds != 0) {
-																	ItemStack nothing = builder.constructItem(
-																			Material.ORANGE_STAINED_GLASS_PANE,
-																			seconds,
-																			"&6" + seconds,
-																			new ArrayList<String>()
-																	);
-																	top1.setItem(4, nothing);
-																	top1.setItem(13, nothing);
-																	top1.setItem(22, nothing);
-																	top1.setItem(31, nothing);
-																	top2.setItem(4, nothing);
-																	top2.setItem(13, nothing);
-																	top2.setItem(22, nothing);
-																	top2.setItem(31, nothing);
-																	Player pl1 = Bukkit.getPlayer(pair.getKey());
-																	Player pl2 = Bukkit.getPlayer(pair.getValue());
-																	pl1.playSound(pl1.getLocation(), Sound.UI_BUTTON_CLICK, 2.0F, 1F);
-																	pl2.playSound(pl2.getLocation(), Sound.UI_BUTTON_CLICK, 2.0F, 1F);
-																}
-																else {
-																	trading.remove(pair);
-																	ArrayList<ItemStack> listForYou = new ArrayList<ItemStack>();
-																	ArrayList<ItemStack> listForThem = new ArrayList<ItemStack>();
-																	ArrayList<Integer> slotsForYou = menu.getTheirSlots();
-																	ArrayList<Integer> slotsForThem = menu.getYourSlots();
-																	for(int i = 0; i < slotsForYou.size(); i++) {
-																		listForYou.add(top1.getItem(slotsForYou.get(i)));
-																	}
-																	for(int i = 0; i < slotsForYou.size(); i++) {
-																		listForThem.add(top1.getItem(slotsForThem.get(i)));
-																	}
-																	Player pl1 = Bukkit.getPlayer(pair.getKey());
-																	Player pl2 = Bukkit.getPlayer(pair.getValue());
-																	Inventory inv1 = pl1.getInventory();
-																	Inventory inv2 = pl2.getInventory();
-																	for(ItemStack stack : listForYou) {
-																		if(stack != null) {
-																			if(inv1.firstEmpty() != -1) {
-																				inv1.setItem(inv1.firstEmpty(), stack);
-																			}
-																			else {
-																				pl1.getWorld().dropItem(pl1.getLocation(), stack);
-																			}
-																		}
-																	}
-																	for(ItemStack stack : listForThem) {
-																		if(stack != null) {
-																			if(inv2.firstEmpty() != -1) {
-																				inv2.setItem(inv2.firstEmpty(), stack);
-																			}
-																			else {
-																				pl2.getWorld().dropItem(pl2.getLocation(), stack);
-																			}
-																		}
-																	}
-																	DFPlayer dfPlayer1 = dfManager.getEntity(pair.getKey());
-																	DFPlayer dfPlayer2 = dfManager.getEntity(pair.getValue());
-																	NBTItem moneyItemMe = new NBTItem(top1.getItem(27));
-																	NBTItem moneyItemThem = new NBTItem(top1.getItem(35));
-																	dfPlayer1.removeMoney(moneyItemMe.getDouble("Money"));
-																	dfPlayer2.removeMoney(moneyItemThem.getDouble("Money"));
-																	dfPlayer1.addMoney(moneyItemThem.getDouble("Money"));
-																	dfPlayer2.addMoney(moneyItemMe.getDouble("Money"));
-																	trading.remove(pair);
-																	pl1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTrade accepted!"));
-																	pl2.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTrade accepted!"));
-																	cancel();
-																}
+									this.trading.put(pair, top1);
+									if(!this.doing.contains(pair)) {
+										if(ready1.hasKey("Status") && ready2.hasKey("Status")) {
+											if(ready1.getString("Status").equals("Ready") && ready2.getString("Status").equals("Ready")) {
+												this.doing.add(pair);
+												new BukkitRunnable() {
+													int seconds = 6;
+													public void run() {
+														seconds--;
+														if(trading.containsKey(pair)) {
+															if(seconds != 0) {
+																ItemStack nothing = builder.constructItem(
+																		Material.ORANGE_STAINED_GLASS_PANE,
+																		seconds,
+																		"&6" + seconds,
+																		new ArrayList<String>()
+																);
+																top1.setItem(4, nothing);
+																top1.setItem(13, nothing);
+																top1.setItem(22, nothing);
+																top1.setItem(31, nothing);
+																top2.setItem(4, nothing);
+																top2.setItem(13, nothing);
+																top2.setItem(22, nothing);
+																top2.setItem(31, nothing);
+																Player pl1 = Bukkit.getPlayer(pair.getKey());
+																Player pl2 = Bukkit.getPlayer(pair.getValue());
+																pl1.playSound(pl1.getLocation(), Sound.UI_BUTTON_CLICK, 2.0F, 1F);
+																pl2.playSound(pl2.getLocation(), Sound.UI_BUTTON_CLICK, 2.0F, 1F);
 															}
 															else {
+																if(doing.contains(pair)) {
+																	doing.remove(pair);
+																}
+																trading.remove(pair);
+																ArrayList<ItemStack> listForYou = new ArrayList<ItemStack>();
+																ArrayList<ItemStack> listForThem = new ArrayList<ItemStack>();
+																ArrayList<Integer> slotsForYou = menu.getTheirSlots();
+																ArrayList<Integer> slotsForThem = menu.getYourSlots();
+																for(int i = 0; i < slotsForYou.size(); i++) {
+																	listForYou.add(top1.getItem(slotsForYou.get(i)));
+																}
+																for(int i = 0; i < slotsForYou.size(); i++) {
+																	listForThem.add(top1.getItem(slotsForThem.get(i)));
+																}
+																Player pl1 = Bukkit.getPlayer(pair.getKey());
+																Player pl2 = Bukkit.getPlayer(pair.getValue());
+																Inventory inv1 = pl1.getInventory();
+																Inventory inv2 = pl2.getInventory();
+																for(ItemStack stack : listForYou) {
+																	if(stack != null) {
+																		if(inv1.firstEmpty() != -1) {
+																			inv1.setItem(inv1.firstEmpty(), stack);
+																		}
+																		else {
+																			pl1.getWorld().dropItem(pl1.getLocation(), stack);
+																		}
+																	}
+																}
+																for(ItemStack stack : listForThem) {
+																	if(stack != null) {
+																		if(inv2.firstEmpty() != -1) {
+																			inv2.setItem(inv2.firstEmpty(), stack);
+																		}
+																		else {
+																			pl2.getWorld().dropItem(pl2.getLocation(), stack);
+																		}
+																	}
+																}
+																DFPlayer dfPlayer1 = dfManager.getEntity(pair.getKey());
+																DFPlayer dfPlayer2 = dfManager.getEntity(pair.getValue());
+																NBTItem moneyItemMe = new NBTItem(top1.getItem(27));
+																NBTItem moneyItemThem = new NBTItem(top1.getItem(35));
+																dfPlayer1.removeMoney(moneyItemMe.getDouble("Money"));
+																dfPlayer2.removeMoney(moneyItemThem.getDouble("Money"));
+																dfPlayer1.addMoney(moneyItemThem.getDouble("Money"));
+																dfPlayer2.addMoney(moneyItemMe.getDouble("Money"));
+																trading.remove(pair);
+																pl1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTrade accepted!"));
+																pl2.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTrade accepted!"));
 																cancel();
 															}
 														}
-													}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
-												}
+														else {
+															if(doing.contains(pair)) {
+																doing.remove(pair);
+															}
+															cancel();
+														}
+													}
+												}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 20L);
 											}
 										}
 									}
@@ -375,6 +377,9 @@ public class TradeEvents implements Listener{
 		if(pair != null) {
 			if(reason == Reason.PLAYER) {
 				this.trading.remove(pair);
+				if(this.doing.contains(pair)) {
+					this.doing.remove(pair);
+				}
 				Player p1 = Bukkit.getPlayer(pair.getKey());
 				ArrayList<Integer> mySlots = this.menu.getYourSlots();
 				if(p1 != null) {
