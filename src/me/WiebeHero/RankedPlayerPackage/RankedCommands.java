@@ -743,6 +743,7 @@ public class RankedCommands implements CommandExecutor{
 										User newUser = lp.loadUser(id);
 										if(lp.containsParrent(newUser, "bronze")) {
 											lp.removeParent(newUser, "broze");
+											rPlayer.setBronzeTime(0L);
 											Player p = Bukkit.getPlayer(id);
 											if(p != null) {
 												p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour free &6Bronze &crank rank out! If you want to have this rank permanently. Visit: dungeonforge.eu/shop/"));

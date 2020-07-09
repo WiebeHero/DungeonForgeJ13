@@ -30,6 +30,7 @@ public class RankedManager {
 		this.lp = lp;
 		this.ranked = new HashMap<UUID, RankedPlayer>();
 	}
+	@SuppressWarnings("unchecked")
 	public void loadKitCooldowns() {
 		File f1 =  new File("plugins/CustomEnchantments/KitCooldowns.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
@@ -87,6 +88,7 @@ public class RankedManager {
 							if(user != null) {
 								if(lp.containsParrent(user, "bronze")) {
 									lp.removeParent(user, "bronze");
+									rPlayer.setBronzeTime(0L);
 									Player p = Bukkit.getPlayer(uuid);
 									if(p != null) {
 										p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour free &6Bronze &crank rank out! If you want to have this rank permanently. Visit: dungeonforge.eu/shop/"));
@@ -97,8 +99,10 @@ public class RankedManager {
 					}.runTaskLater(CustomEnchantments.getInstance(), bronzeTime / 50L);
 					rPlayer.setTask(task);
 				}
-				@SuppressWarnings("unchecked")
-				ItemStack[] content = ((List<ItemStack>) yml.get("Kits.Cooldowns." + uuid + ".PlayerVaults")).toArray(new ItemStack[0]);
+				ItemStack[] content = new ItemStack[0];
+				if(yml.get("Kits.Cooldowns." + uuid + ".PlayerVaults") != null) {
+					content = ((List<ItemStack>) yml.get("Kits.Cooldowns." + uuid + ".PlayerVaults")).toArray(new ItemStack[0]);
+				}
 				rPlayer.setStackList(content);
 				this.ranked.put(uuid, rPlayer);
 			}
