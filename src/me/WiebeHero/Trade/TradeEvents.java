@@ -239,100 +239,108 @@ public class TradeEvents implements Listener{
 									else if(pair.getValue().equals(uuid)) {
 										slots = this.menu.getTheirSlots();
 									}
-									if(slots.contains(event.getSlot())) {
-										int first = player.getInventory().firstEmpty();
-										if(first != -1) {
-											ItemStack clicked = event.getCurrentItem().clone();
-											event.setCurrentItem(null);
-											player.getInventory().setItem(first, clicked);
-										}
-										else {
-											ItemStack clicked = event.getCurrentItem().clone();
-											event.setCurrentItem(null);
-											player.getWorld().dropItem(player.getLocation(), clicked);
-										}
-										if(!this.exceptions.contains(uuid)) {
-											top2.setItem(event.getSlot(), new ItemStack(Material.AIR));
-										}
-										player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 0.75F);
-										this.trading.put(pair, top1);
-									}
-									else {
-										if(event.getCurrentItem().getType() == Material.SIGN) {
-											player.closeInventory();
-											this.exceptions.add(uuid);
-											Inventory repInv = this.trading.get(pair);
-											sFactory
-											.newMenu(new ArrayList<String>(Arrays.asList("&7----------------", "", "&a^^^^^^^^^^^^^^", "&7Type money here")))
-											.reopenIfFail()
-											.response((writer, lines) -> {
-												double money = 0.00;
-												try {
-													money = Double.parseDouble(lines[1]);
+									ItemStack r1 = top1.getItem(46);
+									ItemStack r2 = top1.getItem(52);
+									NBTItem ready1 = new NBTItem(r1);
+									NBTItem ready2 = new NBTItem(r2);
+									if(ready1.hasKey("Status") && ready2.hasKey("Status")) {
+										if(!ready1.getString("Status").equals("Ready") && !ready2.getString("Status").equals("Ready")) {
+											if(slots.contains(event.getSlot())) {
+												int first = player.getInventory().firstEmpty();
+												if(first != -1) {
+													ItemStack clicked = event.getCurrentItem().clone();
+													event.setCurrentItem(null);
+													player.getInventory().setItem(first, clicked);
 												}
-												catch(NumberFormatException ex) {
-													writer.sendMessage("Failed!");
+												else {
+													ItemStack clicked = event.getCurrentItem().clone();
+													event.setCurrentItem(null);
+													player.getWorld().dropItem(player.getLocation(), clicked);
 												}
-												if(money >= 0.00) {
-													DFPlayer dfPlayer = dfManager.getEntity(writer);
-													if(dfPlayer.getMoney() >= money) {
-														if(pair.getKey().equals(uuid)) {
-															ItemStack newMoney = this.builder.constructItem(
-																	money > 0.00 ? Material.GOLD_BLOCK : Material.BARRIER,
-																	1,
-																	"&aMoney: " + money + "$",
-																	new ArrayList<String>(),
-																	new Pair<String, Double>("Money", money)
-															);
-															repInv.setItem(27, newMoney);
-															new BukkitRunnable() {
-																public void run() {
-																	player.openInventory(repInv);
-																	if(!exceptions.contains(pair.getValue())) {
-																		top2.setItem(27, newMoney);
-																	}
-																}
-															}.runTaskLater(CustomEnchantments.getInstance(), 2L);
-															player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 2.0F, 1.0F);
-															this.trading.put(pair, repInv);
+												if(!this.exceptions.contains(uuid)) {
+													top2.setItem(event.getSlot(), new ItemStack(Material.AIR));
+												}
+												player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 0.75F);
+												this.trading.put(pair, top1);
+											}
+											else {
+												if(event.getCurrentItem().getType() == Material.SIGN) {
+													player.closeInventory();
+													this.exceptions.add(uuid);
+													Inventory repInv = this.trading.get(pair);
+													sFactory
+													.newMenu(new ArrayList<String>(Arrays.asList("&7----------------", "", "&a^^^^^^^^^^^^^^", "&7Type money here")))
+													.reopenIfFail()
+													.response((writer, lines) -> {
+														double money = 0.00;
+														try {
+															money = Double.parseDouble(lines[1]);
 														}
-														else if(pair.getValue().equals(uuid)) {
-															ItemStack newMoney = this.builder.constructItem(
-																	money > 0.00 ? Material.GOLD_BLOCK : Material.BARRIER,
-																	1,
-																	"&aMoney: " + money + "$",
-																	new ArrayList<String>(),
-																	new Pair<String, Double>("Money", money)
-															);
-															repInv.setItem(35, newMoney);
-															new BukkitRunnable() {
-																public void run() {
-																	player.openInventory(inv);
-																	if(!exceptions.contains(pair.getKey())) {
-																		top2.setItem(35, newMoney);
-																	}
-																}
-															}.runTaskLater(CustomEnchantments.getInstance(), 2L);
-															player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 2.0F, 1.0F);
-															this.trading.put(pair, repInv);
+														catch(NumberFormatException ex) {
+															writer.sendMessage("Failed!");
 														}
-													}
-													else {
-														new BukkitRunnable() {
-															public void run() {
-																player.openInventory(repInv);
+														if(money >= 0.00) {
+															DFPlayer dfPlayer = dfManager.getEntity(writer);
+															if(dfPlayer.getMoney() >= money) {
+																if(pair.getKey().equals(uuid)) {
+																	ItemStack newMoney = this.builder.constructItem(
+																			money > 0.00 ? Material.GOLD_BLOCK : Material.BARRIER,
+																			1,
+																			"&aMoney: " + money + "$",
+																			new ArrayList<String>(),
+																			new Pair<String, Double>("Money", money)
+																	);
+																	repInv.setItem(27, newMoney);
+																	new BukkitRunnable() {
+																		public void run() {
+																			player.openInventory(repInv);
+																			if(!exceptions.contains(pair.getValue())) {
+																				top2.setItem(27, newMoney);
+																			}
+																		}
+																	}.runTaskLater(CustomEnchantments.getInstance(), 2L);
+																	player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 2.0F, 1.0F);
+																	this.trading.put(pair, repInv);
+																}
+																else if(pair.getValue().equals(uuid)) {
+																	ItemStack newMoney = this.builder.constructItem(
+																			money > 0.00 ? Material.GOLD_BLOCK : Material.BARRIER,
+																			1,
+																			"&aMoney: " + money + "$",
+																			new ArrayList<String>(),
+																			new Pair<String, Double>("Money", money)
+																	);
+																	repInv.setItem(35, newMoney);
+																	new BukkitRunnable() {
+																		public void run() {
+																			player.openInventory(inv);
+																			if(!exceptions.contains(pair.getKey())) {
+																				top2.setItem(35, newMoney);
+																			}
+																		}
+																	}.runTaskLater(CustomEnchantments.getInstance(), 2L);
+																	player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 2.0F, 1.0F);
+																	this.trading.put(pair, repInv);
+																}
 															}
-														}.runTaskLater(CustomEnchantments.getInstance(), 2L);
-														writer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money to put in the trade!"));
+															else {
+																new BukkitRunnable() {
+																	public void run() {
+																		player.openInventory(repInv);
+																	}
+																}.runTaskLater(CustomEnchantments.getInstance(), 2L);
+																writer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money to put in the trade!"));
+																player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);
+															}
+															this.exceptions.remove(writer.getUniqueId());
+															return true;
+														}
 														player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);
-													}
-													this.exceptions.remove(writer.getUniqueId());
-													return true;
+														return false;
+													})
+													.open(player);
 												}
-												player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);
-												return false;
-											})
-											.open(player);
+											}
 										}
 									}
 								}
