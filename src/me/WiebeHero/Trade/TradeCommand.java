@@ -31,44 +31,42 @@ public class TradeCommand implements CommandExecutor{
 			Player player = (Player) sender;
 			if(cmd.getName().equalsIgnoreCase(trade)) {
 				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
-					RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
-					if(rPlayer.getHighestRank().getRank() >= Rank.QA.getRank()) {
-						if(args.length == 1) {
-							if(Bukkit.getPlayer(args[0]) != null) {
-								Player other = Bukkit.getPlayer(args[0]);
-								if(player != other) { 
-									if(player.getLocation().distance(other.getLocation()) <= 15.00) {
-										if(tradeList.containsKey(other.getUniqueId())) {
-											if(tradeList.get(other.getUniqueId()).equals(player.getUniqueId())) {
-												menu.TradeOverview(other, player);
-												events.addTrading(other.getUniqueId(), player.getUniqueId());
-												tradeList.remove(other.getUniqueId());
-											}
-											else {
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /trade (Player Name)"));
-											}
+				RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
+					if(args.length == 1) {
+						if(Bukkit.getPlayer(args[0]) != null) {
+							Player other = Bukkit.getPlayer(args[0]);
+							if(player != other) { 
+								if(player.getLocation().distance(other.getLocation()) <= 15.00) {
+									if(tradeList.containsKey(other.getUniqueId())) {
+										if(tradeList.get(other.getUniqueId()).equals(player.getUniqueId())) {
+											menu.TradeOverview(other, player);
+											events.addTrading(other.getUniqueId(), player.getUniqueId());
+											tradeList.remove(other.getUniqueId());
 										}
 										else {
-											tradeList.put(player.getUniqueId(), other.getUniqueId());
-											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTrade request sent to &6" + other.getName() + "!"));
-											other.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas requested to trade with you! Type: /trade &6" + player.getName() + " &ato start trading!"));
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /trade (Player Name)"));
 										}
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou must be closer to the player you want to trade with!"));
+										tradeList.put(player.getUniqueId(), other.getUniqueId());
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTrade request sent to &6" + other.getName() + "!"));
+										other.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas requested to trade with you! Type: /trade &6" + player.getName() + " &ato start trading!"));
 									}
 								}
 								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't trade with yourself!"));
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou must be closer to the player you want to trade with!"));
 								}
 							}
 							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not online!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't trade with yourself!"));
 							}
 						}
 						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /trade (Player Name)"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not online!"));
 						}
+					}
+					else {
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Ussage: /trade (Player Name)"));
 					}
 				}
 				else {
