@@ -18,20 +18,17 @@ import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
 public class TradeCommand implements CommandExecutor{
 	private TradeMenu menu;
 	private TradeEvents events;
-	private RankedManager rManager;
 	public String trade = "trade";
 	private HashMap<UUID, UUID> tradeList = new HashMap<UUID, UUID>();
-	public TradeCommand(TradeMenu menu, TradeEvents events, RankedManager rManager) {
+	public TradeCommand(TradeMenu menu, TradeEvents events) {
 		this.menu = menu;
 		this.events = events;
-		this.rManager = rManager;
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
 			if(cmd.getName().equalsIgnoreCase(trade)) {
 				if(CombatTag.getCombatTag().get(player.getUniqueId()) == 0) {
-				RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
 					if(args.length == 1) {
 						if(Bukkit.getPlayer(args[0]) != null) {
 							Player other = Bukkit.getPlayer(args[0]);

@@ -9,6 +9,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -167,6 +168,11 @@ public class DeathOfMob implements Listener {
 						if(random() < 0.1) {
 							event.getDrops().add(new ItemStack(Material.WITHER_SKELETON_SKULL, number()));
 						}
+					}
+				}
+				else if(victim instanceof Villager) {
+					if(random() <= 50) {
+						event.getDrops().add(new ItemStack(Material.EMERALD, number()));
 					}
 				}
 			}
