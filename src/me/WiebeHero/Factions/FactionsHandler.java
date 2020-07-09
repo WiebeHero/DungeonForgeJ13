@@ -59,48 +59,50 @@ public class FactionsHandler implements Listener{
 			Player player = event.getPlayer();
 			Block block = event.getClickedBlock();
 			DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player);
-			if(facPlayer.getFactionId() != null) {
-				DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-				if(block != null) {
-					if(faction.isInChunk(block.getLocation())) {
-						if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-							int rank = facPlayer.getRank();
-							if(rank < 2) {
-								event.setCancelled(true);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to interact in your claimed territory!"));
+			if(facPlayer != null) {
+				if(facPlayer.getFactionId() != null) {
+					DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+					if(block != null) {
+						if(faction.isInChunk(block.getLocation())) {
+							if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+								int rank = facPlayer.getRank();
+								if(rank < 2) {
+									event.setCancelled(true);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to interact in your claimed territory!"));
+								}
+							}
+							
+						}
+						else if(this.facManager.isInAChunk(block.getLocation())) {
+							if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+								Block b = event.getClickedBlock();
+								if(!this.blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
+									event.setCancelled(true);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+								}
+							}
+							else if(event.getAction() == Action.PHYSICAL) {
+								if(this.plates.contains(event.getClickedBlock().getType())) {
+									event.setCancelled(true);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+								}
 							}
 						}
-						
-					}
-					else if(this.facManager.isInAChunk(block.getLocation())) {
-						if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-							Block b = event.getClickedBlock();
-							if(!this.blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
-								event.setCancelled(true);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
-							}
-						}
-						else if(event.getAction() == Action.PHYSICAL) {
-							if(this.plates.contains(event.getClickedBlock().getType())) {
-								event.setCancelled(true);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
-							}
-						}
-					}
-				}
-			}
-			else if(this.facManager.isInAChunk(block.getLocation())) {
-				if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-					Block b = event.getClickedBlock();
-					if(!this.blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
-						event.setCancelled(true);
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 					}
 				}
-				else if(event.getAction() == Action.PHYSICAL) {
-					if(this.plates.contains(event.getClickedBlock().getType())) {
-						event.setCancelled(true);
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+				else if(this.facManager.isInAChunk(block.getLocation())) {
+					if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+						Block b = event.getClickedBlock();
+						if(!this.blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
+							event.setCancelled(true);
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+						}
+					}
+					else if(event.getAction() == Action.PHYSICAL) {
+						if(this.plates.contains(event.getClickedBlock().getType())) {
+							event.setCancelled(true);
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+						}
 					}
 				}
 			}
@@ -112,23 +114,25 @@ public class FactionsHandler implements Listener{
 			Player player = event.getPlayer();
 			Block block = event.getBlock();
 			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-			if(facPlayer.getFactionId() != null) {
-				DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-				if(faction.isInChunk(block.getLocation())) {
-					int rank = facPlayer.getRank();
-					if(rank < 2) {
+			if(facPlayer != null) {
+				if(facPlayer.getFactionId() != null) {
+					DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
+					if(faction.isInChunk(block.getLocation())) {
+						int rank = facPlayer.getRank();
+						if(rank < 2) {
+							event.setCancelled(true);
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+						}
+					}
+					else if(facManager.isInAChunk(block.getLocation())) {
 						event.setCancelled(true);
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 					}
 				}
 				else if(facManager.isInAChunk(block.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
-			}
-			else if(facManager.isInAChunk(block.getLocation())) {
-				event.setCancelled(true);
-				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 			}
 		}
 	}
@@ -138,23 +142,25 @@ public class FactionsHandler implements Listener{
 			Player player = event.getPlayer();
 			Block block = event.getBlock();
 			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-			if(facPlayer.getFactionId() != null) {
-				DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-				if(faction.isInChunk(block.getLocation())) {
-					int rank = facPlayer.getRank();
-					if(rank < 2) {
+			if(facPlayer != null) {
+				if(facPlayer.getFactionId() != null) {
+					DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
+					if(faction.isInChunk(block.getLocation())) {
+						int rank = facPlayer.getRank();
+						if(rank < 2) {
+							event.setCancelled(true);
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+						}
+					}
+					else if(facManager.isInAChunk(block.getLocation())) {
 						event.setCancelled(true);
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 					}
 				}
 				else if(facManager.isInAChunk(block.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
-			}
-			else if(facManager.isInAChunk(block.getLocation())) {
-				event.setCancelled(true);
-				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 			}
 		}
 	}
@@ -166,18 +172,20 @@ public class FactionsHandler implements Listener{
 				Player victim = (Player) event.getEntity();
 				DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
 				DFFactionPlayer oPlayer = facPlayerManager.getFactionPlayer(victim);
-				if(facPlayer.getFactionId() != null && oPlayer.getFactionId() != null) {
-					DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-					if(faction.isMember(victim.getUniqueId())) {
-						event.setCancelled(true);
-						damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
-					}
-					else {
-						if(oPlayer != null) {
-							if(oPlayer.getFactionId() != null) {
-								if(faction.isAlly(oPlayer.getFactionId())) {
-									event.setCancelled(true);
-									damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+				if(facPlayer != null && oPlayer != null) {
+					if(facPlayer.getFactionId() != null && oPlayer.getFactionId() != null) {
+						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
+						if(faction.isMember(victim.getUniqueId())) {
+							event.setCancelled(true);
+							damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+						}
+						else {
+							if(oPlayer != null) {
+								if(oPlayer.getFactionId() != null) {
+									if(faction.isAlly(oPlayer.getFactionId())) {
+										event.setCancelled(true);
+										damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+									}
 								}
 							}
 						}
@@ -193,18 +201,20 @@ public class FactionsHandler implements Listener{
 					Player victim = (Player) event.getEntity();
 					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
 					DFFactionPlayer oPlayer = facPlayerManager.getFactionPlayer(victim);
-					if(facPlayer.getFactionId() != null && oPlayer.getFactionId() != null) {
-						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-						if(faction.isMember(victim.getUniqueId())) {
-							event.setCancelled(true);
-							damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
-						}
-						else {
-							if(oPlayer != null) {
-								if(oPlayer.getFactionId() != null) {
-									if(faction.isAlly(oPlayer.getFactionId())) {
-										event.setCancelled(true);
-										damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+					if(facPlayer != null && oPlayer != null) {
+						if(facPlayer.getFactionId() != null && oPlayer.getFactionId() != null) {
+							DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
+							if(faction.isMember(victim.getUniqueId())) {
+								event.setCancelled(true);
+								damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
+							}
+							else {
+								if(oPlayer != null) {
+									if(oPlayer.getFactionId() != null) {
+										if(faction.isAlly(oPlayer.getFactionId())) {
+											event.setCancelled(true);
+											damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your faction allies!"));
+										}
 									}
 								}
 							}

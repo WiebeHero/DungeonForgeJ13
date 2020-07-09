@@ -12,6 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
@@ -106,7 +107,7 @@ public class Disparitys implements Listener{
 			disparityList.remove(player.getName());
 		}
 	}
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void disparityAttack(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
 			if(event.getDamager() instanceof Player) {
@@ -137,7 +138,7 @@ public class Disparitys implements Listener{
 			}
 		}
 	}
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void disparityBowAttack(EntityDamageByEntityEvent event) {
 		if(!event.isCancelled()) {
 			if(event.getDamager() instanceof Projectile) {
@@ -171,7 +172,7 @@ public class Disparitys implements Listener{
 			}
 		}
 	}
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void disparityPotionSplash(PotionSplashEvent event) {
 		if(!event.isCancelled()) {
 			if(event.getEntity().getShooter() instanceof Player) {
