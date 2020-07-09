@@ -532,6 +532,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				}
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 5L);
+		//a
 		new BukkitRunnable() {
 			@Override
 			public void run() {
