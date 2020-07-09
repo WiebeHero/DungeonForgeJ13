@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Kit;
@@ -29,14 +30,13 @@ public class KitMenu {
 		int occupied = 0;
 		for(Rank rank : rPlayer.getRanks()) {
 			if(System.currentTimeMillis() >= rPlayer.getKitCooldown(rEnum.getIfPresentKit(rank.toString()))) {
-				i.setItem(occupied, builder.constructItem(
+				i.setItem(occupied, this.builder.constructItem(
 					Material.CHEST_MINECART,
-					rank.display + " Kit",
+					rank.getDisplay() + " Kit",
 					new ArrayList<String>(Arrays.asList(
-						"&7Click this to obtain the " + rank.display + " &7kit!"
+						"&7Click this to obtain the " + rank.getDisplay() + " &7kit!"
 					)),
-					"Kit",
-					Kit.valueOf(rank.toString())
+					new Pair<String, Kit>("Kit", Kit.valueOf(rank.toString()))
 				));
 				player.openInventory(i);
 			}
@@ -46,9 +46,9 @@ public class KitMenu {
 		        long diffMinutes = timeLeft / (60 * 1000) % 60;
 		        long diffHours = timeLeft / (60 * 60 * 1000) % 24;
 		        long diffDays = timeLeft / (24 * 60 * 60 * 1000);
-				i.setItem(occupied, builder.constructItem(
+				i.setItem(occupied, this.builder.constructItem(
 					Material.MINECART,
-					rank.display + " Kit",
+					rank.getDisplay() + " Kit",
 					new ArrayList<String>(Arrays.asList(
 						"&7You cannot obtain this kit for:",
 						"&6" + diffDays + " &7Days and &6" + diffHours + ":" + diffMinutes + ":" + diffSeconds
@@ -60,14 +60,13 @@ public class KitMenu {
 		for(Entry<Kit, Boolean> entry : rPlayer.getKitUnlockList().entrySet()) {
 			if(entry.getValue() == true) {
 				if(System.currentTimeMillis() >= rPlayer.getKitCooldown(entry.getKey())) {
-					i.setItem(occupied, builder.constructItem(
+					i.setItem(occupied, this.builder.constructItem(
 						Material.CHEST_MINECART,
-						entry.getKey().display + " Kit",
+						entry.getKey().getDisplay() + " Kit",
 						new ArrayList<String>(Arrays.asList(
-							"&7Click this to obtain the " + entry.getKey().display + " &7kit!"
+							"&7Click this to obtain the " + entry.getKey().getDisplay() + " &7kit!"
 						)),
-						"Kit",
-						"Bronze"
+						new Pair<String, Kit>("Kit", entry.getKey())
 					));
 					player.openInventory(i);
 				}
@@ -77,9 +76,9 @@ public class KitMenu {
 			        long diffMinutes = timeLeft / (60 * 1000) % 60;
 			        long diffHours = timeLeft / (60 * 60 * 1000) % 24;
 			        long diffDays = timeLeft / (24 * 60 * 60 * 1000);
-					i.setItem(occupied, builder.constructItem(
+					i.setItem(occupied, this.builder.constructItem(
 						Material.MINECART,
-						entry.getKey().display + " Kit",
+						entry.getKey().getDisplay() + " Kit",
 						new ArrayList<String>(Arrays.asList(
 							"&7You cannot obtain this kit for:",
 							"&6" + diffDays + " &7Days and &6" + diffHours + ":" + diffMinutes + ":" + diffSeconds
@@ -89,9 +88,9 @@ public class KitMenu {
 				occupied++;
 			}
 			else {
-				i.setItem(occupied, builder.constructItem(
+				i.setItem(occupied, this.builder.constructItem(
 					Material.MINECART,
-					entry.getKey().display + " Kit",
+					entry.getKey().getDisplay() + " Kit",
 					new ArrayList<String>(Arrays.asList(
 						"&7You do not have this kit unlocked!"
 					))

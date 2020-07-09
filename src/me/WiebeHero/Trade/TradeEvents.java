@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -100,6 +101,7 @@ public class TradeEvents implements Listener{
 										top2.setItem(empty, clicked);
 									}
 									event.setCurrentItem(null);
+									player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 1.25F);
 									this.trading.put(pair, top1);
 								}
 								else {
@@ -119,8 +121,7 @@ public class TradeEvents implements Listener{
 												1,
 												"&7Status: &aReady",
 												new ArrayList<String>(),
-												"Status",
-												"Ready"
+												new Pair<String, String>("Status", "Ready")
 										);
 										top1.setItem(46, ready);
 										if(!exceptions.contains(pair.getValue())) {
@@ -133,8 +134,7 @@ public class TradeEvents implements Listener{
 												1,
 												"&7Status: &aReady",
 												new ArrayList<String>(),
-												"Status",
-												"Ready"
+												new Pair<String, String>("Status", "Ready")
 										);
 										top1.setItem(52, ready);
 										if(!exceptions.contains(pair.getKey())) {
@@ -168,6 +168,10 @@ public class TradeEvents implements Listener{
 															top2.setItem(13, nothing);
 															top2.setItem(22, nothing);
 															top2.setItem(31, nothing);
+															Player pl1 = Bukkit.getPlayer(pair.getKey());
+															Player pl2 = Bukkit.getPlayer(pair.getValue());
+															pl1.playSound(pl1.getLocation(), Sound.UI_BUTTON_CLICK, 2.0F, 1F);
+															pl2.playSound(pl2.getLocation(), Sound.UI_BUTTON_CLICK, 2.0F, 1F);
 														}
 														else {
 															trading.remove(pair);
@@ -195,7 +199,7 @@ public class TradeEvents implements Listener{
 																	}
 																}
 															}
-															for(ItemStack stack : listForYou) {
+															for(ItemStack stack : listForThem) {
 																if(stack != null) {
 																	if(inv2.firstEmpty() != -1) {
 																		inv2.setItem(inv2.firstEmpty(), stack);
@@ -205,6 +209,14 @@ public class TradeEvents implements Listener{
 																	}
 																}
 															}
+															DFPlayer dfPlayer1 = dfManager.getEntity(pair.getKey());
+															DFPlayer dfPlayer2 = dfManager.getEntity(pair.getValue());
+															NBTItem moneyItemMe = new NBTItem(top1.getItem(27));
+															NBTItem moneyItemThem = new NBTItem(top1.getItem(35));
+															dfPlayer1.removeMoney(moneyItemMe.getDouble("Money"));
+															dfPlayer2.removeMoney(moneyItemThem.getDouble("Money"));
+															dfPlayer1.addMoney(moneyItemThem.getDouble("Money"));
+															dfPlayer2.addMoney(moneyItemMe.getDouble("Money"));
 															trading.remove(pair);
 															pl1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTrade accepted!"));
 															pl2.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTrade accepted!"));
@@ -242,6 +254,7 @@ public class TradeEvents implements Listener{
 										if(!this.exceptions.contains(uuid)) {
 											top2.setItem(event.getSlot(), new ItemStack(Material.AIR));
 										}
+										player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 0.75F);
 										this.trading.put(pair, top1);
 									}
 									else {
@@ -269,8 +282,7 @@ public class TradeEvents implements Listener{
 																	1,
 																	"&aMoney: " + money + "$",
 																	new ArrayList<String>(),
-																	"Money",
-																	money
+																	new Pair<String, Double>("Money", money)
 															);
 															repInv.setItem(27, newMoney);
 															new BukkitRunnable() {
@@ -281,6 +293,7 @@ public class TradeEvents implements Listener{
 																	}
 																}
 															}.runTaskLater(CustomEnchantments.getInstance(), 2L);
+															player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 2.0F, 1.0F);
 															this.trading.put(pair, repInv);
 														}
 														else if(pair.getValue().equals(uuid)) {
@@ -289,8 +302,7 @@ public class TradeEvents implements Listener{
 																	1,
 																	"&aMoney: " + money + "$",
 																	new ArrayList<String>(),
-																	"Money",
-																	money
+																	new Pair<String, Double>("Money", money)
 															);
 															repInv.setItem(35, newMoney);
 															new BukkitRunnable() {
@@ -301,6 +313,7 @@ public class TradeEvents implements Listener{
 																	}
 																}
 															}.runTaskLater(CustomEnchantments.getInstance(), 2L);
+															player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 2.0F, 1.0F);
 															this.trading.put(pair, repInv);
 														}
 													}
@@ -311,10 +324,12 @@ public class TradeEvents implements Listener{
 															}
 														}.runTaskLater(CustomEnchantments.getInstance(), 2L);
 														writer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have enough money to put in the trade!"));
+														player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);
 													}
 													this.exceptions.remove(writer.getUniqueId());
 													return true;
 												}
+												player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);
 												return false;
 											})
 											.open(player);
@@ -334,6 +349,7 @@ public class TradeEvents implements Listener{
 		Player player = (Player) event.getPlayer();
 		UUID uuid = player.getUniqueId();
 		Reason reason = event.getReason();
+		Inventory inv = event.getInventory();
 		Pair<UUID, UUID> pair = null;
 		for(Pair<UUID, UUID> p : this.trading.keySet()) {
 			if(p.getKey().equals(uuid) || p.getValue().equals(uuid)) {
@@ -344,14 +360,42 @@ public class TradeEvents implements Listener{
 			if(reason == Reason.PLAYER) {
 				this.trading.remove(pair);
 				Player p1 = Bukkit.getPlayer(pair.getKey());
+				ArrayList<Integer> mySlots = this.menu.getYourSlots();
 				if(p1 != null) {
+					for(int i = 0; i < mySlots.size(); i++) {
+						ItemStack item = inv.getItem(mySlots.get(i));
+						if(item != null) {
+							int first = p1.getInventory().firstEmpty();
+							if(first != -1) {
+								p1.getInventory().setItem(first, item);
+							}
+							else {
+								p1.getWorld().dropItem(p1.getLocation(), item);
+							}
+						}
+					}
 					p1.closeInventory();
 					p1.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe trade has been cancelled!"));
+					p1.playSound(p1.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);
 				}
 				Player p2 = Bukkit.getPlayer(pair.getValue());
+				ArrayList<Integer> theirSlots = this.menu.getTheirSlots();
 				if(p2 != null) {
+					for(int i = 0; i < theirSlots.size(); i++) {
+						ItemStack item = inv.getItem(theirSlots.get(i));
+						if(item != null) {
+							int first = p2.getInventory().firstEmpty();
+							if(first != -1) {
+								p2.getInventory().setItem(first, item);
+							}
+							else {
+								p2.getWorld().dropItem(p2.getLocation(), item);
+							}
+						}
+					}
 					p2.closeInventory();
 					p2.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe trade has been cancelled!"));
+					p2.playSound(p2.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);
 				}
 			}
 		}

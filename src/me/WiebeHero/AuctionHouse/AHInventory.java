@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.nbtapi.NBTItem;
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
@@ -46,7 +47,7 @@ public class AHInventory {
 						"&7Here you can claim your item's that have",
 						"&7not been sold."
 				)),
-				"Bin"
+				new Pair<String, String>("Bin", "")
 		));
 		i.setItem(46, builder.constructItem(
 				Material.DIAMOND,
@@ -55,7 +56,7 @@ public class AHInventory {
 						"&7Here you can find your item's that your",
 						"&7currently selling."
 				)),
-				"Selling"
+				new Pair<String, String>("Selling", "")
 		));
 		i.setItem(48, builder.constructItem(
 				Material.PAPER,
@@ -63,8 +64,7 @@ public class AHInventory {
 				new ArrayList<String>(Arrays.asList(
 						"&7Go to the previous page of the Auction House."
 				)),
-				"Previous",
-				page - 1
+				new Pair<String, Integer>("Previous", page - 1)
 		));
 		i.setItem(49, builder.constructItem(
 				Material.BARRIER,
@@ -72,7 +72,7 @@ public class AHInventory {
 				new ArrayList<String>(Arrays.asList(
 						"&7Close the Auction House."
 				)),
-				"Close"
+				new Pair<String, String>("Close", "")
 		));
 		i.setItem(50, builder.constructItem(
 				Material.PAPER,
@@ -80,8 +80,7 @@ public class AHInventory {
 				new ArrayList<String>(Arrays.asList(
 						"&7Go to the next page of the Auction House."
 				)),
-				"Next",
-				page + 1
+				new Pair<String, Integer>("Next", page + 1)
 		));
 		i.setItem(53, builder.constructItem(
 				Material.SIGN,
@@ -90,7 +89,7 @@ public class AHInventory {
 						"&7Click this to search for the item your",
 						"&7looking for."
 				)),
-				"Search"
+				new Pair<String, String>("Search", "")
 		));
 		i.setItem(36, builder.constructItem(
 				Material.GRAY_STAINED_GLASS_PANE,
@@ -147,7 +146,7 @@ public class AHInventory {
 						"&7By pressing this button, you agree",
 						"&7to purchase thise item."
 				)),
-				"Confirm"
+				new Pair<String, String>("Confirm", "")
 		));
 		i.setItem(1, builder.constructItem(
 				Material.GRAY_STAINED_GLASS_PANE,
@@ -165,7 +164,7 @@ public class AHInventory {
 						"&7By pressing this button, you cancel",
 						"&7your current purchase."
 				)),
-				"Cancel"
+				new Pair<String, String>("Cancel", "")
 		));
 		player.openInventory(i);
 	}
@@ -198,7 +197,7 @@ public class AHInventory {
 						"&7Here you can claim your item's that have",
 						"&7not been sold."
 				)),
-				"Bin"
+				new Pair<String, String>("Bin", "")
 		));
 		i.setItem(46, builder.constructItem(
 				Material.SIGN,
@@ -207,7 +206,7 @@ public class AHInventory {
 						"&7Click here to return to the",
 						"&7Auction House."
 				)),
-				"Return"
+				new Pair<String, String>("Return", "")
 		));
 		i.setItem(48, builder.constructItem(
 				Material.WHITE_STAINED_GLASS_PANE,
@@ -219,7 +218,7 @@ public class AHInventory {
 				new ArrayList<String>(Arrays.asList(
 						"&7Close the Auction House."
 				)),
-				"Close"
+				new Pair<String, String>("Close", "")
 		));
 		i.setItem(50, builder.constructItem(
 				Material.WHITE_STAINED_GLASS_PANE,
@@ -284,7 +283,7 @@ public class AHInventory {
 						"&7By pressing this button, you agree",
 						"&7that you want to take this item off the Auction House."
 				)),
-				"Confirm"
+				new Pair<String, String>("Confirm", "")
 		));
 		i.setItem(1, builder.constructItem(
 				Material.GRAY_STAINED_GLASS_PANE,
@@ -302,7 +301,7 @@ public class AHInventory {
 						"&7By pressing this button, your item won't",
 						"&7be taken off the Auction House."
 				)),
-				"Cancel"
+				new Pair<String, String>("Cancel", "")
 		));
 		player.openInventory(i);
 	}
@@ -332,7 +331,7 @@ public class AHInventory {
 						"&7Click here to return to the",
 						"&7Auction House."
 				)),
-				"Return"
+				new Pair<String, String>("Return", "")
 		));
 		i.setItem(46, builder.constructItem(
 				Material.DIAMOND,
@@ -341,7 +340,7 @@ public class AHInventory {
 						"&7Here you can find your item's that your",
 						"&7currently selling."
 				)),
-				"Selling"
+				new Pair<String, String>("Selling", "")
 		));
 		i.setItem(48, builder.constructItem(
 				Material.WHITE_STAINED_GLASS_PANE,
@@ -353,7 +352,7 @@ public class AHInventory {
 				new ArrayList<String>(Arrays.asList(
 						"&7Close the Auction House."
 				)),
-				"Close"
+				new Pair<String, String>("Close", "")
 		));
 		i.setItem(50, builder.constructItem(
 				Material.WHITE_STAINED_GLASS_PANE,

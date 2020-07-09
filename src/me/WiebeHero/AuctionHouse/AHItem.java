@@ -43,8 +43,8 @@ public class AHItem {
 		return this.name;
 	}
 	
-	public UUID getKey() {
-		return this.uuid;
+	public UUID getUniqueId() {
+		return this.unique;
 	}
 	
 	public long getEndPeriod() {

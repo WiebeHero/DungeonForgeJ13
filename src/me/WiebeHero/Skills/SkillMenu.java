@@ -11,14 +11,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import me.WiebeHero.DFPlayerPackage.EnumSkills.SkillState;
 import me.WiebeHero.DFPlayerPackage.Enums.Classes;
-import me.WiebeHero.DFPlayerPackage.State.States;
 
 public class SkillMenu {
 	private DFPlayerManager dfManager;
@@ -851,7 +849,7 @@ public class SkillMenu {
 					"&cClick this to reset your character.",
 					"&cThis requires level 10."
 				)),
-				"Reset"
+				new Pair<String, String>("Reset", "")
 		));
 		i.setItem(32, empty());
 		i.setItem(33, empty());
@@ -870,9 +868,10 @@ public class SkillMenu {
 						"&4&lWARNING, this will:",
 						"  &cSet your level to 1",
 						"  &cReset your class",
-						"  &cSet all of your skills to 0"
+						"  &cSet all of your skills to 0",
+						"  &cCosts 10000$"
 				)),
-				"Confirm"
+				new Pair<String, String>("Confirm", "")
 		));
 		i.setItem(1, builder.constructItem(
 				Material.GRAY_STAINED_GLASS_PANE,
@@ -893,7 +892,7 @@ public class SkillMenu {
 						"&7By pressing this button, you cancel",
 						"&7resetting your profile."
 				)),
-				"Cancel"
+				new Pair<String, String>("Cancel", "")
 		));
 		player.openInventory(i);
 	}

@@ -29,6 +29,7 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
 import me.WiebeHero.MoreStuff.SwordSwingProgress;
@@ -76,9 +77,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
 													}
-													else {
-														damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-													}
 												}
 											}
 										}
@@ -123,13 +121,34 @@ public class EnchantmentHandler extends SwordSwingProgress{
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
 													}
-													else {
-														damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-													}
 												}
 											}
 										}
 									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void meleeKillEnchantmentHandler(DFPlayerXpGainEvent event) {
+		Player player = event.getPlayer();
+		if(player.getEquipment().getItemInMainHand() != null) {
+			if(player.getEquipment().getItemInMainHand().hasItemMeta()) {
+				if(player.getEquipment().getItemInMainHand().getItemMeta().hasLore()) {
+					for(String s1 : player.getEquipment().getItemInMainHand().getItemMeta().getLore()){
+						String enchant = ChatColor.stripColor(s1);
+						String check = StringUtils.substring(enchant, 0, enchant.length() - 2);
+						if(enchantment.getMeleeEnchantments().containsKey(check)) {
+							if(enchantment.getMeleeEnchantments().get(check).getKey() == Condition.ENTITY_DEATH_MELEE) {
+								if(!wg.isInZone(player, "spawn")) {
+									enchant = enchant.replaceAll("[^\\d.]", "");
+									int level = Integer.parseInt(enchant) - 1;
+									enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(player, level);
+									enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(player, level, event);
 								}
 							}
 						}
@@ -169,9 +188,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 														enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
-													}
-													else {
-														damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 													}
 												}
 											}
@@ -215,7 +231,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 															enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
 														}
 														else {
-															victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 															break;
 														}
 													}
@@ -258,9 +273,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 														enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 														enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
 													}
-													else {
-														victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-													}
 												}
 											}
 										}
@@ -300,9 +312,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 															enchantment.getShieldEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 															enchantment.getShieldEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 															enchantment.getShieldEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
-														}
-														else {
-															victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 														}
 													}
 												}
@@ -345,9 +354,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 															enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, victim, level);
 															enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, victim, level, event);
 														}
-														else {
-															damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-														}
 													}
 												}
 											}
@@ -382,9 +388,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
 												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 											}
-											else {
-												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-											}
 										}
 									}
 								}
@@ -415,9 +418,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 												int level = Integer.parseInt(enchant) - 1;
 												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
 												enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
-											}
-											else {
-												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 											}
 										}
 									}
@@ -451,9 +451,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													enchantment.getMeleeEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 												}
 											}
-											else {
-												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-											}
 										}
 									}
 								}
@@ -479,9 +476,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level);
 													enchantment.getBowEnchantments().get(check).getValue().activateEnchantment(damager, level, event);
 												}
-											}
-											else {
-												damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 											}
 										}
 									}
@@ -516,9 +510,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
-												else {
-													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-												}
 											}
 										}
 										else if(event.getCause() == DamageCause.WITHER) {
@@ -528,9 +519,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
-												}
-												else {
-													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 												}
 											}
 										}
@@ -542,9 +530,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
-												else {
-													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-												}
 											}
 										}
 										else if(event.getCause() == DamageCause.FIRE) {
@@ -554,9 +539,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
-												}
-												else {
-													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 												}
 											}
 										}
@@ -568,9 +550,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
-												else {
-													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-												}
 											}
 										}
 										else if(event.getCause() == DamageCause.LIGHTNING) {
@@ -580,9 +559,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
-												}
-												else {
-													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 												}
 											}
 										}
@@ -594,9 +570,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
-												else {
-													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-												}
 											}
 										}
 										else if(event.getCause() == DamageCause.HOT_FLOOR) {
@@ -607,9 +580,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
 												}
-												else {
-													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
-												}
 											}
 										}
 										else if(event.getCause() == DamageCause.MAGIC) {
@@ -619,9 +589,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 													int level = Integer.parseInt(enchant) - 1;
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 													enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
-												}
-												else {
-													victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 												}
 											}
 										}
@@ -655,9 +622,6 @@ public class EnchantmentHandler extends SwordSwingProgress{
 												int level = Integer.parseInt(enchant) - 1;
 												enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level);
 												enchantment.getArmorEnchantments().get(check).getValue().activateEnchantment(victim, level, event);
-											}
-											else {
-												victim.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use enchantments at spawn!"));
 											}
 										}
 									}

@@ -1,22 +1,37 @@
 package me.WiebeHero.RankedPlayerPackage;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Rank;
+import me.WiebeHero.Scoreboard.WGMethods;
 import net.luckperms.api.model.user.User;
 
 public class RankedPlayerListener implements Listener{
 	private MethodLuck luck;
 	private RankedManager rManager;
-	public RankedPlayerListener(RankedManager rManager, MethodLuck luck) {
+	private WGMethods wg;
+	private ArrayList<UUID> cooldown;
+	public RankedPlayerListener(RankedManager rManager, MethodLuck luck, WGMethods wg) {
 		this.luck = luck;
 		this.rManager = rManager;
+		this.wg = wg;
+		this.cooldown = new ArrayList<UUID>();
 	}
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void joinRank(PlayerJoinEvent event) {
@@ -35,6 +50,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.OWNER, "&2Owner", 999, 999);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			mod = true;
 		}
@@ -49,6 +66,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.MANAGER, "&5Manager", 999, 999);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			mod = true;
 		}
@@ -63,6 +82,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.HEAD_ADMIN, "&4Head Admin", 999, 999);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			mod = true;
 		}
@@ -77,6 +98,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.ADMIN, "&4Admin", 999, 999);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			mod = true;
 		}
@@ -175,6 +198,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.YOUTUBER, "&cY&fo&cu&ft&cu&fb&ce&fr", 7, 7);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -189,6 +214,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.EMERALD, "&aEmerald", 7, 7);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -203,6 +230,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.DIAMOND, "&bDiamond", 6, 6);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 45, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -217,6 +246,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.PLATINUM, "&3Platinum", 5, 5);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 36, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -231,6 +262,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.GOLD, "&eGold", 4, 4);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 27, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -245,6 +278,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.SILVER, "&7Silver", 3, 3);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 18, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -259,6 +294,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.BRONZE, "&6Bronze", 2, 2);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 9, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -293,6 +330,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.OWNER, "&2Owner", 999, 999);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			mod = true;
 		}
@@ -307,6 +346,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.MANAGER, "&5Manager", 999, 999);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			mod = true;
 		}
@@ -321,6 +362,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.HEAD_ADMIN, "&4Head Admin", 999, 999);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			mod = true;
 		}
@@ -335,6 +378,8 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.ADMIN, "&4Admin", 999, 999);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
+			r.getPV().setContents(r.getStackList());
 			rManager.add(player.getUniqueId(), r);
 			mod = true;
 		}
@@ -384,12 +429,12 @@ public class RankedPlayerListener implements Listener{
 			RankedPlayer r = null;
 			if(rManager.contains(player.getUniqueId())) {
 				r = rManager.getRankedPlayer(player.getUniqueId());
-				r.addRank(Rank.HELPER_PLUS);
+				r.addRank(Rank.HELPER);
 				r.setAHCount(1);
 				r.setHomeCount(1);
 			}
 			else {
-				r = new RankedPlayer(Rank.HELPER_PLUS, "&aHelper", 1, 1);
+				r = new RankedPlayer(Rank.HELPER, "&aHelper", 1, 1);
 			}
 			rManager.add(player.getUniqueId(), r);
 			mod = true;
@@ -433,6 +478,7 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.YOUTUBER, "&cY&fo&cu&ft&cu&fb&ce&fr", 7, 7);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -447,6 +493,7 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.EMERALD, "&aEmerald", 7, 7);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 54, new CCT().colorize("&7" + player.getName() + "'s Vault")));
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -461,6 +508,7 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.DIAMOND, "&bDiamond", 6, 6);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 45, new CCT().colorize("&7" + player.getName() + "'s Vault")));
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -475,6 +523,7 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.PLATINUM, "&3Platinum", 5, 5);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 36, new CCT().colorize("&7" + player.getName() + "'s Vault")));
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -489,6 +538,7 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.GOLD, "&eGold", 4, 4);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 27, new CCT().colorize("&7" + player.getName() + "'s Vault")));
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -503,6 +553,7 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.SILVER, "&7Silver", 3, 3);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 18, new CCT().colorize("&7" + player.getName() + "'s Vault")));
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -517,6 +568,7 @@ public class RankedPlayerListener implements Listener{
 			else {
 				r = new RankedPlayer(Rank.BRONZE, "&6Bronze", 2, 2);
 			}
+			r.setPV(CustomEnchantments.getInstance().getServer().createInventory(null, 9, new CCT().colorize("&7" + player.getName() + "'s Vault")));
 			rManager.add(player.getUniqueId(), r);
 			pay = true;
 		}
@@ -534,6 +586,41 @@ public class RankedPlayerListener implements Listener{
 			RankedPlayer r = rManager.getRankedPlayer(player.getUniqueId());
 			r.addRank(Rank.USER);
 			r.loadKits();
+		}
+	}
+	@EventHandler
+	public void pvClose(InventoryCloseEvent event) {
+		Player player = (Player) event.getPlayer();
+		InventoryView view = player.getOpenInventory();
+		Inventory inv = event.getInventory();
+		if(view.getTitle().contains(player.getName() + "'s Vault")) {
+			RankedPlayer rPlayer = this.rManager.getRankedPlayer(player.getUniqueId());
+			rPlayer.setPV(inv);
+			rPlayer.setStackList(inv.getContents());
+		}
+	}
+	@EventHandler
+	public void disablePlayerFly(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		RankedPlayer rPlayer = this.rManager.getRankedPlayer(player.getUniqueId());
+		if(rPlayer != null) {
+			if(!wg.isInZone(player, "spawn")) {
+				if(rPlayer.getFlight()) {
+					if(!this.cooldown.contains(player.getUniqueId())) {
+						this.cooldown.add(player.getUniqueId());
+						new BukkitRunnable() {
+							public void run() {
+								if(cooldown.contains(player.getUniqueId())) {
+									cooldown.remove(player.getUniqueId());
+								}
+							}
+						}.runTaskLater(CustomEnchantments.getInstance(), 1L);
+						rPlayer.setFlight(false);
+						player.setAllowFlight(false);
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use player fly outside of spawn and has been turned off!"));
+					}
+				}
+			}
 		}
 	}
 }

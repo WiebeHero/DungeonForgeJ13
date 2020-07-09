@@ -191,7 +191,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				if(args.length == 3) {
 					if(args[0].equalsIgnoreCase("set")) {
 						if(rPlayer.isStaff()) {
-							if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+							if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 								OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
 								if(p.getName() != null) {
 									if(rManager.contains(p.getUniqueId())) {
@@ -201,8 +201,8 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											Rank rank = Rank.valueOf(r);
 											User promoted = luck.loadUser(p.getUniqueId());
 											if(!player.getUniqueId().equals(p.getUniqueId())) {
-												if(rPlayer.getHighestRank().rank > rank.rank) {
-													if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
+												if(rPlayer.getHighestRank().getRank() > rank.getRank()) {
+													if(rPlayer.getHighestRank().getRank() > oPlayer.getHighestRank().getRank()) {
 														for(Rank ranks : Rank.values()) {
 															String group = ranks.toString().toLowerCase();
 															if(luck.containsParrent(promoted, group)) {
@@ -255,7 +255,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(clearchat)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 0) {
-						if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HELPER_PLUS.getRank()) {
 							Bukkit.broadcastMessage(StringUtils.repeat(" \n", 25));
 						}
 						else {
@@ -273,14 +273,14 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(fly)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 0) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							if(player.getAllowFlight()) {
 								player.setAllowFlight(false);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have enabled fly mode!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have disabled fly mode!"));
 							}
 							else {
 								player.setAllowFlight(true);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have disabled fly mode!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have enabled fly mode!"));
 							}
 						}
 						else {
@@ -288,11 +288,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-								if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
+								if(rPlayer.getHighestRank().getRank() > oPlayer.getHighestRank().getRank()) {
 									if(p.getAllowFlight()) {
 										p.setAllowFlight(false);
 										p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas turned off fly mode!"));
@@ -325,7 +325,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(feed)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 0) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							player.setFoodLevel(20);
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou fed yourself!"));
 						}
@@ -334,11 +334,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-								if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
+								if(rPlayer.getHighestRank().getRank() > oPlayer.getHighestRank().getRank()) {
 									p.setFoodLevel(20);
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou fed &6" + p.getName()));
 								}
@@ -365,7 +365,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(heal)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 0) {
-						if(rPlayer.getHighestRank().rank >= Rank.HEAD_MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_MOD.getRank()) {
 							player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou healed yourself!"));
 						}
@@ -374,11 +374,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HEAD_MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_MOD.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-								if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
+								if(rPlayer.getHighestRank().getRank() > oPlayer.getHighestRank().getRank()) {
 									player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou healed &6" + p.getName()));
 								}
@@ -405,7 +405,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(clearinventory)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 0) {
-						if(rPlayer.getHighestRank().rank >= Rank.HEAD_MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_MOD.getRank()) {
 							player.getInventory().clear();
 							player.getEquipment().clear();
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou cleared your inventory!"));
@@ -415,11 +415,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HEAD_MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_MOD.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-								if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
+								if(rPlayer.getHighestRank().getRank() > oPlayer.getHighestRank().getRank()) {
 									player.getInventory().clear();
 									player.getEquipment().clear();
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou cleared &6" + p.getName() + "'s &ainventory!"));
@@ -447,7 +447,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(time)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 2) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							if(args[0].equalsIgnoreCase("set")) {
 								if(args[1].equalsIgnoreCase("day")) {
 									player.getWorld().setTime(0L);
@@ -492,7 +492,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(weather)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 2) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							if(args[0].equalsIgnoreCase("set")) {
 								if(args[1].equalsIgnoreCase("rain") || args[1].equalsIgnoreCase("snow")) {
 									player.getWorld().setStorm(true);
@@ -526,7 +526,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(tp)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HEAD_MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_MOD.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								player.teleport(p);
@@ -551,7 +551,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(tphere)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HEAD_MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_MOD.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								p.teleport(player);
@@ -576,7 +576,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(tptp)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 2) {
-						if(rPlayer.getHighestRank().rank >= Rank.HEAD_MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_MOD.getRank()) {
 							Player pFrom = Bukkit.getPlayer(args[0]);
 							Player pTo = Bukkit.getPlayer(args[1]);
 							if(pFrom != null && pTo != null) {
@@ -602,11 +602,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(freeze)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-								if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
+								if(rPlayer.getHighestRank().getRank() > oPlayer.getHighestRank().getRank()) {
 									if(!freezeList.contains(p.getUniqueId())) {
 										freezeList.add(p.getUniqueId());
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have frozen &6" + p.getName() + "!"));
@@ -638,11 +638,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(unfreeze)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-								if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
+								if(rPlayer.getHighestRank().getRank() > oPlayer.getHighestRank().getRank()) {
 									if(freezeList.contains(p.getUniqueId())) {
 										freezeList.remove(p.getUniqueId());
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have unfrozen &6" + p.getName() + "!"));
@@ -674,7 +674,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(checkban)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 							@SuppressWarnings("deprecation")
 							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 							if(p.getName() != null) {
@@ -719,7 +719,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(checkmute)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 							@SuppressWarnings("deprecation")
 							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 							if(p.getName() != null) {
@@ -764,14 +764,14 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(checkstaff)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 							@SuppressWarnings("deprecation")
 							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 							if(p.getName() != null) {
 								if(rManager.contains(p.getUniqueId())) {
 									RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
 									if(oPlayer.isStaff()) {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player is staff. Rank: " + oPlayer.getHighestRank().display));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aThis player is staff. Rank: " + oPlayer.getHighestRank().getDisplay()));
 									}
 									else {
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not staff! If he is impersonating staff, please consider reporting him!"));
@@ -800,7 +800,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(staffchat)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 0) {
-						if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 							if(msgManager.contains(player.getUniqueId())) {
 								MSG msg = msgManager.get(player.getUniqueId());
 								if(msg.getStaffChat()) {
@@ -830,20 +830,20 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			}
 			else if(cmd.getName().equalsIgnoreCase(stafflist)) {
 				if(rPlayer.isStaff()) {
-					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+					if(args.length == 0) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 							for(Entry<UUID, RankedPlayer> entry : rManager.getRankedPlayerList().entrySet()) {
 								UUID uuid = entry.getKey();
 								RankedPlayer oPlayer = entry.getValue();
 								ArrayList<String> messages = new ArrayList<String>();
-								if(oPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+								if(oPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 									if(Bukkit.getPlayer(uuid) != null) {
 										String name = Bukkit.getPlayer(uuid).getName();
-										messages.add(new CCT().colorize(oPlayer.getHighestRank().display + " " + name + " &7(OFFLINE)"));
+										messages.add(new CCT().colorize(oPlayer.getHighestRank().getDisplay() + " " + name + " &7(OFFLINE)"));
 									}
 									else {
 										String name = Bukkit.getOfflinePlayer(uuid).getName();
-										messages.add(new CCT().colorize(oPlayer.getHighestRank().display + " " + name + " &a(ONLINE)"));
+										messages.add(new CCT().colorize(oPlayer.getHighestRank().getDisplay() + " " + name + " &a(ONLINE)"));
 									}
 								}
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: " + messages.toString()));
@@ -854,7 +854,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /sc"));
+						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid ussage: /stafflist"));
 					}
 				}
 				else {
@@ -862,7 +862,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				}
 			}
 			else if(cmd.getName().equalsIgnoreCase(staffmode)) {
-				if(sManager.contains(player.getUniqueId()) && rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+				if(sManager.contains(player.getUniqueId()) && rPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 					Staff staff = sManager.get(player.getUniqueId());
 					if(staff.getStaffMode() == true) {
 						player.getInventory().setContents(staff.getInv());
@@ -889,7 +889,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						player.getInventory().setItem(2, vanish());
 						player.getInventory().setItem(3, examine());
 						player.getInventory().setItem(4, playerInfo());
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							player.getInventory().setItem(6, capture());
 							player.getInventory().setItem(7, spawner());
 							player.getInventory().setItem(8, loot());
@@ -910,7 +910,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(god)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 0) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							Staff staff = sManager.get(player.getUniqueId());
 							if(staff.getGodMode()) {
 								staff.switchGodModeMode(false);
@@ -936,7 +936,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(gamemode)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							int mode = -1;
 							try {
 								mode = Integer.parseInt(args[0]);
@@ -974,7 +974,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else if(args.length == 2) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								int mode = -1;
@@ -1028,7 +1028,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(checkmode)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							Player p = Bukkit.getPlayer(args[0]);
 							if(p != null) {
 								Staff staff = sManager.get(p.getUniqueId());
@@ -1058,13 +1058,13 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(punish)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 							if(p.getName() != null) {
 								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
 									if(!p.getUniqueId().equals(player.getUniqueId())) {
 										RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-										if(rPlayer.getHighestRank().rank >= oPlayer.getHighestRank().rank) {
+										if(rPlayer.getHighestRank().getRank() >= oPlayer.getHighestRank().getRank()) {
 											target.put(player.getUniqueId(), new Pair<UUID, String>(p.getUniqueId(), p.getName()));
 											gui.PunishMenu(player, p.getName());
 										}
@@ -1099,13 +1099,13 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(history)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 							if(p.getName() != null) {
 								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
 									if(!p.getUniqueId().equals(player.getUniqueId())) {
 										RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-										if(rPlayer.getHighestRank().rank >= oPlayer.getHighestRank().rank) {
+										if(rPlayer.getHighestRank().getRank() >= oPlayer.getHighestRank().getRank()) {
 											target.put(player.getUniqueId(), new Pair<UUID, String>(p.getUniqueId(), p.getName()));
 											gui.PunishHistory(player, p.getName());
 										}
@@ -1140,13 +1140,13 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(ban)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HELPER_PLUS.getRank()) {
 							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 							if(p.getName() != null) {
 								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
 									if(!p.getUniqueId().equals(player.getUniqueId())) {
 										RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-										if(rPlayer.getHighestRank().rank > oPlayer.getHighestRank().rank) {
+										if(rPlayer.getHighestRank().getRank() > oPlayer.getHighestRank().getRank()) {
 											Punish pun = pManager.get(p.getUniqueId());
 											target.put(player.getUniqueId(), new Pair<UUID, String>(p.getUniqueId(), p.getName()));
 											if(!pun.isBanned()) {
@@ -1187,7 +1187,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(unban)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 							if(p.getName() != null) {
 								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
@@ -1239,13 +1239,13 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(mute)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 							if(p.getName() != null) {
 								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
 									if(!p.getUniqueId().equals(player.getUniqueId())) {
 										RankedPlayer rp = rManager.getRankedPlayer(p.getUniqueId());
-										if(rPlayer.getHighestRank().rank > rp.getHighestRank().rank) {
+										if(rPlayer.getHighestRank().getRank() > rp.getHighestRank().getRank()) {
 											target.put(player.getUniqueId(), new Pair<UUID, String>(p.getUniqueId(), p.getName()));
 											gui.MuteReason(player, p.getName());
 										}
@@ -1280,7 +1280,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(unmute)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HELPER_PLUS.getRank()) {
 							OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 							if(p.getName() != null) {
 								if(rManager.contains(p.getUniqueId()) && pManager.contains(p.getUniqueId())) {
@@ -1337,9 +1337,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(af)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 2) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							if(args[0].equalsIgnoreCase("leader")) {
-								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+								if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 									OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
 									if(p.getName() != null) {
 										if(facPlayerManager.contains(p.getUniqueId())) {
@@ -1379,7 +1379,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								}
 							}
 							else if(args[0].equalsIgnoreCase("abandon") || args[0].equalsIgnoreCase("disband")) {
-								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+								if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 									String facName = args[1];
 									if(facManager.getFaction(facName) != null) {
 										DFFaction faction = facManager.getFaction(facName);
@@ -1514,7 +1514,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else if(args.length == 3) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							if(args[0].equalsIgnoreCase("unclaim")) {
 								if(args[1].equalsIgnoreCase("all")) {
 									String facName = args[2];
@@ -1559,7 +1559,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					else if(args.length == 5) {
-						if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 							if(args[0].equalsIgnoreCase("bank")) {
 								if(args[1].equalsIgnoreCase("set")) {
 									String facName = args[2];
@@ -1597,9 +1597,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(a)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 2) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							if(args[0].equalsIgnoreCase("item")) {
-								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+								if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 									HashMap<String, ItemStack> stacks = this.rewards.getItemList();
 									if(stacks.containsKey(args[1])) {
 										ItemStack i = stacks.get(args[1]).clone();
@@ -1614,7 +1614,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								}
 							}
 							else if(args[0].equalsIgnoreCase("spawner")) {
-								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+								if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 									String type = args[1].toUpperCase();
 									EntityType newType = null;
 									try {
@@ -1640,7 +1640,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								}
 							}
 							else if(args[0].equalsIgnoreCase("moneynote")) {
-								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+								if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 									double amount = 0.00;
 									try {
 										amount = Double.parseDouble(args[1]);
@@ -1654,8 +1654,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 												1,
 												"&aMoney Note: $" + amount,
 												new ArrayList<String>(),
-												"Money",
-												amount
+												new Pair<String, Double>("Money", amount)
 										);
 										player.getInventory().addItem(note);
 									}
@@ -1668,7 +1667,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								}
 							}
 							else if(args[0].equalsIgnoreCase("xpbottle")) {
-								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+								if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 									int amount = 0;
 									try {
 										amount = Integer.parseInt(args[1]);
@@ -1686,8 +1685,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 														"&7It will add the XP on this bottle to your weapon.",
 														"&7XP Amount: &6" + amount
 												)),
-												"XPBottle",
-												amount
+												new Pair<String, Integer>("XPBottle", amount)
 										);
 										player.getInventory().addItem(note);
 									}
@@ -1700,7 +1698,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								}
 							}
 							else if(args[0].equalsIgnoreCase("crystal")) {
-								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+								if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 									String rarity = args[1].toUpperCase();
 									if(RarityEnum.getIfPresent(rarity) != null) {
 										Rarity rar = RarityEnum.getIfPresent(rarity);
@@ -1713,14 +1711,8 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 												"&7really nice rewards!",
 												"&7Rarity: " + rar.getColorCode() + rar.getDisplay()
 											)),
-											new ArrayList<String>(Arrays.asList(
-												"CrystalObject",
-												"Rarity"
-											)),
-											new ArrayList<String>(Arrays.asList(
-												"",
-												rar.getDisplay()
-											))
+											new Pair<String, String>("CrystalObject", ""),
+											new Pair<String, String>("Rarity", rar.getDisplay())
 										);
 										player.getInventory().addItem(item);
 									}
@@ -1735,7 +1727,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					if(args.length == 3) {
-						if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 							if(args[0].equalsIgnoreCase("item")) {
 								HashMap<String, ItemStack> stacks = this.rewards.getItemList();
 								if(stacks.containsKey(args[1])) {
@@ -2101,7 +2093,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					if(args.length == 4) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							if(args[0].equalsIgnoreCase("money")) {
 								if(args[1].equalsIgnoreCase("give")) {
 									OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
@@ -2132,7 +2124,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									}
 								}
 								else if(args[1].equalsIgnoreCase("set")) {
-									if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 										OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
 										if(p.getName() != null) {
 											if(dfManager.contains(p.getUniqueId())) {
@@ -2165,7 +2157,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									}
 								}
 								else if(args[1].equalsIgnoreCase("remove")) {
-									if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+									if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 										OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
 										if(p.getName() != null) {
 											if(dfManager.contains(p.getUniqueId())) {
@@ -2244,7 +2236,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								}
 							}
 							else if(args[0].equalsIgnoreCase("item")) {
-								if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+								if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 									HashMap<String, ItemStack> stacks = this.rewards.getItemList();
 									if(stacks.containsKey(args[1])) {
 										ItemStack i = stacks.get(args[1]).clone();
@@ -2649,7 +2641,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			else if(cmd.getName().equalsIgnoreCase(item)) {
 				if(rPlayer.isStaff()) {
 					if(args.length == 1) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							String itemName = args[0].toUpperCase();
 							if(Material.getMaterial(itemName) != null) {
 								ItemStack stack = new ItemStack(Material.getMaterial(itemName), 1);
@@ -2665,7 +2657,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						}
 					}
 					if(args.length == 2) {
-						if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							String itemName = args[0].toUpperCase();
 							int amount = 0;
 							try {
@@ -2702,7 +2694,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			}
 			else if(cmd.getName().equalsIgnoreCase(protocol)) {
 				if(rPlayer.isStaff()) {
-					if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+					if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 						if(args.length == 1) {
 							if(args[0].equalsIgnoreCase("clearall")) {
 								CustomEnchantments.maintenance = true;
@@ -2891,7 +2883,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
         	Player player = (Player) sender;
         	RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
         	if(command.getName().equalsIgnoreCase(protocol)) { 
-            	if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+            	if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 	            	if(args.length == 1) {
 	            		return Arrays.asList("maintenance", "clearinv", "shutdown", "softreset", "hardreset", "profile", "updatexpvalues");
 	            	}
@@ -2902,8 +2894,18 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	            	}
             	}
             }
+        	else if(command.getName().equalsIgnoreCase(gamemode)) { 
+        		if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
+        			if(args.length == 1) {
+        				ArrayList<String> itemNames = new ArrayList<String>(Arrays.asList("survival", "creative", "adventure", "spectator", "0", "1", "2", "3"));
+            			ArrayList<String> collection = new ArrayList<String>();
+            			StringUtil.copyPartialMatches(args[0], itemNames, collection);
+        				return collection;
+        			}
+        		}
+        	}
         	else if(command.getName().equalsIgnoreCase(a)) { 
-        		if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+        		if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 	            	if(args.length == 1) {
 	            		return Arrays.asList("money", "level", "item");
 	            	}
@@ -2930,7 +2932,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	            		}
 	            	}
             	}
-        		else if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+        		else if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 	            	if(args.length == 1) {
 	            		return Arrays.asList("money");
 	            	}
@@ -2947,7 +2949,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
             	}
             }
         	else if(command.getName().equalsIgnoreCase(af)) { 
-        		if(rPlayer.getHighestRank().rank >= Rank.HEAD_ADMIN.rank) {
+        		if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
         			if(args.length == 1) {
         				ArrayList<String> list = new ArrayList<String>(Arrays.asList("kick", "promote", "demote", "unclaim", "rename", "leader", "disband", "bank"));
         				ArrayList<String> found = new ArrayList<String>();
@@ -2994,7 +2996,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
         				}
         			}
         		}
-        		else if(rPlayer.getHighestRank().rank >= Rank.ADMIN.rank) {
+        		else if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
         			if(args.length == 1) {
         				ArrayList<String> list = new ArrayList<String>(Arrays.asList("kick", "promote", "demote", "unclaim", "rename"));
         				ArrayList<String> found = new ArrayList<String>();
@@ -3492,16 +3494,16 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						else if(item.hasKey("SpawnerItem")) {
 							staff.switchSpawnerMode(true);
 							player.getInventory().clear();
-							player.getInventory().setItem(0, gui.createDisplayItem(
+							player.getInventory().setItem(0, this.builder.constructItem(
 									Material.COMPASS, 
 									"&aSpawner Menu", 
 									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to open",
 										"&7up the spawner menu to create/delete spawner items."
 									)),
-									"SpawnerCreate"
+									new Pair<String, String>("SpawnerCreate", "")
 							));
-							player.getInventory().setItem(1, gui.createDisplayItem(
+							player.getInventory().setItem(1, this.builder.constructItem(
 									Material.BARRIER, 
 									"&cSpawner Delete", 
 									new ArrayList<String>(Arrays.asList(
@@ -3509,9 +3511,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										"&7any spawner. Make sure there is a block",
 										"&7actually placed in the spawner."
 									)),
-									"SpawnerDelete"
+									new Pair<String, String>("SpawnerDelete", "")
 							));
-							player.getInventory().setItem(2, gui.createDisplayItem(
+							player.getInventory().setItem(2, this.builder.constructItem(
 									Material.YELLOW_STAINED_GLASS, 
 									"&6Spawner See", 
 									new ArrayList<String>(Arrays.asList(
@@ -3519,22 +3521,22 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										"&7any spawner in a 20 block radius.",
 										"&7These spawners will turn into yellow glass."
 									)),
-									"SpawnerSee"
+									new Pair<String, String>("SpawnerSee", "")
 							));
 						}
 						else if(item.hasKey("LootItem")) {
 							staff.switchLootMode(true);
 							player.getInventory().clear();
-							player.getInventory().setItem(0, gui.createDisplayItem(
+							player.getInventory().setItem(0, this.builder.constructItem(
 									Material.COMPASS, 
 									"&aLoot Menu", 
 									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to open",
 										"&7up the loot chests menu to create/delete chest items."
 									)),
-									"LootCreate"
+									new Pair<String, String>("LootCreate", "")
 							));
-							player.getInventory().setItem(1, gui.createDisplayItem(
+							player.getInventory().setItem(1, this.builder.constructItem(
 									Material.BARRIER, 
 									"&cLoot Delete", 
 									new ArrayList<String>(Arrays.asList(
@@ -3543,9 +3545,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										"&7actually placed in the position of the loot chest.",
 										"&7(A chest in its place is also valid)"
 									)),
-									"LootDelete"
+									new Pair<String, String>("LootDelete", "")
 							));
-							player.getInventory().setItem(2, gui.createDisplayItem(
+							player.getInventory().setItem(2, this.builder.constructItem(
 									Material.YELLOW_STAINED_GLASS, 
 									"&6Loot See", 
 									new ArrayList<String>(Arrays.asList(
@@ -3553,13 +3555,13 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										"&7any loot chest in a 20 block radius.",
 										"&7These loot chests will turn into yellow glass."
 									)),
-									"LootSee"
+									new Pair<String, String>("LootSee", "")
 							));
 						}
 						else if(item.hasKey("CapturePointItem")) {
 							staff.switchCapturePointMode(true);
 							player.getInventory().clear();
-							player.getInventory().setItem(0, gui.createDisplayItem(
+							player.getInventory().setItem(0, this.builder.constructItem(
 									Material.COMPASS, 
 									"&aCapture Point Menu", 
 									new ArrayList<String>(Arrays.asList(
@@ -3567,9 +3569,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										"&7up the capture points menu to create/delete",
 										"&7capture point items."
 									)),
-									"CapturePointCreate"
+									new Pair<String, String>("CapturePointCreate", "")
 							));
-							player.getInventory().setItem(1, gui.createDisplayItem(
+							player.getInventory().setItem(1, this.builder.constructItem(
 									Material.BARRIER, 
 									"&cCapture Point Delete", 
 									new ArrayList<String>(Arrays.asList(
@@ -3578,17 +3580,17 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										"&7actually placed in the position of the",
 										"&7capture point."
 									)),
-									"CapturePointDelete"
+									new Pair<String, String>("CapturePointDelete", "")
 							));
-							player.getInventory().setItem(2, gui.createDisplayItem(
-									Material.YELLOW_STAINED_GLASS, 
+							player.getInventory().setItem(2, this.builder.constructItem(
+									Material.BLUE_STAINED_GLASS, 
 									"&6Capture Point See", 
 									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to see",
 										"&7any capture points in a 20 block radius.",
 										"&7These capture points will turn into blue glass."
 									)),
-									"CapturePointSee"
+									new Pair<String, String>("CapturePointSee", "")
 							));
 						}
 					}
@@ -3690,7 +3692,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					NBTItem i = new NBTItem(item);
 					if(i.hasKey("Ban Option")) {
 						if(target.containsKey(player.getUniqueId())) {
-							if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+							if(rPlayer.getHighestRank().getRank() >= Rank.HELPER_PLUS.getRank()) {
 								player.closeInventory();
 								gui.BanChoice(player, target.get(player.getUniqueId()).getValue());
 							}
@@ -3701,7 +3703,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					}
 					else if(i.hasKey("History Option")) {
 						if(target.containsKey(player.getUniqueId())) {
-							if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+							if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 								player.closeInventory();
 								gui.PunishHistory(player, target.get(player.getUniqueId()).getValue());
 							}
@@ -3712,7 +3714,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					}
 					else if(i.hasKey("Mute Option")) {
 						if(target.containsKey(player.getUniqueId())) {
-							if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+							if(rPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 								player.closeInventory();
 								gui.MuteChoice(player, target.get(player.getUniqueId()).getValue());
 							}
@@ -3738,7 +3740,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					Punish pun = pManager.get(target.get(player.getUniqueId()).getKey());
 					if(i.hasKey("Ban")) {
 						if(target.containsKey(player.getUniqueId())) {
-							if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+							if(rPlayer.getHighestRank().getRank() >= Rank.HELPER_PLUS.getRank()) {
 								if(!pun.isBanned()) {
 									player.closeInventory();
 									gui.BanReason(player, target.get(player.getUniqueId()).getValue());
@@ -3754,7 +3756,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					}
 					else if(i.hasKey("Unban")) {
 						if(target.containsKey(player.getUniqueId())) {
-							if(rPlayer.getHighestRank().rank >= Rank.MOD.rank) {
+							if(rPlayer.getHighestRank().getRank() >= Rank.MOD.getRank()) {
 								if(pun.isBanned()) {
 									player.closeInventory();
 									pun.setBanTime(0L);
@@ -3944,7 +3946,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							for(Entry<UUID, RankedPlayer> entry : rManager.getRankedPlayerList().entrySet()) {
 								if(!entry.getKey().equals(player.getUniqueId())) {
 									RankedPlayer r = entry.getValue();
-									if(rPlayer.getHighestRank().rank >= r.getHighestRank().rank) {
+									if(rPlayer.getHighestRank().getRank() >= r.getHighestRank().getRank()) {
 										if(Bukkit.getPlayer(entry.getKey()) != null) {
 											Player pp = Bukkit.getPlayer(entry.getKey());
 											pp.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &chas banned " + p.getName() + " for: &b" + time + " &creason: " + pun.getBanReason(pun.getBanReasonsList().size() - 1)));
@@ -3971,7 +3973,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					Punish pun = pManager.get(target.get(player.getUniqueId()).getKey());
 					if(i.hasKey("Mute")) {
 						if(target.containsKey(player.getUniqueId())) {
-							if(rPlayer.getHighestRank().rank >= Rank.HELPER.rank) {
+							if(rPlayer.getHighestRank().getRank() >= Rank.HELPER.getRank()) {
 								if(!pun.isMuted()) {
 									player.closeInventory();
 									gui.MuteReason(player, target.get(player.getUniqueId()).getValue());
@@ -3987,7 +3989,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 					}
 					else if(i.hasKey("Unmute")) {
 						if(target.containsKey(player.getUniqueId())) {
-							if(rPlayer.getHighestRank().rank >= Rank.HELPER_PLUS.rank) {
+							if(rPlayer.getHighestRank().getRank() >= Rank.HELPER_PLUS.getRank()) {
 								if(pun.isMuted()) {
 									player.closeInventory();
 									pun.setMuteTime(0L);
@@ -4133,7 +4135,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							for(Entry<UUID, RankedPlayer> entry : rManager.getRankedPlayerList().entrySet()) {
 								if(!entry.getKey().equals(player.getUniqueId())) {
 									RankedPlayer r = entry.getValue();
-									if(rPlayer.getHighestRank().rank >= r.getHighestRank().rank) {
+									if(rPlayer.getHighestRank().getRank() >= r.getHighestRank().getRank()) {
 										if(Bukkit.getPlayer(entry.getKey()) != null) {
 											Player pp = Bukkit.getPlayer(entry.getKey());
 											if(pun.isMuted()) {
@@ -4227,7 +4229,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									RankedPlayer rPlayer = rManager.getRankedPlayer(player.getUniqueId());
 									for(Entry<UUID, RankedPlayer> entry : rManager.getRankedPlayerList().entrySet()) {
 										RankedPlayer r = entry.getValue();
-										if(rPlayer.getHighestRank().rank >= r.getHighestRank().rank) {
+										if(rPlayer.getHighestRank().getRank() >= r.getHighestRank().getRank()) {
 											if(Bukkit.getPlayer(entry.getKey()) != null) {
 												Player pp = Bukkit.getPlayer(entry.getKey());
 												pp.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + "&c " + message));

@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.nbtapi.NBTItem;
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Kit;
 
@@ -43,7 +44,54 @@ public class ItemStackBuilder {
 		item.setItemMeta(meta);
 		return item;
 	}
-	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key) {
+	public ItemStack constructItem(Material mat, String display, Pair... pair) {
+		ItemStack item = new ItemStack(mat, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		for(Pair<Object, Object> p : pair) {
+			if(p.getKey() instanceof String && p.getValue() instanceof String) {
+				Pair<String, String> newP = new Pair<String, String>((String)p.getKey(), (String)p.getValue());
+				i.setString(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Boolean) {
+				Pair<String, Boolean> newP = new Pair<String, Boolean>((String)p.getKey(), (Boolean)p.getValue());
+				i.setBoolean(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof Byte && p.getValue() instanceof Byte) {
+				Pair<String, Byte> newP = new Pair<String, Byte>((String)p.getKey(), (Byte)p.getValue());
+				i.setByte(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Integer) {
+				Pair<String, Integer> newP = new Pair<String, Integer>((String)p.getKey(), (Integer)p.getValue());
+				i.setInteger(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Float) {
+				Pair<String, Float> newP = new Pair<String, Float>((String)p.getKey(), (Float)p.getValue());
+				i.setFloat(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Double) {
+				Pair<String, Double> newP = new Pair<String, Double>((String)p.getKey(), (Double)p.getValue());
+				i.setDouble(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Long) {
+				Pair<String, Long> newP = new Pair<String, Long>((String)p.getKey(), (Long)p.getValue());
+				i.setLong(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Short) {
+				Pair<String, Short> newP = new Pair<String, Short>((String)p.getKey(), (Short)p.getValue());
+				i.setShort(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Object) {
+				Pair<String, Object> newP = new Pair<String, Object>((String)p.getKey(), (Object)p.getValue());
+				i.setObject(newP.getKey(), newP.getValue());
+			}
+			
+		}
+		return i.getItem();
+	}
+	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, Pair... pair) {
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new CCT().colorize(display));
@@ -53,102 +101,45 @@ public class ItemStackBuilder {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem i = new NBTItem(item);
-		i.setString(key, "");
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key, String value) {
-		ItemStack item = new ItemStack(mat, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
+		for(Pair<Object, Object> p : pair) {
+			if(p.getKey() instanceof String && p.getValue() instanceof String) {
+				Pair<String, String> newP = new Pair<String, String>((String)p.getKey(), (String)p.getValue());
+				i.setString(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Boolean) {
+				Pair<String, Boolean> newP = new Pair<String, Boolean>((String)p.getKey(), (Boolean)p.getValue());
+				i.setBoolean(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof Byte && p.getValue() instanceof Byte) {
+				Pair<String, Byte> newP = new Pair<String, Byte>((String)p.getKey(), (Byte)p.getValue());
+				i.setByte(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Integer) {
+				Pair<String, Integer> newP = new Pair<String, Integer>((String)p.getKey(), (Integer)p.getValue());
+				i.setInteger(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Float) {
+				Pair<String, Float> newP = new Pair<String, Float>((String)p.getKey(), (Float)p.getValue());
+				i.setFloat(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Double) {
+				Pair<String, Double> newP = new Pair<String, Double>((String)p.getKey(), (Double)p.getValue());
+				i.setDouble(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Long) {
+				Pair<String, Long> newP = new Pair<String, Long>((String)p.getKey(), (Long)p.getValue());
+				i.setLong(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Short) {
+				Pair<String, Short> newP = new Pair<String, Short>((String)p.getKey(), (Short)p.getValue());
+				i.setShort(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Object) {
+				Pair<String, Object> newP = new Pair<String, Object>((String)p.getKey(), (Object)p.getValue());
+				i.setObject(newP.getKey(), newP.getValue());
+			}
+			
 		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setString(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key, Kit value) {
-		ItemStack item = new ItemStack(mat, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setObject(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, ArrayList<String> key, ArrayList<String> value) {
-		ItemStack item = new ItemStack(mat, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		for(int i1 = 0; i1 < key.size(); i1++) {
-			i.setString(key.get(i1), value.get(i1));
-		}
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat, int amount, String display, ArrayList<String> lore, ArrayList<String> key, ArrayList<String> value) {
-		ItemStack item = new ItemStack(mat, amount);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		for(int i1 = 0; i1 < key.size(); i1++) {
-			i.setString(key.get(i1), value.get(i1));
-		}
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key, int value) {
-		ItemStack item = new ItemStack(mat, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setInteger(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key, double value) {
-		ItemStack item = new ItemStack(mat, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setDouble(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat, String display, ArrayList<String> lore, String key, Object value) {
-		ItemStack item = new ItemStack(mat, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setObject(key, value);
 		return i.getItem();
 	}
 	public ItemStack constructItem(Material mat, int amount) {
@@ -183,7 +174,55 @@ public class ItemStackBuilder {
 		item.setItemMeta(meta);
 		return item;
 	}
-	public ItemStack constructItem(Material mat, int amount, String display, ArrayList<String> lore, String key) {
+	
+	public ItemStack constructItem(Material mat, int amount, String display, Pair... pair) {
+		ItemStack item = new ItemStack(mat, amount);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(new CCT().colorize(display));
+		item.setItemMeta(meta);
+		NBTItem i = new NBTItem(item);
+		for(Pair p : pair) {
+			if(p.getKey() instanceof String && p.getValue() instanceof String) {
+				Pair<String, String> newP = new Pair<String, String>((String)p.getKey(), (String)p.getValue());
+				i.setString(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Boolean) {
+				Pair<String, Boolean> newP = new Pair<String, Boolean>((String)p.getKey(), (Boolean)p.getValue());
+				i.setBoolean(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof Byte && p.getValue() instanceof Byte) {
+				Pair<String, Byte> newP = new Pair<String, Byte>((String)p.getKey(), (Byte)p.getValue());
+				i.setByte(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Integer) {
+				Pair<String, Integer> newP = new Pair<String, Integer>((String)p.getKey(), (Integer)p.getValue());
+				i.setInteger(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Float) {
+				Pair<String, Float> newP = new Pair<String, Float>((String)p.getKey(), (Float)p.getValue());
+				i.setFloat(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Double) {
+				Pair<String, Double> newP = new Pair<String, Double>((String)p.getKey(), (Double)p.getValue());
+				i.setDouble(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Long) {
+				Pair<String, Long> newP = new Pair<String, Long>((String)p.getKey(), (Long)p.getValue());
+				i.setLong(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Short) {
+				Pair<String, Short> newP = new Pair<String, Short>((String)p.getKey(), (Short)p.getValue());
+				i.setShort(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Object) {
+				Pair<String, Object> newP = new Pair<String, Object>((String)p.getKey(), (Object)p.getValue());
+				i.setObject(newP.getKey(), newP.getValue());
+			}
+		}
+		return i.getItem();
+	}
+	
+	public ItemStack constructItem(Material mat, int amount, String display, ArrayList<String> lore, Pair... pair) {
 		ItemStack item = new ItemStack(mat, amount);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new CCT().colorize(display));
@@ -193,46 +232,44 @@ public class ItemStackBuilder {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem i = new NBTItem(item);
-		i.setString(key, "");
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat, int amount, String display, ArrayList<String> lore, String key, String value) {
-		ItemStack item = new ItemStack(mat, amount);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
+		for(Pair p : pair) {
+			if(p.getKey() instanceof String && p.getValue() instanceof String) {
+				Pair<String, String> newP = new Pair<String, String>((String)p.getKey(), (String)p.getValue());
+				i.setString(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Boolean) {
+				Pair<String, Boolean> newP = new Pair<String, Boolean>((String)p.getKey(), (Boolean)p.getValue());
+				i.setBoolean(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof Byte && p.getValue() instanceof Byte) {
+				Pair<String, Byte> newP = new Pair<String, Byte>((String)p.getKey(), (Byte)p.getValue());
+				i.setByte(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Integer) {
+				Pair<String, Integer> newP = new Pair<String, Integer>((String)p.getKey(), (Integer)p.getValue());
+				i.setInteger(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Float) {
+				Pair<String, Float> newP = new Pair<String, Float>((String)p.getKey(), (Float)p.getValue());
+				i.setFloat(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Double) {
+				Pair<String, Double> newP = new Pair<String, Double>((String)p.getKey(), (Double)p.getValue());
+				i.setDouble(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Long) {
+				Pair<String, Long> newP = new Pair<String, Long>((String)p.getKey(), (Long)p.getValue());
+				i.setLong(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Short) {
+				Pair<String, Short> newP = new Pair<String, Short>((String)p.getKey(), (Short)p.getValue());
+				i.setShort(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Object) {
+				Pair<String, Object> newP = new Pair<String, Object>((String)p.getKey(), (Object)p.getValue());
+				i.setObject(newP.getKey(), newP.getValue());
+			}
 		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setString(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat, int amount, String display, ArrayList<String> lore, String key, int value) {
-		ItemStack item = new ItemStack(mat, amount);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setInteger(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(Material mat,int amount, String display, ArrayList<String> lore, String key, Object value) {
-		ItemStack item = new ItemStack(mat, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setObject(key, value);
 		return i.getItem();
 	}
 	
@@ -268,61 +305,54 @@ public class ItemStackBuilder {
 		item.setItemMeta(meta);
 		return item;
 	}
-	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key) {
+	public ItemStack constructItem(ItemStack stack, int amount, String display, Pair... pair) {
 		ItemStack item = new ItemStack(stack);
+		stack.setAmount(amount);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem i = new NBTItem(item);
-		i.setString(key, "");
-		return i.getItem();
-	}
-	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, String value) {
-		ItemStack item = new ItemStack(stack);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setString(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, Kit value) {
-		ItemStack item = new ItemStack(stack);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setObject(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, ArrayList<String> key, ArrayList<String> value) {
-		ItemStack item = new ItemStack(stack);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		for(int i1 = 0; i1 < key.size(); i1++) {
-			i.setString(key.get(i1), value.get(i1));
+		for(Pair<Object, Object> p : pair) {
+			if(p.getKey() instanceof String && p.getValue() instanceof String) {
+				Pair<String, String> newP = new Pair<String, String>((String)p.getKey(), (String)p.getValue());
+				i.setString(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Boolean) {
+				Pair<String, Boolean> newP = new Pair<String, Boolean>((String)p.getKey(), (Boolean)p.getValue());
+				i.setBoolean(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof Byte && p.getValue() instanceof Byte) {
+				Pair<String, Byte> newP = new Pair<String, Byte>((String)p.getKey(), (Byte)p.getValue());
+				i.setByte(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Integer) {
+				Pair<String, Integer> newP = new Pair<String, Integer>((String)p.getKey(), (Integer)p.getValue());
+				i.setInteger(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Float) {
+				Pair<String, Float> newP = new Pair<String, Float>((String)p.getKey(), (Float)p.getValue());
+				i.setFloat(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Double) {
+				Pair<String, Double> newP = new Pair<String, Double>((String)p.getKey(), (Double)p.getValue());
+				i.setDouble(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Long) {
+				Pair<String, Long> newP = new Pair<String, Long>((String)p.getKey(), (Long)p.getValue());
+				i.setLong(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Short) {
+				Pair<String, Short> newP = new Pair<String, Short>((String)p.getKey(), (Short)p.getValue());
+				i.setShort(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Object) {
+				Pair<String, Object> newP = new Pair<String, Object>((String)p.getKey(), (Object)p.getValue());
+				i.setObject(newP.getKey(), newP.getValue());
+			}
 		}
 		return i.getItem();
 	}
-	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, ArrayList<String> key, ArrayList<String> value) {
+	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, Pair... pair) {
 		ItemStack item = new ItemStack(stack);
 		stack.setAmount(amount);
 		ItemMeta meta = item.getItemMeta();
@@ -333,48 +363,44 @@ public class ItemStackBuilder {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem i = new NBTItem(item);
-		for(int i1 = 0; i1 < key.size(); i1++) {
-			i.setString(key.get(i1), value.get(i1));
+		for(Pair<Object, Object> p : pair) {
+			if(p.getKey() instanceof String && p.getValue() instanceof String) {
+				Pair<String, String> newP = new Pair<String, String>((String)p.getKey(), (String)p.getValue());
+				i.setString(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Boolean) {
+				Pair<String, Boolean> newP = new Pair<String, Boolean>((String)p.getKey(), (Boolean)p.getValue());
+				i.setBoolean(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof Byte && p.getValue() instanceof Byte) {
+				Pair<String, Byte> newP = new Pair<String, Byte>((String)p.getKey(), (Byte)p.getValue());
+				i.setByte(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Integer) {
+				Pair<String, Integer> newP = new Pair<String, Integer>((String)p.getKey(), (Integer)p.getValue());
+				i.setInteger(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Float) {
+				Pair<String, Float> newP = new Pair<String, Float>((String)p.getKey(), (Float)p.getValue());
+				i.setFloat(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Double) {
+				Pair<String, Double> newP = new Pair<String, Double>((String)p.getKey(), (Double)p.getValue());
+				i.setDouble(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Long) {
+				Pair<String, Long> newP = new Pair<String, Long>((String)p.getKey(), (Long)p.getValue());
+				i.setLong(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Short) {
+				Pair<String, Short> newP = new Pair<String, Short>((String)p.getKey(), (Short)p.getValue());
+				i.setShort(newP.getKey(), newP.getValue());
+			}
+			else if(p.getKey() instanceof String && p.getValue() instanceof Object) {
+				Pair<String, Object> newP = new Pair<String, Object>((String)p.getKey(), (Object)p.getValue());
+				i.setObject(newP.getKey(), newP.getValue());
+			}
 		}
-		return i.getItem();
-	}
-	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, int value) {
-		ItemStack item = new ItemStack(stack);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setInteger(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, double value) {
-		ItemStack item = new ItemStack(stack);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setDouble(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(ItemStack stack, String display, ArrayList<String> lore, String key, Object value) {
-		ItemStack item = new ItemStack(stack);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setObject(key, value);
 		return i.getItem();
 	}
 	public ItemStack constructItem(ItemStack stack, int amount) {
@@ -412,61 +438,5 @@ public class ItemStackBuilder {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
-	}
-	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, String key) {
-		ItemStack item = new ItemStack(stack);
-		stack.setAmount(amount);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setString(key, "");
-		return i.getItem();
-	}
-	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, String key, String value) {
-		ItemStack item = new ItemStack(stack);
-		item.setAmount(amount);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setString(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, String key, int value) {
-		ItemStack item = new ItemStack(stack);
-		item.setAmount(amount);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setInteger(key, value);
-		return i.getItem();
-	}
-	public ItemStack constructItem(ItemStack stack, int amount, String display, ArrayList<String> lore, String key, Object value) {
-		ItemStack item = new ItemStack(stack);
-		item.setAmount(amount);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(new CCT().colorize(display));
-		for(int i = 0; i < lore.size(); i++) {
-			lore.set(i, new CCT().colorize(lore.get(i)));
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		NBTItem i = new NBTItem(item);
-		i.setObject(key, value);
-		return i.getItem();
 	}
 }

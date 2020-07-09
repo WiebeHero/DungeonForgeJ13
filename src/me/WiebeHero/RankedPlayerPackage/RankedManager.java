@@ -4,18 +4,30 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
+import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Kit;
+import net.luckperms.api.model.user.User;
 
 public class RankedManager {
-	public HashMap<UUID, RankedPlayer> ranked;
-	public RankedManager() {
+	private MethodLuck lp;
+	private HashMap<UUID, RankedPlayer> ranked;
+	public RankedManager(MethodLuck lp) {
+		this.lp = lp;
 		this.ranked = new HashMap<UUID, RankedPlayer>();
 	}
 	public void loadKitCooldowns() {
@@ -63,6 +75,31 @@ public class RankedManager {
 				rPlayer.setKitUnlock(Kit.FLIGHT, yml.getBoolean("Kits.Cooldowns." + uuid + ".Flight.Unlock"));
 				rPlayer.addKitCooldown(Kit.SUPPLIER, yml.getLong("Kits.Cooldowns." + uuid + ".Supplier.Cooldown"));
 				rPlayer.setKitUnlock(Kit.SUPPLIER, yml.getBoolean("Kits.Cooldowns." + uuid + ".Supplier.Unlock"));
+				rPlayer.setGiftCooldown(yml.getLong("Kits.Cooldowns." + uuid + ".Gift Cooldown"));
+				rPlayer.setFreeRankCooldown(yml.getLong("Kits.Cooldowns." + uuid + ".Free Rank Command"));
+				long realTime = yml.getLong("Kits.Cooldowns." + uuid + ".Free Bronze Time");
+				long bronzeTime = realTime - System.currentTimeMillis();
+				if(bronzeTime >= 0L) {
+					rPlayer.setBronzeTime(realTime);
+					BukkitTask task = new BukkitRunnable() {
+						public void run() {
+							User user = lp.loadUser(uuid);
+							if(user != null) {
+								if(lp.containsParrent(user, "bronze")) {
+									lp.removeParent(user, "bronze");
+									Player p = Bukkit.getPlayer(uuid);
+									if(p != null) {
+										p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour free &6Bronze &crank rank out! If you want to have this rank permanently. Visit: dungeonforge.eu/shop/"));
+									}
+								}
+							}
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), bronzeTime / 50L);
+					rPlayer.setTask(task);
+				}
+				@SuppressWarnings("unchecked")
+				ItemStack[] content = ((List<ItemStack>) yml.get("Kits.Cooldowns." + uuid + ".PlayerVaults")).toArray(new ItemStack[0]);
+				rPlayer.setStackList(content);
 				this.ranked.put(uuid, rPlayer);
 			}
 		}
@@ -80,6 +117,7 @@ public class RankedManager {
 			e.printStackTrace();
 		}
 		yml.set("Kits.Cooldowns", null);
+		yml.set("PlayerVaults", null);
 		for(Entry<UUID, RankedPlayer> entry : this.ranked.entrySet()) {
 			yml.createSection("Kits.Cooldowns." + entry.getKey());
 			UUID uuid = entry.getKey();
@@ -165,41 +203,65 @@ public class RankedManager {
 					yml.set("Kits.Cooldowns." + uuid + ".Raid.Cooldown", rPlayer.getKitCooldown(Kit.RAID));
 				}
 			}
-			if(rPlayer.getKitUnlock(Kit.RAID) == true) {
-				yml.set("Kits.Cooldowns." + uuid + ".Raid.Unlock", rPlayer.getKitUnlock(Kit.RAID));
+			if(rPlayer.hasKitUnlock(Kit.RAID)) {
+				if(rPlayer.getKitUnlock(Kit.RAID) == true) {
+					yml.set("Kits.Cooldowns." + uuid + ".Raid.Unlock", rPlayer.getKitUnlock(Kit.RAID));
+				}
 			}
 			if(rPlayer.hasKitCooldown(Kit.POTION)) {
 				if(rPlayer.getKitCooldown(Kit.POTION) != 0L) {
 					yml.set("Kits.Cooldowns." + uuid + ".Potion.Cooldown", rPlayer.getKitCooldown(Kit.POTION));
 				}
 			}
-			if(rPlayer.getKitUnlock(Kit.POTION) == true) {
-				yml.set("Kits.Cooldowns." + uuid + ".Potion.Unlock", rPlayer.getKitUnlock(Kit.POTION));
+			if(rPlayer.hasKitUnlock(Kit.POTION)) {
+				if(rPlayer.getKitUnlock(Kit.POTION) == true) {
+					yml.set("Kits.Cooldowns." + uuid + ".Potion.Unlock", rPlayer.getKitUnlock(Kit.POTION));
+				}
 			}
 			if(rPlayer.hasKitCooldown(Kit.BUILD)) {
 				if(rPlayer.getKitCooldown(Kit.BUILD) != 0L) {
 					yml.set("Kits.Cooldowns." + uuid + ".Build.Cooldown", rPlayer.getKitCooldown(Kit.BUILD));
 				}
 			}
-			if(rPlayer.getKitUnlock(Kit.BUILD) == true) {
-				yml.set("Kits.Cooldowns." + uuid + ".Build.Unlock", rPlayer.getKitUnlock(Kit.BUILD));
+			if(rPlayer.hasKitUnlock(Kit.BUILD)) {
+				if(rPlayer.getKitUnlock(Kit.BUILD) == true) {
+					yml.set("Kits.Cooldowns." + uuid + ".Build.Unlock", rPlayer.getKitUnlock(Kit.BUILD));
+				}
 			}
 			if(rPlayer.hasKitCooldown(Kit.CRYSTAL)) {
 				if(rPlayer.getKitCooldown(Kit.CRYSTAL) != 0L) {
+					yml.set("Kits.Cooldowns." + uuid + ".Crystal.Cooldown", rPlayer.getKitCooldown(Kit.CRYSTAL));
+				}
+			}
+			if(rPlayer.hasKitUnlock(Kit.CRYSTAL)) {
+				if(rPlayer.getKitUnlock(Kit.CRYSTAL) == true) {
+					yml.set("Kits.Cooldowns." + uuid + ".Crystal.Unlock", rPlayer.getKitUnlock(Kit.CRYSTAL));
+				}
+			}
+			if(rPlayer.hasKitCooldown(Kit.FLIGHT)) {
+				if(rPlayer.getKitCooldown(Kit.FLIGHT) != 0L) {
 					yml.set("Kits.Cooldowns." + uuid + ".Flight.Cooldown", rPlayer.getKitCooldown(Kit.CRYSTAL));
 				}
 			}
-			if(rPlayer.getKitUnlock(Kit.CRYSTAL) == true) {
-				yml.set("Kits.Cooldowns." + uuid + ".Flight.Unlock", rPlayer.getKitUnlock(Kit.CRYSTAL));
+			if(rPlayer.hasKitUnlock(Kit.FLIGHT)) {
+				if(rPlayer.getKitUnlock(Kit.FLIGHT) == true) {
+					yml.set("Kits.Cooldowns." + uuid + ".Flight.Unlock", rPlayer.getKitUnlock(Kit.CRYSTAL));
+				}
 			}
 			if(rPlayer.hasKitCooldown(Kit.SUPPLIER)) {
 				if(rPlayer.getKitCooldown(Kit.SUPPLIER) != 0L) {
 					yml.set("Kits.Cooldowns." + uuid + ".Supplier.Cooldown", rPlayer.getKitCooldown(Kit.SUPPLIER));
 				}
 			}
-			if(rPlayer.getKitUnlock(Kit.SUPPLIER) == true) {
-				yml.set("Kits.Cooldowns." + uuid + ".Supplier.Unlock", rPlayer.getKitUnlock(Kit.SUPPLIER));
+			if(rPlayer.hasKitUnlock(Kit.SUPPLIER)) {
+				if(rPlayer.getKitUnlock(Kit.SUPPLIER) == true) {
+					yml.set("Kits.Cooldowns." + uuid + ".Supplier.Unlock", rPlayer.getKitUnlock(Kit.SUPPLIER));
+				}
 			}
+			yml.set("Kits.Cooldowns." + uuid + ".Gift Cooldown", rPlayer.getGiftCooldown());
+			yml.set("Kits.Cooldowns." + uuid + ".Free Rank Command", rPlayer.getFreeRankCooldown());
+			yml.set("Kits.Cooldowns." + uuid + ".Free Bronze Time", rPlayer.getBronzeTime());
+			yml.set("Kits.Cooldowns." + uuid + ".PlayerVaults", rPlayer.getStackList());
 		}
 		try{
 			yml.save(f1);

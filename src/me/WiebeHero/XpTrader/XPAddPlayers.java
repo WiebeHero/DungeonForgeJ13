@@ -1,7 +1,8 @@
 package me.WiebeHero.XpTrader;
 
+import java.util.Random;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,10 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.CustomEvents.DFPlayerLevelUpEvent;
 import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
-import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Scoreboard.DFScoreboard;
 
@@ -34,6 +32,16 @@ public class XPAddPlayers implements Listener {
 				NBTItem i = new NBTItem(item);
 				if(i.hasKey("XPBottle")) {
 					int xpAdd = i.getInteger("XPBottle");
+					DFPlayerXpGainEvent ev = new DFPlayerXpGainEvent(player, xpAdd, this.dfManager, this.board);
+					Bukkit.getServer().getPluginManager().callEvent(ev);
+					ev.proceed();
+					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, 2, (float) 1.0);
+					player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+				}
+				else if(i.hasKey("RandomXPBottle")) {
+					int xpMin = i.getInteger("Min");
+					int xpMax = i.getInteger("Max");
+					int xpAdd = new Random().nextInt(xpMax) + xpMin;
 					DFPlayerXpGainEvent ev = new DFPlayerXpGainEvent(player, xpAdd, this.dfManager, this.board);
 					Bukkit.getServer().getPluginManager().callEvent(ev);
 					ev.proceed();

@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 import com.google.common.base.Enums;
 
 import de.tr7zw.nbtapi.NBTItem;
+import javafx.util.Pair;
 import me.WiebeHero.Consumables.Consumable;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
@@ -51,10 +52,19 @@ public class RankEnum {
 		HEAD_MOD(13, "&1Head Mod"),
 		ADMIN(14, "&cAdmin"),
 		HEAD_ADMIN(15, "&4Head Admin"),
-		MANAGER(16, "&5Manager"),
-		OWNER(17, "&2Owner");
-		public final int rank;
-		public final String display;
+		TEAM_ADMIN(16, "&4Team Admin"),
+		MANAGER(17, "&5Manager"),
+		OWNER(18, "&2Owner");
+		private final int rank;
+		private final String display;
+		
+		public int getRank() {
+			return this.rank;
+		}
+		
+		public String getDisplay() {
+			return this.display;
+		}
 		
 		private Rank(int rank, String display) {
 			this.rank = rank;
@@ -68,7 +78,7 @@ public class RankEnum {
 		return Enums.getIfPresent(Kit.class, rank.toString()).orNull();
 	}
 	public enum Kit{
-		USER("&7User", 0, 10800000L){
+		USER("&7User", 0, 10800000L, Material.OAK_LOG){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tierS = new HashMap<String, Integer>();
@@ -85,7 +95,7 @@ public class RankEnum {
 				items.add(con.equipment(Material.WOODEN_PICKAXE, "&7Wooden Pickaxe", EquipmentSlot.HAND, 1.8, 0.8, 100, tierT));
 				items.add(con.equipment(Material.WOODEN_SHOVEL, "&7Wooden Shovel", EquipmentSlot.HAND, 2.3, 0.94, 100, tierT));
 				items.add(con.equipment(Material.WOODEN_HOE, "&7Wooden Hoe", EquipmentSlot.HAND, 1.5, 1.2, 100, tierH));
-				items.add(con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.5, 0.5, 100, tierA, Color.fromRGB(145, 95, 33)));
+				items.add(con.equipment(Material.LEATHER_HELMET, "&7Wooden Helmet", EquipmentSlot.HEAD, 1.5, 0.75, 100, tierA, Color.fromRGB(145, 95, 33)));
 				items.add(con.equipment(Material.LEATHER_CHESTPLATE, "&7Wooden Chestplate", EquipmentSlot.CHEST, 1.5, 0.75, 100, tierA, Color.fromRGB(145, 95, 33)));
 				items.add(con.equipment(Material.LEATHER_LEGGINGS, "&7Wooden Leggings", EquipmentSlot.LEGS, 1.5, 0.75, 100, tierA, Color.fromRGB(145, 95, 33)));
 				items.add(con.equipment(Material.LEATHER_BOOTS, "&7Wooden Boots", EquipmentSlot.FEET, 1.5, 0.75, 100, tierA, Color.fromRGB(145, 95, 33)));
@@ -105,7 +115,7 @@ public class RankEnum {
 				}
 			}
 		},
-		BRONZE("&6Bronze", 1, 259200000L){
+		BRONZE("&6Bronze", 1, 345600000L, Material.BRICK){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -131,7 +141,7 @@ public class RankEnum {
 				}
 			}
 		},
-		SILVER("&7Silver", 2, 259200000L){
+		SILVER("&7Silver", 2, 345600000L, Material.IRON_NUGGET){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -157,7 +167,7 @@ public class RankEnum {
 				}
 			}
 		},
-		GOLD("&eGold", 3, 259200000L){
+		GOLD("&eGold", 3, 345600000L, Material.GOLD_INGOT){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -183,7 +193,7 @@ public class RankEnum {
 				}
 			}
 		},
-		PLATINUM("&3Platinum", 4, 259200000L){
+		PLATINUM("&3Platinum", 4, 345600000L, Material.IRON_INGOT){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -212,7 +222,7 @@ public class RankEnum {
 				}
 			}
 		},
-		DIAMOND("&bDiamond", 5, 259200000L){
+		DIAMOND("&bDiamond", 5, 345600000L, Material.DIAMOND){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -242,7 +252,7 @@ public class RankEnum {
 				}
 			}
 		},
-		EMERALD("&aEmerald", 6, 259200000L){
+		EMERALD("&aEmerald", 6, 345600000L, Material.EMERALD){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -273,7 +283,7 @@ public class RankEnum {
 				}
 			}
 		},
-		YOUTUBER("&cY&fo&cu&ft&cu&fb&ce&fr", 7, 259200000L){
+		YOUTUBER("&cY&fo&cu&ft&cu&fb&ce&fr", 7, 345600000L, Material.PINK_DYE){
 			@Override
 			public void recieveKit(Player p) {
 				HashMap<String, Integer> tier = new HashMap<String, Integer>();
@@ -304,7 +314,7 @@ public class RankEnum {
 				}
 			}
 		},
-		QA("&bQA", 8, 259200000L){
+		QA("&bQA", 8, 345600000L, Material.LIGHT_BLUE_DYE){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -321,7 +331,7 @@ public class RankEnum {
 				}
 			}
 		},
-		QA_ADMIN("&cQA Admin", 9, 259200000L){
+		QA_ADMIN("&cQA Admin", 9, 345600000L, Material.LIGHT_BLUE_DYE){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -339,7 +349,7 @@ public class RankEnum {
 				}
 			}
 		},
-		HELPER("&aHelper", 10, 259200000L){
+		HELPER("&aHelper", 10, 345600000L, Material.LIME_DYE){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -356,7 +366,7 @@ public class RankEnum {
 				}
 			}
 		},
-		HELPER_PLUS("&aHelper+", 11, 259200000L){
+		HELPER_PLUS("&aHelper+", 11, 345600000L, Material.CACTUS_GREEN){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -375,7 +385,7 @@ public class RankEnum {
 				}
 			}
 		},
-		MOD("&9Mod", 12, 259200000L){
+		MOD("&9Mod", 12, 345600000L, Material.LIGHT_BLUE_DYE){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -394,7 +404,7 @@ public class RankEnum {
 				}
 			}
 		},
-		HEAD_MOD("&1Head Mod", 13, 259200000L){
+		HEAD_MOD("&1Head Mod", 13, 345600000L, Material.CYAN_DYE){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -414,7 +424,7 @@ public class RankEnum {
 				}
 			}
 		},
-		ADMIN("&4Admin", 14, 259200000L){
+		ADMIN("&4Admin", 14, 345600000L, Material.ROSE_RED){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -437,7 +447,7 @@ public class RankEnum {
 				}
 			}
 		},
-		HEAD_ADMIN("&4Head Admin", 15, 259200000L){
+		HEAD_ADMIN("&4Head Admin", 15, 345600000L, Material.REDSTONE){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -460,7 +470,30 @@ public class RankEnum {
 				}
 			}
 		},
-		MANAGER("&5Manager", 16, 259200000L){
+		TEAM_ADMIN("&4Team Admin", 15, 345600000L, Material.REDSTONE){
+			@Override
+			public void recieveKit(Player p) {
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				items.add(common(64));
+				items.add(rare(64));
+				items.add(epic(64));
+				items.add(legendary(64));
+				items.add(mythic(64));
+				items.add(heroic(64));
+				items.add(playerXPBottle(2000));
+				items.add(moneyNote(6000));
+				items.add(builder.constructItem(Material.REDSTONE));
+				for(ItemStack item : items) {
+					if(p.getInventory().firstEmpty() != -1) {
+						p.getInventory().addItem(item);
+					}
+					else {
+						p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.25, 0), item);
+					}
+				}
+			}
+		},
+		MANAGER("&5Manager", 16, 345600000L, Material.MAGENTA_DYE){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -483,7 +516,7 @@ public class RankEnum {
 				}
 			}
 		},
-		OWNER("&2Owner", 17, 259200000L){
+		OWNER("&2Owner", 17, 345600000L, Material.CACTUS_GREEN){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -506,7 +539,7 @@ public class RankEnum {
 				}
 			}
 		},
-		RAID("&6Raid", 100, 172800000L){
+		RAID("&6Raid", 100, 172800000L, Material.TNT){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -528,7 +561,7 @@ public class RankEnum {
 				}
 			}
 		},
-		POTION("&6Potion", 101, 259200000L){
+		POTION("&6Potion", 101, 345600000L, Material.POTION){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -597,7 +630,7 @@ public class RankEnum {
 				}
 			}
 		},
-		CRYSTAL("&6Crystal", 102, 259200000L){
+		CRYSTAL("&6Crystal", 102, 345600000L, Material.NETHER_STAR){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -616,7 +649,7 @@ public class RankEnum {
 				}
 			}
 		},
-		BUILD("&6Build", 103, 172800000L){
+		BUILD("&6Build", 103, 172800000L, Material.GRASS){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -640,7 +673,7 @@ public class RankEnum {
 				}
 			}
 		},
-		FLIGHT("&6Flight", 104, 432000000L){
+		FLIGHT("&6Flight", 104, 432000000L, Material.FEATHER){
 			@Override
 			public void recieveKit(Player p) {
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -674,7 +707,7 @@ public class RankEnum {
 				}
 			}
 		},
-		SUPPLIER("&6Supplier", 105, 259200000L)
+		SUPPLIER("&6Supplier", 105, 345600000L, Material.CHEST)
 		{
 			@Override
 			public void recieveKit(Player p) {
@@ -697,14 +730,32 @@ public class RankEnum {
 				}
 			}
 		};
-		public final String display;
-		public final Long cooldown;
-		public final int rank;
+		private final String display;
+		private final Long cooldown;
+		private final int rank;
+		private final Material kDisplay;
 		
-		private Kit(String display, int rank, Long cooldown) {
+		public String getDisplay() {
+			return this.display;
+		}
+		
+		public Long getCooldown() {
+			return this.cooldown;
+		}
+		
+		public int getRank() {
+			return this.rank;
+		}
+		
+		public Material getMaterialDisplay() {
+			return this.kDisplay;
+		}
+		
+		private Kit(String display, int rank, Long cooldown, Material kDisplay) {
 			this.display = new CCT().colorize(display);
 			this.cooldown = cooldown;
 			this.rank = rank;
+			this.kDisplay = kDisplay;
 		}
 		public void recieveKit(Player p) {};
 	}
@@ -743,14 +794,8 @@ public class RankEnum {
 				"&7really nice rewards!",
 				"&7Rarity: &7Common"
 			)),
-			new ArrayList<String>(Arrays.asList(
-				"CrystalObject",
-				"Rarity"
-			)),
-			new ArrayList<String>(Arrays.asList(
-				"",
-				"Common"
-			))
+			new Pair<String, String>("CrystalObject", ""),
+			new Pair<String, String>("Rarity", "Common")
 		);
 		return item;
 	}
@@ -764,14 +809,8 @@ public class RankEnum {
 				"&7really nice rewards!",
 				"&7Rarity: &aRare"
 			)),
-			new ArrayList<String>(Arrays.asList(
-				"CrystalObject",
-				"Rarity"
-			)),
-			new ArrayList<String>(Arrays.asList(
-				"",
-				"Rare"
-			))
+			new Pair<String, String>("CrystalObject", ""),
+			new Pair<String, String>("Rarity", "Rare")
 		);
 		return item;
 	}
@@ -785,14 +824,8 @@ public class RankEnum {
 				"&7really nice rewards!",
 				"&7Rarity: &bEpic"
 			)),
-			new ArrayList<String>(Arrays.asList(
-				"CrystalObject",
-				"Rarity"
-			)),
-			new ArrayList<String>(Arrays.asList(
-				"",
-				"Epic"
-			))
+			new Pair<String, String>("CrystalObject", ""),
+			new Pair<String, String>("Rarity", "Epic")
 		);
 		return item;
 	}
@@ -806,14 +839,8 @@ public class RankEnum {
 				"&7really nice rewards!",
 				"&7Rarity: &cLegendary"
 			)),
-			new ArrayList<String>(Arrays.asList(
-				"CrystalObject",
-				"Rarity"
-			)),
-			new ArrayList<String>(Arrays.asList(
-				"",
-				"Legendary"
-			))
+			new Pair<String, String>("CrystalObject", ""),
+			new Pair<String, String>("Rarity", "Legendary")
 		);
 		return item;
 	}
@@ -827,14 +854,8 @@ public class RankEnum {
 				"&7really nice rewards!",
 				"&7Rarity: &5Mythic"
 			)),
-			new ArrayList<String>(Arrays.asList(
-				"CrystalObject",
-				"Rarity"
-			)),
-			new ArrayList<String>(Arrays.asList(
-				"",
-				"Mythic"
-			))
+			new Pair<String, String>("CrystalObject", ""),
+			new Pair<String, String>("Rarity", "Mythic")
 		);
 		return item;
 	}
@@ -848,14 +869,8 @@ public class RankEnum {
 				"&7really nice rewards!",
 				"&7Rarity: &eHeroic"
 			)),
-			new ArrayList<String>(Arrays.asList(
-				"CrystalObject",
-				"Rarity"
-			)),
-			new ArrayList<String>(Arrays.asList(
-				"",
-				"Heroic"
-			))
+			new Pair<String, String>("CrystalObject", ""),
+			new Pair<String, String>("Rarity", "Heroic")
 		);
 		return item;
 	}

@@ -59,7 +59,7 @@ public class AHEvents implements Listener{
 										double price = ah.getPrice();
 										DFPlayer dfBuyer = dfManager.getEntity(player);
 										if(dfBuyer.getMoney() >= price) {
-											if(ahManager.isInAhSimple(ah.getKey())) {
+											if(ahManager.isInAhSimple(ah.getUniqueId())) {
 												ahInv.AuctionHouseConfirm(player, event.getCurrentItem());
 											}
 											else {
@@ -153,9 +153,9 @@ public class AHEvents implements Listener{
 							NBTItem item = new NBTItem(it);
 							if(item.hasKey("AHItem")) {
 								AHItem ah = item.getObject("AHItem", AHItem.class);
-								if(ahManager.isInAhSimple(ah.getKey())) {
+								if(ahManager.isInAhSimple(ah.getUniqueId())) {
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 1.5F);
-									ahManager.removeFromAh(ah.getKey());
+									ahManager.removeFromAh(ah.getUniqueId());
 									item.setString("Collect", "");
 									ahManager.addToBin(player.getUniqueId(), ahManager.deconstructAHItem(item.getItem()));
 									ahInv.AuctionHouseSelling(player);
@@ -214,10 +214,10 @@ public class AHEvents implements Listener{
 									DFPlayer dfBuyer = dfManager.getEntity(player);
 									double price = ah.getPrice();
 									if(dfBuyer.getMoney() >= ah.getPrice()) {
-										if(ahManager.isInAhSimple(ah.getKey())) {
+										if(ahManager.isInAhSimple(ah.getUniqueId())) {
 											if(player.getInventory().firstEmpty() != -1) {
 												player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_TRADE, 2.0F, 1.0F);
-												ahManager.removeFromAh(ah.getKey());
+												ahManager.removeFromAh(ah.getUniqueId());
 												DFPlayer dfSeller = dfManager.getEntity(ah.getSellerUuid());
 												dfBuyer.removeMoney(price);
 												dfSeller.addMoney(price);

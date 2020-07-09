@@ -95,16 +95,18 @@ public class DFFactionManager {
 		return this.facPlayerManager.getFactionPlayer(uuid).getFactionId() != null;
 	}
 	public boolean isFriendly(Entity check1, Entity check2) {
-		if(facPlayerManager.contains(check1.getUniqueId()) && facPlayerManager.contains(check2.getUniqueId())) {
-			UUID uuid1 = check1.getUniqueId();
-			UUID uuid2 = check2.getUniqueId();
-			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(uuid1);
-			DFFaction faction = this.getFaction(facPlayer.getFactionId());
-			DFFactionPlayer facP = facPlayerManager.getFactionPlayer(uuid2);
-			DFFaction other = this.getFaction(facP.getFactionId());
-			if(faction != null && other != null) {
-				if(faction.isAlly(other.getName()) || faction.isMember(uuid2)) {
-					return true;
+		if(check1 != null && check2 != null) {
+			if(facPlayerManager.contains(check1.getUniqueId()) && facPlayerManager.contains(check2.getUniqueId())) {
+				UUID uuid1 = check1.getUniqueId();
+				UUID uuid2 = check2.getUniqueId();
+				DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(uuid1);
+				DFFaction faction = this.getFaction(facPlayer.getFactionId());
+				DFFactionPlayer facP = facPlayerManager.getFactionPlayer(uuid2);
+				DFFaction other = this.getFaction(facP.getFactionId());
+				if(faction != null && other != null) {
+					if(faction.isAlly(other.getName()) || faction.isMember(uuid2)) {
+						return true;
+					}
 				}
 			}
 		}

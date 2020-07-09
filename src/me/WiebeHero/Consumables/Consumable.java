@@ -111,8 +111,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Smooth_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, item);
@@ -159,8 +158,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.BLACK_WOOL,
@@ -177,8 +175,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						150
+						new Pair<String, Integer>("Cooldown", 150)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Shadow_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
@@ -212,8 +209,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.ORANGE_WOOL,
@@ -228,8 +224,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						200
+						new Pair<String, Integer>("Cooldown", 200)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Hastened_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
@@ -270,8 +265,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.RED_WOOL,
@@ -287,8 +281,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						200
+						new Pair<String, Integer>("Cooldown", 200)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Bursting_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
@@ -348,8 +341,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.PINK_WOOL,
@@ -368,8 +360,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						300
+						new Pair<String, Integer>("Cooldown", 300)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Healing_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
@@ -418,8 +409,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.PURPLE_WOOL,
@@ -434,8 +424,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						500
+						new Pair<String, Integer>("Cooldown", 500)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Godlike_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
@@ -471,8 +460,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.LIGHT_BLUE_WOOL,
@@ -488,8 +476,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						300
+						new Pair<String, Integer>("Cooldown", 300)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Aquatic_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
@@ -533,8 +520,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.BLUE_WOOL,
@@ -550,8 +536,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						300
+						new Pair<String, Integer>("Cooldown", 300)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Frozen_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
@@ -610,8 +595,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.GREEN_WOOL,
@@ -626,8 +610,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						350
+						new Pair<String, Integer>("Cooldown", 350)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Curing_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
@@ -662,8 +645,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.LIME_WOOL,
@@ -678,8 +660,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						250
+						new Pair<String, Integer>("Cooldown", 250)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Bouncy_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);
@@ -722,8 +703,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						60
+						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.BROWN_WOOL,
@@ -738,8 +718,7 @@ public class Consumable {
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
 						)),
-						"Cooldown",
-						200
+						new Pair<String, Integer>("Cooldown", 200)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Poopy_Fluzgla");
 				ShapedRecipe recipe = new ShapedRecipe(key, result);

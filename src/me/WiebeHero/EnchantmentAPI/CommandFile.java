@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
+import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 
 public abstract class CommandFile implements Listener{
@@ -31,6 +32,7 @@ public abstract class CommandFile implements Listener{
     void activateEnchantment(LivingEntity entity, int level, EntityDamageByEntityEvent event) {};
     void activateEnchantment(LivingEntity entity, int level, PlayerItemConsumeEvent event) {};
     void activateEnchantment(LivingEntity entity, int level, FoodLevelChangeEvent event) {};
+    void activateEnchantment(LivingEntity entity, int level, DFPlayerXpGainEvent event) {};
 	void activateEnchantment(LivingEntity damager, LivingEntity victim, int level) {};
 	void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, ProjectileHitEvent event) {};
 	void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDeathEvent event) {};

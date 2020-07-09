@@ -77,7 +77,7 @@ public class AHManager {
 		for(ItemStack item : this.ahList) {
 			NBTItem i = new NBTItem(item);
 			AHItem ah = i.getObject("AHItem", AHItem.class);
-			yml.set("AuctionHouse.Items." + ah.getKey(), item);
+			yml.set("AuctionHouse.Items." + ah.getUniqueId(), item);
 		}
 		try{
 			yml.save(f1);
@@ -93,7 +93,7 @@ public class AHManager {
 				NBTItem i = new NBTItem(item);
 				if(i.hasKey("AHItem")) {
 					AHItem ah = i.getObject("AHItem", AHItem.class);
-					if(ah.getKey().equals(uuid)) {
+					if(ah.getUniqueId().equals(uuid)) {
 						count++;
 					}
 				}
@@ -121,7 +121,7 @@ public class AHManager {
 		for(ItemStack it : this.ahList) {
 			NBTItem n = new NBTItem(it);
 			AHItem ah = n.getObject("AHItem", AHItem.class);
-			UUID nUuid = ah.getKey();
+			UUID nUuid = ah.getUniqueId();
 			if(uuid.equals(nUuid)) {
 				return new Pair<Boolean, ItemStack>(true, it);
 			}
@@ -132,7 +132,7 @@ public class AHManager {
 		for(ItemStack it : this.ahList) {
 			NBTItem n = new NBTItem(it);
 			AHItem ah = n.getObject("AHItem", AHItem.class);
-			UUID nUuid = ah.getKey();
+			UUID nUuid = ah.getUniqueId();
 			if(uuid.equals(nUuid)) {
 				return true;
 			}
@@ -268,9 +268,9 @@ public class AHManager {
 				AHItem ahC = c.getObject("AHItem", AHItem.class);
 				for(int i = 0; i < this.ahList.size(); i++) {
 					ItemStack item = this.ahList.get(i);
-					NBTItem x = new NBTItem(compare);
+					NBTItem x = new NBTItem(item);
 					AHItem ahX = x.getObject("AHItem", AHItem.class);
-					if(ahC.getKey().equals(ahX.getKey())) {
+					if(ahC.getUniqueId().equals(ahX.getUniqueId())) {
 						inv.setItem(2, item);
 					}
 				}

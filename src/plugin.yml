@@ -189,3 +189,65 @@ commands:
   trade:
     ussage: /<command>
     description: 'Command for setting levels'
+  boosters:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  dchat:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  xptrader:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  workbench:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  personalvault:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [pv]
+  near:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  enderchest:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [ec]
+  playershop:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [pshop]
+  playertime:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [ptime]
+  playerbright:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [pbright]
+  sellhand:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  playerweather:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [pweather]
+  playerfeed:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [pfeed]
+  teleportcapturepoint:
+    ussage: /<command>
+    description: 'Command for setting levels'
+    aliases: [tpcp]
+  sellall:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  giftall:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  playerfly:
+    ussage: /<command>
+    description: 'Command for setting levels'
+  freerank:
+    ussage: /<command>
+    description: 'Command for setting levels'

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
@@ -20,7 +21,7 @@ public class TradeMenu {
 	private ArrayList<Integer> itemsThem;
 	
 	public TradeMenu(ItemStackBuilder builder) {
-		this.fill = new ArrayList<Integer>(Arrays.asList(4, 13, 22, 31, 36, 37, 38, 39, 41, 42, 43, 44, 45, 47, 49, 51, 53));
+		this.fill = new ArrayList<Integer>(Arrays.asList(4, 13, 22, 31, 36, 37, 38, 39, 41, 42, 43, 44, 45, 47, 48, 50, 51, 53));
 		this.itemsYou = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 28, 29, 30));
 		this.itemsThem = new ArrayList<Integer>(Arrays.asList(5, 6, 7, 8, 14, 15, 16, 17, 23, 24, 25, 26, 32, 33, 34));
 		this.builder = builder;
@@ -45,15 +46,14 @@ public class TradeMenu {
 				1,
 				"&aAccept Trade",
 				new ArrayList<String>(),
-				"Trade Start"
+				new Pair<String, String>("Trade Start", "")
 		));
 		ItemStack readyStatus = this.builder.constructItem(
 				Material.GRAY_DYE,
 				1,
 				"&7Status: &cNot ready",
 				new ArrayList<String>(),
-				"Status",
-				"Not Ready"
+				new Pair<String, String>("Status", "Not Ready")
 		);
 		i.setItem(46, readyStatus);
 		i.setItem(52, readyStatus);
@@ -62,8 +62,7 @@ public class TradeMenu {
 				1,
 				"&aMoney: 0.00$",
 				new ArrayList<String>(),
-				"Money",
-				0
+				new Pair<String, Double>("Money", 0.00)
 		);
 		i.setItem(27, moneyStatus);
 		i.setItem(35, moneyStatus);
@@ -76,11 +75,9 @@ public class TradeMenu {
 						"&7Click this to deposit money",
 						"&7into the trade!"
 				)),
-				"Money",
-				0
+				new Pair<String, Double>("Money", 0.00)
 		);
-		i.setItem(48, moneySign);
-		i.setItem(50, moneySign);
+		i.setItem(49, moneySign);
 		
 		tradeMe.openInventory(i);
 		tradingWith.openInventory(i);

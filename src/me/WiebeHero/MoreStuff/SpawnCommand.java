@@ -19,6 +19,7 @@ public class SpawnCommand implements Listener,CommandExecutor{
 	public String spawn = "spawn";
 	
 	public static ArrayList<String> spawning = new ArrayList<String>();
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
@@ -55,14 +56,14 @@ public class SpawnCommand implements Listener,CommandExecutor{
 									}
 									else {
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
-										cancel();
 										spawning.remove(player.getUniqueId().toString());
+										cancel();
 									}
 								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
-									cancel();
 									spawning.remove(player.getUniqueId().toString());
+									cancel();
 								}
 								count--;
 								temp++;

@@ -48,6 +48,10 @@ import me.WiebeHero.AuctionHouse.AHCommand;
 import me.WiebeHero.AuctionHouse.AHEvents;
 import me.WiebeHero.AuctionHouse.AHInventory;
 import me.WiebeHero.AuctionHouse.AHManager;
+import me.WiebeHero.Boosters.BoosterCommands;
+import me.WiebeHero.Boosters.BoosterEvents;
+import me.WiebeHero.Boosters.BoosterInventory;
+import me.WiebeHero.Boosters.BoosterManager;
 import me.WiebeHero.CapturePoints.CapturePointCommand;
 import me.WiebeHero.CapturePoints.CapturePointEvents;
 import me.WiebeHero.CapturePoints.CapturePointManager;
@@ -71,11 +75,16 @@ import me.WiebeHero.DFPlayerPackage.DFPlayerRegister;
 import me.WiebeHero.DFPlayerPackage.EffectSkills;
 import me.WiebeHero.DFPlayerPackage.Enums;
 import me.WiebeHero.DFPlayerPackage.Enums.Classes;
-import me.WiebeHero.DFShops.DFShop;
 import me.WiebeHero.DFShops.PayCommand;
-import me.WiebeHero.DungeonInstances.DungeonMaxima;
-import me.WiebeHero.DungeonInstances.DungeonParty;
-import me.WiebeHero.DungeonInstances.DungeonPartyCommand;
+import me.WiebeHero.DFShops.ShopEvents;
+import me.WiebeHero.DFShops.ShopItemManager;
+import me.WiebeHero.DFShops.ShopMenu;
+import me.WiebeHero.DailyRewards.DailyRewardEvents;
+import me.WiebeHero.DailyRewards.DailyRewardLootTable;
+import me.WiebeHero.DailyRewards.DailyRewardManager;
+import me.WiebeHero.DailyRewards.DailyRewardMenu;
+import me.WiebeHero.DailyRewards.DailyRewardRoll;
+import me.WiebeHero.DungeonInstances.PartyCommand;
 import me.WiebeHero.EnchantmentAPI.CommandFile;
 import me.WiebeHero.EnchantmentAPI.Enchantment;
 import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
@@ -87,6 +96,8 @@ import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Factions.FactionInventory;
 import me.WiebeHero.Factions.FactionsHandler;
 import me.WiebeHero.FishingLoot.ChangeFishDrops;
+import me.WiebeHero.FlyTicket.FlyTicketEvents;
+import me.WiebeHero.FlyTicket.FlyTicketManager;
 import me.WiebeHero.LootChest.ChestEvents;
 import me.WiebeHero.LootChest.LootChestManager;
 import me.WiebeHero.LootChest.LootRewards;
@@ -119,10 +130,14 @@ import me.WiebeHero.Novis.NovisEnchantmentGetting;
 import me.WiebeHero.Novis.NovisInventory;
 import me.WiebeHero.Novis.NovisRewards;
 import me.WiebeHero.OtherClasses.SignMenuFactory;
+import me.WiebeHero.Party.PartyEvents;
+import me.WiebeHero.Party.PartyManager;
 import me.WiebeHero.RankedPlayerPackage.KitCommand;
 import me.WiebeHero.RankedPlayerPackage.KitListener;
 import me.WiebeHero.RankedPlayerPackage.KitMenu;
+import me.WiebeHero.RankedPlayerPackage.KitRoll;
 import me.WiebeHero.RankedPlayerPackage.RankEnum;
+import me.WiebeHero.RankedPlayerPackage.RankedCommands;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
 import me.WiebeHero.RankedPlayerPackage.RankedPlayerListener;
 import me.WiebeHero.Scoreboard.DFScoreboard;
@@ -151,11 +166,10 @@ import net.luckperms.api.model.user.User;
 
 public class CustomEnchantments extends JavaPlugin implements Listener{
 	private ArrayList<Integer> availableSlots = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35));
-	public HashMap<UUID, DungeonParty> dfDungeonParty = new HashMap<UUID, DungeonParty>();
-	public ArrayList<DungeonMaxima> dfDungeonList = new ArrayList<DungeonMaxima>();
 	private DFPlayerManager dfManager = new DFPlayerManager();
 	private static CustomEnchantments instance;
-	private DungeonPartyCommand party = new DungeonPartyCommand();
+	private PartyManager pManager = new PartyManager();
+	private PartyCommand party = new PartyCommand(this.pManager);
 	private Portals p = new Portals();
 	private SpawnCommand spa = new SpawnCommand();
 	private TPACommand tpa = new TPACommand();
@@ -165,44 +179,60 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private StaffManager staffManager = new StaffManager();
 	private LootChestManager lootChestManager = new LootChestManager();
 	private MSGManager msgManager = new MSGManager();
-	private RankedManager rankedManager = new RankedManager();
 	// Faction classes
 	private DFFactionPlayerManager facPlayerManager = new DFFactionPlayerManager();
-	private DFFactionManager facManager = new DFFactionManager(facPlayerManager);
+	private DFFactionManager facManager = new DFFactionManager(this.facPlayerManager);
 	// Classes that only need to be called once and can be given through
 	private Methods method = new Methods();
-	private Disparitys disp = new Disparitys(dfManager);
+	private Disparitys disp = new Disparitys(this.dfManager);
 	private PotionM potionM = new PotionM();
 	private ParticleAPI pApi = new ParticleAPI();
 	private SwordSwingProgress sword = new SwordSwingProgress();
 	private MethodLuck luck = new MethodLuck();
+	private RankedManager rankedManager = new RankedManager(this.luck);
 	private WGMethods wg = new WGMethods();
 	private ItemStackBuilder builder = new ItemStackBuilder();
-	private ClassMenu classMenu = new ClassMenu(dfManager);
-	private SkillMenu skill = new SkillMenu(dfManager, builder, classMenu);
-	private SkillCommand skillCommand = new SkillCommand(skill);
-	private DFScoreboard score = new DFScoreboard(dfManager, facManager, facPlayerManager, rankedManager, wg);
-	private FactionInventory facInv = new FactionInventory(builder);
-	private AHManager ahManager = new AHManager(availableSlots);
-	private AHInventory ahInv = new AHInventory(ahManager, builder);
-	private Enchantment enchant = new Enchantment(dfManager, facManager, potionM, pApi, facPlayerManager, builder, wg);
-	private Consumable con = new Consumable(dfManager, facManager, potionM, builder);
-	private PayCommand pay = new PayCommand(dfManager);
-	private DFSpawnerManager spawnerManager = new DFSpawnerManager(dfManager, disp);
-	private ModerationGUI gui = new ModerationGUI(dfManager, builder, punishManager);
+	private ClassMenu classMenu = new ClassMenu(this.dfManager);
+	private SkillMenu skill = new SkillMenu(this.dfManager, this.builder, this.classMenu);
+	private SkillCommand skillCommand = new SkillCommand(this.skill);
+	private DFScoreboard score = new DFScoreboard(this.dfManager, this.facManager, this.facPlayerManager, this.rankedManager, this.wg);
+	private FactionInventory facInv = new FactionInventory(this.builder);
+	private AHManager ahManager = new AHManager(this.availableSlots);
+	private AHInventory ahInv = new AHInventory(this.ahManager, this.builder);
+	private Enchantment enchant = new Enchantment(this.dfManager, this.facManager, this.potionM, this.pApi, this.facPlayerManager, this.builder, this.wg);
+	private Consumable con = new Consumable(this.dfManager, this.facManager, this.potionM, this.builder);
+	private PayCommand pay = new PayCommand(this.dfManager);
+	private DFSpawnerManager spawnerManager = new DFSpawnerManager(this.dfManager, this.disp);
+	private ModerationGUI gui = new ModerationGUI(this.dfManager, this.builder, this.punishManager);
 	private MethodMulti multi = new MethodMulti();
 	private NovisEnchantmentGetting nEnchant = new NovisEnchantmentGetting();
-	private RankEnum rEnum = new RankEnum(builder, con);
-	private KitMenu menu = new KitMenu(builder, rankedManager, rEnum);
-	private KitCommand kitCommand = new KitCommand(rankedManager, rEnum, menu);
+	private RankEnum rEnum = new RankEnum(this.builder, this.con);
+	private KitMenu menu = new KitMenu(this.builder, this.rankedManager, this.rEnum);
+	private KitCommand kitCommand = new KitCommand(this.rankedManager, this.rEnum, this.menu);
 	private EnchantmentGuideInventory enchantmentGuideInv;
-	private SetHomeSystem sethome = new SetHomeSystem(rankedManager);
-	private RankedPlayerListener rListener = new RankedPlayerListener(rankedManager, luck);
-	private CapturePointManager cpManager = new CapturePointManager(facManager, facPlayerManager);
-	private CapturePointMenu cpMenu = new CapturePointMenu(cpManager, builder, facManager);
-	private CapturePointCommand cpCommand = new CapturePointCommand(cpMenu);
-	private DFFactions fac = new DFFactions(facManager, facPlayerManager, score, dfManager, wg, facInv, cpManager);
-	private TradeMenu tradeMenu = new TradeMenu(builder);
+	private SetHomeSystem sethome = new SetHomeSystem(this.rankedManager);
+	private RankedPlayerListener rListener = new RankedPlayerListener(this.rankedManager, this.luck, this.wg);
+	private CapturePointManager cpManager = new CapturePointManager(this.facManager, this.facPlayerManager);
+	private CapturePointMenu cpMenu = new CapturePointMenu(this.cpManager, this.builder, this.facManager);
+	private CapturePointCommand cpCommand = new CapturePointCommand(this.cpMenu);
+	private DFFactions fac = new DFFactions(this.facManager, this.facPlayerManager, this.score, this.dfManager, this.wg, this.facInv, this.cpManager);
+	private TradeMenu tradeMenu = new TradeMenu(this.builder);
+	private DailyRewardManager dailyManager = new DailyRewardManager();
+	private DailyRewardMenu dailyMenu = new DailyRewardMenu(this.builder, this.dailyManager, this.rankedManager);
+	private DailyRewardLootTable dailyTable = new DailyRewardLootTable(this.builder);
+	private DailyRewardRoll dailyRoll = new DailyRewardRoll(this.dailyTable);
+	private DailyRewardEvents dailyEvents = new DailyRewardEvents(this.dailyManager, this.dailyMenu, this.rankedManager, this.dailyRoll);
+	private BoosterManager boosterManager = new BoosterManager();
+	private BoosterEvents boosterEvents = new BoosterEvents(this.boosterManager, this.facManager, this.facPlayerManager);
+	private BoosterInventory bInventory = new BoosterInventory(this.builder, this.boosterManager, this.facManager, this.facPlayerManager);
+	private BoosterCommands boosterCommand = new BoosterCommands(this.bInventory);
+	private FlyTicketManager flyTicketManager = new FlyTicketManager();
+	private FlyTicketEvents flyTicketEvents = new FlyTicketEvents(this.flyTicketManager, this.facManager, this.facPlayerManager);
+	private KitRoll kitRoll = new KitRoll(this.rankedManager, this.builder);
+	private XPTraderMenu xpTraderMenu = new XPTraderMenu();
+	private ShopItemManager shopItemManager = new ShopItemManager();
+	private ShopMenu shopMenu = new ShopMenu(this.shopItemManager, this.builder);
+	private RankedCommands rankedCommands = new RankedCommands(this.rankedManager, this.wg, this.xpTraderMenu, this.msgManager, this.shopItemManager, this.shopMenu, this.potionM, this.score, this.dfManager, this.cpManager, this.facPlayerManager, this.builder, this.luck);
 	private SignMenuFactory signFactory;
 	// General Variables
 	public static boolean hardSave = false;
@@ -215,13 +245,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//Enable Plugin Message
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "\n\nThe plugin CustomEnchantments has been enabled!\n\n");
 		
-		NovisRewards rewards = new NovisRewards(nEnchant);
+		NovisRewards rewards = new NovisRewards(this.nEnchant);
 		this.signFactory = new SignMenuFactory(this);
-		TradeEvents tradeEvents = new TradeEvents(tradeMenu, signFactory, builder, dfManager);
-		TradeCommand tradeCmd = new TradeCommand(tradeMenu, tradeEvents, rankedManager);
-		enchantmentGuideInv = new EnchantmentGuideInventory(enchant, builder);
-		AHCommand ahCommand = new AHCommand(ahManager, rankedManager, ahInv);
-		MSGCommand msgCommand = new MSGCommand(msgManager, null, rankedManager);
+		TradeEvents tradeEvents = new TradeEvents(this.tradeMenu, this.signFactory, this.builder, this.dfManager);
+		TradeCommand tradeCmd = new TradeCommand(this.tradeMenu, tradeEvents, this.rankedManager);
+		this.enchantmentGuideInv = new EnchantmentGuideInventory(this.enchant, this.builder);
+		AHCommand ahCommand = new AHCommand(this.ahManager, this.rankedManager, this.ahInv);
+		MSGCommand msgCommand = new MSGCommand(this.msgManager, this.method, this.rankedManager);
 		loadConfigManager();
 		File f1 =  new File("plugins/CustomEnchantments/GeneralConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
@@ -234,16 +264,24 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		rankedManager.loadKitCooldowns();
-		facPlayerManager.loadPlayers();
-		facManager.loadFactions();
-		facManager.activeEnergyTimer();
-		ahManager.loadAuctionHouse();
-		dfManager.loadPlayers();
+		this.shopItemManager.loadShopItems();
+		this.shopMenu.loadShops();
+		this.dailyManager.loadDailys();
+		this.boosterManager.loadBoosters();
+		this.boosterManager.runRemoval();
+		this.rankedManager.loadKitCooldowns();
+		this.facPlayerManager.loadPlayers();
+		this.facManager.loadFactions();
+		this.facManager.activeEnergyTimer();
+		this.ahManager.loadAuctionHouse();
+		this.dfManager.loadPlayers();
 		maintenance = yml.getBoolean("General.Values.Maintenance");
-		ahManager.start();
-		cpManager.loadCapturePoints();
-		cpManager.activateCapturePoints();
+		this.ahManager.start();
+		this.cpManager.loadCapturePoints();
+		this.cpManager.activateCapturePoints();
+		this.dailyTable.constructDailyList();
+		this.dailyTable.constructWeeklyList();
+		this.dailyTable.constructMonthlyList();
 		new BukkitRunnable() {
 			public void run() {
 				try {
@@ -256,28 +294,28 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				}
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 3L);
-		Enums en = new Enums(dfManager, facManager);
+		Enums en = new Enums(this.dfManager, this.facManager);
 		for(Classes e : Classes.values()) {
 			Bukkit.getPluginManager().registerEvents(e, CustomEnchantments.getInstance());
 		}
 		//Config Manager
-		ModerationEvents mod = new ModerationEvents(facManager, dfManager, rankedManager, punishManager, staffManager, spawnerManager, lootChestManager, gui, multi, luck, method, score, classMenu, msgManager, cpManager, facPlayerManager, rewards, nEnchant, builder);
+		ModerationEvents mod = new ModerationEvents(this.facManager, this.dfManager, this.rankedManager, this.punishManager, this.staffManager, this.spawnerManager, this.lootChestManager, this.gui, this.multi, this.luck, this.method, this.score, this.classMenu, this.msgManager, this.cpManager, this.facPlayerManager, rewards, this.nEnchant, this.builder);
 		//Custom Weapons
 		getServer().getPluginManager().registerEvents(en, this);
-		getServer().getPluginManager().registerEvents(new ActivateAbility(dfManager, facManager), this);
-		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(dfManager, nEnchant), this);
+		getServer().getPluginManager().registerEvents(new ActivateAbility(this.dfManager, this.facManager), this);
+		getServer().getPluginManager().registerEvents(new DFWeaponUpgrade(this.dfManager, this.nEnchant), this);
 		//Custom Armor
-		getServer().getPluginManager().registerEvents(new DFArmorUpgrade(dfManager, nEnchant), this);
-		getServer().getPluginManager().registerEvents(new DFShieldUpgrade(dfManager, nEnchant), this);
+		getServer().getPluginManager().registerEvents(new DFArmorUpgrade(this.dfManager, this.nEnchant), this);
+		getServer().getPluginManager().registerEvents(new DFShieldUpgrade(this.dfManager, this.nEnchant), this);
 		//Custom Shields
 		//Skills
-		getServer().getPluginManager().registerEvents(new SkillMenuInteract(dfManager, skill, classMenu, score), this);
-		getServer().getPluginManager().registerEvents(new SkillJoin(dfManager, classMenu, rEnum), this);
-		getServer().getPluginManager().registerEvents(new ClassMenuSelection(dfManager, classMenu), this);
-		getServer().getPluginManager().registerEvents(new CapturePointEvents(facPlayerManager, cpManager), this);
-		getServer().getPluginManager().registerEvents(new XPEarningMobs(dfManager, score), this);
-		getServer().getPluginManager().registerEvents(new EffectSkills(dfManager, sword), this);
-		getServer().getPluginManager().registerEvents(new KitListener(menu, rankedManager), this);
+		getServer().getPluginManager().registerEvents(new SkillMenuInteract(this.dfManager, this.skill, this.classMenu, this.score), this);
+		getServer().getPluginManager().registerEvents(new SkillJoin(this.dfManager, this.classMenu, this.rEnum), this);
+		getServer().getPluginManager().registerEvents(new ClassMenuSelection(this.dfManager, this.classMenu), this);
+		getServer().getPluginManager().registerEvents(new CapturePointEvents(this.facPlayerManager, this.cpManager), this);
+		getServer().getPluginManager().registerEvents(new XPEarningMobs(this.dfManager, this.score), this);
+		getServer().getPluginManager().registerEvents(new EffectSkills(this.dfManager, this.sword), this);
+		getServer().getPluginManager().registerEvents(new KitListener(this.menu, this.rankedManager, this.kitRoll), this);
 		//Spawners
 		getServer().getPluginManager().registerEvents(new DeathOfMob(), this);
 		getServer().getPluginManager().registerEvents(new CustomDurability(), this);
@@ -286,36 +324,43 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new NovisInventory(rewards), this);
 		//Loot Chest
 		getServer().getPluginManager().registerEvents(new ChestEvents(), this);
-		getServer().getPluginManager().registerEvents(new MoneyNotes(dfManager, score), this);
+		getServer().getPluginManager().registerEvents(new MoneyNotes(this.dfManager, this.score), this);
 		//Brewing Recipes
 		getServer().getPluginManager().registerEvents(new UnblockBrewing(), this);
 		//AFKSystem
 		getServer().getPluginManager().registerEvents(new AFKSystem(), this);
 		//Scoreboard
-		getServer().getPluginManager().registerEvents(score, this);
+		getServer().getPluginManager().registerEvents(this.score, this);
 		//XP Trader
-		getServer().getPluginManager().registerEvents(new XPTraderMenu(), this);
-		getServer().getPluginManager().registerEvents(new XPAddWeapons(nEnchant, dfManager), this);
-		getServer().getPluginManager().registerEvents(new XPAddPlayers(dfManager, score), this);
+		getServer().getPluginManager().registerEvents(this.xpTraderMenu, this);
+		getServer().getPluginManager().registerEvents(new XPAddWeapons(this.nEnchant, this.dfManager), this);
+		getServer().getPluginManager().registerEvents(new XPAddPlayers(this.dfManager, this.score), this);
 		//lootSteal
 		getServer().getPluginManager().registerEvents(new CancelLootSteal(), this);
 		//Factions
-		getServer().getPluginManager().registerEvents(new FactionsHandler(facManager, facPlayerManager, facInv, cpManager), this);
-		getServer().getPluginManager().registerEvents(fac, this);
+		getServer().getPluginManager().registerEvents(new FactionsHandler(this.facManager, this.facPlayerManager, this.facInv, this.cpManager), this);
+		getServer().getPluginManager().registerEvents(this.fac, this);
 		//Stuff
-		getServer().getPluginManager().registerEvents(sethome, this);
-		getServer().getPluginManager().registerEvents(new DFPlayerRegister(dfManager), this);
-		getServer().getPluginManager().registerEvents(new MSGEvents(msgManager), this);
-		getServer().getPluginManager().registerEvents(new AHEvents(ahInv, ahManager, dfManager), this);
-		getServer().getPluginManager().registerEvents(new ConsumableHandler(dfManager, con), this);
-		getServer().getPluginManager().registerEvents(rListener, this);
-		getServer().getPluginManager().registerEvents(new DFMobHealth(dfManager), this);
+		getServer().getPluginManager().registerEvents(this.sethome, this);
+		getServer().getPluginManager().registerEvents(new DFPlayerRegister(this.dfManager), this);
+		getServer().getPluginManager().registerEvents(new MSGEvents(this.msgManager), this);
+		getServer().getPluginManager().registerEvents(new AHEvents(this.ahInv, this.ahManager, this.dfManager), this);
+		getServer().getPluginManager().registerEvents(new ConsumableHandler(this.dfManager, this.con), this);
+		getServer().getPluginManager().registerEvents(this.rListener, this);
+		getServer().getPluginManager().registerEvents(new DFMobHealth(this.dfManager), this);
+		getServer().getPluginManager().registerEvents(this.dailyEvents, this);
 		getServer().getPluginManager().registerEvents(new DisableCollision(), this);
+		//Boosters
+		getServer().getPluginManager().registerEvents(this.boosterEvents, this);
+		//Fly Tickets
+		getServer().getPluginManager().registerEvents(this.flyTicketEvents, this);
 		//Seasonal Events
 		getServer().getPluginManager().registerEvents(new ChristmasInventoryEvents(), this);
 		//Trader
 		getServer().getPluginManager().registerEvents(tradeEvents, this);
-		punishManager.loadPunishList();
+		//Party
+		getServer().getPluginManager().registerEvents(new PartyEvents(this.pManager), this);
+		this.punishManager.loadPunishList();
 		new BukkitRunnable() {
 			public void run() {
 				for(OfflinePlayer p : Bukkit.getOfflinePlayers()) {
@@ -338,38 +383,38 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		}
 		if(yml5.getConfigurationSection("Homes") != null) {
 			if(!yml5.get("Homes").equals("{}")) {
-				sethome.loadHomes(yml5, f6);
+				this.sethome.loadHomes(yml5, f6);
 			}
 		}
 		//TNT
 		getServer().getPluginManager().registerEvents(new TNTExplodeCovered(), this);
-		getServer().getPluginManager().registerEvents(new EnchantmentHandler(enchant, enchantmentGuideInv, wg), this);
-		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getMeleeEnchantments().entrySet()) {
+		getServer().getPluginManager().registerEvents(new EnchantmentHandler(this.enchant, this.enchantmentGuideInv, this.wg), this);
+		for(Entry<String, Pair<Condition, CommandFile>> entry : this.enchant.getMeleeEnchantments().entrySet()) {
 			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
 		}
-		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getBowEnchantments().entrySet()) {
+		for(Entry<String, Pair<Condition, CommandFile>> entry : this.enchant.getBowEnchantments().entrySet()) {
 			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
 		}
-		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getArmorEnchantments().entrySet()) {
+		for(Entry<String, Pair<Condition, CommandFile>> entry : this.enchant.getArmorEnchantments().entrySet()) {
 			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
 		}
-		for(Entry<String, Pair<Condition, CommandFile>> entry : enchant.getShieldEnchantments().entrySet()) {
+		for(Entry<String, Pair<Condition, CommandFile>> entry : this.enchant.getShieldEnchantments().entrySet()) {
 			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
 		}
-		con.loadConsumables();
-		con.registerRecipes();
-		for(Entry<String, Pair<me.WiebeHero.Consumables.ConsumableCondition.Condition, me.WiebeHero.Consumables.CommandFile>> entry : con.getConsumables().entrySet()) {
+		this.con.loadConsumables();
+		this.con.registerRecipes();
+		for(Entry<String, Pair<me.WiebeHero.Consumables.ConsumableCondition.Condition, me.WiebeHero.Consumables.CommandFile>> entry : this.con.getConsumables().entrySet()) {
 			Bukkit.getPluginManager().registerEvents(entry.getValue().getValue(), CustomEnchantments.getInstance());
 		}
 		//NeededStuff
-		getServer().getPluginManager().registerEvents(tpa, this);
+		getServer().getPluginManager().registerEvents(this.tpa, this);
 		getServer().getPluginManager().registerEvents(new CombatTag(), this);
-		getServer().getPluginManager().registerEvents(new LevelRequired(dfManager), this);
-		getServer().getPluginManager().registerEvents(new ChatEvents(dfManager, msgManager, facManager, facPlayerManager, rankedManager), this);
+		getServer().getPluginManager().registerEvents(new LevelRequired(this.dfManager), this);
+		getServer().getPluginManager().registerEvents(new ChatEvents(this.dfManager, this.msgManager, this.facManager, this.facPlayerManager, this.rankedManager), this);
 		getServer().getPluginManager().registerEvents(new Portals(), this);
 		getServer().getPluginManager().registerEvents(new SwordSwingProgress(), this);
 		getServer().getPluginManager().registerEvents(new PreventIllegalItems(), this);
-		getServer().getPluginManager().registerEvents(new Disparitys(dfManager), this);
+		getServer().getPluginManager().registerEvents(new Disparitys(this.dfManager), this);
 		getServer().getPluginManager().registerEvents(new RestrictInteractionWithBlocks(), this);
 		getServer().getPluginManager().registerEvents(new EnderPearlCooldown(), this);
 		getServer().getPluginManager().registerEvents(new MOTDSetting(), this);
@@ -377,27 +422,27 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(new RestrictItemInteraction(), this);
 		getServer().getPluginManager().registerEvents(new CancelJoinLeaveAdvancementMessages(), this);
 		//Shop
-		getServer().getPluginManager().registerEvents(new DFShop(dfManager, score), this);
+		getServer().getPluginManager().registerEvents(new ShopEvents(this.dfManager, this.shopMenu, this.score, this.shopItemManager), this);
 		//Commands
-		getCommand(fac.faction).setExecutor(fac);
-		getCommand(p.rtp).setExecutor(p);
-		getCommand(spa.spawn).setExecutor(spa);
-		getCommand(pay.command).setExecutor(pay);
-		getCommand(pay.balance).setExecutor(pay);
-		getCommand(pay.money).setExecutor(pay);
-		getCommand(sethome.command).setExecutor(sethome);
-		getCommand(sethome.command1).setExecutor(sethome);
-		getCommand(sethome.homeCommand).setExecutor(sethome);
-		getCommand(sethome.homesCommand).setExecutor(sethome);
-		getCommand(tpa.tpa).setExecutor(tpa);
-		getCommand(tpa.tpaccept).setExecutor(tpa);
-		getCommand(tpa.tpahere).setExecutor(tpa);
-		getCommand(tpa.tpatoggle).setExecutor(tpa);
-		getCommand(tpa.tpdeny).setExecutor(tpa);
-		getCommand(tpa.tpdeny).setExecutor(tpa);
+		getCommand(this.fac.faction).setExecutor(this.fac);
+		getCommand(this.p.rtp).setExecutor(this.p);
+		getCommand(this.spa.spawn).setExecutor(this.spa);
+		getCommand(this.pay.command).setExecutor(this.pay);
+		getCommand(this.pay.balance).setExecutor(this.pay);
+		getCommand(this.pay.money).setExecutor(this.pay);
+		getCommand(this.sethome.command).setExecutor(this.sethome);
+		getCommand(this.sethome.command1).setExecutor(this.sethome);
+		getCommand(this.sethome.homeCommand).setExecutor(this.sethome);
+		getCommand(this.sethome.homesCommand).setExecutor(this.sethome);
+		getCommand(this.tpa.tpa).setExecutor(this.tpa);
+		getCommand(this.tpa.tpaccept).setExecutor(this.tpa);
+		getCommand(this.tpa.tpahere).setExecutor(this.tpa);
+		getCommand(this.tpa.tpatoggle).setExecutor(this.tpa);
+		getCommand(this.tpa.tpdeny).setExecutor(this.tpa);
+		getCommand(this.tpa.tpdeny).setExecutor(this.tpa);
 		getCommand(msgCommand.msg).setExecutor(msgCommand);
 		getCommand(msgCommand.ignore).setExecutor(msgCommand);
-		getCommand(skillCommand.skill).setExecutor(skillCommand);
+		getCommand(this.skillCommand.skill).setExecutor(this.skillCommand);
 		getCommand(ahCommand.ah).setExecutor(ahCommand);
 		//Moderation
 		getCommand(mod.rank).setExecutor(mod);
@@ -433,23 +478,43 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getCommand(mod.gamemode).setExecutor(mod);
 		getCommand(mod.item).setExecutor(mod);
 		//Dungeon Parties
-		getCommand(party.comParty).setExecutor(party);
+		getCommand(this.party.comParty).setExecutor(this.party);
 		//Kits
-		getCommand(kitCommand.kit).setExecutor(kitCommand);
-		getCommand(kitCommand.kits).setExecutor(kitCommand);
+		getCommand(this.kitCommand.kit).setExecutor(this.kitCommand);
+		getCommand(this.kitCommand.kits).setExecutor(this.kitCommand);
 		//Capture Points
-		getCommand(cpCommand.capturepoints).setExecutor(cpCommand);
+		getCommand(this.cpCommand.capturepoints).setExecutor(this.cpCommand);
 		getServer().getPluginManager().registerEvents(mod, this);
 		//Trade Command
 		getCommand(tradeCmd.trade).setExecutor(tradeCmd);
-		getServer().getPluginManager().registerEvents(new ModerationGUI(dfManager, builder, punishManager), this);
+		//Booster Command
+		getCommand(this.boosterCommand.boosters).setExecutor(this.boosterCommand);
+		//Ranked Commands
+		getCommand(this.rankedCommands.dchat).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.xptrader).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.workbench).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.pv).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.near).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.enderchest).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.playershop).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.playertime).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.playerbright).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.sellhand).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.playerweather).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.playerfeed).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.teleportcapturepoint).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.sellall).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.giftall).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.playerfly).setExecutor(this.rankedCommands);
+		getCommand(this.rankedCommands.freerank).setExecutor(this.rankedCommands);
+		getServer().getPluginManager().registerEvents(new ModerationGUI(this.dfManager, this.builder, this.punishManager), this);
 		//Glowing Drops
 	    Bukkit.getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new GlowingItemDrops(), this);
 		loadConfig();
 		//Custom Items FOOD
 		getServer().getPluginManager().registerEvents(new ChangeFishDrops(), this);
-		lootR.loadRewards();
+		this.lootR.loadRewards();
 		new BukkitRunnable() {
 			public void run() {
 				for(Entity e : Bukkit.getWorld("FactionWorld-1").getEntities()) {
@@ -472,25 +537,25 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			public void run() {
 				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 hour!"));
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 216000L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 504000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 30 minutes!"));
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 252000L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 540000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 15 minutes!"));
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 270000L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 558000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 10 minutes!"));
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 276000L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 564000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -502,13 +567,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 					}
 				}
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 282000L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 570000L);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 minute!"));
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 286800L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 574800L);
 		
 		new BukkitRunnable() {
 			@Override
@@ -516,14 +581,14 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
 				Bukkit.getServer().shutdown();
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 288000L);
+		}.runTaskLater(CustomEnchantments.getInstance(), 576000L);
 		new BukkitRunnable() {
 			public void run() {
 				load = false;
 			}
 		}.runTaskLater(CustomEnchantments.getInstance(), 100L);
-		lootChestManager.loadLootChests();
-		spawnerManager.loadSpawners();
+		this.lootChestManager.loadLootChests();
+		this.spawnerManager.loadSpawners();
 		new BukkitRunnable() {
 			public void run() {
 				NBTInjector.inject();
@@ -567,55 +632,67 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			}
 		}
 		try {
-			dfManager.savePlayers();
+			this.dfManager.savePlayers();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		try {
-			facManager.saveFactions();
+			this.facManager.saveFactions();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		try {
-			ahManager.saveAuctionHouse();
+			this.ahManager.saveAuctionHouse();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		try {
-			lootChestManager.saveLootChests();
+			this.lootChestManager.saveLootChests();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		try {
-			spawnerManager.saveSpawners();
+			this.spawnerManager.saveSpawners();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		try {
-			sethome.saveHomes();
+			this.sethome.saveHomes();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		try {
-			punishManager.savePunishList();
+			this.punishManager.savePunishList();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		try {
-			rankedManager.saveKitCooldowns();
+			this.rankedManager.saveKitCooldowns();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		try {
-			cpManager.saveCapturePoints();
+			this.cpManager.saveCapturePoints();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			this.boosterManager.saveBoosters();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			this.dailyManager.saveDailys();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -623,19 +700,22 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "\n\nThe plugin CustomEnchantments has been Disabled!\n\n");
 	}
 	public void loadConfigManager() {
-		cfgm = new ConfigManager();
-		cfgm.setUpConfiguration("playerskillsDF.yml", "Skills.Players");
-		cfgm.setUpConfiguration("spawnerConfig.yml", "Spawners.UUID");
-		cfgm.setUpConfiguration("lootConfig.yml", "Loot.Chests");
-		cfgm.setUpConfiguration("factionsConfig.yml", "Factions.List");
-		cfgm.setUpConfiguration("setHomeConfig.yml", "Homes");
-		cfgm.setUpConfiguration("shopConfig.yml", "Shop");
-		cfgm.setUpConfiguration("modConfig.yml", "Mod.Punishments");
-		cfgm.setUpConfiguration("dungeonConfig.yml", "Dungeons.Instances");
-		cfgm.setUpConfiguration("GeneralConfig.yml", "General.Values");
-		cfgm.setUpConfiguration("AuctionConfig.yml", "AuctionHouse.Items");
-		cfgm.setUpConfiguration("KitCooldowns.yml", "Kits.Cooldowns");
-		cfgm.setUpConfiguration("CapturePoints.yml", "Capture Points");
+		this.cfgm = new ConfigManager();
+		this.cfgm.setUpConfiguration("playerskillsDF.yml", "Skills.Players");
+		this.cfgm.setUpConfiguration("spawnerConfig.yml", "Spawners.UUID");
+		this.cfgm.setUpConfiguration("lootConfig.yml", "Loot.Chests");
+		this.cfgm.setUpConfiguration("factionsConfig.yml", "Factions.List");
+		this.cfgm.setUpConfiguration("setHomeConfig.yml", "Homes");
+		this.cfgm.setUpConfiguration("shopConfig.yml", "Shop");
+		this.cfgm.setUpConfiguration("modConfig.yml", "Mod.Punishments");
+		this.cfgm.setUpConfiguration("dungeonConfig.yml", "Dungeons.Instances");
+		this.cfgm.setUpConfiguration("GeneralConfig.yml", "General.Values");
+		this.cfgm.setUpConfiguration("AuctionConfig.yml", "AuctionHouse.Items");
+		this.cfgm.setUpConfiguration("KitCooldowns.yml", "Kits.Cooldowns");
+		this.cfgm.setUpConfiguration("CapturePoints.yml", "Capture Points");
+		this.cfgm.setUpConfiguration("Boosters.yml", "Boosters");
+		this.cfgm.setUpConfiguration("DailyRewards.yml", "DailyRewards");
+		this.cfgm.setUpConfiguration("FlyTickets.yml", "FlyTickets");
 	}
 	public void loadConfig() {
 		getConfig().options().copyDefaults(true);
@@ -752,7 +832,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
             	GroupManager manager = api.getGroupManager();
             	User user = api.getUserManager().getUser(playerList.get(i).getUniqueId());
             	String groupName = "None";
-            	if(luck.containsParrent(user, "bronze")) {
+            	if(this.luck.containsParrent(user, "bronze")) {
             		groupName = "bronze";
             	}
             	else if(luck.containsParrent(user, "silver")) {

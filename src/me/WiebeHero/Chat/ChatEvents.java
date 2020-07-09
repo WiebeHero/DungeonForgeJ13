@@ -2,7 +2,6 @@ package me.WiebeHero.Chat;
 
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,19 +10,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
-import de.tr7zw.nbtapi.NBTItem;
-import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.Factions.DFFactionPlayer;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
-import me.WiebeHero.Novis.RarityEnum.Rarity;
 import me.WiebeHero.RankedPlayerPackage.RankEnum.Rank;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
 import me.WiebeHero.RankedPlayerPackage.RankedPlayer;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -59,8 +54,8 @@ public class ChatEvents implements Listener{
 				format += "§6" + faction.getName() + " §a| ";
 			}
 			format += "§b§l"  + level;
-			if(rPlayer.getHighestRank().rank > Rank.USER.rank) {
-				format += "§a | " + rPlayer.getHighestRank().display + "§a | §f" + player.getName() + ": ";
+			if(rPlayer.getHighestRank().getRank() > Rank.USER.getRank()) {
+				format += "§a | " + rPlayer.getHighestRank().getDisplay() + "§a | §f" + player.getName() + ": ";
 			}
 			else {
 				format += "§a | §7" + player.getName() + ": ";
@@ -68,7 +63,7 @@ public class ChatEvents implements Listener{
 			format += totalMessage;
 		}
 		else {
-			format += "§aStaff chat | " + rPlayer.getHighestRank().display + "§a | §f" + player.getName() + ": ";
+			format += "§aStaff chat | " + rPlayer.getHighestRank().getDisplay() + "§a | §f" + player.getName() + ": ";
 			format += totalMessage;
 		}
 		event.setFormat(format);
@@ -78,7 +73,7 @@ public class ChatEvents implements Listener{
 				RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
 				if(msg != null) {
 					if(myMsg.getStaffChat()) {
-						if(oPlayer.getHighestRank().rank < Rank.HELPER.rank) {
+						if(oPlayer.getHighestRank().getRank() < Rank.HELPER.getRank()) {
 							event.getRecipients().remove(p);
 						}
 					}

@@ -301,16 +301,15 @@ public class NovisInventory implements Listener{
 	//Prevent Clicking in Novis
 	//--------------------------------------------------------------------------------------------------------------------
 	@EventHandler
-	public void novisPreventClick(InventoryClickEvent event) {		
-		ItemStack item = event.getCurrentItem();
+	public void novisPreventClick(InventoryClickEvent event) {
+		Inventory inv = event.getInventory();
 		InventoryView open = event.getView();
 		if(open == null) {
 			return;
 		}
 		if(open.getTitle().contains(ChatColor.stripColor("Decrypting "))) {
-			event.setCancelled(true);
-			if(item.equals(null) || !item.hasItemMeta()) {
-				return;
+			if(inv != null) {
+				event.setCancelled(true);
 			}
 		}
 	}

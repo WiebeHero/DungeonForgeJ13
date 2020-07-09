@@ -63,6 +63,7 @@ import javafx.util.Pair;
 import me.WiebeHero.APIs.ParticleAPI;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
 import me.WiebeHero.CustomEvents.DFShootBowEvent;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.CustomMethods.PotionM;
@@ -186,7 +187,7 @@ public class Enchantment extends CommandFile implements Listener{
 					final double range = 5.00 + level; 
 					final double damage = 7 + 1.5 * level;
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.7D, victim.getLocation().getZ() + 0D);
-					victim.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, locCF, 80, range, range, range, 0.1);
+					victim.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, locCF, 150, range, range, range, 0.1);
 					victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, (float) 1);
 					for(Entity e : victim.getNearbyEntities(range, range, range)) {
 						if(e != damager) {
@@ -609,18 +610,20 @@ public class Enchantment extends CommandFile implements Listener{
 					if(activated.containsKey(uuid)) {
 						event.setCancelled(true);
 						cooldown.add(uuid);
-						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
-						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 						new BukkitRunnable() {
 							public void run() {
 								cooldown.remove(uuid);
 							}
 						}.runTaskLater(CustomEnchantments.getInstance(), 1300L - 50L * activated.get(player.getUniqueId()));
-						ArmorStand slash1 = (ArmorStand) player.getWorld().spawnEntity(player.getLocation().add(0, 1, 0).add(player.getLocation().getDirection()), EntityType.ARMOR_STAND);
-						Location locLeft = pApi.getLocationRelative(slash1.getLocation(), -2.0, 0);
-						Location locRight = pApi.getLocationRelative(slash1.getLocation(), 2.0, 0);
+						ArmorStand slash1 = (ArmorStand) player.getWorld().spawnEntity(player.getLocation().add(0, 1.5, 0).add(player.getLocation().getDirection()), EntityType.ARMOR_STAND);
+						Vector front = slash1.getLocation().getDirection();
+						Location locLeft = pApi.getLocationRelative(player.getLocation().add(0, 1.5, 0), -2.0, 0);
+						Location locRight = pApi.getLocationRelative(player.getLocation().add(0, 1.5, 0), 2.0, 0);
 						ArmorStand slash2 = (ArmorStand) player.getWorld().spawnEntity(locLeft, EntityType.ARMOR_STAND);
 						ArmorStand slash3 = (ArmorStand) player.getWorld().spawnEntity(locRight, EntityType.ARMOR_STAND);
+						Location to = slash1.getLocation().clone();
+						Vector slash2ToMain = to.clone().subtract(slash2.getLocation()).toVector().normalize();
+						Vector slash3ToMain = to.clone().subtract(slash3.getLocation()).toVector().normalize();
 						ArrayList<ArmorStand> stands = new ArrayList<ArmorStand>(Arrays.asList(slash1, slash2, slash3));
 						for(int i = 0; i < stands.size(); i++) {
 							ArmorStand slash = stands.get(i);
@@ -637,11 +640,17 @@ public class Enchantment extends CommandFile implements Listener{
 							double damage = 8.00 + 2.00 * activated.get(uuid);
 							public void run() {
 								if(c <= 30) {
-									Location loc = slash1.getLocation();
-									ArrayList<Location> locs = pApi.getSemiCircle(loc, 3, 50, true);
-									for(int i = 0; i < locs.size(); i++) {
-										Location l = locs.get(i);
-										l.getWorld().spawnParticle(Particle.REDSTONE, l, 1, new DustOptions(Color.RED, 2.5F));
+									Location sl2 = slash2.getLocation().clone();
+									Location sl3 = slash3.getLocation().clone();
+									sl2.setDirection(slash2ToMain);
+									sl3.setDirection(slash3ToMain);
+									sl2.subtract(slash2ToMain.clone().multiply(1.5));
+									sl3.subtract(slash3ToMain.clone().multiply(1.5));
+									for(int x = 0; x < 16; x++) {
+										sl2.getWorld().spawnParticle(Particle.REDSTONE, sl2, 1, new DustOptions(Color.RED, 2.5F));
+										sl3.getWorld().spawnParticle(Particle.REDSTONE, sl3, 1, new DustOptions(Color.RED, 2.5F));
+										sl2.add(slash2ToMain.clone().multiply(0.25));
+										sl3.add(slash3ToMain.clone().multiply(0.25));
 									}
 									for(int i = 0; i < stands.size(); i++) {
 										ArmorStand slash = stands.get(i);
@@ -651,19 +660,7 @@ public class Enchantment extends CommandFile implements Listener{
 													LivingEntity ent = (LivingEntity) e;
 													ent.setKiller(player);
 													hit.add(ent.getUniqueId());
-													if(facPlayerManager.contains(ent.getUniqueId())) {
-														DFFactionPlayer facP = facPlayerManager.getFactionPlayer(ent);
-														DFFaction other = facManager.getFaction(facP.getFactionId());
-														if(faction != null && other != null) {
-															if(!faction.isAlly(other.getName()) || !faction.isMember(ent.getUniqueId())) {
-																ent.damage(damage);
-															}
-														}
-														else {
-															ent.damage(damage);
-														}
-													}
-													else {
+													if(!facManager.isFriendly(player, ent)) {
 														ent.damage(damage);
 													}
 													damage = damage / 2;
@@ -674,10 +671,13 @@ public class Enchantment extends CommandFile implements Listener{
 											slash.remove();
 											cancelled = true;
 										}
-										slash.setVelocity(slash.getLocation().getDirection().multiply(0.75F));
+										slash.setVelocity(front.clone().multiply(0.75F));
 									}
 								}
 								if(cancelled == true) {
+									for(ArmorStand stand : stands) {
+										stand.remove();
+									}
 									cancel();
 								}
 								c++;
@@ -1105,6 +1105,99 @@ public class Enchantment extends CommandFile implements Listener{
 				);
 			}
 		}));
+		this.listMelee.put("Gaster Blasters", new Pair<>(Condition.RIGHT_CLICK, new CommandFile() {
+			ArrayList<UUID> playerStuff = new ArrayList<UUID>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, PlayerInteractEvent event) {
+				if(!playerStuff.contains(damager.getUniqueId())) {
+					playerStuff.add(damager.getUniqueId()); // set to "true"
+					ArmorStand stand1 = (ArmorStand) damager.getWorld().spawnEntity(pApi.getLocationRelative(damager.getLocation().add(0, 1.5, 0), 1.5, 0), EntityType.ARMOR_STAND);
+					stand1.setVisible(false);
+					ArmorStand stand2 = (ArmorStand) damager.getWorld().spawnEntity(pApi.getLocationRelative(damager.getLocation().add(0, 1.5, 0), -1.5, 0), EntityType.ARMOR_STAND);
+					stand2.setGravity(false);
+					stand1.setGravity(false);
+					stand2.setVisible(false);
+					Entity e = damager.getTargetEntity(20);
+					Location to = damager.getEyeLocation().add(e != null ? damager.getLocation().getDirection().multiply(e.getLocation().distance(damager.getEyeLocation())) : damager.getLocation().getDirection().multiply(20)).subtract(0, 1.5, 0);
+					Vector v1 = to.clone().subtract(stand1.getLocation()).toVector().normalize();
+					stand1.setHeadPose(stand1.getHeadPose().add(Math.toRadians(damager.getLocation().getPitch()), 0, 0));
+					Vector v2 = to.clone().subtract(stand2.getLocation()).toVector().normalize();
+					stand2.setHeadPose(stand2.getHeadPose().add(Math.toRadians(damager.getLocation().getPitch()), 0, 0));
+					stand1.getEquipment().setHelmet(new ItemStack(Material.WITHER_SKELETON_SKULL, 1));
+					stand2.getEquipment().setHelmet(new ItemStack(Material.WITHER_SKELETON_SKULL, 1));
+					for(Player victim1 : Bukkit.getOnlinePlayers()) {
+						((Player) victim1).playSound(damager.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 2, (float) 1.25);
+					}
+					Location loc1 = stand1.getEyeLocation().clone();
+					loc1.setDirection(v1);
+					Location loc2 = stand2.getEyeLocation().clone();
+					loc2.setDirection(v2);
+					ArrayList<Entity> hit = new ArrayList<Entity>();
+					new BukkitRunnable() {
+						public void run() {
+							for(int i = 0; i <= 20; i++) {
+								if(loc1.getBlock().getType() == Material.AIR && loc2.getBlock().getType() == Material.AIR && i != 20) {
+									loc1.add(loc1.getDirection());
+									loc2.add(loc2.getDirection());
+									stand1.getWorld().spawnParticle(Particle.REDSTONE, loc1, 15, 0.4, 0.4, 0.4, 0.0, new DustOptions(Color.WHITE, 4.0F));
+									stand2.getWorld().spawnParticle(Particle.REDSTONE, loc2, 15, 0.4, 0.4, 0.4, 0.0, new DustOptions(Color.WHITE, 4.0F));
+									ArrayList<Entity> entList = new ArrayList<Entity>();
+									entList.addAll(loc1.getNearbyEntities(0.5, 0.5, 0.5));
+									entList.addAll(loc2.getNearbyEntities(0.5, 0.5, 0.5));
+									for(Entity en : entList) {
+										if(en != damager && (en != stand1 && en != stand2)) {
+											if(en instanceof LivingEntity && !(en instanceof ArmorStand)) {
+												LivingEntity ent = (LivingEntity) en;
+												if(!facManager.isFriendly(damager, ent)) {
+													if(!hit.contains(ent)) {
+														hit.add(ent);
+														if(damager instanceof Player) {
+															ent.setKiller((Player)damager);
+														}
+														ent.damage(5.0 + level);
+														p.applyEffect(ent, PotionEffectType.WITHER, 1, 160 + 40 * level);
+													}
+												}
+											}
+										}
+									}
+								}
+								else {
+									new BukkitRunnable() {
+										public void run() {
+											stand1.remove();
+											stand2.remove();
+										}
+									}.runTaskLater(CustomEnchantments.getInstance(), 35L);
+									break;
+								}
+							}
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 20L);
+					new BukkitRunnable() {
+						public void run() {
+							playerStuff.remove(damager.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 1400L - 65L * level);
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Gaster Blasters",
+					new ArrayList<String>(Arrays.asList(
+						"&7When you right click, 2 wither skulls",
+						"&7spawn at your left and right. After a short",
+						"&7time they will fire a beam in the direction",
+						"&7that you are looking, any entities caught",
+						"&7in this beam will recieve damage and wither.",
+						"&7This enchantment has a cooldown"
+					))
+				);
+			}
+		}));
 		this.listMelee.put("Happiness", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
@@ -1248,7 +1341,7 @@ public class Enchantment extends CommandFile implements Listener{
 		this.listMelee.put("Hit and Run", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
 			ArrayList<UUID> list = new ArrayList<UUID>();
 			@Override
-			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, PlayerDeathEvent event) {
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level) {
 				if(!list.contains(damager.getUniqueId())) {
 					Location loc1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 0.25D, victim.getLocation().getZ() + 0D);
 					damager.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc1, 60, 0, 0.3, 0, 0);
@@ -2487,6 +2580,26 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7This wolf will recieve the same skills that you currently have.",
 						"&7This enchantment will only activate when a player is killed.",
 						"&7This wolf will despawn after a certain amount of time."
+					))
+				);
+			}
+		}));
+		this.listMelee.put("XP Boost", new Pair<>(Condition.ENTITY_DEATH_MELEE, new CommandFile() {
+			@Override
+			public void activateEnchantment(LivingEntity damager, int level, DFPlayerXpGainEvent event) {
+				if(!(damager instanceof Player) && (damager instanceof Monster || damager instanceof Animals)) {
+					event.setXPMultiplier(event.getXPMultiplier() + 7.5 + 7.5 * level);
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6XP Boost",
+					new ArrayList<String>(Arrays.asList(
+						"&7Earn Player XP at a faster rate when",
+						"&7killing mobs."
 					))
 				);
 			}

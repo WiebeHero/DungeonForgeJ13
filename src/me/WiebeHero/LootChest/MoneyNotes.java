@@ -1,5 +1,7 @@
 package me.WiebeHero.LootChest;
 
+import java.util.Random;
+
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,6 +37,16 @@ public class MoneyNotes implements Listener{
 					else if(money2 > 0.00) {
 						dfPlayer.addMoney(money2);
 					}
+					score.updateScoreboard(player);
+					player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 2.0F);
+				}
+				else if(i.hasKey("RandomMoney")) {
+					int min = i.getInteger("Min");
+					int max = i.getInteger("Max");
+					int money = new Random().nextInt(max) + min;
+					DFPlayer dfPlayer = dfManager.getEntity(player);
+					dfPlayer.addMoney(money);
 					score.updateScoreboard(player);
 					player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 2.0F);

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 public class ParticleAPI {
@@ -75,6 +77,16 @@ public class ParticleAPI {
 		Location newLoc = loc.clone();
 		newLoc.set(newX, loc.getY(), newZ);
 		return newLoc;
+	}
+	public void faceDirection(LivingEntity ent, Location target) {
+        Vector dir = target.clone().subtract(ent.getEyeLocation()).toVector().normalize();
+        ent.getLocation().setDirection(dir);
+    }
+	public EulerAngle directionToEuler(Location dir) {
+	    double xzLength = Math.sqrt(dir.getX()*dir.getX() + dir.getZ()*dir.getZ());
+	    double pitch = Math.atan2(xzLength, dir.getY()) - Math.PI / 2;
+	    double yaw = -Math.atan2(dir.getX(), dir.getZ()) + Math.PI / 4;
+	    return new EulerAngle(pitch, yaw, 0);
 	}
 //	public void slash(Location loc, Particle particle, DustOptions op, int amount) {
 //		float radius = 1.5F;

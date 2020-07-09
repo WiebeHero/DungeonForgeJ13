@@ -109,22 +109,22 @@ public class XPTraderMenu implements Listener{
 							level = it.getInteger("Level");
 						}
 						if(it.hasKey("Rarity")) {
-							if(it.getString("Rarity").equals("&7Common")) {
+							if(it.getString("Rarity").contains("Common")) {
 								rarity = 50;
 							}
-							if(it.getString("Rarity").equals("&aRare")) {
+							if(it.getString("Rarity").contains("Rare")) {
 								rarity = 100;
 							}
-							if(it.getString("Rarity").equals("&bEpic")) {
+							if(it.getString("Rarity").contains("Epic")) {
 								rarity = 200;
 							}
-							if(it.getString("Rarity").equals("&cLegendary")) {
+							if(it.getString("Rarity").contains("Legendary")) {
 								rarity = 400;
 							}
-							if(it.getString("Rarity").equals("&5Mythic")) {
+							if(it.getString("Rarity").contains("Mythic")) {
 								rarity = 600;
 							}
-							if(it.getString("Rarity").equals("&eHeroic")) {
+							if(it.getString("Rarity").contains("Heroic")) {
 								rarity = 800;
 							}
 						}
@@ -169,22 +169,22 @@ public class XPTraderMenu implements Listener{
 							level = it.getInteger("Level");
 						}
 						if(it.hasKey("Rarity")) {
-							if(it.getString("Rarity").equals("&7Common")) {
+							if(it.getString("Rarity").contains("Common")) {
 								rarity = 50;
 							}
-							if(it.getString("Rarity").equals("&aRare")) {
+							if(it.getString("Rarity").contains("Rare")) {
 								rarity = 100;
 							}
-							if(it.getString("Rarity").equals("&bEpic")) {
+							if(it.getString("Rarity").contains("Epic")) {
 								rarity = 200;
 							}
-							if(it.getString("Rarity").equals("&cLegendary")) {
+							if(it.getString("Rarity").contains("Legendary")) {
 								rarity = 400;
 							}
-							if(it.getString("Rarity").equals("&5Mythic")) {
+							if(it.getString("Rarity").contains("Mythic")) {
 								rarity = 600;
 							}
-							if(it.getString("Rarity").equals("&eHeroic")) {
+							if(it.getString("Rarity").contains("Heroic")) {
 								rarity = 800;
 							}
 						}

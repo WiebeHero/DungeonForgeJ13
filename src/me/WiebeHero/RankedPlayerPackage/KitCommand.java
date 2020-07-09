@@ -36,7 +36,7 @@ public class KitCommand implements CommandExecutor {
 							if(rPlayer.getRanks().contains(rEnum.getIfPresent(args[0].toUpperCase()))) {
 								if(System.currentTimeMillis() >= rPlayer.getKitCooldown(kit)) {
 									kit.recieveKit(player);
-									rPlayer.addKitCooldown(kit, System.currentTimeMillis() + kit.cooldown);
+									rPlayer.addKitCooldown(kit, System.currentTimeMillis() + kit.getCooldown());
 									player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_TRADE, 2.0F, 1.0F);
 									player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 1.5F);
 								}
@@ -56,7 +56,7 @@ public class KitCommand implements CommandExecutor {
 								if(rPlayer.getKitUnlock(kit)) {
 									if(System.currentTimeMillis() >= rPlayer.getKitCooldown(kit)) {
 										kit.recieveKit(player);
-										rPlayer.addKitCooldown(kit, System.currentTimeMillis() + kit.cooldown);
+										rPlayer.addKitCooldown(kit, System.currentTimeMillis() + kit.getCooldown());
 										player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_TRADE, 2.0F, 1.0F);
 										player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 1.5F);
 									}

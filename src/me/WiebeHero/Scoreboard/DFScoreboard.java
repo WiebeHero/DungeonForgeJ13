@@ -120,7 +120,7 @@ public class DFScoreboard implements Listener{
 				String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
 				String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
 				t.setSuffix(new CCT().colorize(" &6" + now));
-				p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rp.getHighestRank().display));
+				p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rp.getHighestRank().getDisplay()));
 				t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 				t.addEntry(p.getName());
 			}
@@ -129,7 +129,7 @@ public class DFScoreboard implements Listener{
 	        this.replaceScore(score, 7, new CCT().colorize("&7Territory: " + territory));
 	        this.replaceScore(score, 6, new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
 	        this.replaceScore(score, 5, " ");
-	        this.replaceScore(score, 4, new CCT().colorize("&7Rank: " + rPlayer.getHighestRank().display));
+	        this.replaceScore(score, 4, new CCT().colorize("&7Rank: " + rPlayer.getHighestRank().getDisplay()));
 	        this.replaceScore(score, 3, new CCT().colorize("&7Level: &b&l" + dfManager.getEntity(player).getLevel()));
 	        this.replaceScore(score, 2, "  ");
 	        this.replaceScore(score, 1, new CCT().colorize("    &2&lplay.dungeonforge.eu"));
@@ -200,7 +200,7 @@ public class DFScoreboard implements Listener{
 			String stringClass = dfPlayer.getPlayerClass().toString().toLowerCase();
 			String now = stringClass.substring(0, 1).toUpperCase() + stringClass.substring(1);
 			t.setSuffix(new CCT().colorize(" &6" + now));
-			p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rp.getHighestRank().display));
+			p.setPlayerListName(new CCT().colorize(t.getPrefix() + p.getName() + " " + rp.getHighestRank().getDisplay()));
 			t.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
 			t.addEntry(p.getName());
 		}
@@ -234,7 +234,7 @@ public class DFScoreboard implements Listener{
         this.replaceScore(score, 7, new CCT().colorize("&7Territory: " + territory));
         this.replaceScore(score, 6, new CCT().colorize("&7Money: &a$" + String.format("%.2f", df.getMoney())));
         this.replaceScore(score, 5, " ");
-        this.replaceScore(score, 4, new CCT().colorize("&7Rank: " + rPlayer.getHighestRank().display));
+        this.replaceScore(score, 4, new CCT().colorize("&7Rank: " + rPlayer.getHighestRank().getDisplay()));
         this.replaceScore(score, 3, new CCT().colorize("&7Level: &b&l" + dfManager.getEntity(player).getLevel()));
         this.replaceScore(score, 2, "  ");
         this.replaceScore(score, 1, new CCT().colorize("    &2&lplay.dungeonforge.eu"));

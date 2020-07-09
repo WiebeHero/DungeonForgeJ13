@@ -64,7 +64,7 @@ public class EnchantmentGuideInventory {
 				"&7Click this to go to the melee",
 				"&7enchantments page."
 			)),
-			"Melee"
+			new Pair<String, String>("Melee", "")
 		));
 		inv.setItem(12, builder.constructItem(
 			Material.BOW,
@@ -73,7 +73,7 @@ public class EnchantmentGuideInventory {
 				"&7Click this to go to the bow",
 				"&7enchantments page."
 			)),
-			"Bow"
+			new Pair<String, String>("Bow", "")
 		));
 		inv.setItem(14, builder.constructItem(
 			Material.DIAMOND_CHESTPLATE,
@@ -82,7 +82,7 @@ public class EnchantmentGuideInventory {
 				"&7Click this to go to the armor",
 				"&7enchantments page."
 			)),
-			"Armor"
+			new Pair<String, String>("Armor", "")
 		));
 		inv.setItem(16, builder.constructItem(
 			Material.SHIELD,
@@ -91,7 +91,7 @@ public class EnchantmentGuideInventory {
 				"&7Click this to go to the shield",
 				"&7enchantments page."
 			)),
-			"Shield"
+			new Pair<String, String>("Shield", "")
 		));
 		inv.setItem(0, builder.constructItem(
 			Material.GRAY_STAINED_GLASS_PANE,
@@ -158,7 +158,7 @@ public class EnchantmentGuideInventory {
 			Material.BARRIER,
 			"&cExit",
 			new ArrayList<String>(),
-			"Exit"
+			new Pair<String, String>("Exit", "")
 		));
 		inv.setItem(23, builder.constructItem(
 			Material.GRAY_STAINED_GLASS_PANE,
@@ -276,21 +276,19 @@ public class EnchantmentGuideInventory {
 					Material.PAPER,
 					"&aPrevious Page",
 					new ArrayList<String>(),
-					"Previous",
-					x - 1
+					new Pair<String, Integer>("Previous", x - 1)
 				));
 				i.setItem(49, builder.constructItem(
 					Material.BARRIER,
 					"&cBack",
 					new ArrayList<String>(),
-					"Back"
+					new Pair<String, String>("Back", "")
 				));
 				i.setItem(50, builder.constructItem(
 					Material.PAPER,
 					"&aNext Page",
 					new ArrayList<String>(),
-					"Next",
-					x + 1
+					new Pair<String, Integer>("Next", x + 1)
 				));
 				i.setItem(51, builder.constructItem(
 					Material.GRAY_STAINED_GLASS_PANE,
@@ -405,21 +403,19 @@ public class EnchantmentGuideInventory {
 					Material.PAPER,
 					"&aPrevious Page",
 					new ArrayList<String>(),
-					"Previous",
-					x - 1
+					new Pair<String, Integer>("Previous", x - 1)
 				));
 				i.setItem(49, builder.constructItem(
 					Material.BARRIER,
 					"&cBack",
 					new ArrayList<String>(),
-					"Back"
+					new Pair<String, String>("Back", "")
 				));
 				i.setItem(50, builder.constructItem(
 					Material.PAPER,
 					"&aNext Page",
 					new ArrayList<String>(),
-					"Next",
-					x + 1
+					new Pair<String, Integer>("Next", x + 1)
 				));
 				i.setItem(51, builder.constructItem(
 					Material.GRAY_STAINED_GLASS_PANE,
@@ -537,21 +533,19 @@ public class EnchantmentGuideInventory {
 					Material.PAPER,
 					"&aPrevious Page",
 					new ArrayList<String>(),
-					"Previous",
-					x - 1
+					new Pair<String, Integer>("Previous", x - 1)
 				));
 				i.setItem(49, builder.constructItem(
 					Material.BARRIER,
 					"&cBack",
 					new ArrayList<String>(),
-					"Back"
+					new Pair<String, String>("Back", "")
 				));
 				i.setItem(50, builder.constructItem(
 					Material.PAPER,
 					"&aNext Page",
 					new ArrayList<String>(),
-					"Next",
-					x + 1
+					new Pair<String, Integer>("Next", x + 1)
 				));
 				i.setItem(51, builder.constructItem(
 					Material.GRAY_STAINED_GLASS_PANE,
@@ -666,21 +660,19 @@ public class EnchantmentGuideInventory {
 					Material.PAPER,
 					"&aPrevious Page",
 					new ArrayList<String>(),
-					"Previous",
-					x - 1
+					new Pair<String, Integer>("Previous", x - 1)
 				));
 				i.setItem(49, builder.constructItem(
 					Material.BARRIER,
 					"&cBack",
 					new ArrayList<String>(),
-					"Back"
+					new Pair<String, String>("Back", "")
 				));
 				i.setItem(50, builder.constructItem(
 					Material.PAPER,
 					"&aNext Page",
 					new ArrayList<String>(),
-					"Next",
-					x + 1
+					new Pair<String, Integer>("Next", x + 1)
 				));
 				i.setItem(51, builder.constructItem(
 					Material.GRAY_STAINED_GLASS_PANE,
