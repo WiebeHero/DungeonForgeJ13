@@ -42,6 +42,7 @@ public class TradeEvents implements Listener{
 	
 	public TradeEvents(TradeMenu menu, SignMenuFactory sFactory, ItemStackBuilder builder, DFPlayerManager dfManager) {
 		this.menu = menu;
+		this.doing = new ArrayList<Pair<UUID, UUID>>();
 		this.trading = new HashMap<Pair<UUID, UUID>, Inventory>();
 		this.exceptions = new ArrayList<UUID>();
 		this.sFactory = sFactory;
