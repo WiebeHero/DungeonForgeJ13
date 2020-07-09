@@ -170,10 +170,13 @@ public class DeathOfMob implements Listener {
 						}
 					}
 				}
-				else if(victim instanceof Villager) {
-					if(random() <= 60) {
-						event.getDrops().add(new ItemStack(Material.EMERALD, number()));
-					}
+			}
+		}
+		else if(event.getEntity() instanceof LivingEntity) {
+			LivingEntity victim = event.getEntity();
+			if(victim instanceof Villager) {
+				if(random() <= 50) {
+					event.getDrops().add(new ItemStack(Material.EMERALD, number()));
 				}
 			}
 		}
