@@ -109,18 +109,38 @@ public class Disparitys implements Listener{
 			bar.setVisible(false);
 			disparityList.put(player.getUniqueId(), bar);
 		}
+		if(this.dfManager.contains(player)) {
+			DFPlayer dfPlayer = this.dfManager.getEntity(player);
+			this.update(dfPlayer);
+		}
 	}
 	@EventHandler
 	public void disparityBarRegister(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
+		UUID uuid = player.getUniqueId();
 		if(disparityList.containsKey(player.getUniqueId())) {
 			disparityList.remove(player.getUniqueId());
+		}
+		if(this.placeHolder.containsKey(uuid) && this.iconBar.containsKey(uuid) && this.skillBar.containsKey(uuid)) {
+			BossBar bar1 = this.placeHolder.get(uuid);
+			BossBar bar2 = this.iconBar.get(uuid);
+			BossBar bar3 = this.skillBar.get(uuid);
+			bar1.removePlayer(player);
+			bar2.removePlayer(player);
+			bar3.removePlayer(player);
+			this.placeHolder.remove(uuid);
+			this.iconBar.remove(uuid);
+			this.skillBar.remove(uuid);
 		}
 	}
 	
 	@EventHandler
 	public void updateBossBar(DFPlayerSkillChangeEvent event) {
-		DFPlayer dfPlayer = event.getDFPlayer();
+		this.update(event.getDFPlayer());
+	}
+	
+	public void update(DFPlayer p) {
+		DFPlayer dfPlayer = p;
 		if(dfPlayer != null) {
 			UUID uuid = dfPlayer.getUUID();
 			if(this.placeHolder.containsKey(uuid) && this.iconBar.containsKey(uuid) && this.skillBar.containsKey(uuid)) {
@@ -210,7 +230,6 @@ public class Disparitys implements Listener{
 			}
 		}
 	}
-	
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void disparityAttack(EntityDamageByEntityEvent event) {
