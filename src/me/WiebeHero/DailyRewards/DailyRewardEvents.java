@@ -78,9 +78,6 @@ public class DailyRewardEvents implements Listener{
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aDaily reward claimed!"));
 							}
 							else {
-								Calendar cal = Calendar.getInstance();
-								reward.setLastDaily(cal.get(Calendar.DAY_OF_MONTH) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.YEAR));
-								this.dailyRoll.RewardDaily(player);
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have already claimed your daily reward today!"));
 							}
 						}
