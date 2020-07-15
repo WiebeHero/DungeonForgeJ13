@@ -2189,14 +2189,14 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				if(i <= 40 + 10 * level) {
+				if(i <= 20 + 5 * level) {
 					Location loc1 = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 0.25D, victim.getLocation().getZ() + 0D);
-					damager.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc1, 60, 0, 0.3, 0, 0, Material.NETHER_BRICK.createBlockData()); 
+					damager.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc1, 60, 0, 0.3, 0, 0, Material.NETHER_BRICKS.createBlockData()); 
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(victim.getLocation(), Sound.ENTITY_WITHER_HURT, 2, (float) 0.5);
 					}
 					int amp = 0 + level;
-					int durationAdd = 150 + 50 * level;
+					int durationAdd = 40 + 15 * level;
 					ArrayList<PotionEffectType> types = new ArrayList<PotionEffectType>(Arrays.asList(PotionEffectType.REGENERATION, PotionEffectType.INCREASE_DAMAGE));
 					p.applyEffect(damager, types, amp, durationAdd);
 				}
@@ -4047,9 +4047,9 @@ public class Enchantment extends CommandFile implements Listener{
 			@Override
 			public void activateEnchantment(LivingEntity victim, int level, EntityDamageByEntityEvent event) {
 				float i = ThreadLocalRandom.current().nextFloat() * 100;
-				if(i <= 13 + 2 * level) {
+				if(i <= 15 + 3 * level) {
 					Location locCF = new Location(victim.getWorld(), victim.getLocation().getX() + 0D, victim.getLocation().getY() + 1.0D, victim.getLocation().getZ() + 0D);
-					victim.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, locCF, 20, 0.1, 0.1, 0.1, 0.1); 
+					victim.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, locCF, 20, 0.1, 0.1, 0.1, 0.1); 
 					for(Player victim1 : Bukkit.getOnlinePlayers()) {
 						((Player) victim1).playSound(victim.getLocation(), Sound.BLOCK_PISTON_EXTEND, 2, (float) 1.5);
 					}

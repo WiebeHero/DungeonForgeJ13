@@ -2,12 +2,15 @@ package me.WiebeHero.Factions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -17,6 +20,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -34,10 +38,15 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 
+import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CapturePoints.CapturePoint;
 import me.WiebeHero.CapturePoints.CapturePointManager;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.CustomEvents.DFFactonXpGainEvent;
+import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
+import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
 
 public class FactionsHandler implements Listener{
 	private DFFactionManager facManager;
@@ -362,6 +371,76 @@ public class FactionsHandler implements Listener{
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe item that needs to replaced needs to be a banner!"));
 						}
 					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void xpEarnMobs10(EntityDeathEvent event) {
+		if(event.getEntity().getKiller() != null && event.getEntity().getKiller() instanceof Player) {
+			if(event.getEntity() instanceof LivingEntity) {
+				Player player = event.getEntity().getKiller();
+				DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
+				if(facPlayer != null) {
+					if(facPlayer.getFactionId() != null) {
+						LivingEntity victim = event.getEntity();
+						int finalXP = 0;
+						if(!(victim instanceof Player)) {
+							Entity ent = NBTInjector.patchEntity(victim);
+							NBTCompound comp = NBTInjector.getNbtData(ent);
+							if(comp.hasKey("SpawnerUUID")) {
+								int tier = comp.getInteger("Tier");
+								int levelMob = comp.getInteger("Level");
+								//-----------------------------------------------------------------------------------------------------------------------------------------
+								//XP Adding
+								//-----------------------------------------------------------------------------------------------------------------------------------------
+								int i1 = 0;
+								if(tier == 1) {
+									i1 = new Random().nextInt(1) + 1 + (int)(0.1 * (double)levelMob);
+								}
+								else if(tier == 2) {
+									i1 = new Random().nextInt(2) + 2 + (int)(0.15 * (double)levelMob);
+								}
+								else if(tier == 3) {
+									i1 = new Random().nextInt(3) + 3 + (int)(0.2 * (double)levelMob);
+								}
+								else if(tier == 4) {
+									i1 = new Random().nextInt(4) + 4 + (int)(0.25 * (double)levelMob);
+								}
+								else if(tier == 5) {
+									i1 = new Random().nextInt(5) + 5 + (int)(0.3 * (double)levelMob);
+								}
+								finalXP = i1;
+							}
+						}
+						DFFactonXpGainEvent ev = new DFFactonXpGainEvent(facPlayer.getFactionId(), finalXP, this.facManager, this.facPlayerManager);
+						Bukkit.getServer().getPluginManager().callEvent(ev);
+						ev.proceed();
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void xpGainPlayer(DFPlayerXpGainEvent event) {
+		Player player = event.getPlayer();
+		DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
+		if(facPlayer != null) {
+			if(facPlayer.getFactionId() != null) {
+				DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+				event.setXPMultiplier(event.getXPMultiplier() + faction.getExperienceGainMultiplier());
+			}
+		}
+	}
+	@EventHandler
+	public void xpGainItem(DFItemXpGainEvent event) {
+		Player player = event.getPlayer();
+		DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
+		if(facPlayer != null) {
+			if(facPlayer.getFactionId() != null) {
+				if(event.getEquipmentSlot() != null) {
+					DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+					event.setXPMultiplier(event.getXPMultiplier() + faction.getExperienceGainMultiplier());
 				}
 			}
 		}

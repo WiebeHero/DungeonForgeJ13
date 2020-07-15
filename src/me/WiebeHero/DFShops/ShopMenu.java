@@ -57,7 +57,7 @@ public class ShopMenu {
 		}
 		int slotsFill[] = new int[] {11, 13, 19, 21, 23, 25, 28, 30, 32, 34};
 		String shopNames[] = this.shopManager.getShopTitles().toArray(new String[slotsFill.length]);
-		Material materials[] = new Material[] {Material.COOKED_BEEF, Material.CACTUS, Material.GRASS_BLOCK, Material.TNT, Material.ROTTEN_FLESH, Material.IRON_ORE, Material.BEACON, Material.SPAWNER, Material.BREWING_STAND, Material.DANDELION_YELLOW};
+		Material materials[] = new Material[] {Material.GRASS_BLOCK, Material.TNT, Material.ROTTEN_FLESH, Material.IRON_ORE, Material.COOKED_BEEF, Material.CACTUS, Material.BEACON, Material.BREWING_STAND, Material.SPAWNER, Material.DANDELION_YELLOW};
 		for(int i = 0; i < shopNames.length; i++) {
 			overview.setItem(slotsFill[i], this.builder.constructItem(
 					materials[i],

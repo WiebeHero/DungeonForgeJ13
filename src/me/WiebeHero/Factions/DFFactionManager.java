@@ -211,7 +211,16 @@ public class DFFactionManager {
 					facPlayer.setRank(rank);
 					facPlayer.setFactionId(facId);
 				}
-				this.add(fac);
+				int level = yml.getInt("Factions.List." + list.get(i) + ".Level");
+				if(level > 0) {
+					fac.setLevel(level);
+				}
+				fac.setExperience(yml.getInt("Factions.List." + list.get(i) + ".Experience"));
+				int maxxp = yml.getInt("Factions.List." + list.get(i) + ".Max Experience");
+				if(maxxp != 0) {
+					fac.setMaxExperience(maxxp);
+				}
+;				this.add(fac);
 			}
 		}
 	}
@@ -258,6 +267,9 @@ public class DFFactionManager {
 			yml.set("Factions.List." + fac.getFactionId() + ".Allies", uuids);
 			yml.set("Factions.List." + fac.getFactionId() + ".Energy", fac.getEnergy());
 			yml.set("Factions.List." + fac.getFactionId() + ".Bank", fac.getBank());
+			yml.set("Factions.List." + fac.getFactionId() + ".Level", fac.getLevel());
+			yml.set("Factions.List." + fac.getFactionId() + ".Experience", fac.getExperience());
+			yml.set("Factions.List." + fac.getFactionId() + ".Max Experience", fac.getMaxExperience());
 		}
 		try{
 			yml.save(f1);

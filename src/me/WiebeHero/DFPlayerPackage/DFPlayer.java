@@ -1,5 +1,6 @@
 package me.WiebeHero.DFPlayerPackage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -15,9 +16,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import javafx.util.Pair;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
+import me.WiebeHero.CustomEvents.DFPlayerSkillChangeEvent;
 import me.WiebeHero.DFPlayerPackage.EnumSkills.SkillState;
 import me.WiebeHero.DFPlayerPackage.EnumSkills.Stats;
 import me.WiebeHero.DFPlayerPackage.Enums.Classes;
+import me.WiebeHero.DFPlayerPackage.SkillEnum.Skills;
 import me.WiebeHero.DFPlayerPackage.State.States;
 import net.md_5.bungee.api.ChatColor;
 
@@ -300,6 +303,18 @@ public class DFPlayer {
 			return null;
 		}
 	}
+	
+	public ArrayList<Integer> getSkillList(){
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(this.atk);
+		list.add(this.spd);
+		list.add(this.crt);
+		list.add(this.rnd);
+		list.add(this.hp);
+		list.add(this.df);
+		return list;
+	}
+	
 	public States getSkillState(SkillState state) {
 		return this.getSkillStates().get(state);
 	}
@@ -465,15 +480,21 @@ public class DFPlayer {
 	}
 	
 	public void setAtk(int amount) {
-		this.atk = amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, amount, this.atk, Skills.ATK);
+		Bukkit.getPluginManager().callEvent(event);
+		this.atk = event.getNewLevel();
 	}
 	
 	public void addAtk(int amount) {
-		this.atk = this.atk + amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.atk + amount, this.atk, Skills.ATK);
+		Bukkit.getPluginManager().callEvent(event);
+		this.atk = event.getNewLevel();
 	}
 	
 	public void removeAtk(int amount) {
-		this.atk = this.atk - amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.atk - amount, this.atk, Skills.ATK);
+		Bukkit.getPluginManager().callEvent(event);
+		this.atk = event.getNewLevel();
 	}
 	//---------------------------------------------------------
 	//Attack Speed Handler
@@ -483,15 +504,21 @@ public class DFPlayer {
 	}
 	
 	public void setSpd(int amount) {
-		this.spd = amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, amount, this.spd, Skills.SPD);
+		Bukkit.getPluginManager().callEvent(event);
+		this.spd = event.getNewLevel();
 	}
 	
 	public void addSpd(int amount) {
-		this.spd = this.spd + amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.spd + amount, this.spd, Skills.SPD);
+		Bukkit.getPluginManager().callEvent(event);
+		this.spd = event.getNewLevel();
 	}
 	
 	public void removeSpd(int amount) {
-		this.spd = this.spd - amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.spd +-amount, this.spd, Skills.SPD);
+		Bukkit.getPluginManager().callEvent(event);
+		this.spd = event.getNewLevel();
 	}
 	//---------------------------------------------------------
 	//Critical Chance Handler
@@ -501,15 +528,21 @@ public class DFPlayer {
 	}
 	
 	public void setCrt(int amount) {
-		this.crt = amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, amount, this.crt, Skills.CRT);
+		Bukkit.getPluginManager().callEvent(event);
+		this.crt = event.getNewLevel();
 	}
 	
 	public void addCrt(int amount) {
-		this.crt = this.crt + amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.crt + amount, this.crt, Skills.CRT);
+		Bukkit.getPluginManager().callEvent(event);
+		this.crt = event.getNewLevel();
 	}
 	
 	public void removeCrt(int amount) {
-		this.crt = this.crt - amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.crt - amount, this.crt, Skills.CRT);
+		Bukkit.getPluginManager().callEvent(event);
+		this.crt = event.getNewLevel();
 	}
 	//---------------------------------------------------------
 	//Ranged Damage Handler
@@ -519,15 +552,21 @@ public class DFPlayer {
 	}
 	
 	public void setRnd(int amount) {
-		this.rnd = amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, amount, this.rnd, Skills.RND);
+		Bukkit.getPluginManager().callEvent(event);
+		this.rnd = event.getNewLevel();
 	}
 	
 	public void addRnd(int amount) {
-		this.rnd = this.rnd + amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.rnd + amount, this.rnd, Skills.RND);
+		Bukkit.getPluginManager().callEvent(event);
+		this.rnd = event.getNewLevel();
 	}
 	
 	public void removeRnd(int amount) {
-		this.rnd = this.rnd - amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.rnd - amount, this.rnd, Skills.RND);
+		Bukkit.getPluginManager().callEvent(event);
+		this.rnd = event.getNewLevel();
 	}
 	//---------------------------------------------------------
 	//Max Health Handler
@@ -537,15 +576,21 @@ public class DFPlayer {
 	}
 	
 	public void setHp(int amount) {
-		this.hp = amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, amount, this.hp, Skills.HP);
+		Bukkit.getPluginManager().callEvent(event);
+		this.hp = event.getNewLevel();
 	}
 	
 	public void addHp(int amount) {
-		this.hp = this.hp + amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.hp + amount, this.hp, Skills.HP);
+		Bukkit.getPluginManager().callEvent(event);
+		this.hp = event.getNewLevel();
 	}
 	
 	public void removeHp(int amount) {
-		this.hp = this.hp - amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.hp - amount, this.hp, Skills.HP);
+		Bukkit.getPluginManager().callEvent(event);
+		this.hp = event.getNewLevel();
 	}
 	//---------------------------------------------------------
 	//Armor Defene Handler
@@ -555,15 +600,21 @@ public class DFPlayer {
 	}
 	
 	public void setDf(int amount) {
-		this.df = amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, amount, this.df, Skills.DF);
+		Bukkit.getPluginManager().callEvent(event);
+		this.df = event.getNewLevel();
 	}
 	
 	public void addDf(int amount) {
-		this.df = this.df + amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.df + amount, this.df, Skills.DF);
+		Bukkit.getPluginManager().callEvent(event);
+		this.df = event.getNewLevel();
 	}
 	
 	public void removeDf(int amount) {
-		this.df = this.df - amount;
+		DFPlayerSkillChangeEvent event = new DFPlayerSkillChangeEvent(this, this.df - amount, this.df, Skills.DF);
+		Bukkit.getPluginManager().callEvent(event);
+		this.df = event.getNewLevel();
 	}
 	//---------------------------------------------------------
 	//Attack Damage Modifier Handler

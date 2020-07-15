@@ -122,15 +122,17 @@ public class BoosterManager {
 	public void runRemoval() {
 		new BukkitRunnable() {
 			public void run() {
-				for(Entry<UUID, Booster> entry : boosterList.entrySet()) {
-					if(entry != null) {
-						if(System.currentTimeMillis() >= entry.getValue().getEndTime()) {
-							boosterList.remove(entry.getKey());
+				if(!boosterList.isEmpty()) {
+					for(Entry<UUID, Booster> entry : boosterList.entrySet()) {
+						if(entry != null) {
+							if(System.currentTimeMillis() >= entry.getValue().getEndTime()) {
+								boosterList.remove(entry.getKey());
+							}
 						}
 					}
 				}
 			}
-		}.runTaskTimerAsynchronously(CustomEnchantments.getInstance(), 0L, 1200L);
+		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1200L);
 	}
 	
 	public void loadBoosters() {

@@ -6,11 +6,12 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Illager;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -21,162 +22,230 @@ import me.WiebeHero.LootChest.LootRewards;
 
 public class DeathOfMob implements Listener {
 	private LootRewards rewards = new LootRewards();
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void deathEvent(EntityDeathEvent event) {
-		if(event.getEntity().getKiller() instanceof Player) {
-			if(event.getEntity() instanceof LivingEntity) {
-				LivingEntity victim = event.getEntity();
-				if(victim instanceof Monster) {
-					ItemStack item1 = rewards.commonCrystal();
-					ItemStack item2 = rewards.rareCrystal();
-					ItemStack item3 = rewards.epicCrystal();
-					ItemStack item4 = rewards.legendaryCrystal();
-					ItemStack item5 = rewards.mythicCrystal();
-					Entity e = event.getEntity();
-		    		e = NBTInjector.patchEntity(e);
-		    		NBTCompound comp = NBTInjector.getNbtData(e);
-					if(comp.hasKey("SpawnerUUID")) {
-						if(this.random() <= 1.00) {
-							event.getDrops().add(item1);
-						}
-						else if(this.random() <= 0.80) {
-							event.getDrops().add(item2);
-						}
-						else if(this.random() <= 0.60) {
-							event.getDrops().add(item3);
-						}
-						else if(this.random() <= 0.40) {
-							event.getDrops().add(item4);
-						}
-						else if(this.random() <= 0.20) {
-							event.getDrops().add(item5);
-						}
+		if(event.getEntity() instanceof LivingEntity) {
+			LivingEntity victim = event.getEntity();
+			if(victim instanceof Monster) {
+	    		if(victim.getType() == EntityType.ZOMBIE || victim.getType() == EntityType.HUSK || victim.getType() == EntityType.DROWNED) {
+					if(this.random() <= 55) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.ROTTEN_FLESH, this.number(3)));
 					}
-					if(victim.getType() == EntityType.ZOMBIE || victim.getType() == EntityType.HUSK) {
-						if(random() < 30) {
-							event.getDrops().add(new ItemStack(Material.ROTTEN_FLESH, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.SKELETON || victim.getType() == EntityType.STRAY) {
+					if(this.random() <= 55) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.BONE, this.number(2)));
 					}
-					else if(victim.getType() == EntityType.SKELETON || victim.getType() == EntityType.STRAY) {
-						if(random() < 30) {
-							event.getDrops().add(new ItemStack(Material.BONE, number()));
-						}
-						if(random() < 20) {
-							event.getDrops().add(new ItemStack(Material.ARROW, number()));
-						}
+					if(this.random() <= 45) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.ARROW, this.number(2)));
 					}
-					else if(victim.getType() == EntityType.SPIDER || victim.getType() == EntityType.CAVE_SPIDER) {
-						if(random() < 30) {
-							event.getDrops().add(new ItemStack(Material.STRING, number()));
-						}
-						if(random() < 10) {
-							event.getDrops().add(new ItemStack(Material.SPIDER_EYE, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.SPIDER || victim.getType() == EntityType.CAVE_SPIDER) {
+					if(this.random() <= 50) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.STRING, this.number(3)));
 					}
-					else if(victim.getType() == EntityType.CREEPER) {
-						if(random() < 30) {
-							event.getDrops().add(new ItemStack(Material.GUNPOWDER, number()));
-						}
+					if(this.random() <= 20) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.SPIDER_EYE, this.number(1)));
 					}
-					else if(victim.getType() == EntityType.BLAZE) {
-						if(random() < 2.5) {
-							event.getDrops().add(new ItemStack(Material.BLAZE_ROD, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.CREEPER) {
+					if(this.random() <= 50) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.GUNPOWDER, this.number(2)));
 					}
-					else if(victim.getType() == EntityType.VINDICATOR) {
-						if(random() < 1) {
-							event.getDrops().add(new ItemStack(Material.EMERALD, number()));
-						}
-						if(random() < 0.002) {
-							event.getDrops().add(new ItemStack(Material.TOTEM_OF_UNDYING, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.BLAZE) {
+					if(this.random() <= 50) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.BLAZE_ROD, this.number(3)));
 					}
-					else if(victim.getType() == EntityType.ENDERMAN) {
-						if(random() < 5) {
-							event.getDrops().add(new ItemStack(Material.ENDER_PEARL, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.ENDERMAN) {
+					if(this.random() <= 50) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.ENDER_PEARL, this.number(2)));
 					}
-					else if(victim.getType() == EntityType.EVOKER) {
-						if(random() < 5) {
-							event.getDrops().add(new ItemStack(Material.EMERALD, number()));
-						}
-						if(random() < 1 ) {
-							event.getDrops().add(new ItemStack(Material.TOTEM_OF_UNDYING, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.ENDERMITE) {
+					if(this.random() <= 25) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.CHORUS_FRUIT, this.number(3)));
 					}
-					else if(victim.getType() == EntityType.MAGMA_CUBE) {
-						if(random() < 5) {
-							event.getDrops().add(new ItemStack(Material.MAGMA_CREAM, number()));
-						}
+					if(this.random() <= 2.5) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.CHORUS_FLOWER, this.number(1)));
 					}
-					else if(victim.getType() == EntityType.ELDER_GUARDIAN) {
-						if(random() < 50) {
-							event.getDrops().add(new ItemStack(Material.PRISMARINE_CRYSTALS, number()));
-						}
-						if(random() < 50) {
-							event.getDrops().add(new ItemStack(Material.PRISMARINE_SHARD, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.MAGMA_CUBE) {
+					if(this.random() <= 40) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.MAGMA_CREAM, this.number(3)));
 					}
-					else if(victim.getType() == EntityType.GUARDIAN) {
-						if(random() < 10) {
-							event.getDrops().add(new ItemStack(Material.PRISMARINE_CRYSTALS, number()));
-						}
-						if(random() < 10) {
-							event.getDrops().add(new ItemStack(Material.PRISMARINE_SHARD, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.ELDER_GUARDIAN) {
+					if(this.random() <= 50) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.PRISMARINE_CRYSTALS, this.number(8)));
 					}
-					else if(victim.getType() == EntityType.PIG_ZOMBIE) {
-						if(random() < 10) {
-							event.getDrops().add(new ItemStack(Material.GOLD_NUGGET, number()));
-						}
-						if(random() < 0.5) {
-							event.getDrops().add(new ItemStack(Material.GOLD_INGOT, number()));
-						}
+					if(this.random() <= 50) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.PRISMARINE_SHARD, this.number(8)));
 					}
-					else if(victim.getType() == EntityType.SHULKER) {
-						if(random() < 0.3) {
-							event.getDrops().add(new ItemStack(Material.SHULKER_SHELL, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.GUARDIAN) {
+					if(this.random() <= 35) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.PRISMARINE_CRYSTALS, this.number(4)));
 					}
-					else if(victim.getType() == EntityType.WITCH) {
-						if(random() < 2.5) {
-							event.getDrops().add(new ItemStack(Material.REDSTONE, number()));
-						}
-						if(random() < 2.5) {
-							event.getDrops().add(new ItemStack(Material.GLOWSTONE, number()));
-						}
-						if(random() < 2.5) {
-							event.getDrops().add(new ItemStack(Material.STICK, number()));
-						}
-						if(random() < 2.5) {
-							event.getDrops().add(new ItemStack(Material.GLASS_BOTTLE, number()));
-						}
-						if(random() < 2.5) {
-							event.getDrops().add(new ItemStack(Material.BROWN_MUSHROOM, number()));
-						}
-						if(random() < 2.5) {
-							event.getDrops().add(new ItemStack(Material.RED_MUSHROOM, number()));
-						}
+					if(this.random() <= 35) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.PRISMARINE_SHARD, this.number(4)));
 					}
-					else if(victim.getType() == EntityType.WITHER_SKELETON) {
-						if(random() < 10) {
-							event.getDrops().add(new ItemStack(Material.BONE, number()));
-						}
-						if(random() < 5) {
-							event.getDrops().add(new ItemStack(Material.COAL, number()));
-						}
-						if(random() < 0.1) {
-							event.getDrops().add(new ItemStack(Material.WITHER_SKELETON_SKULL, number()));
-						}
+				}
+				else if(victim.getType() == EntityType.PIG_ZOMBIE) {
+					if(this.random() <= 25) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.GOLD_NUGGET, this.number(4)));
+					}
+					if(this.random() <= 5) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.GOLD_INGOT, this.number(2)));
+					}
+				}
+				else if(victim.getType() == EntityType.SHULKER) {
+					if(this.random() <= 2.0) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.SHULKER_SHELL, this.number(1)));
+					}
+				}
+				else if(victim.getType() == EntityType.SILVERFISH) {
+					if(this.random() <= 2.0) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.STONE, this.number(1)));
+					}
+				}
+				else if(victim.getType() == EntityType.WITCH) {
+					if(this.random() < 15.0) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.REDSTONE, this.number(3)));
+					}
+					if(this.random() < 15.0) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.GLOWSTONE, this.number(3)));
+					}
+					if(this.random() < 15.0) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.STICK, this.number(2)));
+					}
+					if(this.random() < 15.0) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.GLASS_BOTTLE, this.number(1)));
+					}
+					if(this.random() < 15.0) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.BROWN_MUSHROOM, this.number(2)));
+					}
+					if(this.random() < 15.0) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.RED_MUSHROOM, this.number(2)));
+					}
+				}
+				else if(victim.getType() == EntityType.WITHER_SKELETON) {
+					if(this.random() < 65) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.BONE, this.number(3)));
+					}
+					if(this.random() < 15) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.COAL, this.number(4)));
+					}
+					if(this.random() < 1.0) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.WITHER_SKELETON_SKULL, this.number(1)));
+					}
+				}
+	    		ItemStack item1 = this.rewards.commonCrystal();
+				ItemStack item2 = this.rewards.rareCrystal();
+				ItemStack item3 = this.rewards.epicCrystal();
+				ItemStack item4 = this.rewards.legendaryCrystal();
+				ItemStack item5 = this.rewards.mythicCrystal();
+				Entity e = event.getEntity();
+	    		e = NBTInjector.patchEntity(e);
+	    		NBTCompound comp = NBTInjector.getNbtData(e);
+				if(comp.hasKey("SpawnerUUID")) {
+					if(this.random() <= 1.00) {
+						event.getDrops().add(item1);
+					}
+					else if(this.random() <= 0.80) {
+						event.getDrops().add(item2);
+					}
+					else if(this.random() <= 0.60) {
+						event.getDrops().add(item3);
+					}
+					else if(this.random() <= 0.40) {
+						event.getDrops().add(item4);
+					}
+					else if(this.random() <= 0.20) {
+						event.getDrops().add(item5);
 					}
 				}
 			}
-		}
-		else if(event.getEntity() instanceof LivingEntity) {
-			LivingEntity victim = event.getEntity();
-			if(victim instanceof Villager) {
-				if(random() <= 50) {
-					event.getDrops().add(new ItemStack(Material.EMERALD, number()));
+			else if(victim instanceof Villager) {
+				if(this.random() <= 65) {
+					event.getDrops().clear();
+					event.getDrops().add(new ItemStack(Material.EMERALD, this.number(2)));
+				}
+			}
+			else if(victim instanceof Illager) {
+				ItemStack item1 = rewards.commonCrystal();
+				ItemStack item2 = rewards.rareCrystal();
+				ItemStack item3 = rewards.epicCrystal();
+				ItemStack item4 = rewards.legendaryCrystal();
+				ItemStack item5 = rewards.mythicCrystal();
+				Entity e = event.getEntity();
+	    		e = NBTInjector.patchEntity(e);
+	    		NBTCompound comp = NBTInjector.getNbtData(e);
+				if(comp.hasKey("SpawnerUUID")) {
+					if(this.random() <= 1.00) {
+						event.getDrops().add(item1);
+					}
+					else if(this.random() <= 0.80) {
+						event.getDrops().add(item2);
+					}
+					else if(this.random() <= 0.60) {
+						event.getDrops().add(item3);
+					}
+					else if(this.random() <= 0.40) {
+						event.getDrops().add(item4);
+					}
+					else if(this.random() <= 0.20) {
+						event.getDrops().add(item5);
+					}
+				}
+				if(victim.getType() == EntityType.VINDICATOR) {
+					if(this.random() <= 40) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.EMERALD, this.number(2)));
+					}
+					if(this.random() <= 0.002) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.TOTEM_OF_UNDYING, this.number(1)));
+					}
+				}
+				else if(victim.getType() == EntityType.EVOKER || victim.getType() == EntityType.ILLUSIONER) {
+					if(this.random() <= 80) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.EMERALD, this.number(4)));
+					}
+					if(this.random() <= 1) {
+						event.getDrops().clear();
+						event.getDrops().add(new ItemStack(Material.TOTEM_OF_UNDYING, this.number(1)));
+					}
 				}
 			}
 		}
@@ -185,8 +254,8 @@ public class DeathOfMob implements Listener {
 		float i = ThreadLocalRandom.current().nextFloat() * 100;
 		return i;
 	}
-	public int number() {
-		int i = new Random().nextInt(1) + 1;
+	public int number(int max) {
+		int i = new Random().nextInt(max - 1) + 1;
 		return i;
 	}
 }

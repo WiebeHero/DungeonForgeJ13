@@ -19,9 +19,15 @@ public class DFFaction {
 	private ArrayList<UUID> invitedAllyList;
 	private ArrayList<UUID> allyList;
 	private Location facHome;
+	private int level;
+	private int maxLevel;
+	private int xp;
+	private int maxxp;
 	private int facP;
 	private double bank;
 	private double energy;
+	private double maxpMultiplier = 1.13;
+	private double mixpMultiplier = 1.0001;
 	private ItemStack banner;
 	public DFFaction(String facName, Player p, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
 		this.facId = UUID.randomUUID();
@@ -35,6 +41,10 @@ public class DFFaction {
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
+		this.xp = 0;
+		this.maxxp = 200;
+		this.level = 1;
+		this.maxLevel = 100;
 		this.banner = new ItemStack(Material.BLACK_BANNER);
 		DFFactionPlayer df = memberManager.getFactionPlayer(p.getUniqueId());
 		df.setFactionId(this.getFactionId());
@@ -52,6 +62,9 @@ public class DFFaction {
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
+		this.xp = 0;
+		this.maxxp = 200;
+		this.level = 1;
 		this.banner = new ItemStack(Material.BLACK_BANNER);
 	}
 	public DFFaction(String facName, UUID facId, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
@@ -66,6 +79,9 @@ public class DFFaction {
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
+		this.xp = 0;
+		this.maxxp = 200;
+		this.level = 1;
 		this.banner = new ItemStack(Material.BLACK_BANNER);
 	}
 	public void addMember(Player player) {
@@ -278,4 +294,73 @@ public class DFFaction {
 			this.energy -= energy;
 		}
 	}
+	public int getLevel() {
+		return this.level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	public void addLevel(int level) {
+		this.level += level;
+	}
+	public void removeLevel(int level) {
+		this.level -= level;
+	}
+	public int getMaxLevel() {
+		return this.maxLevel;
+	}
+	public int getExperience() {
+		return this.xp;
+	}
+	public void setExperience(int xp) {
+		this.xp = xp;
+	}
+	public void addExperience(int xp) {
+		this.xp += xp;
+	}
+	public void removeExperience(int xp) {
+		this.xp -= xp;
+	}
+	public int getMaxExperience() {
+		return this.maxxp;
+	}
+	public void setMaxExperience(int maxxp) {
+		this.maxxp = maxxp;
+	}
+	public void addMaxExperience(int maxxp) {
+		this.maxxp += maxxp;
+	}
+	public void removeMaxExperience(int maxxp) {
+		this.maxxp = maxxp;
+	}
+	public double getExperienceMultiplier() {
+		double x = this.maxpMultiplier - this.mixpMultiplier;
+		double y = x / 100.00;
+		double z = y * this.getLevel();
+		return this.maxpMultiplier - z;
+	}
+	public double getExperienceGainMultiplier() {
+		double multiplier = 0.00;
+		double defMult = 1.00;
+		multiplier = this.level / 5.00 + defMult;
+		return multiplier;
+	}
+	public int getMaxFactionHomes() {
+		if(this.level > 80) {
+			return 4;
+		}
+		else if(this.level > 50) {
+			return 3;
+		}
+		else if(this.level > 20) {
+			return 2;
+		}
+		return 1;
+	}
+	public int getMaxMembers() {
+		int max = 5;
+		int addOn = (int)Math.floor((double)this.level / 10.00) * 2;
+		return max += addOn;
+	}
+	
 }

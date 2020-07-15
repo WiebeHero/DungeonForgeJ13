@@ -25,6 +25,7 @@ public class DFItemXpGainEvent extends Event{
 	private boolean isCancelled;
 	private ItemStack item;
 	private ItemStack cursor;
+	private double xpMultiplier;
 	private int xp;
 	private int slotR;
 	private EquipmentSlot slot;
@@ -37,6 +38,7 @@ public class DFItemXpGainEvent extends Event{
         this.slot = slot;
         this.enchant = enchant;
         this.dfManager = dfManager;
+        this.xpMultiplier = 100.00;
     }
 	
 	public DFItemXpGainEvent(Player player, ItemStack item, ItemStack cursor, int xp, int slot, DFPlayerManager dfManager, NovisEnchantmentGetting enchant){
@@ -48,6 +50,7 @@ public class DFItemXpGainEvent extends Event{
         this.slotR = slot;
         this.enchant = enchant;
         this.dfManager = dfManager;
+        this.xpMultiplier = 100.00;
     }
 	
 	public Player getPlayer() {
@@ -167,12 +170,20 @@ public class DFItemXpGainEvent extends Event{
 		this.cursor = cursor;
 	}
 	
+	public double getXPMultiplier() {
+		return this.xpMultiplier;
+	}
+	
+	public void setXPMultiplier(double xpMultiplier) {
+		this.xpMultiplier = xpMultiplier;
+	}
+	
 	public void activate() {
 		if(!this.isCancelled()) {
 			ItemStack i = this.getItemStack();
 			NBTItem item = new NBTItem(i);
 			if(item.hasKey("MAXXP")) {
-				int xp = this.getXP();
+				int xp = (int)((double)this.getXP() / 100.0 * this.xpMultiplier);
 				int maxxp = item.getInteger("MAXXP");
 				if(xp >= maxxp) {
 					if(this.getEquipmentSlot() != null) {
@@ -212,7 +223,7 @@ public class DFItemXpGainEvent extends Event{
 						size = 4;
 					}
 					lore.set(lore.size() - size, new CCT().colorize(loreString));
-					lore.set(lore.size() - (size + 1), new CCT().colorize("&7Upgrade Progress: " + "&a[&b&l" + (this.getXP()) + " &6/ " + "&b&l" + maxxp + "&a]"));
+					lore.set(lore.size() - (size + 1), new CCT().colorize("&7Upgrade Progress: " + "&a[&b&l" + (xp) + " &6/ " + "&b&l" + maxxp + "&a]"));
 		    		im.setLore(lore);
 		    		i.setItemMeta(im);
 		    		if(this.getEquipmentSlot() == EquipmentSlot.HEAD) {

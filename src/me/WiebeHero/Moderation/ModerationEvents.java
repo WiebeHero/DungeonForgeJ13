@@ -2907,11 +2907,15 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
         	else if(command.getName().equalsIgnoreCase(a)) { 
         		if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 	            	if(args.length == 1) {
-	            		return Arrays.asList("money", "level", "item");
+	            		ArrayList<String> itemNames = new ArrayList<String>(Arrays.asList("money", "level", "item", "spawner", "moneynote", "crystal", "xpbottle"));
+            			ArrayList<String> collection = new ArrayList<String>();
+            			return StringUtil.copyPartialMatches(args[0], itemNames, collection);
 	            	}
 	            	else if(args.length == 2) {
 	            		if(args[0].equalsIgnoreCase("money")) {
-	            			return Arrays.asList("give", "set", "remove");
+	            			ArrayList<String> itemNames = new ArrayList<String>(Arrays.asList("give", "set", "remove"));
+	            			ArrayList<String> collection = new ArrayList<String>();
+	            			return StringUtil.copyPartialMatches(args[1], itemNames, collection);
 	            		}
 	            		else if(args[0].equalsIgnoreCase("level")) {
 	            			return Arrays.asList("set");
