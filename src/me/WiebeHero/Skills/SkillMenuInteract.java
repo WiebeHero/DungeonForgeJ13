@@ -1,6 +1,7 @@
 package me.WiebeHero.Skills;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +35,7 @@ public class SkillMenuInteract implements Listener{
 		InventoryView current = player.getOpenInventory();
 		if(current.getTitle().contains("Reset Profile:")) {
 			event.setCancelled(true);
-			if(item == null || !item.hasItemMeta()) {
+			if((item == null && item.getType() == Material.AIR) || !item.hasItemMeta()) {
 				return;
 			}
 			else {

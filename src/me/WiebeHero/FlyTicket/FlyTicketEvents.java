@@ -3,7 +3,7 @@ package me.WiebeHero.FlyTicket;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,7 +42,7 @@ public class FlyTicketEvents implements Listener{
 		Action action = event.getAction();
 		if(action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
 			ItemStack item = player.getInventory().getItemInMainHand();
-			if(item != null) {
+			if(item != null && item.getType() != Material.AIR) {
 				NBTItem i = new NBTItem(item);
 				if(i.hasKey("Fly Ticket")) {
 					if(!this.flyTicketManager.containsFlyTicket(player.getUniqueId())) {

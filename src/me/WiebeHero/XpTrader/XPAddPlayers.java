@@ -3,6 +3,7 @@ package me.WiebeHero.XpTrader;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,8 +28,8 @@ public class XPAddPlayers implements Listener {
 	public void xpAddPlayer(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if(player.getInventory().getItemInMainHand() != null) {
-				ItemStack item = player.getInventory().getItemInMainHand();
+			ItemStack item = player.getInventory().getItemInMainHand();
+			if(item != null && item.getType() != Material.AIR) {
 				NBTItem i = new NBTItem(item);
 				if(i.hasKey("XPBottle")) {
 					int xpAdd = i.getInteger("XPBottle");

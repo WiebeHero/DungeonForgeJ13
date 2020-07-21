@@ -3813,7 +3813,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Punish, Ban Reason")) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(target.containsKey(player.getUniqueId())) {
 						OfflinePlayer p = Bukkit.getOfflinePlayer(target.get(player.getUniqueId()).getKey());
@@ -4052,7 +4052,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Punish, Mute Reason")) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(target.containsKey(player.getUniqueId())) {
 						OfflinePlayer p = Bukkit.getOfflinePlayer(target.get(player.getUniqueId()).getKey());
@@ -4189,7 +4189,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Punish History")) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(target.containsKey(player.getUniqueId())) {
 						OfflinePlayer p = Bukkit.getOfflinePlayer(target.get(player.getUniqueId()).getKey());
@@ -4290,7 +4290,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public void spawnerMenu(PlayerInteractEvent event) {
 		Player player = (Player) event.getPlayer();
 		ItemStack i = player.getInventory().getItemInMainHand();
-		if(i != null) {
+		if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 			NBTItem item = new NBTItem(i);
 			if(item.hasKey("SpawnerCreate")) {
 				gui.SpawnerCreate(player);
@@ -4340,7 +4340,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Spawner")) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("SpawnerSlot")) {
 						spawnerSlot.put(player.getUniqueId(), event.getSlot() - 9);
@@ -4367,7 +4367,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Spawner")) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("EntityType")) {
 						EntityType type = item.getObject("EntityType", EntityType.class);
@@ -4385,7 +4385,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Spawner")) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("Tier")) {
 						int tier = item.getInteger("Tier");
@@ -4407,7 +4407,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			Staff staff = sManager.get(player.getUniqueId());
 			if(staff.getSpawnerMode() == true) {
 				event.setCancelled(true);
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("SpawnerPlace")) {
 						if(event.getClickedBlock() != null) {
@@ -4456,7 +4456,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public void lootMenu(PlayerInteractEvent event) {
 		Player player = (Player) event.getPlayer();
 		ItemStack i = player.getInventory().getItemInMainHand();
-		if(i != null) {
+		if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 			NBTItem item = new NBTItem(i);
 			if(item.hasKey("LootCreate")) {
 				gui.LootCreate(player);
@@ -4506,7 +4506,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Loot")) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("LootSlot")) {
 						lootSlot.put(player.getUniqueId(), event.getSlot() - 9);
@@ -4533,7 +4533,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Loot")) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("Radius")) {
 						int radius = item.getInteger("Radius");
@@ -4551,7 +4551,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
 			if(ChatColor.stripColor(title).contains("Loot")) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("Tier")) {
 						int tier = item.getInteger("Tier");
@@ -4568,11 +4568,10 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public void placeLoot(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		ItemStack i = player.getInventory().getItemInMainHand();
-		Block block = event.getBlock();
 		if(sManager.contains(player.getUniqueId())) {
 			Staff staff = sManager.get(player.getUniqueId());
 			if(staff.getLootMode() == true) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("LootPlace")) {
 						event.setCancelled(false);
@@ -4581,9 +4580,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						int tier = item.getInteger("Tier");
 						LootChest chest = new LootChest(loc, tier, radius);
 						lcManager.add(chest.getUUID(), chest);
-						NBTCompound comp = NBTInjector.getNbtData(block.getState());
-						comp.setString("LootChest", "");
-						Bukkit.broadcastMessage(comp.hasKey("LootChest") + "");
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aLoot Chest placed!"));
 					}
 				}
@@ -4616,7 +4612,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public void capturePointMenu(PlayerInteractEvent event) {
 		Player player = (Player) event.getPlayer();
 		ItemStack i = player.getInventory().getItemInMainHand();
-		if(i != null) {
+		if(i != null && i.getType() != Material.AIR) {
 			NBTItem item = new NBTItem(i);
 			if(item.hasKey("CapturePointCreate")) {
 				gui.CapturePointMenu(player);
@@ -4667,7 +4663,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		ItemStack i = event.getCurrentItem();
 		String title = player.getOpenInventory().getTitle();
 		if(player.getOpenInventory() != null) {
-			if(i != null) {
+			if(i != null && i.getType() != Material.AIR) {
 				if(ChatColor.stripColor(title).contains("Capture Point Create")) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("CapturePointSlot")) {
@@ -4714,7 +4710,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		if(sManager.contains(player.getUniqueId())) {
 			Staff staff = sManager.get(player.getUniqueId());
 			if(staff.getCapturePointMode() == true) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR) {
 					NBTItem item = new NBTItem(i);
 					if(item.hasKey("CapturePointPlace")) {
 						event.setCancelled(true);

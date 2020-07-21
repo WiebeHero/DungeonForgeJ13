@@ -30,9 +30,11 @@ public class CustomDurability implements Listener{
 		Player player = event.getPlayer();
 		if(player != null) {
 			ItemStack i = player.getInventory().getItemInMainHand();
-			if(decreaseDurability(player, i) != null) {
-				i = decreaseDurability(player, i);
-				player.getInventory().setItemInMainHand(i);
+			if(i != null && i.getType() != Material.AIR) {
+				if(decreaseDurability(player, i) != null) {
+					i = decreaseDurability(player, i);
+					player.getInventory().setItemInMainHand(i);
+				}
 			}
 		}
 	}
@@ -42,9 +44,11 @@ public class CustomDurability implements Listener{
 			Player player = (Player) event.getDamager();
 			if(player != null) {
 				ItemStack i = player.getInventory().getItemInMainHand();
-				if(decreaseDurability(player, i) != null) {
-					i = decreaseDurability(player, i);
-					player.getInventory().setItemInMainHand(i);
+				if(i != null && i.getType() != Material.AIR) {
+					if(decreaseDurability(player, i) != null) {
+						i = decreaseDurability(player, i);
+						player.getInventory().setItemInMainHand(i);
+					}
 				}
 			}
 		}
@@ -65,7 +69,7 @@ public class CustomDurability implements Listener{
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
 			ItemStack i = player.getInventory().getItemInOffHand();
-			if(i != null) {
+			if(i != null && i.getType() != Material.AIR) {
 				if(decreaseDurability(player, i) != null) {
 					i = decreaseDurability(player, i);
 					player.getInventory().setItemInOffHand(i);
@@ -78,7 +82,7 @@ public class CustomDurability implements Listener{
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
 			for(ItemStack i : player.getInventory().getArmorContents()) {
-				if(i != null) {
+				if(i != null && i.getType() != Material.AIR) {
 					if(decreaseDurability(player, i) != null) {
 						i = decreaseDurability(player, i);
 						if(i.getType().toString().contains("HELMET") || i.getType().toString().contains("HEAD")) {
@@ -191,7 +195,7 @@ public class CustomDurability implements Listener{
 		ItemStack cursor = event.getCursor();
 		if(event.getClickedInventory() != null) {
 			if(event.getClickedInventory().getType() == InventoryType.PLAYER && player.getGameMode().equals(GameMode.SURVIVAL) && event.getSlot() != 36 && event.getSlot() != 37 && event.getSlot() != 38 && event.getSlot() != 39) {
-				if(item != null && cursor != null) {
+				if(item != null && cursor != null && item.getType() != Material.AIR && cursor.getType() != Material.AIR) {
 					NBTItem i = new NBTItem(item);
 					if(i.hasKey("ItemKey")) {
 						int maxDura = i.getInteger("MaxDurability");

@@ -63,7 +63,7 @@ public class ShopEvents implements Listener{
 			if(view != null) {
 				if(ChatColor.stripColor(title).contains("Shop")) {
 					ItemStack i = event.getCurrentItem();
-					if(i != null) {
+					if(i != null && i.getType() != Material.AIR) {
 						NBTItem item = new NBTItem(i);
 						if(item.hasKey("ShopItem")) {
 							ShopItem sItem = item.getObject("ShopItem", ShopItem.class);

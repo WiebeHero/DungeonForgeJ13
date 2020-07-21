@@ -388,7 +388,7 @@ public class FactionsHandler implements Listener{
 			Player player = (Player)event.getWhoClicked();
 			InventoryView view = player.getOpenInventory();
 			ItemStack stack = event.getCurrentItem();
-			if(stack != null) {
+			if(stack != null && stack.getType() != Material.AIR) {
 				NBTItem item = new NBTItem(stack);
 				if(view.getTitle().contains("Faction Overview")) {
 					event.setCancelled(true);
