@@ -57,8 +57,17 @@ public class DFFactions implements Listener,CommandExecutor{
 					if(player.getWorld().getName().equals("DFWarzone-1") || player.getWorld().getName().equals("FactionWorld-1")) {
 						DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player.getUniqueId());
 						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-						if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
+						if(args.length == 0) {
+							if(facPlayer.getFactionId() != null) {
+								this.facInventory.MainFactionInventory(player, faction);
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have a faction! Create one to use this command first!"));
+							}
+						}
+						else if(args[0].equalsIgnoreCase("help")) {
 							player.sendMessage(new CCT().colorize("&6)------------------=[&bHelp&6]=------------------("));
+							player.sendMessage(new CCT().colorize("&b/f | Opens the faction menu if you have one."));
 							player.sendMessage(new CCT().colorize("&b/f create | Create a faction."));
 							player.sendMessage(new CCT().colorize("&b/f claim/unclaim | Claim/Unclaim a chunk of your faction"));
 							player.sendMessage(new CCT().colorize("&b/f unclaim all | Unclaim all chunks of your faction"));
@@ -217,11 +226,15 @@ public class DFFactions implements Listener,CommandExecutor{
 									player.sendMessage(new CCT().colorize("&7Chunks Claimed: &b" + cClaimed));
 									player.sendMessage(new CCT().colorize("&7Members Online: &b" + listOnline));
 									player.sendMessage(new CCT().colorize("&7Members Offline: &b" + listOffline));
-									if(faction.getFactionHome() != null) {
-										player.sendMessage(new CCT().colorize("&7Faction Home: &bSet at " + "&6X: " + faction.getFactionHome().getX() + " Y: " + faction.getFactionHome().getY() + " Z: " + faction.getFactionHome().getZ()));
+									if(!faction.getFactionHomes().isEmpty()) {
+										for(Entry<String, Location> entry : faction.getFactionHomes().entrySet()) {
+											String name = entry.getKey();
+											Location loc = entry.getValue();
+											player.sendMessage(new CCT().colorize("&7Faction Homes: &b" + name + " &6X: " + loc.getX() + " Y: " + loc.getY() + " Z: " + loc.getZ()));
+										}
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&7Faction Home: &cNot Set"));
+										player.sendMessage(new CCT().colorize("&7Faction Homes: &cNot Set"));
 									}
 									player.sendMessage(new CCT().colorize("&7------------------&a[&b" + faction.getName() + "&a]&7------------------"));
 			    				}
@@ -397,9 +410,9 @@ public class DFFactions implements Listener,CommandExecutor{
 												faction.removeChunk(player.getChunk());
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have unclaimed this chunk!"));
 											}
-											else if(facManager.isInAChunk(player)){
+											else if(this.facManager.isInAChunk(player)){
 												DFFaction fac = null;
-												for(DFFaction f : facManager.getFactionMap().values()) {
+												for(DFFaction f : this.facManager.getFactionMap().values()) {
 													if(f.getChunkList().contains(player.getChunk().getChunkKey())) {
 														fac = f;
 													}
@@ -407,12 +420,26 @@ public class DFFactions implements Listener,CommandExecutor{
 												if(fac != null) {
 													if(fac.getEnergy() < fac.getChunkList().size()) {
 														fac.removeChunk(player.getChunk());
-														if(fac.getFactionHome() != null) {
-															if(fac.getFactionHome().getChunk().getChunkKey() == player.getChunk().getChunkKey()) {
-																fac.setFactionHome(null);
+														int total = 0;
+														if(fac.getFactionHomes() != null) {
+															for(Entry<String, Location> entry : fac.getFactionHomes().entrySet()) {
+																String name = entry.getKey();
+																Location loc = entry.getValue();
+																if(loc.getChunk().getChunkKey() == player.getChunk().getChunkKey()) {
+																	fac.removeFactionHome(name);
+																	total++;
+																}
 															}
 														}
-														for(UUID id : facPlayerManager.getFactionPlayerMap().keySet()) {
+														if(total > 0) {
+															for(UUID id : this.facPlayerManager.getFactionPlayerMap().keySet()) {
+																Player p = Bukkit.getPlayer(id);
+																if(p != null) {
+																	p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cHas unclaimed " + total + " of your faction homes!"));
+																}
+															}
+														}
+														for(UUID id : this.facPlayerManager.getFactionPlayerMap().keySet()) {
 															Player p = Bukkit.getPlayer(id);
 															if(p != null) {
 																p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cunclaimed 1 of your chunks!"));
@@ -451,7 +478,7 @@ public class DFFactions implements Listener,CommandExecutor{
 											int rank = facPlayer.getRank();
 											if(rank >= 3) {
 												if(!faction.getChunkList().isEmpty()) {
-													faction.setFactionHome(null);
+													faction.clearFactionHomes();
 													faction.clearChunks();
 													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have unclaimed all of your factions chunks!"));
 												}
@@ -492,24 +519,6 @@ public class DFFactions implements Listener,CommandExecutor{
 								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
 							}
 						}
-						else if(args[0].equalsIgnoreCase("banner")) {
-							if(args.length == 1) {
-								if(faction != null) {
-									if(facPlayer.getRank() >= 3) {
-										facInventory.FactionBannerInventory(player, faction);
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough that you can set a faction banner!"));
-									}
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));
-								}
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid Arguments! Use /f or /f help to see the faction commands!"));
-							}
-						}
 						else if(args[0].equalsIgnoreCase("sethome")) {
 							if(args.length == 1) {
 								if(player.getWorld().getName().equals("FactionWorld-1")) {
@@ -517,8 +526,52 @@ public class DFFactions implements Listener,CommandExecutor{
 										int rank = facPlayer.getRank();
 										if(rank >= 3) {
 											if(faction.isInChunk(player)) {
-												faction.setFactionHome(player.getLocation());
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have set your faction home!"));
+												if(faction.hasFactionHome("Home")) {
+													faction.addFactionHome("Home", player.getLocation());
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have set a faction home named 'Home'"));
+												}
+												else if(faction.getMaxFactionHomes() > faction.getFactionHomesAmount()) {
+													faction.addFactionHome("Home", player.getLocation());
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have set a faction home named 'Home'!"));
+												}
+												else {
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't set any more faction homes!"));
+												}
+											}
+											else {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't set your faction home outside of your territory!"));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to set a home for your faction!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't set your faction home in this world!"));
+								}
+							}
+							else if(args.length == 2) {
+								if(player.getWorld().getName().equals("FactionWorld-1")) {
+									if(faction != null) {
+										int rank = facPlayer.getRank();
+										if(rank >= 3) {
+											if(faction.isInChunk(player)) {
+												String name = args[1];
+												if(faction.hasFactionHome(name)) {
+													faction.addFactionHome(name, player.getLocation());
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have set a faction home named '" + name + "'"));
+												}
+												else if(faction.getMaxFactionHomes() > faction.getFactionHomesAmount()) {
+													faction.addFactionHome(name, player.getLocation());
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have set a faction home named '" + name + "'"));
+												}
+												else {
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't set any more faction homes!"));
+												}
 											}
 											else {
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't set your faction home outside of your territory!"));
@@ -547,10 +600,10 @@ public class DFFactions implements Listener,CommandExecutor{
 									final DFFaction fac = faction;
 									int rank = facPlayer.getRank();
 									if(rank >= 2) {
-										if(fac.getFactionHome() != null) {
+										if(fac.hasFactionHome("Home")) {
 											if(wg.isInZone(player, "spawn")) {
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
-												player.teleport(fac.getFactionHome());
+												player.teleport(fac.getFactionHomes().get("Home"));
 											}
 											else {
 												new BukkitRunnable() {
@@ -567,8 +620,81 @@ public class DFFactions implements Listener,CommandExecutor{
 																	}
 																}
 																if(count == 0) {
-																	player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
-																	player.teleport(fac.getFactionHome());
+																	if(fac.hasFactionHome("Home")) {
+																		player.teleport(fac.getFactionHome("Home"));
+																		player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+																	}
+																	else {
+																		player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cSomeone removed the home named 'Home' teleportation cancelled!"));
+																	}
+																	count = 10;
+																	spawning.remove(player.getUniqueId().toString());
+																	cancel();
+																}
+															}
+															else {
+																player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
+																cancel();
+																spawning.remove(player.getUniqueId().toString());
+															}
+														}
+														else {
+															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cCancelled teleporting because of you moving."));
+															cancel();
+															spawning.remove(player.getUniqueId().toString());
+														}
+														count--;
+														temp++;
+													}	
+												}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 1L);
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have not set a home with the name 'Home'"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to teleport to your faction home!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));
+								}
+							}
+							else if(args.length == 2) {
+								Location loc = player.getLocation();
+								if(faction != null) {
+									final DFFaction fac = faction;
+									int rank = facPlayer.getRank();
+									if(rank >= 2) {
+										String name = args[1];
+										if(fac.hasFactionHome(name)) {
+											if(wg.isInZone(player, "spawn")) {
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+												player.teleport(fac.getFactionHome(name));
+											}
+											else {
+												new BukkitRunnable() {
+													int count = 200;
+													int temp = 0;
+													@Override
+													public void run() {
+														if(loc.getWorld().getName().equals(player.getWorld().getName())) {
+															if(loc.distance(player.getLocation()) <= 0.1) {
+																if(temp == 0) {
+																	temp = temp - 20;
+																	if(count / 20 != 0) {
+																		player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aSending you to your faction home in " + (count / 20) + "..."));
+																	}
+																}
+																if(count == 0) {
+																	if(fac.hasFactionHome(name)) {
+																		player.teleport(fac.getFactionHome(name));
+																		player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
+																	}
+																	else {
+																		player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cSomeone removed the home named 'Home' teleportation cancelled!"));
+																	}
 																	count = 10;
 																	spawning.remove(player.getUniqueId().toString());
 																	cancel();
@@ -593,6 +719,37 @@ public class DFFactions implements Listener,CommandExecutor{
 										}
 										else {
 											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have set your faction home!"));
+										}
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to teleport to your faction home!"));
+									}
+								}
+								else {
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have a faction!"));
+								}
+							}
+							else {
+								player.sendMessage(new CCT().colorize("&cInvalid Arguments! Use /f or /f help to see the faction commands!"));
+							}
+						}
+						else if(args[0].equalsIgnoreCase("homes")) {
+							if(args.length == 1) {
+								if(faction != null) {
+									int rank = facPlayer.getRank();
+									if(rank >= 2) {
+										if(!faction.getFactionHomes().isEmpty()) {
+											for(Entry<String, Location> entry : faction.getFactionHomes().entrySet()) {
+												String name = entry.getKey();
+												Location loc = entry.getValue();
+												String x = String.format("%.2f", loc.getX());
+												String y = String.format("%.2f", loc.getY());
+												String z = String.format("%.2f", loc.getZ());
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aHome name: &6" + name + " &aLocation: &6X: " + x + " &6Y: " + y + " &6Z: " + z));
+											}
+										}
+										else {
+											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have no faction homes!"));
 										}
 									}
 									else {

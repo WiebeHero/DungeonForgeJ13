@@ -7,6 +7,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -33,6 +34,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
+import com.destroystokyo.paper.Title;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -44,6 +46,7 @@ import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CapturePoints.CapturePoint;
 import me.WiebeHero.CapturePoints.CapturePointManager;
 import me.WiebeHero.CustomEnchantments.CCT;
+import me.WiebeHero.CustomEvents.DFFactionLevelUpEvent;
 import me.WiebeHero.CustomEvents.DFFactonXpGainEvent;
 import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
 import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
@@ -310,72 +313,6 @@ public class FactionsHandler implements Listener{
 	}
 	
 	@EventHandler
-	public void clickInventory(InventoryClickEvent event) {
-		Player player = (Player)event.getWhoClicked();
-		DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-		DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
-		ItemStack stack = event.getCurrentItem();
-		Inventory inv = event.getClickedInventory();
-		InventoryView view = player.getOpenInventory();
-		ClickType click = event.getClick();
-		if(view.getTitle().contains("Faction Banner")) {
-			event.setCancelled(true);
-			if(inv.getType() == InventoryType.CHEST) {
-				if(click == ClickType.RIGHT) {
-					if(stack != null) {
-						NBTItem item = new NBTItem(stack);
-						if(item.hasKey("BannerRemove")) {
-							faction.setBanner(new ItemStack(Material.BLACK_BANNER, 1));
-							facInventory.FactionBannerInventory(player, faction);
-							for(CapturePoint cp : cpManager.getCapturePointList().values()) {
-								if(cp.getCapturedId() != null) {
-									if(cp.getCapturedId().equals(faction.getFactionId())) {
-										Location loc = cp.getCaptureLocation();
-										loc.getBlock().setType(stack.getType());
-										Banner banner = (Banner)loc.getBlock().getState();
-										banner.setPatterns(null);
-										banner.update();
-									}
-								}
-							}
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aFaction banner has been reset!"));
-						}
-					}
-					else {
-						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou must have nothing in your cursor while resetting the banner!"));
-					}
-				}
-			}
-			else if(inv.getType() == InventoryType.PLAYER) {
-				if(click == ClickType.LEFT) {
-					if(stack != null) {
-						if(stack.getType().toString().contains("BANNER")) {
-							stack.setAmount(1);
-							faction.setBanner(stack);
-							facInventory.FactionBannerInventory(player, faction);
-							for(CapturePoint cp : cpManager.getCapturePointList().values()) {
-								if(cp.getCapturedId() != null) {
-									if(cp.getCapturedId().equals(faction.getFactionId())) {
-										Location loc = cp.getCaptureLocation();
-										BannerMeta m = (BannerMeta)stack.getItemMeta();
-										loc.getBlock().setType(stack.getType());
-										Banner banner = (Banner)loc.getBlock().getState();
-										banner.setPatterns(m.getPatterns());
-										banner.update();
-									}
-								}
-							}
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aFaction banner has been set!"));
-						}
-						else {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe item that needs to replaced needs to be a banner!"));
-						}
-					}
-				}
-			}
-		}
-	}
-	@EventHandler
 	public void xpEarnMobs10(EntityDeathEvent event) {
 		if(event.getEntity().getKiller() != null && event.getEntity().getKiller() instanceof Player) {
 			if(event.getEntity() instanceof LivingEntity) {
@@ -413,7 +350,7 @@ public class FactionsHandler implements Listener{
 								finalXP = i1;
 							}
 						}
-						DFFactonXpGainEvent ev = new DFFactonXpGainEvent(facPlayer.getFactionId(), finalXP, this.facManager, this.facPlayerManager);
+						DFFactonXpGainEvent ev = new DFFactonXpGainEvent(player, facPlayer.getFactionId(), finalXP, this.facManager, this.facPlayerManager);
 						Bukkit.getServer().getPluginManager().callEvent(ev);
 						ev.proceed();
 					}
@@ -441,6 +378,136 @@ public class FactionsHandler implements Listener{
 				if(event.getEquipmentSlot() != null) {
 					DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
 					event.setXPMultiplier(event.getXPMultiplier() + faction.getExperienceGainMultiplier());
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void factionMenuClick(InventoryClickEvent event) {
+		if(event.getWhoClicked() instanceof Player) {
+			Player player = (Player)event.getWhoClicked();
+			InventoryView view = player.getOpenInventory();
+			ItemStack stack = event.getCurrentItem();
+			if(stack != null) {
+				NBTItem item = new NBTItem(stack);
+				if(view.getTitle().contains("Faction Overview")) {
+					event.setCancelled(true);
+					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
+					if(facPlayer.getFactionId() != null) {
+						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+						if(item.hasKey("Leveling")) {
+							this.facInventory.FactionLevelProgress(player, faction, 1);
+						}
+						else if(item.hasKey("Members")) {
+							
+						}
+						else if(item.hasKey("Chunks")) {
+							
+						}
+						else if(item.hasKey("Vault")) {
+							
+						}
+						else if(item.hasKey("Settings")) {
+							
+						}
+						else {
+							Inventory inv = event.getClickedInventory();
+							ClickType click = event.getClick();
+							if(inv.getType() == InventoryType.PLAYER) {
+								if(click == ClickType.LEFT) {
+									if(stack.getType().toString().contains("BANNER")) {
+										stack.setAmount(1);
+										faction.setBanner(stack);
+										this.facInventory.MainFactionInventory(player, faction);
+										for(CapturePoint cp : this.cpManager.getCapturePointList().values()) {
+											if(cp.getCapturedId() != null) {
+												if(cp.getCapturedId().equals(faction.getFactionId())) {
+													Location loc = cp.getCaptureLocation();
+													BannerMeta m = (BannerMeta)stack.getItemMeta();
+													loc.getBlock().setType(stack.getType());
+													Banner banner = (Banner)loc.getBlock().getState();
+													banner.setPatterns(m.getPatterns());
+													banner.update();
+												}
+											}
+										}
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aFaction banner has been set!"));
+									}
+									else {
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe item that needs to replaced needs to be a banner!"));
+									}
+								}
+							}
+							else if(inv.getType() == InventoryType.CHEST) {
+								if(click == ClickType.RIGHT) {
+									if(item.hasKey("BannerRemove")) {
+										faction.setBanner(new ItemStack(Material.BLACK_BANNER, 1));
+										this.facInventory.MainFactionInventory(player, faction);
+										for(CapturePoint cp : this.cpManager.getCapturePointList().values()) {
+											if(cp.getCapturedId() != null) {
+												if(cp.getCapturedId().equals(faction.getFactionId())) {
+													Location loc = cp.getCaptureLocation();
+													loc.getBlock().setType(stack.getType());
+													Banner banner = (Banner)loc.getBlock().getState();
+													banner.setPatterns(null);
+													banner.update();
+												}
+											}
+										}
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aFaction banner has been reset!"));
+									}
+								}
+							}
+						}
+					}
+				}
+				if(view.getTitle().contains("Faction Leveling")) {
+					event.setCancelled(true);
+					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
+					if(facPlayer.getFactionId() != null) {
+						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+						if(item.hasKey("Next")) {
+							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 2.0F);
+							int newPage = item.getInteger("Next");
+							int maxPage = (int) Math.ceil((double)faction.getMaxLevel() / 28.00);
+							if(newPage <= maxPage && maxPage > 1) {
+								this.facInventory.FactionLevelProgress(player, faction, newPage);
+							}
+							else if(newPage > maxPage && maxPage > 1) {
+								this.facInventory.FactionLevelProgress(player, faction, 1);
+							}
+						}
+						else if(item.hasKey("Previous")) {
+							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 2.0F);
+							int newPage = item.getInteger("Previous");
+							int maxPage = (int) Math.ceil((double)faction.getMaxLevel() / 28.00);
+							if(newPage >= 1 && maxPage > 1) {
+								this.facInventory.FactionLevelProgress(player, faction, newPage);
+							}
+							else if(newPage < 1 && maxPage > 1) {
+								this.facInventory.FactionLevelProgress(player, faction, maxPage);
+							}
+						}
+						else if(item.hasKey("Back")) {
+							this.facInventory.MainFactionInventory(player, faction);
+						}
+					}
+				}
+				if(view.getTitle().contains("Faction Homes and Chunks")) {
+					event.setCancelled(true);
+					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
+					if(facPlayer.getFactionId() != null) {
+						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+						if(item.hasKey("Homes")) {
+							
+						}
+						else if(item.hasKey("Chunks")) {
+							
+						}
+						else if(item.hasKey("Back")){
+							this.facInventory.MainFactionInventory(player, faction);
+						}
+					}
 				}
 			}
 		}

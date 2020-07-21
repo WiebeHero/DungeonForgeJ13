@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import com.destroystokyo.paper.Title;
+
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactionManager;
@@ -19,6 +21,7 @@ import me.WiebeHero.Factions.DFFactionPlayerManager;
 public class DFFactionLevelUpEvent extends Event{
 	
 	private static final HandlerList handlers = new HandlerList();
+	private Player player;
 	private UUID leveledFaction;
 	private DFFactionManager manager;
 	private DFFactionPlayerManager facPlayerManager;
@@ -27,7 +30,8 @@ public class DFFactionLevelUpEvent extends Event{
 	private int newLevel;
 	private ArrayList<Integer> levels;
 	
-	public DFFactionLevelUpEvent(UUID levelFaction, DFFactionManager manager, DFFactionPlayerManager facPlayerManager){
+	public DFFactionLevelUpEvent(Player p, UUID levelFaction, DFFactionManager manager, DFFactionPlayerManager facPlayerManager){
+		this.player = p;
         this.leveledFaction = levelFaction;
         this.manager = manager;
         this.facPlayerManager = facPlayerManager;
@@ -51,7 +55,7 @@ public class DFFactionLevelUpEvent extends Event{
 	        	Player player = Bukkit.getPlayer(entry.getKey());
 	        	if(player != null) {
 			        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
-					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYour faction has leveled up to level &6" + this.fac.getLevel() + "&a!"));
+			        player.sendTitle(new Title(new CCT().colorize("&aLEVEL UP!"), new CCT().colorize("&7Faction Level: &6" + this.oldLevel + " &7-> &6" + this.newLevel), 15, 80, 40));
 	        	}
 	        }
         }
@@ -71,6 +75,10 @@ public class DFFactionLevelUpEvent extends Event{
 	
 	public DFFaction getFaction() {
 		return this.fac;
+	}
+	
+	public Player getPlayer() {
+		return this.player;
 	}
 
 	@Override public HandlerList getHandlers() { return handlers; }

@@ -18,6 +18,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class LootChestManager {
@@ -87,6 +89,8 @@ public class LootChestManager {
 			  				if(loot.getRadius() == 1) {
 					  			if(loc.getBlock().getType() == Material.CHEST) {
 					  				Block block = loc.getBlock();
+					  				NBTCompound comp = NBTInjector.getNbtData(block.getState());
+									comp.setString("LootChest", "");
 						  			Chest chest = (Chest) block.getState();
 					  				Inventory inv = chest.getBlockInventory();
 					  				inv.clear();
@@ -112,6 +116,8 @@ public class LootChestManager {
 					  			else {
 					  				loc.getBlock().setType(Material.CHEST);
 					  				Block block = loc.getBlock();
+					  				NBTCompound comp = NBTInjector.getNbtData(block.getState());
+									comp.setString("LootChest", "");
 						  			Chest chest = (Chest) block.getState();
 					  				Inventory inv = chest.getBlockInventory();
 					  				inv.clear();
@@ -139,6 +145,8 @@ public class LootChestManager {
 			  				else {
 		  						Block temp = manager.checkChest(loot.getLocation().getBlock(), (double)loot.getRadius());
 		  						if(temp != null) {
+		  							NBTCompound comp = NBTInjector.getNbtData(temp.getState());
+									comp.setString("LootChest", "");
 			  						Chest chest = (Chest) temp.getState();
 					  				Inventory inv = chest.getBlockInventory();
 					  				inv.clear();
@@ -175,6 +183,8 @@ public class LootChestManager {
 		  								}
 		  							}
 	  								Block block = tempLoc.getBlock();
+	  								NBTCompound comp = NBTInjector.getNbtData(block.getState());
+									comp.setString("LootChest", "");
 	  								block.setType(Material.CHEST);
   									Chest chest = (Chest) block.getState();
 					  				Inventory inv = chest.getBlockInventory();

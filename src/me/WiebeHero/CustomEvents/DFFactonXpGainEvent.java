@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.Factions.DFFaction;
 import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
@@ -15,6 +14,7 @@ import me.WiebeHero.Factions.DFFactionPlayerManager;
 public class DFFactonXpGainEvent extends Event{
 	
 	private static final HandlerList handlers = new HandlerList();
+	private Player player;
 	private UUID leveledFaction;
 	private DFFactionManager manager;
 	private DFFactionPlayerManager facPlayerManager;
@@ -25,7 +25,8 @@ public class DFFactonXpGainEvent extends Event{
 	private DFFaction faction;
 	private double xpMultiplier;
 	
-	public DFFactonXpGainEvent(UUID leveledFaction, int totalXP, DFFactionManager manager, DFFactionPlayerManager facPlayerManager){
+	public DFFactonXpGainEvent(Player player, UUID leveledFaction, int totalXP, DFFactionManager manager, DFFactionPlayerManager facPlayerManager){
+		this.player = player;
         this.leveledFaction = leveledFaction;
         this.manager = manager;
         this.totalXP = totalXP;
@@ -41,7 +42,7 @@ public class DFFactonXpGainEvent extends Event{
 	        this.manager.add(this.faction);
 	        if(this.faction.getExperience() >= this.faction.getMaxExperience()) {
 	        	this.leveled = true;
-	        	DFFactionLevelUpEvent event = new DFFactionLevelUpEvent(leveledFaction, manager, facPlayerManager);
+	        	DFFactionLevelUpEvent event = new DFFactionLevelUpEvent(this.player, this.leveledFaction, this.manager, this.facPlayerManager);
 				Bukkit.getServer().getPluginManager().callEvent(event);
 	        }
         }
@@ -66,8 +67,8 @@ public class DFFactonXpGainEvent extends Event{
 		return this.leveled;
 	}
 	
-	public UUID getPlayer() {
-		return this.leveledFaction;
+	public Player getPlayer() {
+		return this.player;
 	}
 	
 	public DFFaction getFaction() {

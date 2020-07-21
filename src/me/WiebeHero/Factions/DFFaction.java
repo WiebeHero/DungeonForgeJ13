@@ -1,15 +1,20 @@
 package me.WiebeHero.Factions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class DFFaction {
+	
 	private UUID facId;
 	private DFFactionManager facManager;
 	private DFFactionPlayerManager memberManager;
@@ -18,7 +23,7 @@ public class DFFaction {
 	private ArrayList<UUID> invitedList;
 	private ArrayList<UUID> invitedAllyList;
 	private ArrayList<UUID> allyList;
-	private Location facHome;
+	private HashMap<String, Location> facHomes;
 	private int level;
 	private int maxLevel;
 	private int xp;
@@ -26,18 +31,22 @@ public class DFFaction {
 	private int facP;
 	private double bank;
 	private double energy;
+	private double maxEnergy;
 	private double maxpMultiplier = 1.13;
 	private double mixpMultiplier = 1.0001;
 	private ItemStack banner;
+	
 	public DFFaction(String facName, Player p, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
 		this.facId = UUID.randomUUID();
 		this.chunkList = new ArrayList<Long>();
 		this.allyList = new ArrayList<UUID>();
 		this.invitedAllyList = new ArrayList<UUID>();
 		this.invitedList = new ArrayList<UUID>();
+		this.facHomes = new HashMap<String, Location>();
 		this.facName = facName;
 		this.facP = 0;
 		this.energy = 2.00;
+		this.maxEnergy = 30.00;
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
@@ -56,15 +65,18 @@ public class DFFaction {
 		this.allyList = new ArrayList<UUID>();
 		this.invitedAllyList = new ArrayList<UUID>();
 		this.invitedList = new ArrayList<UUID>();
+		this.facHomes = new HashMap<String, Location>();
 		this.facName = facName;
 		this.facP = 0;
 		this.energy = 2.00;
+		this.maxEnergy = 30.00;
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
 		this.xp = 0;
 		this.maxxp = 200;
 		this.level = 1;
+		this.maxLevel = 100;
 		this.banner = new ItemStack(Material.BLACK_BANNER);
 	}
 	public DFFaction(String facName, UUID facId, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
@@ -73,15 +85,18 @@ public class DFFaction {
 		this.allyList = new ArrayList<UUID>();
 		this.invitedAllyList = new ArrayList<UUID>();
 		this.invitedList = new ArrayList<UUID>();
+		this.facHomes = new HashMap<String, Location>();
 		this.facName = facName;
 		this.facP = 0;
 		this.energy = 2.00;
+		this.maxEnergy = 30.00;
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
 		this.xp = 0;
 		this.maxxp = 200;
 		this.level = 1;
+		this.maxLevel = 100;
 		this.banner = new ItemStack(Material.BLACK_BANNER);
 	}
 	public void addMember(Player player) {
@@ -173,11 +188,29 @@ public class DFFaction {
 		return false;
 	}
 	
-	public void setFactionHome(Location loc) {
-		this.facHome = loc;
+	public void setFactionHomes(HashMap<String, Location> facHomes) {
+		this.facHomes = facHomes;
 	}
-	public Location getFactionHome() {
-		return this.facHome;
+	public void addFactionHome(String name, Location loc) {
+		this.facHomes.put(name, loc);
+	}
+	public void removeFactionHome(String name) {
+		this.facHomes.remove(name);
+	}
+	public boolean hasFactionHome(String name) {
+		return this.facHomes.containsKey(name);
+	}
+	public Location getFactionHome(String name) {
+		return this.facHomes.get(name);
+	}
+	public HashMap<String, Location> getFactionHomes() {
+		return this.facHomes;
+	}
+	public void clearFactionHomes() {
+		this.facHomes.clear();
+	}
+	public int getFactionHomesAmount() {
+		return this.facHomes.size();
 	}
 	
 	public void addInvite(UUID uuid) {
@@ -277,7 +310,9 @@ public class DFFaction {
 	public void removeBank(double money) {
 		this.bank -= money;
 	}
-	
+	public double getMaxEnergy() {
+		return this.maxEnergy;
+	}
 	public double getEnergy() {
 		return this.energy;
 	}
@@ -346,21 +381,39 @@ public class DFFaction {
 		return multiplier;
 	}
 	public int getMaxFactionHomes() {
-		if(this.level > 80) {
-			return 4;
-		}
-		else if(this.level > 50) {
-			return 3;
-		}
-		else if(this.level > 20) {
-			return 2;
-		}
-		return 1;
+		int max = 1 + (int)Math.ceil((double)this.level / 25.00);
+		return max;
 	}
 	public int getMaxMembers() {
 		int max = 5;
-		int addOn = (int)Math.floor((double)this.level / 10.00) * 2;
+		int addOn = (int)Math.ceil((double)this.level / 10.00) * 2;
 		return max += addOn;
 	}
 	
+	public ArrayList<UUID> getMembers(){
+		ArrayList<UUID> members = new ArrayList<UUID>();
+		for(Entry<UUID, DFFactionPlayer> entry : this.memberManager.getFactionPlayerMap().entrySet()) {
+			DFFactionPlayer facPlayer = entry.getValue();
+			if(facPlayer.getFactionId() != null) {
+				if(facPlayer.getFactionId().equals(this.facId)) {
+					members.add(entry.getKey());
+				}
+			}
+		}
+		return members;
+	}
+	
+	public OfflinePlayer getLeader() {
+		for(Entry<UUID, DFFactionPlayer> entry : this.memberManager.getFactionPlayerMap().entrySet()) {
+			DFFactionPlayer facPlayer = entry.getValue();
+			if(facPlayer.getFactionId() != null) {
+				if(facPlayer.getFactionId().equals(this.facId)) {
+					if(facPlayer.getRank() == 4) {
+						return Bukkit.getOfflinePlayer(entry.getKey());
+					}
+				}
+			}
+		}
+		return null;
+	}
 }

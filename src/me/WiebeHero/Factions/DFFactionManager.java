@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
@@ -149,9 +148,12 @@ public class DFFactionManager {
 						count = 5;
 					}
 					if(count != 0) {
-						if(fac.getEnergy() + 0.025 * count <= 30.00) {
+						if(fac.getEnergy() + 0.025 * count <= fac.getMaxEnergy()) {
 							fac.addEnergy(0.015 + 0.015 * count);
 							count = 0;
+						}
+						else {
+							fac.setEnergy(fac.getMaxEnergy());
 						}
 					}
 				}
@@ -178,8 +180,18 @@ public class DFFactionManager {
 				String facName = yml.getString("Factions.List." + list.get(i) + ".Faction Name");
 				Set<String> chec = yml.getConfigurationSection("Factions.List." + list.get(i) + ".Members").getKeys(false);
 				DFFaction fac = new DFFaction(facName, facId, this, facPlayerManager);
-				Location loc = (Location) yml.get("Factions.List." + list.get(i) + ".Faction Home");
-				fac.setFactionHome(loc);
+				HashMap<String, Location> locs = new HashMap<String, Location>();//(Location) yml.get("Factions.List." + list.get(i) + ".Faction Home");
+				if(yml.getConfigurationSection("Factions.List." + list.get(i) + ".Faction Homes") != null) {
+					Set<String> facHomesList = yml.getConfigurationSection("Factions.List." + list.get(i) + ".Faction Homes").getKeys(false);
+					ArrayList<String> names = new ArrayList<String>(facHomesList);
+					for(int i1 = 0; i1 < names.size(); i1++) {
+						locs.put(names.get(i), (Location)yml.get("Factions.List." + list.get(i) + ".Faction Homes." + names.get(i1)));
+					}
+				}
+				else if(yml.get("Factions.List." + list.get(i) + ".Faction Home") != null) {
+					locs.put("Home", (Location)yml.get("Factions.List." + list.get(i) + ".Faction Home"));
+				}
+				fac.setFactionHomes(locs);
 				ArrayList<String> chunks = new ArrayList<String>(yml.getStringList("Factions.List." + list.get(i) + ".Chunks List"));
 				for(int i1 = 0; i1 < chunks.size(); i1++) {
 					long key = Long.parseLong(chunks.get(i1));
@@ -260,7 +272,9 @@ public class DFFactionManager {
 				}
 			}
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Banner", fac.getBanner());
-			yml.set("Factions.List." + fac.getFactionId() + ".Faction Home", fac.getFactionHome());
+			for(Entry<String, Location> entry : fac.getFactionHomes().entrySet()) {
+				yml.set("Factions.List." + fac.getFactionId() + ".Faction Homes." + entry.getKey(), entry.getValue());
+			}
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Name", fac.getName());
 			yml.set("Factions.List." + fac.getFactionId() + ".Chunks List", list);
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Points", fac.getFactionPoints());

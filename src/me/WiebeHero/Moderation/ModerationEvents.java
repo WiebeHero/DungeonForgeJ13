@@ -22,6 +22,9 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -62,7 +65,10 @@ import org.bukkit.util.StringUtil;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 
+import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.nbtapi.NBTTileEntity;
+import de.tr7zw.nbtinjector.NBTInjector;
 import javafx.util.Pair;
 import me.WiebeHero.CapturePoints.CapturePoint;
 import me.WiebeHero.CapturePoints.CapturePointManager;
@@ -2798,6 +2804,24 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 								}
 								CustomEnchantments.maintenance = false;
 							}
+							if(args[0].equalsIgnoreCase("updatechests")) {
+								CustomEnchantments.maintenance = true;
+								for(LootChest lc : this.lcManager.getLootList().values()) {
+									Block block = lc.getLocation().getBlock();
+									if(block != null) {
+										if(block.getType() != Material.AIR) {
+											BlockState bs = block.getState();
+								            if(bs instanceof Chest) {
+								            	NBTCompound comp = NBTInjector.getNbtData(block.getState());
+												if(!comp.hasKey("LootChest")) {
+													comp.setString("LootChest", "");
+												}
+								            }
+										}
+									}
+								}
+								CustomEnchantments.maintenance = false;
+							}
 						}
 						else if(args.length == 2) {
 							if(args[0].equalsIgnoreCase("clear")) {
@@ -2823,7 +2847,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									for(Player p : Bukkit.getOnlinePlayers()) {
 										if(p != player) {
 											RankedPlayer oPlayer = rManager.getRankedPlayer(p.getUniqueId());
-											if(oPlayer.isStaff()) {
+											if(!oPlayer.isStaff()) {
 												p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cMaintenance mode was initiated, standby."));
 											}
 										}
@@ -4544,6 +4568,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public void placeLoot(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		ItemStack i = player.getInventory().getItemInMainHand();
+		Block block = event.getBlock();
 		if(sManager.contains(player.getUniqueId())) {
 			Staff staff = sManager.get(player.getUniqueId());
 			if(staff.getLootMode() == true) {
@@ -4556,6 +4581,9 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 						int tier = item.getInteger("Tier");
 						LootChest chest = new LootChest(loc, tier, radius);
 						lcManager.add(chest.getUUID(), chest);
+						NBTCompound comp = NBTInjector.getNbtData(block.getState());
+						comp.setString("LootChest", "");
+						Bukkit.broadcastMessage(comp.hasKey("LootChest") + "");
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aLoot Chest placed!"));
 					}
 				}

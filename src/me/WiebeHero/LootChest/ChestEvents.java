@@ -12,6 +12,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtinjector.NBTInjector;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 
 public class ChestEvents implements Listener{
@@ -25,14 +27,17 @@ public class ChestEvents implements Listener{
 	            		BlockState bs = block.getState();
 			            if(bs instanceof Chest) {
 			            	Chest chest = (Chest) bs;
-	                		new BukkitRunnable() {
-	                			public void run() {
-	                				chest.getBlockInventory().clear();
-	                        		chest.getBlock().setType(Material.AIR);
-	                        		chest.getLocation().getWorld().spawnParticle(Particle.CLOUD, chest.getLocation().getX() + 0.5, chest.getLocation().getY() + 0.5, chest.getLocation().getZ() + 0.5, 45, 0.0000001, 0.0000001, 0.0000001, 0.15);
-	                        		chest.getWorld().playSound(chest.getLocation(), Sound.ENTITY_CHICKEN_EGG, 2.0F, 1.0F);
-	                			}
-	                		}.runTaskLater(CustomEnchantments.getInstance(), 15L);
+			            	NBTCompound comp = NBTInjector.getNbtData(block.getState());
+							if(comp.hasKey("LootChest")) {
+								new BukkitRunnable() {
+		                			public void run() {
+		                				chest.getBlockInventory().clear();
+		                        		chest.getBlock().setType(Material.AIR);
+		                        		chest.getLocation().getWorld().spawnParticle(Particle.CLOUD, chest.getLocation().getX() + 0.5, chest.getLocation().getY() + 0.5, chest.getLocation().getZ() + 0.5, 45, 0.0000001, 0.0000001, 0.0000001, 0.15);
+		                        		chest.getWorld().playSound(chest.getLocation(), Sound.ENTITY_CHICKEN_EGG, 2.0F, 1.0F);
+		                			}
+		                		}.runTaskLater(CustomEnchantments.getInstance(), 15L);
+							}
 			            }
 	            	}
 	            }

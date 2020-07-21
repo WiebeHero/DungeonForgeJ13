@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import com.destroystokyo.paper.Title;
+
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
@@ -44,7 +46,6 @@ public class DFPlayerLevelUpEvent extends Event {
         }
         this.newLevel = this.dfPlayer.getLevel();
         this.player.getWorld().playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, (float) 0.5);
-		this.player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have leveled up to level &6" + this.dfPlayer.getLevel() + "&a!"));
 		this.board.updateScoreboard(this.player);
         float barprogress = (float) this.dfPlayer.getExperience() / this.dfPlayer.getMaxExperience();
 		if(barprogress > 1) {
@@ -59,6 +60,7 @@ public class DFPlayerLevelUpEvent extends Event {
 			this.player.setLevel(this.dfPlayer.getLevel());
 			this.player.setExp(0.0F);
 		}
+		this.player.sendTitle(new Title(new CCT().colorize("&aLEVEL UP!"), new CCT().colorize("&7Player Level: &6" + this.oldLevel + " &7-> &6" + this.newLevel), 15, 80, 40));
 		this.dfPlayer.resetAbilityStats();
     }
 	
