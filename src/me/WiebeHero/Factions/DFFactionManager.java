@@ -185,7 +185,7 @@ public class DFFactionManager {
 					Set<String> facHomesList = yml.getConfigurationSection("Factions.List." + list.get(i) + ".Faction Homes").getKeys(false);
 					ArrayList<String> names = new ArrayList<String>(facHomesList);
 					for(int i1 = 0; i1 < names.size(); i1++) {
-						locs.put(names.get(i), (Location)yml.get("Factions.List." + list.get(i) + ".Faction Homes." + names.get(i1)));
+						locs.put(names.get(i1), (Location)yml.get("Factions.List." + list.get(i) + ".Faction Homes." + names.get(i1)));
 					}
 				}
 				else if(yml.get("Factions.List." + list.get(i) + ".Faction Home") != null) {
