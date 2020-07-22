@@ -95,6 +95,7 @@ import me.WiebeHero.Factions.DFFactionPlayerManager;
 import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Factions.FactionInventory;
 import me.WiebeHero.Factions.FactionsHandler;
+import me.WiebeHero.Factions.RankFactionGroups;
 import me.WiebeHero.FishingLoot.ChangeFishDrops;
 import me.WiebeHero.FlyTicket.FlyTicketEvents;
 import me.WiebeHero.FlyTicket.FlyTicketManager;
@@ -196,7 +197,8 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private SkillMenu skill = new SkillMenu(this.dfManager, this.builder, this.classMenu);
 	private SkillCommand skillCommand = new SkillCommand(this.skill);
 	private DFScoreboard score = new DFScoreboard(this.dfManager, this.facManager, this.facPlayerManager, this.rankedManager, this.wg);
-	private FactionInventory facInv = new FactionInventory(this.builder);
+	private RankFactionGroups group = new RankFactionGroups();
+	private FactionInventory facInv = new FactionInventory(this.builder, this.group);
 	private AHManager ahManager = new AHManager(this.availableSlots);
 	private AHInventory ahInv = new AHInventory(this.ahManager, this.builder);
 	private Enchantment enchant = new Enchantment(this.dfManager, this.facManager, this.potionM, this.pApi, this.facPlayerManager, this.builder, this.wg);

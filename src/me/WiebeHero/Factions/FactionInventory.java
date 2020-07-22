@@ -2,9 +2,11 @@ package me.WiebeHero.Factions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
-import org.bukkit.Location;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -19,10 +21,12 @@ import me.WiebeHero.CustomMethods.ItemStackBuilder;
 public class FactionInventory {
 	
 	private ItemStackBuilder builder;
-	int array[] = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
+	private RankFactionGroups group;
+	private int array[] = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
 	
-	public FactionInventory(ItemStackBuilder builder) {
+	public FactionInventory(ItemStackBuilder builder, RankFactionGroups group) {
 		this.builder = builder;
+		this.group = group;
 	}
 	
 	public void FactionBannerInventory(Player player, DFFaction faction) {
@@ -82,7 +86,7 @@ public class FactionInventory {
 		
 		ItemStack members = this.builder.constructItem(
 				Material.BOOK,
-				"&cFaction Members (Coming Soon...)",
+				"&aFaction Members",
 				new ArrayList<String>(Arrays.asList(
 						"&7Your faction has a total of &6" + faction.getMembers().size() + " &7members",
 						"&7in your faction. Click here to view members and",
@@ -230,7 +234,117 @@ public class FactionInventory {
 	}
 	
 	public void FactionMemberManagement(Player player, DFFaction faction) {
-		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 27, (new CCT().colorize("&aFaction Members: &6" + faction.getName())));
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 45, (new CCT().colorize("&aFaction Member Management")));
+		int array[] = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 41, 42, 43, 44};
+		ItemStack nothing = this.builder.constructItem(
+				Material.GRAY_STAINED_GLASS_PANE,
+				1,
+				" "
+		);
+		for(int x = 0; x < array.length; x++) {
+			i.setItem(array[x], nothing);
+		}
+		i.setItem(20, this.builder.constructItem(
+				Material.PLAYER_HEAD,
+				1,
+				"&a&lView members",
+				new ArrayList<String>(Arrays.asList(
+						"&7Click this to promote, demote and",
+						"&7kick faction members!"
+				)),
+				new Pair<String, String>("View", "")
+		));
+		i.setItem(24, this.builder.constructItem(
+				Material.BOOK,
+				1,
+				"&a&lPermissions",
+				new ArrayList<String>(Arrays.asList(
+						"&7Click this to manage the permissions",
+						"&7that your faction groups has!"
+				)),
+				new Pair<String, String>("Permission", "")
+		));
+		i.setItem(40, this.builder.constructItem(
+				Material.BARRIER,
+				1,
+				"&cBack",
+				new Pair<String, String>("Back", "")
+		));
+		player.openInventory(i);
+	}
+	
+	public void FactionMemberMenu(Player player, DFFaction faction) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 54, (new CCT().colorize("&aFaction Members")));
+		int array[] = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 50, 51, 52, 53};
+		int memberSlots[] = new int[] {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};
+		ItemStack nothing = this.builder.constructItem(
+				Material.GRAY_STAINED_GLASS_PANE,
+				1,
+				" "
+		);
+		for(int x = 0; x < array.length; x++) {
+			i.setItem(array[x], nothing);
+		}
+		ArrayList<UUID> uuids = faction.getMembers();
+		ArrayList<DFFactionPlayer> facPlayers = faction.getDFFactionMembers();
+		for(int x = 0; x < uuids.size(); x++) {
+			OfflinePlayer pl = Bukkit.getOfflinePlayer(uuids.get(x));
+			DFFactionPlayer facPlayer = facPlayers.get(x);
+			ItemStack head = CustomEnchantments.getInstance().createHead(pl);
+			i.setItem(memberSlots[x], this.builder.constructItem(
+					head,
+					1,
+					"&a" + pl.getName(),
+					new ArrayList<String>(Arrays.asList(
+						"&7Rank: &6" + group.getRankFactionGroup(facPlayer.getRank()).getDisplay()
+					)),
+					new Pair<UUID, DFFactionPlayer>(uuids.get(x), facPlayer)
+			));
+		}
+		i.setItem(49, this.builder.constructItem(
+				Material.BARRIER,
+				1,
+				"&cBack",
+				new Pair<String, String>("Back", "")
+		));
+		player.openInventory(i);
+	}
+	
+	public void Faction(Player player, DFFaction faction) {
+		Inventory i = CustomEnchantments.getInstance().getServer().createInventory(null, 54, (new CCT().colorize("&aFaction Groups")));
+		int array[] = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 50, 51, 52, 53};
+		int memberSlots[] = new int[] {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};
+		ItemStack nothing = this.builder.constructItem(
+				Material.GRAY_STAINED_GLASS_PANE,
+				1,
+				" "
+		);
+		for(int x = 0; x < array.length; x++) {
+			i.setItem(array[x], nothing);
+		}
+		ArrayList<UUID> uuids = faction.getMembers();
+		ArrayList<DFFactionPlayer> facPlayers = faction.getDFFactionMembers();
+		for(int x = 0; x < uuids.size(); x++) {
+			OfflinePlayer pl = Bukkit.getOfflinePlayer(uuids.get(x));
+			DFFactionPlayer facPlayer = facPlayers.get(x);
+			ItemStack head = CustomEnchantments.getInstance().createHead(pl);
+			i.setItem(memberSlots[x], this.builder.constructItem(
+					head,
+					1,
+					"&a" + pl.getName(),
+					new ArrayList<String>(Arrays.asList(
+						"&7Rank: &6" + group.getRankFactionGroup(facPlayer.getRank()).getDisplay()
+					)),
+					new Pair<UUID, DFFactionPlayer>(uuids.get(x), facPlayer)
+			));
+		}
+		i.setItem(49, this.builder.constructItem(
+				Material.BARRIER,
+				1,
+				"&cBack",
+				new Pair<String, String>("Back", "")
+		));
+		player.openInventory(i);
 	}
 	
 	public void FactionChunkHomes(Player player, DFFaction faction) {
@@ -270,6 +384,7 @@ public class FactionInventory {
 				"&cBack",
 				new Pair<String, String>("Back", "")
 		));
+		player.openInventory(i);
 	}
 	
 	public void FactionChunkManagement(Player player, DFFaction faction) {

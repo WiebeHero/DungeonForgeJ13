@@ -403,6 +403,19 @@ public class DFFaction {
 		return members;
 	}
 	
+	public ArrayList<DFFactionPlayer> getDFFactionMembers(){
+		ArrayList<DFFactionPlayer> members = new ArrayList<DFFactionPlayer>();
+		for(Entry<UUID, DFFactionPlayer> entry : this.memberManager.getFactionPlayerMap().entrySet()) {
+			DFFactionPlayer facPlayer = entry.getValue();
+			if(facPlayer.getFactionId() != null) {
+				if(facPlayer.getFactionId().equals(this.facId)) {
+					members.add(entry.getValue());
+				}
+			}
+		}
+		return members;
+	}
+	
 	public OfflinePlayer getLeader() {
 		for(Entry<UUID, DFFactionPlayer> entry : this.memberManager.getFactionPlayerMap().entrySet()) {
 			DFFactionPlayer facPlayer = entry.getValue();

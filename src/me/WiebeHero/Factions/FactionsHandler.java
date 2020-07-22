@@ -399,7 +399,7 @@ public class FactionsHandler implements Listener{
 							this.facInventory.FactionLevelProgress(player, faction, 1);
 						}
 						else if(item.hasKey("Members")) {
-							
+							this.facInventory.FactionMemberManagement(player, faction);
 						}
 						else if(item.hasKey("Chunks")) {
 							
@@ -508,6 +508,25 @@ public class FactionsHandler implements Listener{
 							this.facInventory.MainFactionInventory(player, faction);
 						}
 					}
+				}
+				if(view.getTitle().contains("Faction Member Management")) {
+					event.setCancelled(true);
+					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
+					if(facPlayer.getFactionId() != null) {
+						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+						if(item.hasKey("View")) {
+							this.facInventory.FactionMemberMenu(player, faction);
+						}
+						else if(item.hasKey("Permission")) {
+							
+						}
+						else if(item.hasKey("Back")){
+							this.facInventory.MainFactionInventory(player, faction);
+						}
+					}
+				}
+				if(view.getTitle().contains("Faction Members")) {
+					event.setCancelled(true);
 				}
 			}
 		}

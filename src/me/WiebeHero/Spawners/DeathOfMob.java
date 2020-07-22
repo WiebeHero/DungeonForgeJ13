@@ -178,20 +178,22 @@ public class DeathOfMob implements Listener {
 	    		e = NBTInjector.patchEntity(e);
 	    		NBTCompound comp = NBTInjector.getNbtData(e);
 				if(comp.hasKey("SpawnerUUID")) {
-					if(this.random() <= 1.00) {
-						event.getDrops().add(item1);
-					}
-					else if(this.random() <= 0.80) {
-						event.getDrops().add(item2);
-					}
-					else if(this.random() <= 0.60) {
-						event.getDrops().add(item3);
-					}
-					else if(this.random() <= 0.40) {
-						event.getDrops().add(item4);
-					}
-					else if(this.random() <= 0.20) {
-						event.getDrops().add(item5);
+					if(comp.hasKey("Tier") && comp.getInteger("Tier") > 0) {
+						if(this.random() <= 1.00) {
+							event.getDrops().add(item1);
+						}
+						else if(this.random() <= 0.80) {
+							event.getDrops().add(item2);
+						}
+						else if(this.random() <= 0.60) {
+							event.getDrops().add(item3);
+						}
+						else if(this.random() <= 0.40) {
+							event.getDrops().add(item4);
+						}
+						else if(this.random() <= 0.20) {
+							event.getDrops().add(item5);
+						}
 					}
 				}
 			}
@@ -211,20 +213,22 @@ public class DeathOfMob implements Listener {
 	    		e = NBTInjector.patchEntity(e);
 	    		NBTCompound comp = NBTInjector.getNbtData(e);
 				if(comp.hasKey("SpawnerUUID")) {
-					if(this.random() <= 1.00) {
-						event.getDrops().add(item1);
-					}
-					else if(this.random() <= 0.80) {
-						event.getDrops().add(item2);
-					}
-					else if(this.random() <= 0.60) {
-						event.getDrops().add(item3);
-					}
-					else if(this.random() <= 0.40) {
-						event.getDrops().add(item4);
-					}
-					else if(this.random() <= 0.20) {
-						event.getDrops().add(item5);
+					if(comp.hasKey("Tier") && comp.getInteger("Tier") > 0) {
+						if(this.random() <= 1.00) {
+							event.getDrops().add(item1);
+						}
+						else if(this.random() <= 0.80) {
+							event.getDrops().add(item2);
+						}
+						else if(this.random() <= 0.60) {
+							event.getDrops().add(item3);
+						}
+						else if(this.random() <= 0.40) {
+							event.getDrops().add(item4);
+						}
+						else if(this.random() <= 0.20) {
+							event.getDrops().add(item5);
+						}
 					}
 				}
 				if(victim.getType() == EntityType.VINDICATOR) {
