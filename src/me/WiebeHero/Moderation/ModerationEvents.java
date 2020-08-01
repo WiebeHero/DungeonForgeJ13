@@ -74,12 +74,12 @@ import me.WiebeHero.CapturePoints.CapturePoint;
 import me.WiebeHero.CapturePoints.CapturePointManager;
 import me.WiebeHero.Chat.MSG;
 import me.WiebeHero.Chat.MSGManager;
+import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.CustomMethods.MethodMulti;
-import me.WiebeHero.CustomMethods.Methods;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
 import me.WiebeHero.Factions.DFFaction;
@@ -1602,26 +1602,6 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			}
 			else if(cmd.getName().equalsIgnoreCase(a)) {
 				if(rPlayer.isStaff()) {
-					if(args.length == 1) {
-						if(args[0].equalsIgnoreCase("kitkey")) {
-							if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
-								ItemStack note = this.builder.constructItem(
-										Material.TRIPWIRE_HOOK,
-										1,
-										"&4&lRandom Kit Key",
-										new String[] {
-											"&7When you right click, you unlock",
-											"&7a random kit. (Non donator kits)"
-										},
-										new Pair<String, String>("KitKey", "")
-								);
-								player.getInventory().addItem(note);
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
-							}
-						}
-					}
 					if(args.length == 2) {
 						if(rPlayer.getHighestRank().getRank() >= Rank.ADMIN.getRank()) {
 							if(args[0].equalsIgnoreCase("item")) {
@@ -1679,7 +1659,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 												Material.PAPER,
 												1,
 												"&aMoney Note: $" + amount,
-												new String[] {},
+												new ArrayList<String>(),
 												new Pair<String, Double>("Money", amount)
 										);
 										player.getInventory().addItem(note);
@@ -1706,43 +1686,12 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 												Material.EXPERIENCE_BOTTLE,
 												1,
 												"&a&lXP Bottle (Player)",
-												new String[] {
-														"&7When you throw this bottle, you will",
-														"&7gain player xp appropiate to it's amount",
+												new ArrayList<String>(Arrays.asList(
+														"&7When you combine your item with this bottle,",
+														"&7It will add the XP on this bottle to your weapon.",
 														"&7XP Amount: &6" + amount
-												},
+												)),
 												new Pair<String, Integer>("XPBottle", amount)
-										);
-										player.getInventory().addItem(note);
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid amount of xp!"));
-									}
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour rank is not high enough to use this command!"));
-								}
-							}
-							else if(args[0].equalsIgnoreCase("fxpbottle")) {
-								if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
-									int amount = 0;
-									try {
-										amount = Integer.parseInt(args[1]);
-									}
-									catch(NumberFormatException ex) {
-										ex.printStackTrace();
-									}
-									if(amount > 0) {
-										ItemStack note = this.builder.constructItem(
-												Material.EXPERIENCE_BOTTLE,
-												1,
-												"&a&lXP Bottle (Faction)",
-												new String[] {
-														"&7When you throw this bottle, you will",
-														"&7gain faction xp appropiate to it's amount",
-														"&7XP Amount: &6" + amount
-												},
-												new Pair<String, Integer>("FXPBottle", amount)
 										);
 										player.getInventory().addItem(note);
 									}
@@ -1763,11 +1712,11 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											Material.NETHER_STAR,
 											1,
 											rar.getColorCode() + rar.getDisplay() + " Crystal",
-											new String[] {
+											new ArrayList<String>(Arrays.asList(
 												"&7Bring me to &6&lNOVIS &7to get some",
 												"&7really nice rewards!",
 												"&7Rarity: " + rar.getColorCode() + rar.getDisplay()
-											},
+											)),
 											new Pair<String, String>("CrystalObject", ""),
 											new Pair<String, String>("Rarity", rar.getDisplay())
 										);
@@ -2982,7 +2931,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
         	else if(command.getName().equalsIgnoreCase(a)) { 
         		if(rPlayer.getHighestRank().getRank() >= Rank.HEAD_ADMIN.getRank()) {
 	            	if(args.length == 1) {
-	            		ArrayList<String> itemNames = new ArrayList<String>(Arrays.asList("money", "level", "item", "spawner", "moneynote", "crystal", "xpbottle", "fxpbottle", "kitkey"));
+	            		ArrayList<String> itemNames = new ArrayList<String>(Arrays.asList("money", "level", "item", "spawner", "moneynote", "crystal", "xpbottle"));
             			ArrayList<String> collection = new ArrayList<String>();
             			return StringUtil.copyPartialMatches(args[0], itemNames, collection);
 	            	}
@@ -3576,30 +3525,30 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							player.getInventory().setItem(0, this.builder.constructItem(
 									Material.COMPASS, 
 									"&aSpawner Menu", 
-									new String[] {
+									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to open",
 										"&7up the spawner menu to create/delete spawner items."
-									},
+									)),
 									new Pair<String, String>("SpawnerCreate", "")
 							));
 							player.getInventory().setItem(1, this.builder.constructItem(
 									Material.BARRIER, 
 									"&cSpawner Delete", 
-									new String[] {
+									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to delete",
 										"&7any spawner. Make sure there is a block",
 										"&7actually placed in the spawner."
-									},
+									)),
 									new Pair<String, String>("SpawnerDelete", "")
 							));
 							player.getInventory().setItem(2, this.builder.constructItem(
 									Material.YELLOW_STAINED_GLASS, 
 									"&6Spawner See", 
-									new String[] {
+									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to see",
 										"&7any spawner in a 20 block radius.",
 										"&7These spawners will turn into yellow glass."
-									},
+									)),
 									new Pair<String, String>("SpawnerSee", "")
 							));
 						}
@@ -3609,31 +3558,31 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							player.getInventory().setItem(0, this.builder.constructItem(
 									Material.COMPASS, 
 									"&aLoot Menu", 
-									new String[] {
+									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to open",
 										"&7up the loot chests menu to create/delete chest items."
-									},
+									)),
 									new Pair<String, String>("LootCreate", "")
 							));
 							player.getInventory().setItem(1, this.builder.constructItem(
 									Material.BARRIER, 
 									"&cLoot Delete", 
-									new String[] {
+									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to delete",
 										"&7any loot chest. Make sure there is a block",
 										"&7actually placed in the position of the loot chest.",
 										"&7(A chest in its place is also valid)"
-									},
+									)),
 									new Pair<String, String>("LootDelete", "")
 							));
 							player.getInventory().setItem(2, this.builder.constructItem(
 									Material.YELLOW_STAINED_GLASS, 
 									"&6Loot See", 
-									new String[] {
+									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to see",
 										"&7any loot chest in a 20 block radius.",
 										"&7These loot chests will turn into yellow glass."
-									},
+									)),
 									new Pair<String, String>("LootSee", "")
 							));
 						}
@@ -3643,32 +3592,32 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							player.getInventory().setItem(0, this.builder.constructItem(
 									Material.COMPASS, 
 									"&aCapture Point Menu", 
-									new String[] {
+									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to open",
 										"&7up the capture points menu to create/delete",
 										"&7capture point items."
-									},
+									)),
 									new Pair<String, String>("CapturePointCreate", "")
 							));
 							player.getInventory().setItem(1, this.builder.constructItem(
 									Material.BARRIER, 
 									"&cCapture Point Delete", 
-									new String[] {
+									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to delete",
 										"&7any capture points. Make sure there is a block",
 										"&7actually placed in the position of the",
 										"&7capture point."
-									},
+									)),
 									new Pair<String, String>("CapturePointDelete", "")
 							));
 							player.getInventory().setItem(2, this.builder.constructItem(
 									Material.BLUE_STAINED_GLASS, 
 									"&6Capture Point See", 
-									new String[] {
+									new ArrayList<String>(Arrays.asList(
 										"&7Right click this item to see",
 										"&7any capture points in a 20 block radius.",
 										"&7These capture points will turn into blue glass."
-									},
+									)),
 									new Pair<String, String>("CapturePointSee", "")
 							));
 						}
@@ -4672,7 +4621,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 				boolean message = false;
 				Location loc = event.getClickedBlock().getLocation();
 				if(!cpManager.getCapturePointList().isEmpty()) {
-					for(CapturePoint point : cpManager.getCapturePointList()) {
+					for(CapturePoint point : cpManager.getCapturePointList().values()) {
 						if(point != null) {
 							if(point.getCaptureLocation().distance(loc) <= 2.5) {
 								cpManager.removeCapturePoint(point);
@@ -4690,7 +4639,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 			}
 			else if(item.hasKey("CapturePointSee")) {
 				int count = 0;
-				for(CapturePoint point : cpManager.getCapturePointList()) {
+				for(CapturePoint point : cpManager.getCapturePointList().values()) {
 					if(point != null) {
 						if(player.getLocation().distance(point.getCaptureLocation()) <= 40.0) {
 							player.sendBlockChange(point.getCaptureLocation(), Material.BLUE_STAINED_GLASS.createBlockData());

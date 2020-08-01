@@ -29,59 +29,35 @@ public class CapturePointManager {
 	
 	private DFFactionPlayerManager facPlayerManager;
 	private DFFactionManager facManager;
-	private ArrayList<CapturePoint> capturePointList;
+	private HashMap<UUID, CapturePoint> capturePointList;
 	
 	public CapturePointManager(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager) {
-		this.capturePointList = new ArrayList<CapturePoint>();
+		this.capturePointList = new HashMap<UUID, CapturePoint>();
 		this.facManager = facManager;
 		this.facPlayerManager = facPlayerManager;
 	}
 	
 	public void addCapturePoint(CapturePoint point) {
-		if(!this.capturePointList.contains(point)) {
-			this.capturePointList.add(point);
-		}
+		this.capturePointList.put(point.getCaptureId(), point);
 	}
 	
 	public void removeCapturePoint(CapturePoint point) {
 		point.getBossBar().removeAll();
-		this.capturePointList.remove(point);
-	}
-	public void removeCapturePoint(UUID uuid) {
-		for(int i = 0; i < this.capturePointList.size(); i++) {
-			CapturePoint point = this.capturePointList.get(i);
-			point.getBossBar().removeAll();
-			if(uuid.equals(point.getUniqueId())) {
-				this.capturePointList.remove(point);
-			}
-		}
-	}
-	
-	public boolean containsCapturePoint(CapturePoint point) {
-		return this.capturePointList.contains(point);
+		this.capturePointList.remove(point.getCaptureId());
 	}
 	
 	public boolean containsCapturePoint(UUID uuid) {
-		for(int i = 0; i < this.capturePointList.size(); i++) {
-			CapturePoint point = this.capturePointList.get(i);
-			if(uuid.equals(point.getUniqueId())) {
-				return true;
-			}
-		}
-		return false;
+		return this.capturePointList.containsKey(uuid);
 	}
 	
 	public CapturePoint getCapturePoint(UUID uuid) {
-		for(int i = 0; i < this.capturePointList.size(); i++) {
-			CapturePoint point = this.capturePointList.get(i);
-			if(uuid.equals(point.getUniqueId())) {
-				return point;
-			}
+		if(this.capturePointList.containsKey(uuid)) {
+			return this.capturePointList.get(uuid);
 		}
 		return null;
 	}
 	
-	public ArrayList<CapturePoint> getCapturePointList() {
+	public HashMap<UUID, CapturePoint> getCapturePointList() {
 		return this.capturePointList;
 	}
 	
@@ -114,7 +90,7 @@ public class CapturePointManager {
 					double radius = yml.getDouble("Capture Points." + cUuid + ".Capture Point Radius");
 					double multiplier = yml.getDouble("Capture Points." + cUuid + ".Capture Point Multiplier");
 					CapturePoint cp = new CapturePoint(cUuid, fUuid, loc, progress, radius, multiplier);
-					this.capturePointList.add(cp);
+					this.capturePointList.put(cp.getCaptureId(), cp);
  				}
 			}
 		}
@@ -132,16 +108,16 @@ public class CapturePointManager {
 			e.printStackTrace();
 		}
 		yml.set("Capture Points", null);
-		for(CapturePoint cp : this.capturePointList) {
+		for(CapturePoint cp : this.capturePointList.values()) {
 			if(cp != null) {
-				yml.createSection("Capture Points." + cp.getUniqueId().toString());
+				yml.createSection("Capture Points." + cp.getCaptureId().toString());
 				if(cp.getCapturedId() != null) {
-					yml.set("Capture Points." + cp.getUniqueId().toString() + ".Captured ID", cp.getCapturedId().toString());
+					yml.set("Capture Points." + cp.getCaptureId().toString() + ".Captured ID", cp.getCapturedId().toString());
 				}
-				yml.set("Capture Points." + cp.getUniqueId().toString() + ".Capture Point Location", cp.getCaptureLocation());
-				yml.set("Capture Points." + cp.getUniqueId().toString() + ".Capture Point Progress", cp.getCaptureProgress());
-				yml.set("Capture Points." + cp.getUniqueId().toString() + ".Capture Point Radius", cp.getCaptureRadius());
-				yml.set("Capture Points." + cp.getUniqueId().toString() + ".Capture Point Multiplier", cp.getXPMultiplier());
+				yml.set("Capture Points." + cp.getCaptureId().toString() + ".Capture Point Location", cp.getCaptureLocation());
+				yml.set("Capture Points." + cp.getCaptureId().toString() + ".Capture Point Progress", cp.getCaptureProgress());
+				yml.set("Capture Points." + cp.getCaptureId().toString() + ".Capture Point Radius", cp.getCaptureRadius());
+				yml.set("Capture Points." + cp.getCaptureId().toString() + ".Capture Point Multiplier", cp.getXPMultiplier());
 			}
 		}
 		try{
@@ -156,7 +132,7 @@ public class CapturePointManager {
 		new BukkitRunnable() {
 			public void run() {
 				if(!capturePointList.isEmpty()) {
-					for(CapturePoint point : capturePointList) {
+					for(CapturePoint point : capturePointList.values()) {
 						point.getBossBar().removeAll();
 						double radius = point.getCaptureRadius() + 5;
 						for(Entity e : point.getCaptureLocation().getNearbyEntities(radius, radius, radius)) {
@@ -177,7 +153,7 @@ public class CapturePointManager {
 		new BukkitRunnable() {
 			public void run() {
 				if(!capturePointList.isEmpty()) {
-					for(CapturePoint point : capturePointList) {
+					for(CapturePoint point : capturePointList.values()) {
 						ArrayList<UUID> facsNear = new ArrayList<UUID>();
 						HashMap<UUID, Integer> size = new HashMap<UUID, Integer>();
 						double radius = point.getCaptureRadius() + 5;

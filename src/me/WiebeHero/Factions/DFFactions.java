@@ -11,14 +11,12 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.block.Banner;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.WiebeHero.CapturePoints.CapturePoint;
@@ -27,8 +25,6 @@ import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
-import me.WiebeHero.Factions.DFFactionGroups.FactionGroup;
-import me.WiebeHero.Factions.DFFactionGroups.FactionPermission;
 import me.WiebeHero.MoreStuff.CombatTag;
 import me.WiebeHero.Scoreboard.DFScoreboard;
 import me.WiebeHero.Scoreboard.WGMethods;
@@ -42,9 +38,8 @@ public class DFFactions implements Listener,CommandExecutor{
 	private WGMethods wg;
 	private FactionInventory facInventory;
 	private CapturePointManager cpManager;
-	private DFFactionGroups facGroups;
 	private ArrayList<String> spawning;
-	public DFFactions(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, DFScoreboard board, DFPlayerManager dfManager, WGMethods wg, FactionInventory facInventory, CapturePointManager cpManager, DFFactionGroups facGroups) {
+	public DFFactions(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, DFScoreboard board, DFPlayerManager dfManager, WGMethods wg, FactionInventory facInventory, CapturePointManager cpManager) {
 		this.facManager = facManager;
 		this.facPlayerManager = facPlayerManager;
 		this.board = board;
@@ -52,7 +47,6 @@ public class DFFactions implements Listener,CommandExecutor{
 		this.wg = wg;
 		this.facInventory = facInventory;
 		this.cpManager = cpManager;
-		this.facGroups = facGroups;
 		this.spawning = new ArrayList<String>();
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -126,40 +120,6 @@ public class DFFactions implements Listener,CommandExecutor{
 						    	player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYour faction name can NOT be nothing!"));
 							}
 						}
-						else if(args[0].equalsIgnoreCase("vault")) {
-							if(args.length == 1) {
-								if(faction != null) {
-									ArrayList<UUID> uuids = faction.getMembers();
-									boolean viewing = false;
-									for(UUID uuid : uuids) {
-										if(Bukkit.getPlayer(uuid) != null) {
-											Player p = Bukkit.getPlayer(uuid);
-											InventoryView view = p.getOpenInventory();
-											if(view.getTitle().contains(faction.getName() + "'s Vault")) {
-												viewing = true;
-											}
-										}
-									}
-									if(!viewing) {
-										FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-										boolean state = faction.getPermission(group, FactionPermission.FACTION_VAULT_ACCES);
-										if(state) {
-											player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 2.0F, 1.5F);
-											player.openInventory(faction.getFactionVault());
-										}
-									}
-									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cOnly 1 person can view the faction vault at a time!"));
-									}
-								}
-								else {
-			    					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have a faction!"));
-			    				}
-						    }
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have a faction!"));
-							}
-						}
 						else if(args[0].equalsIgnoreCase("abandon") || args[0].equalsIgnoreCase("disband")) {
 							if(args.length == 1) {
 								if(faction != null) {
@@ -188,7 +148,7 @@ public class DFFactions implements Listener,CommandExecutor{
 												}
 											}
 										}
-										for(CapturePoint cp : cpManager.getCapturePointList()) {
+										for(CapturePoint cp : cpManager.getCapturePointList().values()) {
 											if(cp.getCapturedId() != null) {
 												if(cp.getCapturedId().equals(faction.getFactionId())) {
 													Location loc = cp.getCaptureLocation();
@@ -363,9 +323,8 @@ public class DFFactions implements Listener,CommandExecutor{
 									if(faction != null) {
 										if(!facManager.isInAChunk(player)) {
 											if(!faction.isInChunk(player)) {
-												FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-												boolean state = faction.getPermission(group, FactionPermission.CLAIM_FACTION_CHUNKS);
-												if(state) {
+												int rank = facPlayer.getRank();
+												if(rank >= 3) {
 													int chunkTotal = faction.getChunkList().size();
 													int maxChunks = 20;
 													if(chunkTotal == 0) {
@@ -445,9 +404,8 @@ public class DFFactions implements Listener,CommandExecutor{
 							if(args.length == 1) {
 								if(player.getWorld().getName().equals("FactionWorld-1")) {
 									if(faction != null) {
-										FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-										boolean state = faction.getPermission(group, FactionPermission.UNCLAIM_FACTION_CHUNKS);
-										if(state) {
+										int rank = facPlayer.getRank();
+										if(rank >= 3) {
 											if(faction.isInChunk(player)) {
 												faction.removeChunk(player.getChunk());
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have unclaimed this chunk!"));
@@ -517,9 +475,8 @@ public class DFFactions implements Listener,CommandExecutor{
 								if(args[1].equalsIgnoreCase("all")) {
 									if(player.getWorld().getName().equals("FactionWorld-1")) {
 										if(faction != null) {
-											FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-											boolean state = faction.getPermission(group, FactionPermission.UNCLAIM_FACTION_CHUNKS);
-											if(state) {
+											int rank = facPlayer.getRank();
+											if(rank >= 3) {
 												if(!faction.getChunkList().isEmpty()) {
 													faction.clearFactionHomes();
 													faction.clearChunks();
@@ -566,9 +523,8 @@ public class DFFactions implements Listener,CommandExecutor{
 							if(args.length == 1) {
 								if(player.getWorld().getName().equals("FactionWorld-1")) {
 									if(faction != null) {
-										FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-										boolean state = faction.getPermission(group, FactionPermission.SET_FACTION_HOMES);
-										if(state) {
+										int rank = facPlayer.getRank();
+										if(rank >= 3) {
 											if(faction.isInChunk(player)) {
 												if(faction.hasFactionHome("Home")) {
 													faction.addFactionHome("Home", player.getLocation());
@@ -601,9 +557,8 @@ public class DFFactions implements Listener,CommandExecutor{
 							else if(args.length == 2) {
 								if(player.getWorld().getName().equals("FactionWorld-1")) {
 									if(faction != null) {
-										FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-										boolean state = faction.getPermission(group, FactionPermission.SET_FACTION_HOMES);
-										if(state) {
+										int rank = facPlayer.getRank();
+										if(rank >= 3) {
 											if(faction.isInChunk(player)) {
 												String name = args[1];
 												if(faction.hasFactionHome(name)) {
@@ -643,9 +598,8 @@ public class DFFactions implements Listener,CommandExecutor{
 								Location loc = player.getLocation();
 								if(faction != null) {
 									final DFFaction fac = faction;
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.USE_FACTION_HOMES);
-									if(state) {
+									int rank = facPlayer.getRank();
+									if(rank >= 2) {
 										if(fac.hasFactionHome("Home")) {
 											if(wg.isInZone(player, "spawn")) {
 												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aTeleporting!"));
@@ -711,9 +665,8 @@ public class DFFactions implements Listener,CommandExecutor{
 								Location loc = player.getLocation();
 								if(faction != null) {
 									final DFFaction fac = faction;
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.USE_FACTION_HOMES);
-									if(state) {
+									int rank = facPlayer.getRank();
+									if(rank >= 2) {
 										String name = args[1];
 										if(fac.hasFactionHome(name)) {
 											if(wg.isInZone(player, "spawn")) {
@@ -783,9 +736,8 @@ public class DFFactions implements Listener,CommandExecutor{
 						else if(args[0].equalsIgnoreCase("homes")) {
 							if(args.length == 1) {
 								if(faction != null) {
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.USE_FACTION_HOMES);
-									if(state) {
+									int rank = facPlayer.getRank();
+									if(rank >= 2) {
 										if(!faction.getFactionHomes().isEmpty()) {
 											for(Entry<String, Location> entry : faction.getFactionHomes().entrySet()) {
 												String name = entry.getKey();
@@ -801,7 +753,7 @@ public class DFFactions implements Listener,CommandExecutor{
 										}
 									}
 									else {
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to view the overview of faction homes!"));
+										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou dont have permission to teleport to your faction home!"));
 									}
 								}
 								else {
@@ -815,9 +767,8 @@ public class DFFactions implements Listener,CommandExecutor{
 						else if(args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("invite")) {
 							if(args.length == 2) {
 								if(faction != null) {
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.INVITE_FACTION_MEMBERS);
-									if(state) {
+									int rank = facPlayer.getRank();
+									if(rank >= 3) {
 										OfflinePlayer o = Bukkit.getOfflinePlayer(args[1]);
 										if(o.getName() != null) {
 											Player p = Bukkit.getPlayer(o.getUniqueId());
@@ -856,7 +807,7 @@ public class DFFactions implements Listener,CommandExecutor{
 												}
 											}
 											else {
-												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + o.getName() + "&c is not online!"));
+												player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + p.getName() + "&c is not online!"));
 											}
 										}
 										else {
@@ -913,25 +864,16 @@ public class DFFactions implements Listener,CommandExecutor{
 						else if(args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("kick")) {
 							if(args.length == 2) {
 								if(faction != null) {
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.KICK_FACTION_MEMBERS);
-									if(state) {
+									int rank = facPlayer.getRank();
+									if(rank >= 3) {
 										OfflinePlayer p = Bukkit.getOfflinePlayer(args[1]);
 										if(p.getName() != null) {
 											if(p != player) {
 												if(faction.isMember(p.getUniqueId())) {
 													DFFactionPlayer facP = facPlayerManager.getFactionPlayer(p.getUniqueId());
-													int rank = facPlayer.getRank();
 													int rankOther = facP.getRank();
 													if(rank > rankOther) {
 														faction.removeMember(p.getUniqueId());
-														if(Bukkit.getPlayer(p.getUniqueId()) != null) {
-															Player pl = Bukkit.getPlayer(p.getUniqueId());
-															InventoryView view = pl.getOpenInventory();
-															if(view.getTitle().contains(faction.getName() + "'s Vault")) {
-																pl.closeInventory();
-															}
-														}
 														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + p.getName() + " &afrom the faction!"));
 														Player o = Bukkit.getPlayer(p.getUniqueId());
 														if(p != null) {
@@ -1084,28 +1026,21 @@ public class DFFactions implements Listener,CommandExecutor{
 										if(p != player) {
 											if(faction.isMember(p.getUniqueId())) {
 												DFFactionPlayer facP = facPlayerManager.getFactionPlayer(p);
-												FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-												boolean state = faction.getPermission(group, FactionPermission.PROMOTE_FACTION_MEMBERS);
-												if(state) {
-													int rankMe = facPlayer.getRank();
-													int rankOther = facP.getRank();
-													if(rankMe > rankOther) {
-														faction.promoteMember(p.getUniqueId());
-														if(facP.getRank() == 2) {
-															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " &ato Member!"));
-															p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &aHas promoted you to a Member!"));
-														}
-														if(facP.getRank() == 3) {
-															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " &ato Officer!"));
-															p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &aHas promoted you to a Officer!"));
-														}
+												int rankMe = facPlayer.getRank();
+												int rankOther = facP.getRank();
+												if(rankMe > rankOther) {
+													faction.promoteMember(p.getUniqueId());
+													if(facP.getRank() == 2) {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " &ato Member!"));
+														p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &aHas promoted you to a Member!"));
 													}
-													else {
-														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have permission to promote this faction member!"));
+													if(facP.getRank() == 3) {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + p.getName() + " &ato Officer!"));
+														p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &aHas promoted you to a Officer!"));
 													}
 												}
 												else {
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have permission to promote players from your faction!"));
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have permission to promote this faction member!"));
 												}
 											}
 											else {
@@ -1136,35 +1071,21 @@ public class DFFactions implements Listener,CommandExecutor{
 										if(p != player) {
 											if(faction.isMember(p.getUniqueId())) {
 												DFFactionPlayer facP = facPlayerManager.getFactionPlayer(p);
-												FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-												boolean state = faction.getPermission(group, FactionPermission.DEMOTE_FACTION_MEMBERS);
-												if(state) {
-													int rankMe = facPlayer.getRank();
-													int rankOther = facP.getRank();
-													if(rankMe > rankOther) {
-														state = faction.getPermission(group, FactionPermission.FACTION_VAULT_ACCES);
-														InventoryView view = p.getOpenInventory();
-														if(!state) {
-															if(view.getTitle().contains(faction.getName() + "'s Vault")) {
-																p.closeInventory();
-															}
-														}
-														faction.demoteMember(p.getUniqueId());
-														if(facP.getRank() == 2) {
-															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " &cto Member!"));
-															p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cHas demoted you to a Member!"));
-														}
-														if(facP.getRank() == 1) {
-															player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " &cto Recruit!"));
-															p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cHas demoted you to a Recruit!"));
-														}
+												int rankMe = facPlayer.getRank();
+												int rankOther = facP.getRank();
+												if(rankMe > rankOther) {
+													faction.demoteMember(p.getUniqueId());
+													if(facP.getRank() == 2) {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " &cto Member!"));
+														p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cHas demoted you to a Member!"));
 													}
-													else {
-														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have permission to demote this faction member!"));
+													if(facP.getRank() == 1) {
+														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have demoted &6" + p.getName() + " &cto Recruit!"));
+														p.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cHas demoted you to a Recruit!"));
 													}
 												}
 												else {
-													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have permission to promote players from your faction!"));
+													player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou don't have permission to demote this faction member!"));
 												}
 											}
 											else {
@@ -1196,9 +1117,8 @@ public class DFFactions implements Listener,CommandExecutor{
 										if(!faction.isAlly(fac.getName())) {
 											if(!faction.isInvitedAlly(fac.getFactionId())) {
 												if(!faction.getName().equals(fac.getName())) {
-													FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-													boolean state = faction.getPermission(group, FactionPermission.ALLY_FACTIONS);
-													if(state) {
+													int rank = facPlayer.getRank();
+													if(rank >= 3) {
 														faction.addInvitedAlly(fac.getFactionId());
 														if(faction.isInvitedAlly(fac.getFactionId()) && fac.isInvitedAlly(faction.getFactionId())) {
 															faction.removeInvitedAlly(fac.getFactionId());
@@ -1293,9 +1213,8 @@ public class DFFactions implements Listener,CommandExecutor{
 									DFFaction fac = facManager.getFaction(allyName);
 									if(fac != null) {
 										if(faction.isAlly(fac.getName())) {
-											FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-											boolean state = faction.getPermission(group, FactionPermission.UNALLY_FACTIONS);
-											if(state) {
+											int rank = facPlayer.getRank();
+											if(rank >= 3) {
 												faction.removeAlly(fac.getFactionId());
 												fac.removeAlly(faction.getFactionId());
 												for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {

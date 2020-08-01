@@ -11,14 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import javafx.util.Pair;
-import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Factions.DFFactionGroups.FactionGroup;
-import me.WiebeHero.Factions.DFFactionGroups.FactionPermission;
 
 public class DFFaction {
 	
@@ -31,7 +24,6 @@ public class DFFaction {
 	private ArrayList<UUID> invitedAllyList;
 	private ArrayList<UUID> allyList;
 	private HashMap<String, Location> facHomes;
-	private HashMap<FactionGroup, ArrayList<Pair<FactionPermission, Boolean>>> factionPermissions;
 	private int level;
 	private int maxLevel;
 	private int xp;
@@ -43,8 +35,6 @@ public class DFFaction {
 	private double maxpMultiplier = 1.13;
 	private double mixpMultiplier = 1.0001;
 	private ItemStack banner;
-	private Inventory fv;
-	private ItemStack stackList[];
 	
 	public DFFaction(String facName, Player p, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
 		this.facId = UUID.randomUUID();
@@ -60,18 +50,11 @@ public class DFFaction {
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
-		this.stackList = new ItemStack[54];
 		this.xp = 0;
 		this.maxxp = 200;
 		this.level = 1;
 		this.maxLevel = 100;
-		this.fv = CustomEnchantments.getInstance().getServer().createInventory(null, this.getVaultSize(), new CCT().colorize("&a" + this.getName() + "'s Vault"));
 		this.banner = new ItemStack(Material.BLACK_BANNER);
-		this.factionPermissions = new HashMap<FactionGroup, ArrayList<Pair<FactionPermission, Boolean>>>();
-		for(FactionGroup group : FactionGroup.values()) {
-			this.factionPermissions.put(group, new ArrayList<Pair<FactionPermission, Boolean>>());
-			this.factionPermissions.get(group).addAll(group.getDefaultPerms(group));
-		}
 		DFFactionPlayer df = memberManager.getFactionPlayer(p.getUniqueId());
 		df.setFactionId(this.getFactionId());
 		df.setRank(4);
@@ -90,18 +73,11 @@ public class DFFaction {
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
-		this.stackList = new ItemStack[54];
 		this.xp = 0;
 		this.maxxp = 200;
 		this.level = 1;
 		this.maxLevel = 100;
-		this.fv = CustomEnchantments.getInstance().getServer().createInventory(null, this.getVaultSize(), new CCT().colorize("&a" + this.getName() + "'s Vault"));
 		this.banner = new ItemStack(Material.BLACK_BANNER);
-		this.factionPermissions = new HashMap<FactionGroup, ArrayList<Pair<FactionPermission, Boolean>>>();
-		for(FactionGroup group : FactionGroup.values()) {
-			this.factionPermissions.put(group, new ArrayList<Pair<FactionPermission, Boolean>>());
-			this.factionPermissions.get(group).addAll(group.getDefaultPerms(group));
-		}
 	}
 	public DFFaction(String facName, UUID facId, DFFactionManager facManager, DFFactionPlayerManager memberManager) {
 		this.facId = facId;
@@ -117,18 +93,11 @@ public class DFFaction {
 		this.bank = 0.00;
 		this.facManager = facManager;
 		this.memberManager = memberManager;
-		this.stackList = new ItemStack[54];
 		this.xp = 0;
 		this.maxxp = 200;
 		this.level = 1;
 		this.maxLevel = 100;
-		this.fv = CustomEnchantments.getInstance().getServer().createInventory(null, this.getVaultSize(), new CCT().colorize("&a" + this.getName() + "'s Vault"));
 		this.banner = new ItemStack(Material.BLACK_BANNER);
-		this.factionPermissions = new HashMap<FactionGroup, ArrayList<Pair<FactionPermission, Boolean>>>();
-		for(FactionGroup group : FactionGroup.values()) {
-			this.factionPermissions.put(group, new ArrayList<Pair<FactionPermission, Boolean>>());
-			this.factionPermissions.get(group).addAll(group.getDefaultPerms(group));
-		}
 	}
 	public void addMember(Player player) {
 		if(memberManager.contains(player.getUniqueId())){
@@ -288,10 +257,6 @@ public class DFFaction {
 		return false;
 	}
 	
-	public boolean hasChunk(Long key){
-		return this.chunkList.contains(key);
-	}
-	
 	public boolean isAlly(String fac) {
 		DFFaction faction = facManager.getFaction(fac);
 		return this.allyList.contains(faction.getFactionId());
@@ -403,41 +368,6 @@ public class DFFaction {
 	public void removeMaxExperience(int maxxp) {
 		this.maxxp = maxxp;
 	}
-	
-	public ArrayList<Pair<FactionPermission, Boolean>> getPermissions(FactionGroup group){
-		return this.factionPermissions.get(group);
-	}
-	
-	public boolean getPermission(FactionGroup group, FactionPermission perm){
-		ArrayList<Pair<FactionPermission, Boolean>> perms = this.factionPermissions.get(group);
-		for(int i = 0; i < perms.size(); i++) {
-			Pair<FactionPermission, Boolean> pair = perms.get(i);
-			if(pair.getKey() == perm) {
-				return pair.getValue();
-			}
-		}
-		return false;
-	}
-	
-	public void setPermission(FactionGroup group, FactionPermission perm, boolean bool) {
-		ArrayList<Pair<FactionPermission, Boolean>> perms = this.factionPermissions.get(group);
-		for(int i = 0; i < perms.size(); i++) {
-			Pair<FactionPermission, Boolean> pair = perms.get(i);
-			if(pair.getKey() == perm) {
-				perms.set(i, new Pair<FactionPermission, Boolean>(perm, bool));
-			}
-		}
-	}
-	
-	public HashMap<FactionGroup, ArrayList<Pair<FactionPermission, Boolean>>> getFactionPermissionsList(){
-		return this.factionPermissions;
-	}
-	
-	public int getVaultSize() {
-		int mult = (int)((double)this.level / 20.00);
-		return (int)(9.00 + 9.00 * (double)mult);
-	}
-	
 	public double getExperienceMultiplier() {
 		double x = this.maxpMultiplier - this.mixpMultiplier;
 		double y = x / 100.00;
@@ -458,10 +388,6 @@ public class DFFaction {
 		int max = 5;
 		int addOn = (int)Math.ceil((double)this.level / 10.00) * 2;
 		return max += addOn;
-	}
-	
-	public HashMap<UUID, DFFactionPlayer> getMemberMap(){
-		return this.memberManager.getFactionPlayerMap();
 	}
 	
 	public ArrayList<UUID> getMembers(){
@@ -502,21 +428,5 @@ public class DFFaction {
 			}
 		}
 		return null;
-	}
-	
-	public void setStackList(ItemStack stacks[]) {
-		this.stackList = stacks;
-	}
-	
-	public ItemStack[] getStackList() {
-		return this.stackList;
-	}
-	
-	public void setFactionVault(Inventory inv) {
-		this.fv = inv;
-	}
-	
-	public Inventory getFactionVault() {
-		return this.fv;
 	}
 }

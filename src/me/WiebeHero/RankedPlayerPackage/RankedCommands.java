@@ -1,6 +1,7 @@
 package me.WiebeHero.RankedPlayerPackage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -111,11 +112,11 @@ public class RankedCommands implements CommandExecutor{
 				Material.NETHER_STAR,
 				1,
 				"&7Common Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &7Common"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Common")
 		));
@@ -123,11 +124,11 @@ public class RankedCommands implements CommandExecutor{
 				Material.NETHER_STAR,
 				1,
 				"&aRare Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &aRare"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Rare")
 		));
@@ -135,11 +136,11 @@ public class RankedCommands implements CommandExecutor{
 				Material.NETHER_STAR,
 				1,
 				"&bEpic Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &bEpic"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Epic")
 		));
@@ -147,11 +148,11 @@ public class RankedCommands implements CommandExecutor{
 				Material.NETHER_STAR,
 				1,
 				"&cLegendary Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &cLegendary"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Legendary")
 		));
@@ -159,11 +160,11 @@ public class RankedCommands implements CommandExecutor{
 				Material.NETHER_STAR,
 				1,
 				"&5Mythic Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &5Mythic"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Mythic")
 		));
@@ -171,11 +172,11 @@ public class RankedCommands implements CommandExecutor{
 				Material.NETHER_STAR,
 				1,
 				"&eHeroic Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &eHeroic"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Heroic")
 		));
@@ -538,7 +539,7 @@ public class RankedCommands implements CommandExecutor{
 						catch(NumberFormatException ex) {
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis number is invalid!"));
 						}
-						ArrayList<CapturePoint> points = new ArrayList<CapturePoint>(this.cpManager.getCapturePointList());
+						ArrayList<CapturePoint> points = new ArrayList<CapturePoint>(this.cpManager.getCapturePointList().values());
 						Location loc = player.getLocation().clone();
 						if(number > -1 && number < points.size()) {
 							CapturePoint point = points.get(number);

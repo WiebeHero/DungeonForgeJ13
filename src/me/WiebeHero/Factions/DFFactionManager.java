@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
@@ -19,22 +18,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javafx.util.Pair;
-import me.WiebeHero.CustomEnchantments.CCT;
 import me.WiebeHero.CustomEnchantments.CustomEnchantments;
-import me.WiebeHero.Factions.DFFactionGroups.FactionGroup;
-import me.WiebeHero.Factions.DFFactionGroups.FactionPermission;
 
 public class DFFactionManager {
 	
 	private HashMap<UUID, DFFaction> factionList;
 	private DFFactionPlayerManager facPlayerManager;
-	private DFFactionGroups facGroups;
 	
-	public DFFactionManager(DFFactionPlayerManager facPlayerManager, DFFactionGroups facGroups) {
+	public DFFactionManager(DFFactionPlayerManager facPlayerManager) {
 		this.factionList = new HashMap<UUID, DFFaction>();
 		this.facPlayerManager = facPlayerManager;
-		this.facGroups = facGroups;
 	}
 	
 	public void add(DFFaction dfFaction) {
@@ -167,7 +160,6 @@ public class DFFactionManager {
 			}
 		}.runTaskTimer(CustomEnchantments.getInstance(), 0L, 400L);
 	}
-	@SuppressWarnings("unchecked")
 	public void loadFactions() {
 		File f1 =  new File("plugins/CustomEnchantments/factionsConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
@@ -218,21 +210,6 @@ public class DFFactionManager {
 				else {
 					fac.setBanner(banner);
 				}
-				if(yml.getConfigurationSection("Factions.List." + list.get(i) + ".Faction Permissions") != null) {
-					Set<String> setGroup = yml.getConfigurationSection("Factions.List." + list.get(i) + ".Faction Permissions").getKeys(false);
-					Bukkit.getConsoleSender().sendMessage(setGroup.toString());
-					ArrayList<String> arrayGroup = new ArrayList<String>(setGroup);
-					for(int i1 = 0; i1 < arrayGroup.size(); i1++) {
-						FactionGroup group = this.facGroups.getIfGroupPresent(arrayGroup.get(i1));
-						Set<String> setPerms = yml.getConfigurationSection("Factions.List." + list.get(i) + ".Faction Permissions." + arrayGroup.get(i1)).getKeys(false);
-						ArrayList<String> arrayPerms = new ArrayList<String>(setPerms);
-						for(int i2 = 0; i2 < arrayPerms.size(); i2++) {
-							FactionPermission perm = this.facGroups.getIfPermissionPresent(arrayPerms.get(i2));
-							boolean state = yml.getBoolean("Factions.List." + list.get(i) + ".Faction Permissions." + arrayGroup.get(i1) + "." + arrayPerms.get(i2));
-							fac.setPermission(group, perm, state);
-						}
-					}
-				}
 				fac.setAllyList(fAllyList);
 				int fPoints = yml.getInt("Factions.List." + list.get(i) + ".Faction Points");
 				fac.setFactionPoints(fPoints);
@@ -255,14 +232,7 @@ public class DFFactionManager {
 				if(maxxp != 0) {
 					fac.setMaxExperience(maxxp);
 				}
-				ItemStack[] content = new ItemStack[0];
-				if(yml.get("Factions.List." + list.get(i) + ".Faction Vault") != null) {
-					content = ((List<ItemStack>) yml.get("Factions.List." + list.get(i) + ".Faction Vault")).toArray(new ItemStack[0]);
-				}
-				fac.setFactionVault(CustomEnchantments.getInstance().getServer().createInventory(null, fac.getVaultSize(), new CCT().colorize("&a" + fac.getName() + "'s Vault")));
-				fac.setStackList(content);
-				fac.getFactionVault().setContents(fac.getStackList());
-				this.add(fac);
+;				this.add(fac);
 			}
 		}
 	}
@@ -305,15 +275,6 @@ public class DFFactionManager {
 			for(Entry<String, Location> entry : fac.getFactionHomes().entrySet()) {
 				yml.set("Factions.List." + fac.getFactionId() + ".Faction Homes." + entry.getKey(), entry.getValue());
 			}
-			for(Entry<FactionGroup, ArrayList<Pair<FactionPermission, Boolean>>> entry : fac.getFactionPermissionsList().entrySet()) {
-				FactionGroup group = entry.getKey();
-				ArrayList<Pair<FactionPermission, Boolean>> perms = entry.getValue();
-				for(Pair<FactionPermission, Boolean> pair : perms) {
-					FactionPermission perm = pair.getKey();
-					boolean state = pair.getValue();
-					yml.set("Factions.List." + fac.getFactionId() + ".Faction Permissions." + group.toString() + "." + perm.toString(), state);
-				}
-			}
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Name", fac.getName());
 			yml.set("Factions.List." + fac.getFactionId() + ".Chunks List", list);
 			yml.set("Factions.List." + fac.getFactionId() + ".Faction Points", fac.getFactionPoints());
@@ -323,7 +284,6 @@ public class DFFactionManager {
 			yml.set("Factions.List." + fac.getFactionId() + ".Level", fac.getLevel());
 			yml.set("Factions.List." + fac.getFactionId() + ".Experience", fac.getExperience());
 			yml.set("Factions.List." + fac.getFactionId() + ".Max Experience", fac.getMaxExperience());
-			yml.set("Factions.List." + fac.getFactionId() + ".Faction Vault", fac.getStackList());
 		}
 		try{
 			yml.save(f1);

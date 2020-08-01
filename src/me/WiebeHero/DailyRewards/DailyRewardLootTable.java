@@ -48,11 +48,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				2,
 				"&7Common Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &7Common"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Common")
 		));
@@ -68,11 +68,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 100-200"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 100),
 				new Pair<String, Integer>("Max", 100)
@@ -81,11 +81,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				2,
 				"&aRare Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &aRare"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Rare")
 		));
@@ -93,11 +93,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				2,
 				"&bEpic Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &bEpic"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Epic")
 		));
@@ -105,11 +105,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 200-300"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 200),
 				new Pair<String, Integer>("Max", 100)
@@ -126,11 +126,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				2,
 				"&cLegendary Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &cLegendary"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Legendary")
 		));
@@ -138,11 +138,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 300-400"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 300),
 				new Pair<String, Integer>("Max", 100)
@@ -159,10 +159,10 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aPersonal XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7You gain &610% &7more player xp for the",
 						"&7next 30 minutes."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 10.0),
 				new Pair<String, Long>("Duration", 1800000L),
@@ -172,11 +172,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				1,
 				"&5Mythic Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &5Mythic"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Mythic")
 		));
@@ -184,11 +184,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 400-500"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 400),
 				new Pair<String, Integer>("Max", 100)
@@ -205,10 +205,10 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aPersonal XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7You gain &615% &7more player xp for the",
 						"&7next 45 minutes."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 15.0),
 				new Pair<String, Long>("Duration", 2700000L),
@@ -218,11 +218,11 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aFaction XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7Your faction members  and yourself",
 						"&7gain &65% &7more player xp for the",
 						"&7next 30 minutes."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 5.0),
 				new Pair<String, Long>("Duration", 1800000L),
@@ -232,11 +232,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				1,
 				"&eHeroic Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &eHeroic"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Heroic")
 		));
@@ -244,11 +244,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 500-600"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 500),
 				new Pair<String, Integer>("Max", 100)
@@ -265,10 +265,10 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aPersonal XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7You gain &620% &7more player xp for the",
 						"&7next hour."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 20.0),
 				new Pair<String, Long>("Duration", 3600000L),
@@ -278,11 +278,11 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aFaction XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7Your faction members  and yourself",
 						"&7gain &610% &7more player xp for the",
 						"&7next 45 minutes."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 10.0),
 				new Pair<String, Long>("Duration", 2700000L),
@@ -306,11 +306,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				2,
 				"&7Common Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &7Common"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Common")
 		));
@@ -326,11 +326,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 100-200"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 100),
 				new Pair<String, Integer>("Max", 100)
@@ -339,11 +339,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				2,
 				"&aRare Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &aRare"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Rare")
 		));
@@ -351,11 +351,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				2,
 				"&bEpic Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &bEpic"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Epic")
 		));
@@ -363,11 +363,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 200-300"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 200),
 				new Pair<String, Integer>("Max", 100)
@@ -384,11 +384,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				2,
 				"&cLegendary Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &cLegendary"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Legendary")
 		));
@@ -396,11 +396,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 300-400"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 300),
 				new Pair<String, Integer>("Max", 100)
@@ -417,10 +417,10 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aPersonal XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7You gain &610% &7more player xp for the",
 						"&7next 30 minutes."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 10.0),
 				new Pair<String, Long>("Duration", 1800000L),
@@ -430,11 +430,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				1,
 				"&5Mythic Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &5Mythic"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Mythic")
 		));
@@ -442,11 +442,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 400-500"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 400),
 				new Pair<String, Integer>("Max", 100)
@@ -463,10 +463,10 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aPersonal XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7You gain &615% &7more player xp for the",
 						"&7next 45 minutes."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 15.0),
 				new Pair<String, Long>("Duration", 2700000L),
@@ -476,11 +476,11 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aFaction XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7Your faction members  and yourself",
 						"&7gain &65% &7more player xp for the",
 						"&7next 30 minutes."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 5.0),
 				new Pair<String, Long>("Duration", 1800000L),
@@ -490,11 +490,11 @@ public class DailyRewardLootTable {
 				Material.NETHER_STAR,
 				1,
 				"&eHeroic Crystal",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7Bring me to &6&lNOVIS &7to get some",
 					"&7really nice rewards!",
 					"&7Rarity: &eHeroic"
-				},
+				)),
 				new Pair<String, String>("CrystalObject", ""),
 				new Pair<String, String>("Rarity", "Heroic")
 		));
@@ -502,11 +502,11 @@ public class DailyRewardLootTable {
 				Material.EXPERIENCE_BOTTLE, 
 				1,
 				"&a&lXP Bottle (Player)",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7When you combine your item with this bottle,",
 						"&7It will add the XP on this bottle to your weapon.",
 						"&7XP Amount: &6Between 500-600"
-				},
+				)),
 				new Pair<String, String>("RandomXPBottle", ""),
 				new Pair<String, Integer>("Min", 500),
 				new Pair<String, Integer>("Max", 100)
@@ -523,10 +523,10 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aPersonal XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7You gain &620% &7more player xp for the",
 						"&7next hour."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 20.0),
 				new Pair<String, Long>("Duration", 3600000L),
@@ -536,11 +536,11 @@ public class DailyRewardLootTable {
 				Material.PAPER, 
 				1,
 				"&aFaction XP Booster",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7Your faction members  and yourself",
 						"&7gain &610% &7more player xp for the",
 						"&7next 45 minutes."
-				},
+				)),
 				new Pair<String, String>("Booster", ""),
 				new Pair<String, Double>("Increase", 10.0),
 				new Pair<String, Long>("Duration", 2700000L),
@@ -550,10 +550,10 @@ public class DailyRewardLootTable {
 				Material.TRIPWIRE_HOOK,
 				1,
 				"&4&lRandom Kit Key",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&7When you right click, you unlock",
 					"&7a random kit. (Non donator kits)"
-				},
+				)),
 				new Pair<String, String>("KitKey", "")
 		));
 		this.weeklyList = list;
@@ -575,11 +575,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							12,
 							"&7Common Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &7Common"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Common")
 					));
@@ -587,11 +587,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							10,
 							"&aRare Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &aRare"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Rare")
 					));
@@ -600,11 +600,11 @@ public class DailyRewardLootTable {
 							Material.EXPERIENCE_BOTTLE, 
 							1,
 							"&a&lXP Bottle (Player)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7When you combine your item with this bottle,",
 									"&7It will add the XP on this bottle to your weapon.",
 									"&7XP Amount: &6Between 400-600"
-							},
+							)),
 							new Pair<String, String>("RandomXPBottle", ""),
 							new Pair<String, Integer>("Min", 400),
 							new Pair<String, Integer>("Max", 200)
@@ -622,10 +622,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain &610% &7more player xp for the",
 									"&7next hour."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 10.0),
 							new Pair<String, Long>("Duration", 3600000L),
@@ -635,10 +635,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal Faction Fly Ticket",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain the ability to fly in your",
 									"&7own faction territory for 30 minutes."
-							},
+							)),
 							new Pair<String, String>("Fly Ticket", ""),
 							new Pair<String, Long>("Duration", 1800000L)
 					));
@@ -656,11 +656,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							12,
 							"&aRare Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &aRare"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Rare")
 					));
@@ -668,11 +668,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							10,
 							"&bEpic Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &bEpic"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Epic")
 					));
@@ -681,11 +681,11 @@ public class DailyRewardLootTable {
 							Material.EXPERIENCE_BOTTLE, 
 							1,
 							"&a&lXP Bottle (Player)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7When you combine your item with this bottle,",
 									"&7It will add the XP on this bottle to your weapon.",
 									"&7XP Amount: &6Between 700-900"
-							},
+							)),
 							new Pair<String, String>("RandomXPBottle", ""),
 							new Pair<String, Integer>("Min", 700),
 							new Pair<String, Integer>("Max", 200)
@@ -703,10 +703,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain &615% &7more player xp for the",
 									"&7next 1.5 hours."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 15.0),
 							new Pair<String, Long>("Duration", 5400000L),
@@ -716,10 +716,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal Faction Fly Ticket",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain the ability to fly in your",
 									"&7own faction territory for 45 minutes."
-							},
+							)),
 							new Pair<String, String>("Fly Ticket", ""),
 							new Pair<String, Long>("Duration", 2700000L)
 					));
@@ -737,11 +737,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							12,
 							"&bEpic Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &bEpic"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Epic")
 					));
@@ -749,11 +749,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							10,
 							"&cLegendary Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &cLegendary"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Legendary")
 					));
@@ -762,11 +762,11 @@ public class DailyRewardLootTable {
 							Material.EXPERIENCE_BOTTLE, 
 							1,
 							"&a&lXP Bottle (Player)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7When you combine your item with this bottle,",
 									"&7It will add the XP on this bottle to your weapon.",
 									"&7XP Amount: &6Between 1000-1200"
-							},
+							)),
 							new Pair<String, String>("RandomXPBottle", ""),
 							new Pair<String, Integer>("Min", 1000),
 							new Pair<String, Integer>("Max", 200)
@@ -784,10 +784,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain &620% &7more player xp for the",
 									"&7next 2.0 hours."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 20.0),
 							new Pair<String, Long>("Duration", 7200000L),
@@ -797,11 +797,11 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aFaction XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7Your faction members  and yourself",
 									"&7gain &610% &7more player xp for the",
 									"&7next 1.0 hours."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 10.0),
 							new Pair<String, Long>("Duration", 3600000L),
@@ -811,10 +811,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal Faction Fly Ticket",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain the ability to fly in your",
 									"&7own faction territory for 1.0 hours."
-							},
+							)),
 							new Pair<String, String>("Fly Ticket", ""),
 							new Pair<String, Long>("Duration", 3600000L)
 					));
@@ -833,11 +833,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							12,
 							"&cLegendary Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &bEpic"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Legendary")
 					));
@@ -845,11 +845,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							8,
 							"&5Mythic Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &5Mythic"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Mythic")
 					));
@@ -858,11 +858,11 @@ public class DailyRewardLootTable {
 							Material.EXPERIENCE_BOTTLE, 
 							1,
 							"&a&lXP Bottle (Player)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7When you combine your item with this bottle,",
 									"&7It will add the XP on this bottle to your weapon.",
 									"&7XP Amount: &6Between 1400-1700"
-							},
+							)),
 							new Pair<String, String>("RandomXPBottle", ""),
 							new Pair<String, Integer>("Min", 1400),
 							new Pair<String, Integer>("Max", 300)
@@ -880,10 +880,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain &625% &7more player xp for the",
 									"&7next 2.5 hours."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 25.0),
 							new Pair<String, Long>("Duration", 9000000L),
@@ -893,11 +893,11 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aFaction XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7Your faction members  and yourself",
 									"&7gain &615% &7more player xp for the",
 									"&7next 1.5 hours."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 15.0),
 							new Pair<String, Long>("Duration", 5400000L),
@@ -907,10 +907,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal Faction Fly Ticket",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain the ability to fly in your",
 									"&7own faction territory for 1.25 hours."
-							},
+							)),
 							new Pair<String, String>("Fly Ticket", ""),
 							new Pair<String, Long>("Duration", 4500000L)
 					));
@@ -933,11 +933,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							18,
 							"&cLegendary Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &cLegendary"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Legendary")
 					));
@@ -945,11 +945,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							12,
 							"&5Mythic Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &5Mythic"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Mythic")
 					));
@@ -958,11 +958,11 @@ public class DailyRewardLootTable {
 							Material.EXPERIENCE_BOTTLE, 
 							1,
 							"&a&lXP Bottle (Player)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7When you combine your item with this bottle,",
 									"&7It will add the XP on this bottle to your weapon.",
 									"&7XP Amount: &6Between 2000-2500"
-							},
+							)),
 							new Pair<String, String>("RandomXPBottle", ""),
 							new Pair<String, Integer>("Min", 2000),
 							new Pair<String, Integer>("Max", 500)
@@ -979,10 +979,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain &630% &7more player xp for the",
 									"&7next 3.0 hours."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 30.0),
 							new Pair<String, Long>("Duration", 10800000L),
@@ -992,10 +992,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal Faction Fly Ticket",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain the ability to fly in your",
 									"&7own faction territory for 1.5 hours."
-							},
+							)),
 							new Pair<String, String>("Fly Ticket", ""),
 							new Pair<String, Long>("Duration", 5400000L)
 					));
@@ -1003,11 +1003,11 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aFaction XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7Your faction members  and yourself",
 									"&7gain &620% &7more player xp for the",
 									"&7next 2.0 hours."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 20.0),
 							new Pair<String, Long>("Duration", 7200000L),
@@ -1018,11 +1018,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							1,
 							"&eHeroic Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &eHeroic"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Heroic")
 					));
@@ -1031,10 +1031,10 @@ public class DailyRewardLootTable {
 							Material.TRIPWIRE_HOOK,
 							1,
 							"&4&lRandom Kit Key",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7When you right click, you unlock",
 								"&7a random kit. (Non donator kits)"
-							},
+							)),
 							new Pair<String, String>("KitKey", "")
 					));
 					this.monthlyList.put(Rank.DIAMOND, list);
@@ -1053,11 +1053,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							18,
 							"&5Mythic Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &5Mythic"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Mythic")
 					));
@@ -1066,11 +1066,11 @@ public class DailyRewardLootTable {
 							Material.EXPERIENCE_BOTTLE, 
 							1,
 							"&a&lXP Bottle (Player)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7When you combine your item with this bottle,",
 									"&7It will add the XP on this bottle to your weapon.",
 									"&7XP Amount: &6Between 2500-3200"
-							},
+							)),
 							new Pair<String, String>("RandomXPBottle", ""),
 							new Pair<String, Integer>("Min", 2500),
 							new Pair<String, Integer>("Max", 700)
@@ -1087,10 +1087,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain &635% &7more player xp for the",
 									"&7next 3.5 hours."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 35.0),
 							new Pair<String, Long>("Duration", 12600000L),
@@ -1100,10 +1100,10 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aPersonal Faction Fly Ticket",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7You gain the ability to fly in your",
 									"&7own faction territory for 2.0 hours."
-							},
+							)),
 							new Pair<String, String>("Fly Ticket", ""),
 							new Pair<String, Long>("Duration", 7200000L)
 					));
@@ -1111,11 +1111,11 @@ public class DailyRewardLootTable {
 							Material.PAPER, 
 							1,
 							"&aFaction XP Booster",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&7Your faction members  and yourself",
 									"&7gain &625% &7more player xp for the",
 									"&7next 2.5 hours."
-							},
+							)),
 							new Pair<String, String>("Booster", ""),
 							new Pair<String, Double>("Increase", 25.0),
 							new Pair<String, Long>("Duration", 9000000L),
@@ -1126,11 +1126,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							1,
 							"&eHeroic Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &eHeroic"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Heroic")
 					));
@@ -1138,11 +1138,11 @@ public class DailyRewardLootTable {
 							Material.NETHER_STAR,
 							3,
 							"&eHeroic Crystal",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7Bring me to &6&lNOVIS &7to get some",
 								"&7really nice rewards!",
 								"&7Rarity: &eHeroic"
-							},
+							)),
 							new Pair<String, String>("CrystalObject", ""),
 							new Pair<String, String>("Rarity", "Heroic")
 					));
@@ -1151,10 +1151,10 @@ public class DailyRewardLootTable {
 							Material.TRIPWIRE_HOOK,
 							1,
 							"&4&lRandom Kit Key",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 								"&7When you right click, you unlock",
 								"&7a random kit. (Non donator kits)"
-							},
+							)),
 							new Pair<String, String>("KitKey", "")
 					));
 					this.monthlyList.put(Rank.EMERALD, list);

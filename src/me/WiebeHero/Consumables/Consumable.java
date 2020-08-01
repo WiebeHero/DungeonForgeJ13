@@ -102,7 +102,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -110,7 +110,7 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Smooth_Fluzgla");
@@ -149,7 +149,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -157,14 +157,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.BLACK_WOOL,
 						1,
 						"&7Shadow Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Speed I (To you): &b7.5 Seconds",
@@ -174,7 +174,7 @@ public class Consumable {
 							"  &7Cooldown: &b7.5 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 150)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Shadow_Fluzgla");
@@ -200,7 +200,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -208,14 +208,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.ORANGE_WOOL,
 						1,
 						"&7Hastened Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Haste I (To you): &b10 Seconds",
@@ -223,7 +223,7 @@ public class Consumable {
 							"  &7Cooldown: &b10.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 200)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Hastened_Fluzgla");
@@ -256,7 +256,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -264,14 +264,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.RED_WOOL,
 						1,
 						"&7Bursting Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Shoot Fireballs",
@@ -280,7 +280,7 @@ public class Consumable {
 							"  &7Cooldown: &b10.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 200)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Bursting_Fluzgla");
@@ -332,7 +332,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -340,14 +340,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.PINK_WOOL,
 						1,
 						"&7Healing Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal (To you): &c2.5 HP",
@@ -359,7 +359,7 @@ public class Consumable {
 							"  &7Cooldown: &b15.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 300)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Healing_Fluzgla");
@@ -400,7 +400,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -408,14 +408,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.PURPLE_WOOL,
 						1,
 						"&7Godlike Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Random Effect III (To you): &b5.0 Seconds",
@@ -423,7 +423,7 @@ public class Consumable {
 							"  &7Cooldown: &b25.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 500)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Godlike_Fluzgla");
@@ -451,7 +451,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -459,14 +459,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.LIGHT_BLUE_WOOL,
 						1,
 						"&7Aquatic Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Dolphins Grace I: &b10.0 Seconds",
@@ -475,7 +475,7 @@ public class Consumable {
 							"  &7Cooldown: &b15.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 300)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Aquatic_Fluzgla");
@@ -511,7 +511,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -519,14 +519,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.BLUE_WOOL,
 						1,
 						"&7Frozen Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Slowness II (To enemies): &b5.0 Seconds",
@@ -535,7 +535,7 @@ public class Consumable {
 							"  &7Cooldown: &b15.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 300)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Frozen_Fluzgla");
@@ -586,7 +586,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -594,14 +594,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.GREEN_WOOL,
 						1,
 						"&7Curing Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Remove random negative effect",
@@ -609,7 +609,7 @@ public class Consumable {
 							"  &7Cooldown: &b17.5 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 350)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Curing_Fluzgla");
@@ -636,7 +636,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -644,14 +644,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.LIME_WOOL,
 						1,
 						"&7Bouncy Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Jump Boost II: &b10.0 Seconds",
@@ -659,7 +659,7 @@ public class Consumable {
 							"  &7Cooldown: &b12.5 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 250)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Bouncy_Fluzgla");
@@ -694,7 +694,7 @@ public class Consumable {
 						Material.WHITE_WOOL,
 						1,
 						"&7Smooth Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Heal: &c2.5 HP",
@@ -702,14 +702,14 @@ public class Consumable {
 							"  &7Cooldown: &b3.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 60)
 				);
 				ItemStack result = builder.constructItem(
 						Material.BROWN_WOOL,
 						1,
 						"&7Poopy Fluzgla",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7-----------------------",
 							"&7When consumed:",
 							"  &7Nausea II (To enemies): &b10.0 Seconds",
@@ -717,7 +717,7 @@ public class Consumable {
 							"  &7Cooldown: &b10.0 Seconds",
 							"&7-----------------------",
 							"&7Also used as a crafting ingridient."
-						},
+						)),
 						new Pair<String, Integer>("Cooldown", 200)
 				);
 				NamespacedKey key = new NamespacedKey(CustomEnchantments.getInstance(), "Poopy_Fluzgla");

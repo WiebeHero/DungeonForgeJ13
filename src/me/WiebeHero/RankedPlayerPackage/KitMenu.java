@@ -1,5 +1,7 @@
 package me.WiebeHero.RankedPlayerPackage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -31,9 +33,9 @@ public class KitMenu {
 				i.setItem(occupied, this.builder.constructItem(
 					Material.CHEST_MINECART,
 					rank.getDisplay() + " Kit",
-					new String[] {
+					new ArrayList<String>(Arrays.asList(
 						"&7Click this to obtain the " + rank.getDisplay() + " &7kit!"
-					},
+					)),
 					new Pair<String, Kit>("Kit", Kit.valueOf(rank.toString()))
 				));
 				player.openInventory(i);
@@ -47,10 +49,10 @@ public class KitMenu {
 				i.setItem(occupied, this.builder.constructItem(
 					Material.MINECART,
 					rank.getDisplay() + " Kit",
-					new String[] {
+					new ArrayList<String>(Arrays.asList(
 						"&7You cannot obtain this kit for:",
 						"&6" + diffDays + " &7Days and &6" + diffHours + ":" + diffMinutes + ":" + diffSeconds
-					}
+					))
 				));
 			}
 			occupied++;
@@ -61,9 +63,9 @@ public class KitMenu {
 					i.setItem(occupied, this.builder.constructItem(
 						Material.CHEST_MINECART,
 						entry.getKey().getDisplay() + " Kit",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7Click this to obtain the " + entry.getKey().getDisplay() + " &7kit!"
-						},
+						)),
 						new Pair<String, Kit>("Kit", entry.getKey())
 					));
 					player.openInventory(i);
@@ -77,10 +79,10 @@ public class KitMenu {
 					i.setItem(occupied, this.builder.constructItem(
 						Material.MINECART,
 						entry.getKey().getDisplay() + " Kit",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7You cannot obtain this kit for:",
 							"&6" + diffDays + " &7Days and &6" + diffHours + ":" + diffMinutes + ":" + diffSeconds
-						}
+						))
 					));
 				}
 				occupied++;
@@ -89,9 +91,9 @@ public class KitMenu {
 				i.setItem(occupied, this.builder.constructItem(
 					Material.MINECART,
 					entry.getKey().getDisplay() + " Kit",
-					new String[] {
+					new ArrayList<String>(Arrays.asList(
 						"&7You do not have this kit unlocked!"
-					}
+					))
 				));
 				occupied++;
 			}

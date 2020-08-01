@@ -64,10 +64,10 @@ import me.WiebeHero.Consumables.Consumable;
 import me.WiebeHero.Consumables.ConsumableHandler;
 import me.WiebeHero.Consumables.CustomDurability;
 import me.WiebeHero.CraftRecipes.UnblockBrewing;
+import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomMethods.ItemStackBuilder;
 import me.WiebeHero.CustomMethods.MethodLuck;
 import me.WiebeHero.CustomMethods.MethodMulti;
-import me.WiebeHero.CustomMethods.Methods;
 import me.WiebeHero.CustomMethods.PotionM;
 import me.WiebeHero.DFPlayerPackage.DFPlayer;
 import me.WiebeHero.DFPlayerPackage.DFPlayerManager;
@@ -90,12 +90,12 @@ import me.WiebeHero.EnchantmentAPI.Enchantment;
 import me.WiebeHero.EnchantmentAPI.EnchantmentCondition.Condition;
 import me.WiebeHero.EnchantmentAPI.EnchantmentGuideInventory;
 import me.WiebeHero.EnchantmentAPI.EnchantmentHandler;
-import me.WiebeHero.Factions.DFFactionGroups;
 import me.WiebeHero.Factions.DFFactionManager;
 import me.WiebeHero.Factions.DFFactionPlayerManager;
 import me.WiebeHero.Factions.DFFactions;
 import me.WiebeHero.Factions.FactionInventory;
 import me.WiebeHero.Factions.FactionsHandler;
+import me.WiebeHero.Factions.RankFactionGroups;
 import me.WiebeHero.FishingLoot.ChangeFishDrops;
 import me.WiebeHero.FlyTicket.FlyTicketEvents;
 import me.WiebeHero.FlyTicket.FlyTicketManager;
@@ -180,10 +180,9 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private StaffManager staffManager = new StaffManager();
 	private LootChestManager lootChestManager = new LootChestManager();
 	private MSGManager msgManager = new MSGManager();
-	// Faction classes3
-	private DFFactionGroups group = new DFFactionGroups();
+	// Faction classes
 	private DFFactionPlayerManager facPlayerManager = new DFFactionPlayerManager();
-	private DFFactionManager facManager = new DFFactionManager(this.facPlayerManager, this.group);
+	private DFFactionManager facManager = new DFFactionManager(this.facPlayerManager);
 	// Classes that only need to be called once and can be given through
 	private Methods method = new Methods();
 	private Disparitys disp = new Disparitys(this.dfManager);
@@ -198,6 +197,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private SkillMenu skill = new SkillMenu(this.dfManager, this.builder, this.classMenu);
 	private SkillCommand skillCommand = new SkillCommand(this.skill);
 	private DFScoreboard score = new DFScoreboard(this.dfManager, this.facManager, this.facPlayerManager, this.rankedManager, this.wg);
+	private RankFactionGroups group = new RankFactionGroups();
 	private FactionInventory facInv = new FactionInventory(this.builder, this.group);
 	private AHManager ahManager = new AHManager(this.availableSlots);
 	private AHInventory ahInv = new AHInventory(this.ahManager, this.builder);
@@ -217,7 +217,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private CapturePointManager cpManager = new CapturePointManager(this.facManager, this.facPlayerManager);
 	private CapturePointMenu cpMenu = new CapturePointMenu(this.cpManager, this.builder, this.facManager);
 	private CapturePointCommand cpCommand = new CapturePointCommand(this.cpMenu);
-	private DFFactions fac = new DFFactions(this.facManager, this.facPlayerManager, this.score, this.dfManager, this.wg, this.facInv, this.cpManager, this.group);
+	private DFFactions fac = new DFFactions(this.facManager, this.facPlayerManager, this.score, this.dfManager, this.wg, this.facInv, this.cpManager);
 	private TradeMenu tradeMenu = new TradeMenu(this.builder);
 	private DailyRewardManager dailyManager = new DailyRewardManager();
 	private DailyRewardMenu dailyMenu = new DailyRewardMenu(this.builder, this.dailyManager, this.rankedManager);
@@ -336,11 +336,11 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		//XP Trader
 		getServer().getPluginManager().registerEvents(this.xpTraderMenu, this);
 		getServer().getPluginManager().registerEvents(new XPAddWeapons(this.nEnchant, this.dfManager), this);
-		getServer().getPluginManager().registerEvents(new XPAddPlayers(this.dfManager, this.facPlayerManager, this.facManager, this.score), this);
+		getServer().getPluginManager().registerEvents(new XPAddPlayers(this.dfManager, this.score), this);
 		//lootSteal
 		getServer().getPluginManager().registerEvents(new CancelLootSteal(), this);
 		//Factions
-		getServer().getPluginManager().registerEvents(new FactionsHandler(this.facManager, this.facPlayerManager, this.facInv, this.cpManager, this.builder, this.group), this);
+		getServer().getPluginManager().registerEvents(new FactionsHandler(this.facManager, this.facPlayerManager, this.facInv, this.cpManager), this);
 		getServer().getPluginManager().registerEvents(this.fac, this);
 		//Stuff
 		getServer().getPluginManager().registerEvents(this.sethome, this);

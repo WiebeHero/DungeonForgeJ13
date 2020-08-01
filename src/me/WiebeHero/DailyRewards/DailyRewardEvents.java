@@ -2,7 +2,6 @@ package me.WiebeHero.DailyRewards;
 
 import java.util.Calendar;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
