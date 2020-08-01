@@ -9,8 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.WiebeHero.CustomClasses.Methods;
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.CustomMethods.Methods;
 import me.WiebeHero.MoreStuff.CombatTag;
 import me.WiebeHero.RankedPlayerPackage.RankedManager;
 

@@ -1,6 +1,7 @@
 package me.WiebeHero.RankedPlayerPackage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.bukkit.Color;
@@ -680,21 +681,21 @@ public class RankEnum {
 						Material.FEATHER,
 						1,
 						"&6Faction Flying Feather (10min)",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7When you right click this item, you will be",
 							"&7able to fly in your territory for 10 minutes.",
 							"&7This will stack if you already have this effect active."
-						}
+						))
 				));
 				items.add(builder.constructItem(
 						Material.FEATHER,
 						1,
 						"&6Faction Flying Feather (20min)",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 							"&7When you right click this item, you will be",
 							"&7able to fly in your territory for 20 minutes.",
 							"&7This will stack if you already have this effect active."
-						}
+						))
 				));
 				for(ItemStack item : items) {
 					if(p.getInventory().firstEmpty() != -1) {
@@ -788,11 +789,11 @@ public class RankEnum {
 			Material.NETHER_STAR,
 			amount,
 			"&7Common Crystal",
-			new String[] {
+			new ArrayList<String>(Arrays.asList(
 				"&7Bring me to &6&lNOVIS &7to get some",
 				"&7really nice rewards!",
 				"&7Rarity: &7Common"
-			},
+			)),
 			new Pair<String, String>("CrystalObject", ""),
 			new Pair<String, String>("Rarity", "Common")
 		);
@@ -803,11 +804,11 @@ public class RankEnum {
 			Material.NETHER_STAR,
 			amount,
 			"&aRare Crystal",
-			new String[] {
+			new ArrayList<String>(Arrays.asList(
 				"&7Bring me to &6&lNOVIS &7to get some",
 				"&7really nice rewards!",
 				"&7Rarity: &aRare"
-			},
+			)),
 			new Pair<String, String>("CrystalObject", ""),
 			new Pair<String, String>("Rarity", "Rare")
 		);
@@ -818,11 +819,11 @@ public class RankEnum {
 			Material.NETHER_STAR,
 			amount,
 			"&bEpic Crystal",
-			new String[] {
+			new ArrayList<String>(Arrays.asList(
 				"&7Bring me to &6&lNOVIS &7to get some",
 				"&7really nice rewards!",
 				"&7Rarity: &bEpic"
-			},
+			)),
 			new Pair<String, String>("CrystalObject", ""),
 			new Pair<String, String>("Rarity", "Epic")
 		);
@@ -833,11 +834,11 @@ public class RankEnum {
 			Material.NETHER_STAR,
 			amount,
 			"&cLegendary Crystal",
-			new String[] {
+			new ArrayList<String>(Arrays.asList(
 				"&7Bring me to &6&lNOVIS &7to get some",
 				"&7really nice rewards!",
 				"&7Rarity: &cLegendary"
-			},
+			)),
 			new Pair<String, String>("CrystalObject", ""),
 			new Pair<String, String>("Rarity", "Legendary")
 		);
@@ -848,11 +849,11 @@ public class RankEnum {
 			Material.NETHER_STAR,
 			amount,
 			"&5Mythic Crystal",
-			new String[] {
+			new ArrayList<String>(Arrays.asList(
 				"&7Bring me to &6&lNOVIS &7to get some",
 				"&7really nice rewards!",
 				"&7Rarity: &5Mythic"
-			},
+			)),
 			new Pair<String, String>("CrystalObject", ""),
 			new Pair<String, String>("Rarity", "Mythic")
 		);
@@ -863,11 +864,11 @@ public class RankEnum {
 			Material.NETHER_STAR,
 			amount,
 			"&eHeroic Crystal",
-			new String[] {
+			new ArrayList<String>(Arrays.asList(
 				"&7Bring me to &6&lNOVIS &7to get some",
 				"&7really nice rewards!",
 				"&7Rarity: &eHeroic"
-			},
+			)),
 			new Pair<String, String>("CrystalObject", ""),
 			new Pair<String, String>("Rarity", "Heroic")
 		);

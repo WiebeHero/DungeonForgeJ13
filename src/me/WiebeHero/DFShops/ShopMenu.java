@@ -63,10 +63,10 @@ public class ShopMenu {
 					materials[i],
 					1,
 					"&a&l" + shopNames[i],
-					new String[] {
+					new ArrayList<String>(Arrays.asList(
 							"&7Click this item to open the",
 							"&7" + shopNames[i] + "!"
-					},
+					)),
 					new Pair<String, String>("Open Shop", shopNames[i])
 			));
 		}
@@ -74,10 +74,10 @@ public class ShopMenu {
 				Material.BARRIER,
 				1,
 				"&c&lCLOSE",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7Click this item to close the",
 						"&7Shop overview page!"
-				},
+				)),
 				new Pair<String, String>("Close", "")
 		));
 		this.shops.put("Shop Overview", overview);
@@ -100,30 +100,30 @@ public class ShopMenu {
 						Material.PAPER,
 						1,
 						"&a&lPrevious Page",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 								"&7Click this item to go to",
 								"&7the previous page!"
-						},
+						)),
 						new Pair<String, Integer>("Previous", i - 1)
 				));
 				page.setItem(49, this.builder.constructItem(
 						Material.BARRIER,
 						1,
 						"&c&lBACK",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 								"&7Click this item to go back to",
 								"&7the Shop overview page!"
-						},
+						)),
 						new Pair<String, String>("Back", "")
 				));
 				page.setItem(50, this.builder.constructItem(
 						Material.PAPER,
 						1,
 						"&a&lNext Page",
-						new String[] {
+						new ArrayList<String>(Arrays.asList(
 								"&7Click this item to go to",
 								"&7the next page!"
-						},
+						)),
 						new Pair<String, Integer>("Next", i + 1)
 				));
 				if(!shopItems.isEmpty()) {

@@ -84,7 +84,7 @@ public class CapturePoint {
 		return this.xpMultiplier;
 	}
 	
-	public UUID getUniqueId() {
+	public UUID getCaptureId() {
 		return this.captureId;
 	}
 	

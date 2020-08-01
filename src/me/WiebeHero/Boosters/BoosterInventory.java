@@ -60,12 +60,12 @@ public class BoosterInventory {
 				pNull ? Material.RED_STAINED_GLASS_PANE : Material.LIME_STAINED_GLASS_PANE,
 				1,
 				pNull ? "&7Personal Booster: &cNot active" : "&7Personal Booster: &aBooster active",
-				pNull ? new String[] {} :
-				new String[] {
+				pNull ? new ArrayList<String>() :
+				new ArrayList<String>(Arrays.asList(
 						"&7Booster Owner: &6" + Bukkit.getOfflinePlayer(personal.getOwner()).getName(),
 						"&7Booster Multiplier: &a" + personal.getMultiplier() + "%",
 						"&7Booster Duration: &b" + time
-				}
+				))
 		));
 		long fTime = fNull ? 0L : faction.getEndTime() - System.currentTimeMillis();
 		diffSeconds = fTime / 1000 % 60;
@@ -76,12 +76,12 @@ public class BoosterInventory {
 				fNull ? Material.RED_STAINED_GLASS_PANE : Material.LIME_STAINED_GLASS_PANE,
 				1,
 				fNull ? "&7Faction Booster: &cNot active" : "&7Faction Booster: &aBooster active",
-				fNull ? new String[] {} :
-				new String[] {
+				fNull ? new ArrayList<String>() :
+				new ArrayList<String>(Arrays.asList(
 						"&7Booster Owner: &6" + Bukkit.getOfflinePlayer(faction.getOwner()).getName(),
 						"&7Booster Multiplier: &a" + faction.getMultiplier() + "%",
 						"&7Booster Duration: &b" + time
-				}
+				))
 		));
 		long aTime = aNull ? 0L : all.getEndTime() - System.currentTimeMillis();
 		diffSeconds = aTime / 1000 % 60;
@@ -92,12 +92,12 @@ public class BoosterInventory {
 				aNull ? Material.RED_STAINED_GLASS_PANE : Material.LIME_STAINED_GLASS_PANE,
 				1,
 				aNull ? "&7Global Booster: &cNot active" : "&7Global Booster: &aBooster active",
-				aNull ? new String[] {} :
-				new String[] {
+				aNull ? new ArrayList<String>() :
+				new ArrayList<String>(Arrays.asList(
 						"&7Booster Owner: &6" + Bukkit.getOfflinePlayer(all.getOwner()).getName(),
 						"&7Booster Multiplier: &a" + all.getMultiplier() + "%",
 						"&7Booster Duration: &b" + time
-				}
+				))
 		));
 		player.openInventory(i);
 	}

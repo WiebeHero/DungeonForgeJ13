@@ -2,7 +2,9 @@ package me.WiebeHero.DailyRewards;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -65,10 +67,10 @@ public class DailyRewardMenu {
 					this.dManager.getCurrentDailyDate().equals(reward.getLastDaily()) ? Material.MINECART : Material.CHEST_MINECART,
 					1,
 					this.dManager.getCurrentDailyDate().equals(reward.getLastDaily()) ? "&6Daily Reward &c(Not Available)" : "&6Daily Reward &a(Available)",
-					new String[] {
+					new ArrayList<String>(Arrays.asList(
 							"&7You can claim a random reward once a day.",
 							"&7Click here to claim it!"
-					},
+					)),
 					new Pair<String, String>("Daily", "")
 			));
 			long time = reward.getLastWeekly();
@@ -76,10 +78,10 @@ public class DailyRewardMenu {
 					System.currentTimeMillis() < time ? Material.MINECART : Material.CHEST_MINECART,
 					1,
 					System.currentTimeMillis() < time ? "&6Weekly Reward &c(Not Available)" : "&6Weekly Reward &a(Available)",
-					new String[] {
+					new ArrayList<String>(Arrays.asList(
 							"&7You can claim a random reward once a week.",
 							"&7Click here to claim it!"
-					},
+					)),
 					new Pair<String, String>("Weekly", "")
 			));
 			
@@ -90,7 +92,7 @@ public class DailyRewardMenu {
 							!claimedSlots.contains(slots.get(x)) ? Material.CHEST_MINECART : Material.MINECART,
 							1,
 							!claimedSlots.contains(slots.get(x)) ? "&aMontly Reward: &6&lBronze &a(Available)" : "&aMontly Reward: &6&lBronze &c(Not Available)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&71 of the following rewards will be given to",
 									"&7you if you click this at the end of",
 									"&7each month:",
@@ -102,7 +104,7 @@ public class DailyRewardMenu {
 									"  &7Cow Spawner &a[Rare]",
 									"  &7Personal XP Booster (10%) for 1.0 hours &2[Very Rare]",
 									"  &7Personal Faction Fly Ticket for 30 minutes &2[Very Rare]"
-							},
+							)),
 							new Pair<String, String>("Monthly", "")
 					));
 				}
@@ -115,7 +117,7 @@ public class DailyRewardMenu {
 							!claimedSlots.contains(slots.get(x)) ? Material.CHEST_MINECART : Material.MINECART,
 							1,
 							!claimedSlots.contains(slots.get(x)) ? "&aMontly Reward: &7&lSilver &a(Available)" : "&aMontly Reward: &7&lSilver &c(Not Available)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&71 of the following rewards will be given to",
 									"&7you if you click this at the end of",
 									"&7each month:",
@@ -127,7 +129,7 @@ public class DailyRewardMenu {
 									"  &7Spider Spawner &a[Rare]",
 									"  &7Personal XP Booster (15%) for 1.5 hours &2[Very Rare]",
 									"  &7Personal Faction Fly Ticket for 45 minutes &2[Very Rare]"
-							},
+							)),
 							new Pair<String, String>("Monthly", "")
 					));
 				}
@@ -140,7 +142,7 @@ public class DailyRewardMenu {
 							!claimedSlots.contains(slots.get(x)) ? Material.CHEST_MINECART : Material.MINECART,
 							1,
 							!claimedSlots.contains(slots.get(x)) ? "&aMontly Reward: &e&lGold &a(Available)" : "&aMontly Reward: &e&lGold &c(Not Available)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&71 of the following rewards will be given to",
 									"&7you if you click this at the end of",
 									"&7each month:",
@@ -154,7 +156,7 @@ public class DailyRewardMenu {
 									"  &7Faction XP Booster (10%) for 1.0 hours &a[Rare]",
 									"  &7Personal Faction Fly Ticket for 1.0 hours &a[Rare]",
 									"  &7Zombie Pigman Spawner &2[Very Rare]"
-							},
+							)),
 							new Pair<String, String>("Monthly", "")
 					));
 				}
@@ -167,7 +169,7 @@ public class DailyRewardMenu {
 							!claimedSlots.contains(slots.get(x)) ? Material.CHEST_MINECART : Material.MINECART,
 							1,
 							!claimedSlots.contains(slots.get(x)) ? "&aMontly Reward: &3&lPlatinum &a(Available)" : "&aMontly Reward: &3&lPlatinum &c(Not Available)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&71 of the following rewards will be given to",
 									"&7you if you click this at the end of",
 									"&7each month:",
@@ -181,7 +183,7 @@ public class DailyRewardMenu {
 									"  &7Faction XP Booster (15%) for 1.5 hours &a[Rare]",
 									"  &7Personal Faction Fly Ticket for 1.25 hours &a[Rare]",
 									"  &7Blaze Spawner &2[Very Rare]"
-							},
+							)),
 							new Pair<String, String>("Monthly", "")
 					));
 				}
@@ -194,7 +196,7 @@ public class DailyRewardMenu {
 							!claimedSlots.contains(slots.get(x)) ? Material.CHEST_MINECART : Material.MINECART,
 							1,
 							!claimedSlots.contains(slots.get(x)) ? "&aMontly Reward: &b&lDiamond &a(Available)" : "&aMontly Reward: &b&lDiamond &c(Not Available)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&71 of the following rewards will be given to",
 									"&7you if you click this at the end of",
 									"&7each month:",
@@ -210,7 +212,7 @@ public class DailyRewardMenu {
 									"  &71 Heroic Crystal &b[Super Rare]",
 									"  &7Iron Golem Spawner &b[Super Rare]",
 									"  &7Random Kit Key &c[Insanely Rare]"
-							},
+							)),
 							new Pair<String, String>("Monthly", "")
 					));
 				}
@@ -223,7 +225,7 @@ public class DailyRewardMenu {
 							!claimedSlots.contains(slots.get(x)) ? Material.CHEST_MINECART : Material.MINECART,
 							1,
 							!claimedSlots.contains(slots.get(x)) ? "&aMontly Reward: &a&lEmerald &a(Available)" : "&aMontly Reward: &a&lEmerald &c(Not Available)",
-							new String[] {
+							new ArrayList<String>(Arrays.asList(
 									"&71 of the following rewards will be given to",
 									"&7you if you click this at the end of",
 									"&7each month:",
@@ -239,7 +241,7 @@ public class DailyRewardMenu {
 									"  &73 Heroic Crystals &2[Very Rare]",
 									"  &7Villager Spawner &b[Super Rare]",
 									"  &7Random Kit Key &b[Super Rare]"
-							},
+							)),
 							new Pair<String, String>("Monthly", "")
 					));
 				}

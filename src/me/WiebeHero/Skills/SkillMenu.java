@@ -845,10 +845,10 @@ public class SkillMenu {
 		i.setItem(31, builder.constructItem(
 				Material.PAPER,
 				"&cReset",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 					"&cClick this to reset your character.",
 					"&cThis requires level 10."
-				},
+				)),
 				new Pair<String, String>("Reset", "")
 		));
 		i.setItem(32, empty());
@@ -862,7 +862,7 @@ public class SkillMenu {
 		i.setItem(0, builder.constructItem(
 				Material.LIME_STAINED_GLASS_PANE,
 				"&aConfirm resetting your profile",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7By pressing this button, you agree",
 						"&7to reset your player profile.",
 						"&4&lWARNING, this will:",
@@ -870,7 +870,7 @@ public class SkillMenu {
 						"  &cReset your class",
 						"  &cSet all of your skills to 0",
 						"  &cCosts 10000$"
-				},
+				)),
 				new Pair<String, String>("Confirm", "")
 		));
 		i.setItem(1, builder.constructItem(
@@ -888,10 +888,10 @@ public class SkillMenu {
 		i.setItem(4, builder.constructItem(
 				Material.RED_STAINED_GLASS_PANE,
 				"&aCancel resetting your profile",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7By pressing this button, you cancel",
 						"&7resetting your profile."
-				},
+				)),
 				new Pair<String, String>("Cancel", "")
 		));
 		player.openInventory(i);

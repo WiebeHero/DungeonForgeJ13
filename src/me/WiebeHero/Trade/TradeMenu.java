@@ -34,7 +34,7 @@ public class TradeMenu {
 				Material.GRAY_STAINED_GLASS_PANE,
 				1,
 				" ",
-				new String[] {}
+				new ArrayList<String>()
 		);
 		
 		for(int x = 0; x < this.fill.size(); x++){
@@ -45,14 +45,14 @@ public class TradeMenu {
 				Material.LIME_DYE,
 				1,
 				"&aAccept Trade",
-				new String[] {},
+				new ArrayList<String>(),
 				new Pair<String, String>("Trade Start", "")
 		));
 		ItemStack readyStatus = this.builder.constructItem(
 				Material.GRAY_DYE,
 				1,
 				"&7Status: &cNot ready",
-				new String[] {},
+				new ArrayList<String>(),
 				new Pair<String, String>("Status", "Not Ready")
 		);
 		i.setItem(46, readyStatus);
@@ -61,7 +61,7 @@ public class TradeMenu {
 				Material.BARRIER,
 				1,
 				"&aMoney: 0.00$",
-				new String[] {},
+				new ArrayList<String>(),
 				new Pair<String, Double>("Money", 0.00)
 		);
 		i.setItem(27, moneyStatus);
@@ -71,10 +71,10 @@ public class TradeMenu {
 				Material.SIGN,
 				1,
 				"&aPut money in trade",
-				new String[] {
+				new ArrayList<String>(Arrays.asList(
 						"&7Click this to deposit money",
 						"&7into the trade!"
-				},
+				)),
 				new Pair<String, Double>("Money", 0.00)
 		);
 		i.setItem(49, moneySign);

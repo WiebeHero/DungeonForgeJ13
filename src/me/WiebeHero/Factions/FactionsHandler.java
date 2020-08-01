@@ -3,12 +3,10 @@ package me.WiebeHero.Factions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
@@ -27,7 +25,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -36,8 +33,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
+import com.destroystokyo.paper.Title;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -46,96 +43,58 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtinjector.NBTInjector;
-import javafx.util.Pair;
 import me.WiebeHero.CapturePoints.CapturePoint;
 import me.WiebeHero.CapturePoints.CapturePointManager;
 import me.WiebeHero.CustomEnchantments.CCT;
-import me.WiebeHero.CustomEnchantments.CustomEnchantments;
 import me.WiebeHero.CustomEvents.DFFactionLevelUpEvent;
 import me.WiebeHero.CustomEvents.DFFactonXpGainEvent;
 import me.WiebeHero.CustomEvents.DFItemXpGainEvent;
 import me.WiebeHero.CustomEvents.DFPlayerXpGainEvent;
-import me.WiebeHero.CustomMethods.ItemStackBuilder;
-import me.WiebeHero.Factions.DFFactionGroups.FactionGroup;
-import me.WiebeHero.Factions.DFFactionGroups.FactionPermission;
-import net.md_5.bungee.api.ChatColor;
 
 public class FactionsHandler implements Listener{
 	private DFFactionManager facManager;
 	private DFFactionPlayerManager facPlayerManager;
 	private FactionInventory facInventory;
 	private CapturePointManager cpManager;
-	private ItemStackBuilder builder;
-	private DFFactionGroups facGroups;
-	public FactionsHandler(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, FactionInventory facInventory, CapturePointManager cpManager, ItemStackBuilder builder, DFFactionGroups facGroups) {
+	public FactionsHandler(DFFactionManager facManager, DFFactionPlayerManager facPlayerManager, FactionInventory facInventory, CapturePointManager cpManager) {
 		this.cpManager = cpManager;
 		this.facManager = facManager;
 		this.facPlayerManager = facPlayerManager;
 		this.facInventory = facInventory;
-		this.builder = builder;
-		this.facGroups = facGroups;
-		this.containerAcces = new ArrayList<Material>(Arrays.asList(Material.CHEST, Material.FURNACE, Material.MINECART, Material.CHEST_MINECART, Material.HOPPER_MINECART, Material.FURNACE_MINECART, Material.CRAFTING_TABLE, Material.ENDER_CHEST, Material.DISPENSER, Material.DROPPER, Material.HOPPER, Material.SHULKER_BOX, Material.JUKEBOX, Material.BREWING_STAND));	
 	}
-	private ArrayList<Material> containerAcces;
+	private ArrayList<Material> blockAcces = new ArrayList<Material>(Arrays.asList(Material.CHEST, Material.FURNACE, Material.MINECART, Material.CHEST_MINECART, Material.HOPPER_MINECART, Material.FURNACE_MINECART, Material.CRAFTING_TABLE, Material.ENDER_CHEST, Material.DISPENSER, Material.DROPPER, Material.HOPPER, Material.SHULKER_BOX, Material.JUKEBOX, Material.BREWING_STAND));
+	private ArrayList<Material> plates = new ArrayList<Material>(Arrays.asList(Material.ACACIA_PRESSURE_PLATE, Material.BIRCH_PRESSURE_PLATE, Material.DARK_OAK_PRESSURE_PLATE, Material.HEAVY_WEIGHTED_PRESSURE_PLATE, Material.JUNGLE_PRESSURE_PLATE, Material.LIGHT_WEIGHTED_PRESSURE_PLATE, Material.OAK_PRESSURE_PLATE, Material.SPRUCE_PRESSURE_PLATE, Material.STONE_PRESSURE_PLATE));
+	private ArrayList<Material> beds = new ArrayList<Material>(Arrays.asList(Material.BLACK_BED, Material.BLUE_BED, Material.BROWN_BED, Material.CYAN_BED, Material.GRAY_BED, Material.GREEN_BED, Material.LIGHT_BLUE_BED, Material.LIGHT_GRAY_BED, Material.LIME_BED, Material.MAGENTA_BED, Material.ORANGE_BED, Material.PINK_BED, Material.PURPLE_BED, Material.RED_BED, Material.WHITE_BED, Material.YELLOW_BED));
 	@EventHandler
 	public void territoryInteract(PlayerInteractEvent event) {
 		if(event.getPlayer().getWorld().getName().equals(Bukkit.getWorld("FactionWorld-1").getName())) {
 			Player player = event.getPlayer();
 			Block block = event.getClickedBlock();
 			DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player);
-			Action action = event.getAction();
 			if(facPlayer != null) {
 				if(facPlayer.getFactionId() != null) {
 					DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
 					if(block != null) {
 						if(faction.isInChunk(block.getLocation())) {
-							if(action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK || action == Action.PHYSICAL) {
-								if(block.getType().toString().contains("DOOR")) {
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.OPEN_DOORS);
-									if(!state) {
-										event.setCancelled(true);
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have the permissions to interact with doors in your territory!"));
-									}
-								}
-								else if(block.getType().toString().contains("BUTTON")) {
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.PRESS_BUTTONS);
-									if(!state) {
-										event.setCancelled(true);
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have the permissions to interact with buttons in your territory!"));
-									}
-								}
-								else if(block.getType() == Material.LEVER) {
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.FLICK_LEVERS);
-									if(!state) {
-										event.setCancelled(true);
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have the permissions to interact with levers in your territory!"));
-									}
-								}
-								else if(block.getType().toString().contains("PLATE")) {
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.ACTIVATE_PRESSURE_PLATE);
-									if(!state) {
-										event.setCancelled(true);
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have the permissions to interact with pressure plates in your territory!"));
-									}
-								}
-								else if(block.getType() == Material.STRING) {
-									FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-									boolean state = faction.getPermission(group, FactionPermission.ACTIVATE_TRIPWIRE_HOOKS);
-									if(!state) {
-										event.setCancelled(true);
-										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have the permissions to interact with tripwire hooks in your territory!"));
-									}
+							if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+								int rank = facPlayer.getRank();
+								if(rank < 2) {
+									event.setCancelled(true);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to interact in your claimed territory!"));
 								}
 							}
+							
 						}
 						else if(this.facManager.isInAChunk(block.getLocation())) {
-							if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
+							if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 								Block b = event.getClickedBlock();
-								if(!this.containerAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
+								if(!this.blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
+									event.setCancelled(true);
+									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+								}
+							}
+							else if(event.getAction() == Action.PHYSICAL) {
+								if(this.plates.contains(event.getClickedBlock().getType())) {
 									event.setCancelled(true);
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 								}
@@ -144,9 +103,15 @@ public class FactionsHandler implements Listener{
 					}
 				}
 				else if(this.facManager.isInAChunk(block.getLocation())) {
-					if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
+					if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 						Block b = event.getClickedBlock();
-						if(!this.containerAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
+						if(!this.blockAcces.contains(b.getType()) && player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.CREEPER_SPAWN_EGG) {
+							event.setCancelled(true);
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
+						}
+					}
+					else if(event.getAction() == Action.PHYSICAL) {
+						if(this.plates.contains(event.getClickedBlock().getType())) {
 							event.setCancelled(true);
 							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 						}
@@ -160,24 +125,23 @@ public class FactionsHandler implements Listener{
 		if(event.getPlayer().getWorld().getName().equals(Bukkit.getWorld("FactionWorld-1").getName())) {
 			Player player = event.getPlayer();
 			Block block = event.getBlock();
-			DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player);
+			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
 			if(facPlayer != null) {
 				if(facPlayer.getFactionId() != null) {
-					DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+					DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 					if(faction.isInChunk(block.getLocation())) {
-						FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-						boolean state = faction.getPermission(group, FactionPermission.BREAK_BLOCKS);
-						if(!state) {
+						int rank = facPlayer.getRank();
+						if(rank < 2) {
 							event.setCancelled(true);
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have the permission to break blocks in your territory!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
 						}
 					}
-					else if(this.facManager.isInAChunk(block.getLocation())) {
+					else if(facManager.isInAChunk(block.getLocation())) {
 						event.setCancelled(true);
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 					}
 				}
-				else if(this.facManager.isInAChunk(block.getLocation())) {
+				else if(facManager.isInAChunk(block.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
@@ -189,24 +153,23 @@ public class FactionsHandler implements Listener{
 		if(event.getPlayer().getWorld().getName().equals(Bukkit.getWorld("FactionWorld-1").getName())) {
 			Player player = event.getPlayer();
 			Block block = event.getBlock();
-			DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player);
+			DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
 			if(facPlayer != null) {
 				if(facPlayer.getFactionId() != null) {
-					DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+					DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 					if(faction.isInChunk(block.getLocation())) {
-						FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-						boolean state = faction.getPermission(group, FactionPermission.PLACE_BLOCKS);
-						if(!state) {
+						int rank = facPlayer.getRank();
+						if(rank < 2) {
 							event.setCancelled(true);
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou do not have the permission to place blocks in your territory!"));
+							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou need to be atleast member to break blocks in your claimed territory!"));
 						}
 					}
-					else if(this.facManager.isInAChunk(block.getLocation())) {
+					else if(facManager.isInAChunk(block.getLocation())) {
 						event.setCancelled(true);
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 					}
 				}
-				else if(this.facManager.isInAChunk(block.getLocation())) {
+				else if(facManager.isInAChunk(block.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't interact with enemy territory!"));
 				}
@@ -219,11 +182,11 @@ public class FactionsHandler implements Listener{
 			if(event.getEntity() instanceof Player) {
 				Player damager = (Player) event.getDamager();
 				Player victim = (Player) event.getEntity();
-				DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(damager);
-				DFFactionPlayer oPlayer = this.facPlayerManager.getFactionPlayer(victim);
+				DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
+				DFFactionPlayer oPlayer = facPlayerManager.getFactionPlayer(victim);
 				if(facPlayer != null && oPlayer != null) {
 					if(facPlayer.getFactionId() != null && oPlayer.getFactionId() != null) {
-						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+						DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 						if(faction.isMember(victim.getUniqueId())) {
 							event.setCancelled(true);
 							damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
@@ -248,11 +211,11 @@ public class FactionsHandler implements Listener{
 				if(event.getEntity() instanceof Player) {
 					Player damager = (Player) arrow.getShooter();
 					Player victim = (Player) event.getEntity();
-					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(damager);
-					DFFactionPlayer oPlayer = this.facPlayerManager.getFactionPlayer(victim);
+					DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(damager);
+					DFFactionPlayer oPlayer = facPlayerManager.getFactionPlayer(victim);
 					if(facPlayer != null && oPlayer != null) {
 						if(facPlayer.getFactionId() != null && oPlayer.getFactionId() != null) {
-							DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+							DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 							if(faction.isMember(victim.getUniqueId())) {
 								event.setCancelled(true);
 								damager.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't harm your own faction members!"));
@@ -317,7 +280,7 @@ public class FactionsHandler implements Listener{
 	public void disableBeds(PlayerInteractEvent event) {
 		Block b = event.getClickedBlock();
 		if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if(b.getType().toString().contains("BED")) {
+			if(beds.contains(b.getType())) {
 				event.setCancelled(true);
 			}
 		}
@@ -326,14 +289,14 @@ public class FactionsHandler implements Listener{
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void newFacPlayer(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if(!this.facPlayerManager.contains(player.getUniqueId())) {
-			this.facPlayerManager.add(player.getUniqueId());
+		if(!facPlayerManager.contains(player.getUniqueId())) {
+			facPlayerManager.add(player.getUniqueId());
 		}
 	}
 	@EventHandler
 	public void losePower(PlayerDeathEvent event) {
-		DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(event.getEntity());
-		DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+		DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(event.getEntity());
+		DFFaction faction = facManager.getFaction(facPlayer.getFactionId());
 		if(faction != null) {
 			faction.removeEnergy(2.0);
 			event.getEntity().sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have died and your faction has lost 2 power!"));
@@ -420,31 +383,11 @@ public class FactionsHandler implements Listener{
 		}
 	}
 	@EventHandler
-	public void pvSizeIncrease(DFFactionLevelUpEvent event) {
-		Player player = event.getPlayer();
-		DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-		if(facPlayer != null) {
-			if(facPlayer.getFactionId() != null) {
-				DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-				if(faction != null) {
-					for(int level : event.getLevelsPassed()) {
-						if(level % 20 == 0) {
-							ItemStack stacks[] = faction.getFactionVault().getContents();
-							faction.setFactionVault(CustomEnchantments.getInstance().getServer().createInventory(null, faction.getVaultSize(), new CCT().colorize("&a" + faction.getName() + "'s Vault")));
-							faction.getFactionVault().setContents(stacks);
-						}
-					}
-				}
-			}
-		}
-	}
-	@EventHandler
 	public void factionMenuClick(InventoryClickEvent event) {
 		if(event.getWhoClicked() instanceof Player) {
 			Player player = (Player)event.getWhoClicked();
 			InventoryView view = player.getOpenInventory();
 			ItemStack stack = event.getCurrentItem();
-			ClickType click = event.getClick();
 			if(stack != null && stack.getType() != Material.AIR) {
 				NBTItem item = new NBTItem(stack);
 				if(view.getTitle().contains("Faction Overview")) {
@@ -454,39 +397,29 @@ public class FactionsHandler implements Listener{
 						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
 						if(item.hasKey("Leveling")) {
 							this.facInventory.FactionLevelProgress(player, faction, 1);
-							player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 1.0F);
 						}
 						else if(item.hasKey("Members")) {
 							this.facInventory.FactionMemberManagement(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 2.0F, 1.5F);
 						}
-						else if(item.hasKey("ChunksAndHomes")) {
-							this.facInventory.FactionChunkHomes(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_GRASS_PLACE, 2.0F, 1.5F);
+						else if(item.hasKey("Chunks")) {
+							
 						}
 						else if(item.hasKey("Vault")) {
-							FactionGroup group = this.facGroups.getRankFactionGroup(facPlayer.getRank());
-							boolean state = faction.getPermission(group, FactionPermission.FACTION_VAULT_ACCES);
-							if(state) {
-								player.openInventory(faction.getFactionVault());
-								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 2.0F, 1.5F);
-							}
-							else {
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't use the faction vault!"));
-							}
+							
 						}
 						else if(item.hasKey("Settings")) {
-							player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aFaction settings are coming soon!"));
+							
 						}
 						else {
 							Inventory inv = event.getClickedInventory();
+							ClickType click = event.getClick();
 							if(inv.getType() == InventoryType.PLAYER) {
 								if(click == ClickType.LEFT) {
 									if(stack.getType().toString().contains("BANNER")) {
 										stack.setAmount(1);
 										faction.setBanner(stack);
 										this.facInventory.MainFactionInventory(player, faction);
-										for(CapturePoint cp : this.cpManager.getCapturePointList()) {
+										for(CapturePoint cp : this.cpManager.getCapturePointList().values()) {
 											if(cp.getCapturedId() != null) {
 												if(cp.getCapturedId().equals(faction.getFactionId())) {
 													Location loc = cp.getCaptureLocation();
@@ -498,7 +431,6 @@ public class FactionsHandler implements Listener{
 												}
 											}
 										}
-										player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 1.0F);
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aFaction banner has been set!"));
 									}
 									else {
@@ -511,7 +443,7 @@ public class FactionsHandler implements Listener{
 									if(item.hasKey("BannerRemove")) {
 										faction.setBanner(new ItemStack(Material.BLACK_BANNER, 1));
 										this.facInventory.MainFactionInventory(player, faction);
-										for(CapturePoint cp : this.cpManager.getCapturePointList()) {
+										for(CapturePoint cp : this.cpManager.getCapturePointList().values()) {
 											if(cp.getCapturedId() != null) {
 												if(cp.getCapturedId().equals(faction.getFactionId())) {
 													Location loc = cp.getCaptureLocation();
@@ -522,7 +454,6 @@ public class FactionsHandler implements Listener{
 												}
 											}
 										}
-										player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 1.0F);
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aFaction banner has been reset!"));
 									}
 								}
@@ -530,7 +461,7 @@ public class FactionsHandler implements Listener{
 						}
 					}
 				}
-				else if(view.getTitle().contains("Faction Leveling")) {
+				if(view.getTitle().contains("Faction Leveling")) {
 					event.setCancelled(true);
 					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
 					if(facPlayer.getFactionId() != null) {
@@ -559,248 +490,44 @@ public class FactionsHandler implements Listener{
 						}
 						else if(item.hasKey("Back")) {
 							this.facInventory.MainFactionInventory(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 2.0F, 1.0F);
 						}
 					}
 				}
-				else if(view.getTitle().contains("Faction Member Management")) {
+				if(view.getTitle().contains("Faction Homes and Chunks")) {
+					event.setCancelled(true);
+					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
+					if(facPlayer.getFactionId() != null) {
+						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
+						if(item.hasKey("Homes")) {
+							
+						}
+						else if(item.hasKey("Chunks")) {
+							
+						}
+						else if(item.hasKey("Back")){
+							this.facInventory.MainFactionInventory(player, faction);
+						}
+					}
+				}
+				if(view.getTitle().contains("Faction Member Management")) {
 					event.setCancelled(true);
 					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
 					if(facPlayer.getFactionId() != null) {
 						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
 						if(item.hasKey("View")) {
 							this.facInventory.FactionMemberMenu(player, faction);
-							player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2.0F, 1.5F);
 						}
 						else if(item.hasKey("Permission")) {
-							this.facInventory.FactionGroupSelection(player, faction);
-							player.playSound(player.getLocation(), Sound.ENTITY_VINDICATOR_AMBIENT, 2.0F, 0.5F);
+							
 						}
 						else if(item.hasKey("Back")){
 							this.facInventory.MainFactionInventory(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 2.0F, 1.0F);
 						}
 					}
 				}
-				else if(view.getTitle().contains("Faction Members")) {
+				if(view.getTitle().contains("Faction Members")) {
 					event.setCancelled(true);
-					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-					if(facPlayer.getFactionId() != null) {
-						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-						if(item.hasKey("Player")) {
-							int rankMe = facPlayer.getRank();
-							FactionGroup group = this.facGroups.getRankFactionGroup(rankMe);
-							UUID uuidOther = item.getObject("Player", UUID.class);
-							OfflinePlayer op = Bukkit.getOfflinePlayer(uuidOther);
-							DFFactionPlayer oFacPlayer = this.facPlayerManager.getFactionPlayer(uuidOther);
-							int rankOther = oFacPlayer.getRank();
-							if(click == ClickType.LEFT) {
-								if(faction.getPermission(group, FactionPermission.PROMOTE_FACTION_MEMBERS) && rankMe > rankOther && rankOther < 4) {
-									oFacPlayer.setRank(rankOther + 1);
-									FactionGroup otherGroup = this.facGroups.getRankFactionGroup(oFacPlayer.getRank());
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have promoted &6" + op.getName() + " &ato &6" + otherGroup.getDisplay() + "!"));
-									if(Bukkit.getPlayer(uuidOther) != null) {
-										Player oPlayer = Bukkit.getPlayer(uuidOther);
-										oPlayer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &apromoted you to to &6" + otherGroup.getDisplay() + "!"));
-									}
-									player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2.0F, 1.5F);
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't promote this player to a higher faction rank!"));
-								}
-							}
-							else if(click == ClickType.RIGHT) {
-								if(faction.getPermission(group, FactionPermission.DEMOTE_FACTION_MEMBERS) && rankMe > rankOther && rankOther > 1) {
-									oFacPlayer.setRank(rankOther - 1);
-									FactionGroup otherGroup = this.facGroups.getRankFactionGroup(oFacPlayer.getRank());
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have demoted &6" + op.getName() + " &ato &6" + otherGroup.getDisplay() + "!"));
-									if(Bukkit.getPlayer(uuidOther) != null) {
-										Player oPlayer = Bukkit.getPlayer(uuidOther);
-										oPlayer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &cdemoted you to to &6" + otherGroup.getDisplay() + "!"));
-									}
-									player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2.0F, 0.5F);
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't demote this player to a lower faction rank!"));
-								}
-							}
-							else if(click == ClickType.MIDDLE) {
-								if(faction.getPermission(group, FactionPermission.DEMOTE_FACTION_MEMBERS) && rankMe > rankOther) {
-									oFacPlayer.setRank(1);
-									oFacPlayer.setFactionId(null);
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + op.getName() + " &afrom your faction!"));
-									if(Bukkit.getPlayer(uuidOther) != null) {
-										Player oPlayer = Bukkit.getPlayer(uuidOther);
-										oPlayer.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ckicked you from your faction!"));
-									}
-									player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 0.5F);
-								}
-								else {
-									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou can't kick this player from your faction!"));
-								}
-							}
-						}
-						else if(item.hasKey("Back")){
-							this.facInventory.FactionMemberManagement(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 2.0F, 1.0F);
-						}
-					}
 				}
-				else if(view.getTitle().contains("Faction Groups")) {
-					event.setCancelled(true);
-					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-					if(facPlayer.getFactionId() != null) {
-						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-						if(item.hasKey("FactionGroup")) {
-							FactionGroup group = item.getObject("FactionGroup", FactionGroup.class);
-							this.facInventory.FactionPermissionMenu(player, faction, group);
-							player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 2.0F, 1.0F);
-						}
-						else if(item.hasKey("Back")){
-							this.facInventory.FactionMemberManagement(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 2.0F, 1.0F);
-						}
-					}
-				}
-				else if(view.getTitle().contains("Faction Permissions")) {
-					event.setCancelled(true);
-					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-					if(facPlayer.getFactionId() != null) {
-						String itemName = ChatColor.stripColor(stack.getItemMeta().getDisplayName());
-						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-						if(item.hasKey("FactionGroup") && item.hasKey(itemName)) {
-							FactionGroup group = item.getObject("FactionGroup", FactionGroup.class);
-							FactionPermission perm = item.getObject(itemName, FactionPermission.class);
-							boolean state = faction.getPermission(group, perm);
-							if(state == true) {
-								state = false;
-								faction.setPermission(group, perm, state);
-							}
-							else if(state == false) {
-								state = true;
-								faction.setPermission(group, perm, state);
-							}
-							Inventory inv = view.getTopInventory();
-							inv.setItem(event.getSlot(), this.builder.constructItem(
-									Material.PAPER,
-									1,
-									"&a" + perm.getDisplay(),
-									new String[] {
-											state ? "&7" + perm.getDisplay() + ": &aOn" : "&7" + perm.getDisplay() + ": &cOff"
-									},
-									new Pair<String, FactionPermission>(perm.getDisplay(), perm),
-									new Pair<String, FactionGroup>("FactionGroup", group)
-							));
-							player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 2.0F, 1.5F);
-						}
-						else if(item.hasKey("Back")){
-							this.facInventory.FactionGroupSelection(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 2.0F, 1.0F);
-						}
-					}
-				}
-				else if(view.getTitle().contains("Faction Homes and Chunks")) {
-					event.setCancelled(true);
-					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-					if(facPlayer.getFactionId() != null) {
-						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-						if(item.hasKey("Homes")) {
-							this.facInventory.FactionHomeManagement(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_OPEN, 2.0F, 0.5F);
-						}
-						else if(item.hasKey("Chunks")) {
-							this.facInventory.FactionChunkManagement(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_GRASS_PLACE, 2.0F, 0.5F);
-						}
-						else if(item.hasKey("Back")){
-							this.facInventory.MainFactionInventory(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 2.0F, 1.0F);
-						}
-					}
-				}
-				else if(view.getTitle().contains("Faction Homes")) {
-					event.setCancelled(true);
-					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-					if(facPlayer.getFactionId() != null) {
-						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-						if(item.hasKey("FactionHome")) {
-							if(click == ClickType.RIGHT) {
-								String name = item.getString("FactionHome");
-								if(faction.hasFactionHome(name)) {
-									faction.removeFactionHome(name);
-									this.facInventory.FactionHomeManagement(player, faction);
-									player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 0.5F);
-								}
-								else {
-									this.facInventory.FactionHomeManagement(player, faction);
-									player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);
-								}
-							}
-						}
-						else if(item.hasKey("Back")) {
-							this.facInventory.FactionChunkHomes(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 2.0F, 1.0F);
-						}
-					}
-				}
-				else if(view.getTitle().contains("Faction Chunks")) {
-					event.setCancelled(true);
-					DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-					if(facPlayer.getFactionId() != null) {
-						DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-						if(item.hasKey("Chunk")) {
-							if(click == ClickType.RIGHT) {
-								Long chunk = item.getLong("Chunk");
-								if(faction.hasChunk(chunk)) {
-									faction.removeChunk(chunk);
-									this.facInventory.FactionChunkManagement(player, faction);
-									player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 0.5F);
-								}
-								else {
-									this.facInventory.FactionChunkManagement(player, faction);
-									player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2.0F, 1.0F);
-								}
-							}
-						}
-						else if(item.hasKey("Back")){
-							this.facInventory.FactionChunkHomes(player, faction);
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 2.0F, 1.0F);
-						}
-					}
-				}
-			}
-		}
-	}
-	@EventHandler
-	public void pvClose(InventoryCloseEvent event) {
-		Player player = (Player) event.getPlayer();
-		DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-		if(facPlayer != null && facPlayer.getFactionId() != null) {
-			DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-			InventoryView view = player.getOpenInventory();
-			Inventory inv = event.getInventory();
-			if(view.getTitle().contains(faction.getName() + "'s Vault")) {
-				faction.setFactionVault(inv);
-				faction.setStackList(inv.getContents());
-				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 2.0F, 1.5F);
-			}
-		}
-	}
-	@EventHandler
-	public void pvClose(InventoryClickEvent event) {
-		Player player = (Player) event.getWhoClicked();
-		DFFactionPlayer facPlayer = this.facPlayerManager.getFactionPlayer(player.getUniqueId());
-		if(facPlayer != null && facPlayer.getFactionId() != null) {
-			DFFaction faction = this.facManager.getFaction(facPlayer.getFactionId());
-			InventoryView view = player.getOpenInventory();
-			Inventory inv = event.getInventory();
-			if(view.getTitle().contains(faction.getName() + "'s Vault")) {
-				new BukkitRunnable() {
-					public void run() {
-						faction.setFactionVault(inv);
-						faction.setStackList(inv.getContents());
-					}
-				}.runTaskLater(CustomEnchantments.getInstance(), 1L);
 			}
 		}
 	}

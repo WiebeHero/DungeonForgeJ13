@@ -1,6 +1,7 @@
 package me.WiebeHero.RankedPlayerPackage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -41,10 +42,10 @@ public class KitRoll {
 					kit.getMaterialDisplay(),
 					1,
 					"&6" + s + " Kit",
-					new String[] {
+					new ArrayList<String>(Arrays.asList(
 						"&7Get this kit if the roll ends",
 						"&7On this item!"
-					},
+					)),
 					new Pair<String, Kit>("NewKit", kit)
 			));
 		}

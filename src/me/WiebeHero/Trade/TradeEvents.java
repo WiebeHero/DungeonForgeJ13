@@ -122,7 +122,7 @@ public class TradeEvents implements Listener{
 												Material.LIME_DYE,
 												1,
 												"&7Status: &aReady",
-												new String[] {},
+												new ArrayList<String>(),
 												new Pair<String, String>("Status", "Ready")
 										);
 										top1.setItem(46, ready);
@@ -135,7 +135,7 @@ public class TradeEvents implements Listener{
 												Material.LIME_DYE,
 												1,
 												"&7Status: &aReady",
-												new String[] {},
+												new ArrayList<String>(),
 												new Pair<String, String>("Status", "Ready")
 										);
 										top1.setItem(52, ready);
@@ -162,7 +162,7 @@ public class TradeEvents implements Listener{
 																		Material.ORANGE_STAINED_GLASS_PANE,
 																		seconds,
 																		"&6" + seconds,
-																		new String[] {}
+																		new ArrayList<String>()
 																);
 																top1.setItem(4, nothing);
 																top1.setItem(13, nothing);
@@ -298,7 +298,7 @@ public class TradeEvents implements Listener{
 																			money > 0.00 ? Material.GOLD_BLOCK : Material.BARRIER,
 																			1,
 																			"&aMoney: " + money + "$",
-																			new String[] {},
+																			new ArrayList<String>(),
 																			new Pair<String, Double>("Money", money)
 																	);
 																	repInv.setItem(27, newMoney);
@@ -318,7 +318,7 @@ public class TradeEvents implements Listener{
 																			money > 0.00 ? Material.GOLD_BLOCK : Material.BARRIER,
 																			1,
 																			"&aMoney: " + money + "$",
-																			new String[] {},
+																			new ArrayList<String>(),
 																			new Pair<String, Double>("Money", money)
 																	);
 																	repInv.setItem(35, newMoney);

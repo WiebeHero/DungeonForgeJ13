@@ -198,7 +198,7 @@ public class DeathOfMob implements Listener {
 				}
 			}
 			else if(victim instanceof Villager) {
-				if(this.random() <= 60) {
+				if(this.random() <= 65) {
 					event.getDrops().clear();
 					event.getDrops().add(new ItemStack(Material.EMERALD, this.number(2)));
 				}
