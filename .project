@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>lib/LuckPerms-Bukkit-5.0.50.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/Bureaublad/DungeonForge%20Main%20Server/Plugins/LuckPerms-Bukkit-5.0.50.jar</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
