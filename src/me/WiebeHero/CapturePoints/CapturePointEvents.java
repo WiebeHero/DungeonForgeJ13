@@ -26,7 +26,7 @@ public class CapturePointEvents implements Listener{
 		DFFactionPlayer facPlayer = facPlayerManager.getFactionPlayer(player);
 		if(facPlayer.getFactionId() != null) {
 			double xpMultiplier = event.getXPMultiplier();
-			for(CapturePoint point : cpManager.getCapturePointList().values()) {
+			for(CapturePoint point : cpManager.getCapturePointList()) {
 				if(point.getCapturedId() != null) {
 					if(point.getCapturedId().equals(facPlayer.getFactionId())) {
 						xpMultiplier += point.getXPMultiplier();

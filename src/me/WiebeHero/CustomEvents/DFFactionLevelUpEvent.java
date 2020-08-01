@@ -41,7 +41,7 @@ public class DFFactionLevelUpEvent extends Event{
 	        this.oldLevel = fac.getLevel();
 	        int times = this.fac.getExperience() / this.fac.getMaxExperience();
 	        for(int i = 1; i <= times; i++) {
-		        if(this.fac.getLevel() < 50) {
+		        if(this.fac.getLevel() < 100) {
 					if(this.fac.getExperience() >= this.fac.getMaxExperience()) {
 						this.fac.addLevel(1);
 						this.levels.add(this.fac.getLevel());
