@@ -435,7 +435,6 @@ public class DFFaction {
 	
 	public int getVaultSize() {
 		int mult = (int)((double)this.level / 20.00);
-		Bukkit.broadcastMessage((int)(9.00 + 9.00 * (double)mult) + "");
 		return (int)(9.00 + 9.00 * (double)mult);
 	}
 	
