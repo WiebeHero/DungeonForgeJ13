@@ -60,37 +60,37 @@ public class EnchantmentGuideInventory {
 		inv.setItem(10, builder.constructItem(
 			Material.DIAMOND_SWORD,
 			"&6Melee Enchantments",
-			new ArrayList<String>(Arrays.asList(
+			new String[] {
 				"&7Click this to go to the melee",
 				"&7enchantments page."
-			)),
+			},
 			new Pair<String, String>("Melee", "")
 		));
 		inv.setItem(12, builder.constructItem(
 			Material.BOW,
 			"&6Bow Enchantments",
-			new ArrayList<String>(Arrays.asList(
+			new String[] {
 				"&7Click this to go to the bow",
 				"&7enchantments page."
-			)),
+			},
 			new Pair<String, String>("Bow", "")
 		));
 		inv.setItem(14, builder.constructItem(
 			Material.DIAMOND_CHESTPLATE,
 			"&6Armor Enchantments",
-			new ArrayList<String>(Arrays.asList(
+			new String[] {
 				"&7Click this to go to the armor",
 				"&7enchantments page."
-			)),
+			},
 			new Pair<String, String>("Armor", "")
 		));
 		inv.setItem(16, builder.constructItem(
 			Material.SHIELD,
 			"&6Shield Enchantments",
-			new ArrayList<String>(Arrays.asList(
+			new String[] {
 				"&7Click this to go to the shield",
 				"&7enchantments page."
-			)),
+			},
 			new Pair<String, String>("Shield", "")
 		));
 		inv.setItem(0, builder.constructItem(
@@ -157,7 +157,6 @@ public class EnchantmentGuideInventory {
 		inv.setItem(22, builder.constructItem(
 			Material.BARRIER,
 			"&cExit",
-			new ArrayList<String>(),
 			new Pair<String, String>("Exit", "")
 		));
 		inv.setItem(23, builder.constructItem(
@@ -275,19 +274,19 @@ public class EnchantmentGuideInventory {
 				i.setItem(48, builder.constructItem(
 					Material.PAPER,
 					"&aPrevious Page",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, Integer>("Previous", x - 1)
 				));
 				i.setItem(49, builder.constructItem(
 					Material.BARRIER,
 					"&cBack",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, String>("Back", "")
 				));
 				i.setItem(50, builder.constructItem(
 					Material.PAPER,
 					"&aNext Page",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, Integer>("Next", x + 1)
 				));
 				i.setItem(51, builder.constructItem(
@@ -402,19 +401,19 @@ public class EnchantmentGuideInventory {
 				i.setItem(48, builder.constructItem(
 					Material.PAPER,
 					"&aPrevious Page",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, Integer>("Previous", x - 1)
 				));
 				i.setItem(49, builder.constructItem(
 					Material.BARRIER,
 					"&cBack",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, String>("Back", "")
 				));
 				i.setItem(50, builder.constructItem(
 					Material.PAPER,
 					"&aNext Page",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, Integer>("Next", x + 1)
 				));
 				i.setItem(51, builder.constructItem(
@@ -532,19 +531,19 @@ public class EnchantmentGuideInventory {
 				i.setItem(48, builder.constructItem(
 					Material.PAPER,
 					"&aPrevious Page",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, Integer>("Previous", x - 1)
 				));
 				i.setItem(49, builder.constructItem(
 					Material.BARRIER,
 					"&cBack",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, String>("Back", "")
 				));
 				i.setItem(50, builder.constructItem(
 					Material.PAPER,
 					"&aNext Page",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, Integer>("Next", x + 1)
 				));
 				i.setItem(51, builder.constructItem(
@@ -659,19 +658,19 @@ public class EnchantmentGuideInventory {
 				i.setItem(48, builder.constructItem(
 					Material.PAPER,
 					"&aPrevious Page",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, Integer>("Previous", x - 1)
 				));
 				i.setItem(49, builder.constructItem(
 					Material.BARRIER,
 					"&cBack",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, String>("Back", "")
 				));
 				i.setItem(50, builder.constructItem(
 					Material.PAPER,
 					"&aNext Page",
-					new ArrayList<String>(),
+					new String[] {},
 					new Pair<String, Integer>("Next", x + 1)
 				));
 				i.setItem(51, builder.constructItem(

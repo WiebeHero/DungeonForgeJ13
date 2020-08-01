@@ -44,7 +44,7 @@ public class CapturePointMenu {
 		i.setItem(7, nothing);
 		i.setItem(8, nothing);
 		i.setItem(9, nothing);
-		ArrayList<CapturePoint> points = new ArrayList<CapturePoint>(this.cpManager.getCapturePointList().values());
+		ArrayList<CapturePoint> points = new ArrayList<CapturePoint>(this.cpManager.getCapturePointList());
 		int amount = points.size();
 		ArrayList<Integer> slots = new ArrayList<Integer>();
 		if(amount == 1) {
@@ -105,11 +105,11 @@ public class CapturePointMenu {
 			i.setItem(slots.get(x), this.builder.constructItem(
 					banner,
 					capturedString,
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 							"&7Location: &6X: " + capLocation.getX() + " Y: " + capLocation.getY() + " Z: " + capLocation.getZ(),
 							"&7Extra Player XP: &b" + point.getXPMultiplier() + "%",
 							"&7Capture Radius: &6" + point.getCaptureRadius() + " Blocks"
-					))
+					}
 			));
 		}
 		

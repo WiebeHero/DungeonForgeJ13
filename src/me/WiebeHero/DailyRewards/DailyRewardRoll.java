@@ -86,7 +86,7 @@ public class DailyRewardRoll {
 					i.setItem(24, emptyVoid(player));
 					i.setItem(25, emptyVoid(player));
 					i.setItem(26, emptyVoid(player));
-					player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 0.4F);
+					player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 2.0F, 1.0F);
 					if(!(counter <= 1)) {
 						count++;
 					}
@@ -125,7 +125,7 @@ public class DailyRewardRoll {
 									i.setItem(24, emptyVoid(player));
 									i.setItem(25, emptyVoid(player));
 									i.setItem(26, emptyVoid(player));
-									player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 0.6F);
+									player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 2.0F, 0.75F);
 									if(!(counter <= 1)) {
 										count++;
 									}
@@ -164,7 +164,7 @@ public class DailyRewardRoll {
 													i.setItem(24, emptyVoid(player));
 													i.setItem(25, emptyVoid(player));
 													i.setItem(26, emptyVoid(player));
-													player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 0.8F);
+													player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 2.0F, 0.5F);
 													if(!(counter <= 1)) {
 														count++;
 													}
@@ -201,7 +201,7 @@ public class DailyRewardRoll {
 																i.setItem(24, emptyVoid(player));
 																i.setItem(25, emptyVoid(player));
 																i.setItem(26, emptyVoid(player));
-																player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0F, 1.0F);
+																player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2.0F, 1.0F);
 																cancel();
 																giveItem(player, finalReward);
 															}

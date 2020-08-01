@@ -884,8 +884,8 @@ public class LootRewards {
 		ItemMeta itemmeta = item1.getItemMeta();
 		itemmeta.setDisplayName(new CCT().colorize("&a&lXP Bottle"));
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(new CCT().colorize("&7When you throw this bottle, you"));
-		lore1.add(new CCT().colorize("&7will gain xp appropiate to it's amount"));
+		lore1.add(new CCT().colorize("&7When you throw this bottle, you will"));
+		lore1.add(new CCT().colorize("&7gain player xp appropiate to it's amount"));
 		lore1.add(new CCT().colorize("&7XP Amount: &6" + xp));
 		itemmeta.setLore(lore1);
 		item1.setItemMeta(itemmeta);
