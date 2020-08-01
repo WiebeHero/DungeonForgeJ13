@@ -138,14 +138,14 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6All Out",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, you have a chance",
 						"&7to go all out, causing your attack damage to",
 						"&7highly rise during the attack. However, you go",
 						"&7beyond your limit and damage yourself in the",
 						"&7process. Taking a portion of the damage that",
 						"&7you dealt to the enemy."
-					))
+					}
 				);
 			}
 		}));
@@ -169,12 +169,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Beserk",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, you have a chance",
 						"&7to go Beserk. When going beserk, you gain the",
 						"&7strength and mining fatigue effect for a short",
 						"&7amount of time."
-					))
+					}
 				);
 			}
 		}));
@@ -210,12 +210,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Blast",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that an explosion will generate at the enemy's",
 						"&7location. Causing the enemy that you attack to take",
 						"&7extra damage and damage surrounding enemies."
-					))
+					}
 				);
 			}
 		}));
@@ -250,12 +250,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Bleed",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you cut a wound in their flesh so deep that they",
 						"&7start bleeding. Causing the enemy to take",
 						"&7continuous damage for a short amount of time."
-					))
+					}
 				);
 			}
 		}));
@@ -279,11 +279,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Blind",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you hit the enemy in the weak spot of their head.",
 						"&7Causing them to go blind for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -315,12 +315,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Blizzard",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that a sudden Blizzard will rise from nowhere. Causing",
 						"&7the enemy that you attack and sorounding enemies",
 						"&7to move slower and go blind for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -375,12 +375,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Brand",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you Brand your enemy. You mark them, this causes",
 						"&7the enemy that you attacked to recieve more damage",
 						"&7from melee and ranged attacks for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -402,11 +402,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Break",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you hit them in a weak spot, causing their",
 						"&7defense skill to decrease for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -428,12 +428,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Charge",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, you go into a charge",
 						"&7causing you to gain the strength and speed effect",
 						"&7for a few seconds.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -467,12 +467,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Chronical Disturbance",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that time warps around them. Causing them to take",
 						"&7a huge amount of damage in a short amount of",
 						"&7time and making their screen shake."
-					))
+					}
 				);
 			}
 		}));
@@ -498,12 +498,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Confusion",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you hit them in the head very hard",
 						"&7causing them to be confused and gain",
 						"&7the nausea effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -549,12 +549,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Cyclone",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that a cyclone will generate out of nowhere.",
 						"&7Causing the enemy that you hit and enemies sorounding him",
 						"&7to be launched high in the sky."
-					))
+					}
 				);
 			}
 		}));
@@ -578,13 +578,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Defensive Position",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you prepare for an incoming",
 						"&7counter attack, causing you to take a",
 						"&7defensive stand and gaining the resistance",
 						"&7effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -693,7 +693,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Determined Slash",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, you prepare to perform",
 						"&6Determined Slash. &7When you have prepared &6Determined Slash",
 						"&7and then left click, a red slash will appear",
@@ -703,7 +703,7 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7after damaging an enemy. However, the damage will be decreased",
 						"&7by half per enemy that is hit.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -749,12 +749,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Disarmor",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you unequip 1 of the enemies armor pieces.",
 						"&7This armor piece will drop on the ground when",
 						"&7unequiped."
-					))
+					}
 				);
 			}
 		}));
@@ -784,12 +784,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Dragon's Fireball",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, you fire the",
 						"&7same fireball the ender dragon fires",
 						"&7in the direction that you are looking.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -821,12 +821,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Drain",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will drain their stamina, causing them",
 						"&7to lose hunger. You will gain the amount of hunger",
 						"&7that you stole from the enemy"
-					))
+					}
 				);
 			}
 		}));
@@ -904,12 +904,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Fatigue",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you make them tired, tired from fatigue.",
 						"&7Causing their attack speed to drop significantly",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -935,11 +935,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Featherweight",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will feel as light as a feather, causing you",
 						"&7to gain the haste and speed effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -966,12 +966,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Final Blow",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you feel like you need to end the fight. Causing the enemy",
 						"&7to take extra damage when they are below a certain",
 						"&7Amount of HP."
-					))
+					}
 				);
 			}
 		}));
@@ -995,11 +995,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Fire Aspect",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you ignite them in flames, causing them to be",
 						"&7on fire for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -1062,12 +1062,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Cleric",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, you release a healing aura.",
 						"&7This causes you to heal nearby faction members",
 						"&7and yourself by some HP.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -1096,12 +1096,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Freeze",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you freeze them in place, causing the enemy",
 						"&7to gain a the slowness effect and mining fatigue",
 						"&7effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -1187,14 +1187,51 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Gaster Blasters",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, 2 wither skulls",
 						"&7spawn at your left and right. After a short",
 						"&7time they will fire a beam in the direction",
 						"&7that you are looking, any entities caught",
 						"&7in this beam will recieve damage and wither.",
 						"&7This enchantment has a cooldown"
-					))
+					}
+				);
+			}
+		}));
+		this.listMelee.put("Glass Break", new Pair<>(Condition.ENTITY_DAMAGE_BY_ENTITY, new CommandFile() {
+			ArrayList<UUID> cooldown = new ArrayList<UUID>();
+			@Override
+			public void activateEnchantment(LivingEntity damager, LivingEntity victim, int level, EntityDamageByEntityEvent event) {
+				if(!this.cooldown.contains(damager.getUniqueId())) {
+					Location locCF = new Location(damager.getWorld(), damager.getLocation().getX() + 0D, damager.getLocation().getY() + 1.5D, damager.getLocation().getZ() + 0D);
+					damager.getWorld().spawnParticle(Particle.BLOCK_CRACK, locCF, 60, 0.1, 0.1, 0.1, 0.1, Material.GLASS.createBlockData()); 
+					damager.getWorld().playSound(damager.getLocation(), Sound.BLOCK_GLASS_BREAK, 2, (float) 1);
+					event.setDamage(event.getDamage() + 3.0 + level);
+					this.cooldown.add(damager.getUniqueId());
+					new BukkitRunnable() {
+						public void run() {
+							cooldown.remove(damager.getUniqueId());
+						}
+					}.runTaskLater(CustomEnchantments.getInstance(), 800L - 100L * level);
+				}
+				else {
+					double dam = event.getDamage() - (4.25 - 0.75 * level);
+					event.setDamage(dam > 0 ? dam : 0.00);
+				}
+			}
+			@Override
+			public ItemStack getStack() {
+				return builder.constructItem(
+					Material.ENCHANTED_BOOK,
+					1,
+					"&6Glass Break",
+					new String[] {
+						"&7When you attack the enemy, a sharp piece of glass",
+						"&7will strike the enemy, causing a huge damage buff.",
+						"&7However, when this enchantment is on cooldown, the",
+						"&7damage of the weapon which holds this enchantment",
+						"&7is decreased."
+					}
 				);
 			}
 		}));
@@ -1226,11 +1263,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Happiness",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will deal extra damage against people",
 						"&7who have chosen the Wrath class."
-					))
+					}
 				);
 			}
 		}));
@@ -1256,12 +1293,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Head Bash",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you strike the enemy very hard on the",
 						"&7head, causing them to get the nausea effect",
 						"&7and go blind for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -1288,11 +1325,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Head Hunter",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you kill the enemy, there is a chance",
 						"&7that you get the head of the enemy that you",
 						"&7killed. This only works on players."
-					))
+					}
 				);
 			}
 		}));
@@ -1330,11 +1367,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Heavy Hand",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will deal a high amount of damage",
 						"&7to the enemy."
-					))
+					}
 				);
 			}
 		}));
@@ -1362,11 +1399,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Hit and Run",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, you will gain",
 						"&7a small movement boost for a few seconds.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -1435,13 +1472,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Inner Focus",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, you freeze for 5 seconds.",
 						"&7You charge all of the energy around you that",
 						"&7causes your skills to rise by a certain amount",
 						"&7for a few seconds.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -1495,7 +1532,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Large Fireball",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, you fire a",
 						"&7large fireball in the direction that you",
 						"&7are looking. When the fireball lands, it",
@@ -1503,7 +1540,7 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7blast radius of the fireball. Enemies directly",
 						"&7hit by the fireball will recieve more damage.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -1531,12 +1568,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Levitate",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you apply the levitation effect to",
 						"&7the enemy. Causing them to go flying in the",
 						"&7sky and falling down shortly after."
-					))
+					}
 				);
 			}
 		}));
@@ -1566,10 +1603,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Lifesteal",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will gain some health."
-					))
+					}
 				);
 			}
 		}));
@@ -1640,13 +1677,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Lightning Thrust",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, you charge your weapon",
 						"&7with electric energy, you then launch up and in",
 						"&7the direction that you are looking. When you hit",
 						"&7the enemy with your weapon, you give the enemy slowness,",
 						"&7mining fatigue and a screen shake that also damages them."
-					))
+					}
 				);
 			}
 		}));
@@ -1676,11 +1713,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Looting",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you kill the enemy, there is a chance",
 						"&7that they will drop extra loot. This only works",
 						"&7on mobs."
-					))
+					}
 				);
 			}
 		}));
@@ -1715,11 +1752,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Negative Hollow",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will remove all of their positive",
 						"&7potion effects."
-					))
+					}
 				);
 			}
 		}));
@@ -1741,12 +1778,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Numbness",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you strike the enemy in the arms",
 						"&7the numbness in their arms causes their",
 						"&7Ranged damage to decrease."
-					))
+					}
 				);
 			}
 		}));
@@ -1783,12 +1820,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Paralyze",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that a lightning strike will strike down",
 						"&7on the enemy causing them to freeze in their",
 						"&7position and have their screen shake."
-					))
+					}
 				);
 			}
 		}));
@@ -1811,11 +1848,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Perfect Slash",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that if they block or dodge the attack, that",
 						"&7it will be negated."
-					))
+					}
 				);
 			}
 		}));
@@ -1867,10 +1904,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Phantom",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, you will go",
 						"&7completely invisible for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -1899,10 +1936,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Pickpocket",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will steal some of their balance."
-					))
+					}
 				);
 			}
 		}));
@@ -1939,12 +1976,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Pinch",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that a pinch will be constantly done to them.",
 						"&7Causing them to recieve continuous damage",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -1969,11 +2006,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Poison",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7you infect a deadly poison into them causing",
 						"&7them to recieve the poison effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2002,13 +2039,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Rampage",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you kill the enemy, there is a chance",
 						"&7that your attack damage, attack speed and",
 						"&7movement speed are increased for a few seconds.",
 						"&7if the enemy is a player, the chance of this",
 						"&7enchantment activating is increased to 100%."
-					))
+					}
 				);
 			}
 		}));
@@ -2023,9 +2060,9 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Sharpness",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, you deal extra damage."
-					))
+					}
 				);
 			}
 		}));
@@ -2052,10 +2089,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Sky High",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will launch them high in the sky."
-					))
+					}
 				);
 			}
 		}));
@@ -2080,12 +2117,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Slow",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that they will feel slower movement in their",
 						"&7legs. Causing them to recieve the slowness",
 						"&7effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2138,14 +2175,14 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Snowball",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, you fire a snowball.",
 						"&7The snowball travels fast through the air, due to",
 						"&7it's velocity and coldness, any enemy that gets",
 						"&7hit by this snowball will recieve a small amount",
 						"&7damage and will gain the slowness effect for a few seconds",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -2177,11 +2214,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Soul Burst",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you kill the enemy, there is a chance",
 						"&7that their soul will burst. This burst will",
 						"&7deal damage to nearby enemies."
-					))
+					}
 				);
 			}
 		}));
@@ -2207,12 +2244,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Reaper",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you kill the enemy, there is a chance",
 						"&7you feel their power flowing within you.",
 						"&7Causing you to recieve the strength and regeneration",
 						"&7effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2237,12 +2274,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Spectral",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you leave a trail on them for you to follow.",
 						"&7Causing them to recieve the glowing effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2293,7 +2330,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Star Shine",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you right click, star dust will shine off you.",
 						"&7You recieve the speed effect for a few seconds.",
 						"&7While the speed effect is active and you attack",
@@ -2301,7 +2338,7 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7decide to attack the enemy, the speed effect",
 						"&7will be removed after the attack.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -2323,11 +2360,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Disturb Health",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that their wellbeing will be disturbed. Causing",
 						"&7their health skill to reduce significantly for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2349,11 +2386,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Unlucky",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that the enemy's luck will drop. Causing their",
 						"&7critical chance skill to reduce significantly for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2383,11 +2420,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Vampirism",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will drain some health from the damage",
 						"&7you deal to the enemy."
-					))
+					}
 				);
 			}
 		}));
@@ -2412,11 +2449,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Venom",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you inject them with a deadly venom. Causing the",
 						"&7enemy to recieve a long lasting poison effect."
-					))
+					}
 				);
 			}
 		}));
@@ -2438,11 +2475,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Weaken",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that their overall power will decrease. Causing their",
 						"&7attack damage skill to reduce significantly for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2466,11 +2503,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Weakness",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that you will weaken the enemy. Causing the enemy",
 						"&7to recieve the weakness effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2495,11 +2532,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Wither",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that they will start to wither away. Causing them",
 						"&7to recieve the wither effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2526,12 +2563,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Wizard",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you attack the enemy, there is a chance",
 						"&7that a lightning strike will strike upon them.",
 						"&7Causing to recieve extra damage, set them on fire and",
 						"&7recieve the weakness effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2574,13 +2611,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Wolf Pack",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you kill the enemy, there is a chance",
 						"&7that you will summon a wolf at the enemy's location.",
 						"&7This wolf will recieve the same skills that you currently have.",
 						"&7This enchantment will only activate when a player is killed.",
 						"&7This wolf will despawn after a certain amount of time."
-					))
+					}
 				);
 			}
 		}));
@@ -2597,10 +2634,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6XP Boost",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7Earn Player XP at a faster rate when",
 						"&7killing mobs."
-					))
+					}
 				);
 			}
 		}));
@@ -2629,11 +2666,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Absorbing",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you will start to learn on how to absorb the damage.",
 						"&7Causing you to recieve the absorption effect."
-					))
+					}
 				);
 			}
 		}));
@@ -2661,10 +2698,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Absorbing Combo",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you multiple times,",
 						"&7You gain a certain amount of absorption hearts."
-					))
+					}
 				);
 			}
 		}));
@@ -2695,11 +2732,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Absorbing Comeback",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7for you to absorb a part of the incoming damage",
 						"&7and return that damage in the next time that you attack."
-					))
+					}
 				);
 			}
 		}));
@@ -2736,14 +2773,14 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Adrenaline Rush",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you and you are below",
 						"&7a certain percentage of your current health, there",
 						"&7is a chance that you will get an Adrenaline Rush.",
 						"&7Causing you to recieve the jump and speed boost effect",
 						"&7for a few seconds.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -2777,11 +2814,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Arcanist Explosion",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a small explosion will generate from your location.",
 						"&7Causing nearby enemies to recieve damage."
-					))
+					}
 				);
 			}
 		}));
@@ -2804,11 +2841,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Archery",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you equip armor, you get more knowledge",
 						"&7about ranged weapons. Causing your Ranged Damage",
 						"&7skill to rise."
-					))
+					}
 				);
 			}
 		}));
@@ -2834,12 +2871,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Bane",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a fatigue curse will be put on them.",
 						"&7Causing them to recieve the minin fatigue effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2871,12 +2908,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Blast Off",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you create an explosion. Launching you high",
 						"&7in the sky. You will be unable to recieve any",
 						"&7damage for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -2902,11 +2939,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Cactus",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a small needle will puncture the enemy.",
 						"&7Causing them to recieve damage."
-					))
+					}
 				);
 			}
 		}));
@@ -2951,13 +2988,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Curse",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you curse them to death. Causing them to be",
 						"&7put under a curse that kills the enemy after a while.",
 						"&7To break the curse, the attacker needs to damage",
 						"&7you at least one time to break the curse."
-					))
+					}
 				);
 			}
 		}));
@@ -2978,11 +3015,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Dodge",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you evade the attack. Causing you to recieve",
 						"&7no damage at all."
-					))
+					}
 				);
 			}
 		}));
@@ -3010,11 +3047,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Full Counter",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you return all of the damage back to",
 						"&7the attacker."
-					))
+					}
 				);
 			}
 		}));
@@ -3041,11 +3078,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Falling Absorption",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you recieve fall damage, you convert",
 						"&7a portion of the damage that you recieved to",
 						"&7absorption hearts."
-					))
+					}
 				);
 			}
 		}));
@@ -3075,12 +3112,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Earthquake",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that your rage of being hit will turn into",
 						"&7an Earthquake. Causing nearby enemies to",
 						"&7recieve damage."
-					))
+					}
 				);
 			}
 		}));
@@ -3103,11 +3140,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Empower",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you evade the attack. Causing you to recieve",
 						"&7Causing nearby enemies to recieve damage."
-					))
+					}
 				);
 			}
 		}));
@@ -3137,11 +3174,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Enlightened",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you get blessed by an unkown force. Causing",
 						"&7to regenerate health instantly."
-					))
+					}
 				);
 			}
 		}));
@@ -3169,13 +3206,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Escape",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you and you are below a",
 						"&7certain amount of health, there is a chance",
 						"&7an opportunity comes to escape the battle.",
 						"&7Causing you to recieve the speed and absorption effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3216,11 +3253,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Fortitude",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you quickly regenerate stamina. Causing you",
 						"&7to regenerate health in a short amount of time."
-					))
+					}
 				);
 			}
 		}));
@@ -3254,12 +3291,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Fossil Blaze",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that your rage ignites something within you, forming",
 						"&7an explosion of fire that set's enemies nearby aflame.",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3285,11 +3322,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Ghostly",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a myserious aura forms around you. Causing",
 						"&7you to recieve the invisibility effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3314,12 +3351,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Harden",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you prepare for a flurry of attack's coming in.",
 						"&7Causing you to recieve the resistance effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3342,12 +3379,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Hastefull",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you equip armor, you gain knowledge on",
 						"&7how to execute more attacks more quickly.",
 						"&7Causing your attack speed skill to increase",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3372,11 +3409,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Hastened",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you feel like that you have to attack faster.",
 						"&7Causing you to recieve the haste effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3402,12 +3439,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Ignite",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that your armor gets very hot.",
 						"&7Causing the enemy to be engulfed by flames",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3451,12 +3488,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Invincibility",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you will be blessed by godly powers.",
 						"&7Causing you to be immune to melee and ranged attacks",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3480,13 +3517,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Jelly Fish",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a jelly's sting will summon from the armor and",
 						"&7piercing the enemy's skin to inflict a deadly poison.",
 						"&7Causing the enemy to recieve the slowness, poison and",
 						"&7the mining fatigue effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3511,12 +3548,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Kadabra",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a curse of weakness will be put upon them.",
 						"&7Causing them to recieve the weakness effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3544,13 +3581,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Last Stand",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, and your health is below",
 						"&7a certain point, there is a chance that",
 						"&7you will give it your all, causing you to recieve",
 						"&7the speed, absorption and regeneration effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3575,11 +3612,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Lightweight",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you equip armor, your legs start",
 						"&7to feel stronger, causing your movement speed",
 						"&7to increase."
-					))
+					}
 				);
 			}
 		}));
@@ -3602,11 +3639,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Lucky",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you equip armor, your luck is",
 						"&7magically increased. Causing your critical",
 						"&7chance skill to increase."
-					))
+					}
 				);
 			}
 		}));
@@ -3641,10 +3678,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Nurtrition",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When eating food, there is a chance",
 						"&7that you will gain additional food points."
-					))
+					}
 				);
 			}
 		}));
@@ -3667,10 +3704,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Overheal",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you equip armor, your well being is",
 						"&7increased. Causing your health skill to increase."
-					))
+					}
 				);
 			}
 		}));
@@ -3685,9 +3722,9 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Protection",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you recieve damage, it is decreased."
-					))
+					}
 				);
 			}
 		}));
@@ -3712,11 +3749,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Rage",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you will become enraged. Causing you to",
 						"&7recieve the strength effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3741,12 +3778,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Regenerator",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you call out to an unknown power. Causing",
 						"&7you to recieve the regeneration effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3771,12 +3808,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Saturation",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that your hunger will be satisfied, somehow.",
 						"&7Causing you to recieve the saturation effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3803,13 +3840,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Savior",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you and your health is",
 						"&7a certain point, there is a chance that",
 						"&7someone will reach out and give you a hand.",
 						"&7Causing you to recieve the regeneration effect.",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3843,12 +3880,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Self Destruct",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that your hunger will be satisfied, somehow.",
 						"&7Causing you to recieve the saturation effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3873,12 +3910,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Slowness",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you slow them down for a long while.",
 						"&7Causing them to recieve the slowness effect",
 						"&7for a while."
-					))
+					}
 				);
 			}
 		}));
@@ -3903,12 +3940,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Slow",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you slow them down. For a short while.",
 						"&7Causing them to recieve the slowness effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3944,13 +3981,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Smoke Screen",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you and you are below a",
 						"&7certain amount of health, there is a chance",
 						"&7that you create a smoke screen to escape.",
 						"&7Causing nearby enemies to recieve the",
 						"&7slowness and blindness effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -3977,12 +4014,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Snare",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you literally shut them up. Causing them to",
 						"&7recieve the slowness and mining fatigue effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -4007,12 +4044,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Tank",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you prepare for more incoming attacks.",
 						"&7Causing you to recieve the strength, slowness and",
 						"&7resistance effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -4035,11 +4072,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Tough Skin",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you equip armor, you gain more knowledge",
 						"&7on how to avoid recieving more damage. Causing",
 						"&7your defense skill to increase."
-					))
+					}
 				);
 			}
 		}));
@@ -4066,11 +4103,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Use the system",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you hack into the system and extend your",
 						"&7immunity timer by a few ticks."
-					))
+					}
 				);
 			}
 		}));
@@ -4093,12 +4130,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Valor",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you feel protection coming over you.",
 						"&7Causing you to recieve the resistance effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -4123,12 +4160,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Withering",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you wish that your enemy would just wither away.",
 						"&7Causing them to recieve the wither effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -4250,12 +4287,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Arrow Rain",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you left click, you prepare a &6Grab and Pull",
 						"&7arrow. When you hit a enemy, you pull them towards",
 						"&7your current location.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -4367,14 +4404,14 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Black Heart",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you left click, you prepare a &6Black Heart",
 						"&7arrow. When you shoot this arrow, a black particle",
 						"&7will follow the arrow. When this arrow lands, it damages",
 						"&7any enemies nearby this arrow over a span of time. If this arrow hits an",
 						"&7entity, it will follow the damage effect around the entity.",
 						"&7This enchantments has a cooldown"
-					))
+					}
 				);
 			}
 		}));
@@ -4505,7 +4542,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Black Hole",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you left click, you prepare a &6Black Hole",
 						"&7arrow. When you shoot this arrow, a black particle",
 						"&7will follow the arrow. When this arrow lands, it will pull",
@@ -4514,7 +4551,7 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7damage and recieve the blindness and slowness effect",
 						"&7for a few seconds.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -4613,14 +4650,14 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Blast",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you left click, you prepare a &6Blast",
 						"&7arrow. When you shoot this arrow, an explosion",
 						"&7particle will follow its path. When this arrow lands,",
 						"&7it will create an explosion, damaging any enemies nearby",
 						"&7it. This effect works the same if you hit an enemy.",
 						"&7this enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -4645,11 +4682,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Confusion",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that you shoot the enemy in the head, they get confused",
 						"&7and recieve the nausea effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -4701,12 +4738,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Double Tap",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot your bow, there is a chance",
 						"&7that you shoot a second arrow imediatly after.",
 						"&7When the first arrow that you shot hit's the enemy,",
 						"&7it will set their imunity timer to 0 seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -4760,12 +4797,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Disarmor",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that the arrow that you shot lunges under 1 of the enemy's",
 						"&7armor pieces, causing 1 of the armor pieces to",
 						"&7fall of the enemy."
-					))
+					}
 				);
 			}
 		}));
@@ -4816,12 +4853,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Grab and Pull",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you left click, you prepare a &6Grab and Pull",
 						"&7arrow. When you hit a enemy, you pull them towards",
 						"&7your current location.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -4884,12 +4921,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Grappling Hook",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you left click, you prepare a &6Grappling Hook",
 						"&7arrow. When you hit a block/enemy, you leap towards",
 						"&7where the arrow landed.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -4935,11 +4972,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Homing",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot your bow, there is a chance",
 						"&7that your arrow will home into the nearest target",
 						"&7present in it's radius."
-					))
+					}
 				);
 			}
 		}));
@@ -5052,7 +5089,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Shooting Star",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you left click, you prepare to shoot a star.",
 						"&7When you shoot, it will shoot a star towards the direction",
 						"&7that you are looking. When this star hits a block or an",
@@ -5060,7 +5097,7 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7take damage, be set on fire and they will be knocked away",
 						"&7from the star.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -5090,11 +5127,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Lifesteal",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that you steal some life force from the enemy.",
 						"&7Causing you to gain health."
-					))
+					}
 				);
 			}
 		}));
@@ -5114,12 +5151,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Lightning",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that the arrow is electrically charged and will",
 						"&7send a lightning strike down from the heavens, striking",
 						"&7the enemy that you shot and dealing extra damage."
-					))
+					}
 				);
 			}
 		}));
@@ -5152,12 +5189,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Paralyze",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that the arrow will paralyze the enemy. Causing",
 						"&7the enemy to recieve the slowness effect and",
 						"&7let their shake."
-					))
+					}
 				);
 			}
 		}));
@@ -5186,10 +5223,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Pickpocket",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that you magically steal some balance from the enemy."
-					))
+					}
 				);
 			}
 		}));
@@ -5213,11 +5250,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Pierce",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that the arrow will be imbedded with ancient magic.",
 						"&7Causing your arrow's damage to ignore the enemy's armor."
-					))
+					}
 				);
 			}
 		}));
@@ -5242,11 +5279,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Poison",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that the wound that the arrow creates will poison",
 						"&7the enemy for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -5356,13 +5393,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Sandstorm",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you left click, you prepare a &6Sandstorm",
 						"&7arrow. When you hit a block/enemy, enemies nearby",
 						"&7this arrow, recieve the blindness effect and",
 						"&7recieve damage slowly over time.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -5384,10 +5421,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Sharpshooter",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, close ranged",
 						"&7attacks deal more damage."
-					))
+					}
 				);
 			}
 		}));
@@ -5467,7 +5504,7 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Lazer Shot",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you left click, you prepare to shoot a lazer.",
 						"&7When you shoot, it will shoot a lazer towards the direction",
 						"&7that you are looking. When this lazer hits a block or an",
@@ -5476,7 +5513,7 @@ public class Enchantment extends CommandFile implements Listener{
 						"&7enemies, the lazer will get it's damage halved per enemy hit.",
 						"&7The same rules are applied for the duration of the fire.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -5498,10 +5535,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Sniper Shot",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, long ranged",
 						"&7attacks deal more damage."
-					))
+					}
 				);
 			}
 		}));
@@ -5525,10 +5562,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Newtons Manipulation",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot an arrow, it will defy",
 						"&7gravity and shoot faster."
-					))
+					}
 				);
 			}
 		}));
@@ -5554,11 +5591,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Weakness",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that they will be weakened and recieve the",
 						"&7weakness effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -5583,10 +5620,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Pickpocket",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When you shoot the enemy, there is a chance",
 						"&7that you magically steal some balance from the enemy."
-					))
+					}
 				);
 			}
 		}));
@@ -5637,11 +5674,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Parry",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemies attacks you and when your blocking,",
 						"&7you will prepare for a counter attack. After &6Parry",
 						"&7activates, your next attack will gain additional damage."
-					))
+					}
 				);
 			}
 		}));
@@ -5667,11 +5704,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Absorbing",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you will start to learn on how to absorb the damage.",
 						"&7Causing you to recieve the absorption effect."
-					))
+					}
 				);
 			}
 		}));
@@ -5694,10 +5731,10 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Absorbing Combo",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you multiple times,",
 						"&7You gain a certain amount of absorption hearts."
-					))
+					}
 				);
 			}
 		}));
@@ -5728,11 +5765,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Absorbing Comeback",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7for you to absorb a part of the incoming damage",
 						"&7and return that damage in the next time that you attack."
-					))
+					}
 				);
 			}
 		}));
@@ -5769,14 +5806,14 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Adrenaline Rush",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you and you are below",
 						"&7a certain percentage of your current health, there",
 						"&7is a chance that you will get an Adrenaline Rush.",
 						"&7Causing you to recieve the jump and speed boost effect",
 						"&7for a few seconds.",
 						"&7This enchantment has a cooldown."
-					))
+					}
 				);
 			}
 		}));
@@ -5812,11 +5849,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Arcanist Explosion",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a small explosion will generate from your location.",
 						"&7Causing nearby enemies to recieve damage."
-					))
+					}
 				);
 			}
 		}));
@@ -5842,12 +5879,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Bane",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a fatigue curse will be put on them.",
 						"&7Causing them to recieve the minin fatigue effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -5879,12 +5916,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Blast Off",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you create an explosion. Launching you high",
 						"&7in the sky. You will be unable to recieve any",
 						"&7damage for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -5910,11 +5947,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Cactus",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a small needle will puncture the enemy.",
 						"&7Causing them to recieve damage."
-					))
+					}
 				);
 			}
 		}));
@@ -5947,13 +5984,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Curse",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you curse them to death. Causing them to be",
 						"&7put under a curse that kills the enemy after a while.",
 						"&7To break the curse, the attacker needs to hit you at least 3",
 						"&7times to remove the curse."
-					))
+					}
 				);
 			}
 		}));
@@ -5980,12 +6017,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Full Counter",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you absorb all the incoming damage.",
 						"&7The next time you attack, you will return all",
 						"&7of the absorbed damage back to the enemy that you attack0."
-					))
+					}
 				);
 			}
 		}));
@@ -6012,12 +6049,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Earthquake",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that your rage of being hit will turn into",
 						"&7an Earthquake. Causing nearby enemies to",
 						"&7recieve damage."
-					))
+					}
 				);
 			}
 		}));
@@ -6047,11 +6084,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Enlightened",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you get blessed by an unkown force. Causing",
 						"&7to regenerate health instantly."
-					))
+					}
 				);
 			}
 		}));
@@ -6079,13 +6116,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Last Stand",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you and you are below a",
 						"&7certain amount of health, there is a chance",
 						"&7an opportunity comes to escape the battle.",
 						"&7Causing you to recieve the speed and absorption effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6126,11 +6163,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Fortitude",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you quickly regenerate stamina. Causing you",
 						"&7to regenerate health in a short amount of time."
-					))
+					}
 				);
 			}
 		}));
@@ -6161,12 +6198,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Fossil Blaze",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that your rage ignites something within you, forming",
 						"&7an explosion of fire that set's enemies nearby aflame.",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6192,11 +6229,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Ghostly",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a myserious aura forms around you. Causing",
 						"&7you to recieve the invisibility effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6221,12 +6258,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Harden",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you prepare for a flurry of attack's coming in.",
 						"&7Causing you to recieve the resistance effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6251,11 +6288,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Hastened",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you feel like that you have to attack faster.",
 						"&7Causing you to recieve the haste effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6278,12 +6315,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Ignite",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that your armor gets very hot.",
 						"&7Causing the enemy to be engulfed by flames",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6327,12 +6364,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Invincibility",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you will be blessed by godly powers.",
 						"&7Causing you to be immune to melee and ranged attacks",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6356,13 +6393,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Jellyfish",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a jelly's sting will summon from the armor and",
 						"&7piercing the enemy's skin to inflict a deadly poison.",
 						"&7Causing the enemy to recieve the slowness, poison and",
 						"&7the mining fatigue effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6387,12 +6424,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Kadabra",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that a curse of weakness will be put upon them.",
 						"&7Causing them to recieve the weakness effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6420,13 +6457,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Last Stand",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, and your health is below",
 						"&7a certain point, there is a chance that",
 						"&7you will give it your all, causing you to recieve",
 						"&7the speed, absorption and regeneration effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6451,11 +6488,11 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Rage",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you will become enraged. Causing you to",
 						"&7recieve the strength effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6480,12 +6517,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Regenerator",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you call out to an unknown power. Causing",
 						"&7you to recieve the regeneration effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6510,12 +6547,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Saturation",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that your hunger will be satisfied, somehow.",
 						"&7Causing you to recieve the saturation effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6542,13 +6579,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Savior",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you and your health is",
 						"&7a certain point, there is a chance that",
 						"&7someone will reach out and give you a hand.",
 						"&7Causing you to recieve the regeneration effect.",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6573,12 +6610,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Slowness",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you slow them down for a long while.",
 						"&7Causing them to recieve the slowness effect",
 						"&7for a while."
-					))
+					}
 				);
 			}
 		}));
@@ -6603,12 +6640,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Slow",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you slow them down. For a short while.",
 						"&7Causing them to recieve the slowness effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6644,13 +6681,13 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Smoke Screen",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you and you are below a",
 						"&7certain amount of health, there is a chance",
 						"&7that you create a smoke screen to escape.",
 						"&7Causing nearby enemies to recieve the",
 						"&7slowness and blindness effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6677,12 +6714,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Snare",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you literally shut them up. Causing them to",
 						"&7recieve the slowness and mining fatigue effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6707,12 +6744,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Tank",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you prepare for more incoming attacks.",
 						"&7Causing you to recieve the strength, slowness and",
 						"&7resistance effect for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6735,12 +6772,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Valor",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you feel protection coming over you.",
 						"&7Causing you to recieve the resistance effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
@@ -6765,12 +6802,12 @@ public class Enchantment extends CommandFile implements Listener{
 					Material.ENCHANTED_BOOK,
 					1,
 					"&6Withering",
-					new ArrayList<String>(Arrays.asList(
+					new String[] {
 						"&7When the enemy attacks you, there is a chance",
 						"&7that you wish that your enemy would just wither away.",
 						"&7Causing them to recieve the wither effect",
 						"&7for a few seconds."
-					))
+					}
 				);
 			}
 		}));
