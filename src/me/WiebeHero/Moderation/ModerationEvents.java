@@ -1,5 +1,6 @@
 package me.WiebeHero.Moderation;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1214,6 +1215,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 											if(!pun.getBanDateList().isEmpty()) {
 												pun.removeBanDate(offense - 1);
 											}
+											this.sendData(pun, p.getUniqueId(), player);
 											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + p.getName()));
 										}
 										else {
@@ -1312,6 +1314,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 												Player offender = Bukkit.getPlayer(p.getUniqueId());
 												offender.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas unmuted you!"));
 											}
+											this.sendData(pun, p.getUniqueId(), player);
 										}
 										else {
 											player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not muted!"));
@@ -3843,8 +3846,10 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									pun.setBanTime(0L);
 									pun.setBanPerm(false);
 									pun.removeBannedBy(pun.getBanOffense() - 1);
+									pun.removeBanDate(pun.getBanOffense() - 1);
 									pun.removeBanReason(pun.getBanOffense() - 1);
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have unbanned &6" + target.get(player.getUniqueId()).getValue()));
+									this.sendData(pun, target.get(player.getUniqueId()).getKey(), player);
 								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not banned!"));
@@ -4035,56 +4040,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									}
 								}
 							}
-							this.pluginMessenger.getServers(player);
-							new BukkitRunnable() {
-								public void run() {
-									String data = "";
-									data += "MODERATION,,";
-									data += p.getUniqueId().toString() + ",,";
-									data += pun.getMutePerm() + ",,";
-									data += pun.getMuteTime() + ",,";
-									ArrayList<String> list = pun.getMuteReasonsList();
-									for(int i = 0; i < list.size(); i++) {
-										data += list.get(i);
-									}
-									data += ",,";
-									list = pun.getMuteDateList();
-									for(int i = 0; i < list.size(); i++) {
-										data += list.get(i);
-									}
-									data += ",,";
-									list = pun.getMutedByList();
-									for(int i = 0; i < list.size(); i++) {
-										data += list.get(i);
-									}
-									data += ",,";
-									data += pun.getBanPerm() + ",,";
-									data += pun.getBanTime() + ",,";
-									list = pun.getBanReasonsList();
-									for(int i = 0; i < list.size(); i++) {
-										data += list.get(i);
-									}
-									data += ",,";
-									list = pun.getBanDateList();
-									for(int i = 0; i < list.size(); i++) {
-										data += list.get(i);
-									}
-									data += ",,";
-									list = pun.getBannedByList();
-									for(int i = 0; i < list.size(); i++) {
-										data += list.get(i);
-									}
-									HashMap<String, Pair<String, Integer>> serverIps = new HashMap<String, Pair<String, Integer>>(pluginMessenger.getServerIps());
-									String serverName = CustomEnchantments.getInstance().getServer().getName();
-									if(serverIps.containsKey(serverName)) {
-										serverIps.remove(serverName);
-									}
-									Bukkit.broadcastMessage(serverIps.keySet().toString());
-									for(Pair<String, Integer> ipport : serverIps.values()) {
-										CustomEnchantments.sendDataToSocket(ipport.getKey(), ipport.getValue() - 24228, data);
-									}
-								}
-							}.runTaskLater(CustomEnchantments.getInstance(), 3L);
+							this.sendData(pun, p.getUniqueId(), player);
 						}
 					}
 				}
@@ -4134,6 +4090,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									if(offender != null) {
 										offender.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ahas unmuted you!"));
 									}
+									this.sendData(pun, target.get(player.getUniqueId()).getKey(), player);
 								}
 								else {
 									player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cThis player is not muted!"));
@@ -4279,6 +4236,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									}
 								}
 							}
+							this.sendData(pun, p.getUniqueId(), player);
 						}
 					}
 				}
@@ -4368,6 +4326,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 										}
 									}
 								}
+								this.sendData(pun, p.getUniqueId(), player);
 								gui.PunishHistory(player, p.getName());
 							}
 						}
@@ -4858,6 +4817,118 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		if(inv.getTitle().contains("Examine") || inv.getTitle().contains("Info") || inv.getTitle().contains("Teleport") || inv.getTitle().contains("Punish")) {
 			event.setCancelled(true);
 		}
+	}
+	
+	public void sendData(Punish pun, UUID uuid, Player player) {
+		this.pluginMessenger.getServers(player);
+		new BukkitRunnable() {
+			public void run() {
+				String data = "";
+				data += "MODERATION,,";
+				data += uuid.toString() + ",,";
+				data += pun.getMutePerm() + ",,";
+				data += pun.getMuteTime() + ",,";
+				ArrayList<String> list = pun.getMuteReasonsList();
+				if(!list.isEmpty()) {
+					for(int i = 0; i < list.size(); i++) {
+						if(i == list.size() - 1) {
+							data += list.get(i);
+						}
+						else {
+							data += list.get(i) + ",";
+						}
+					}
+				}
+				else {
+					data += " ";
+				}
+				data += ",,";
+				list = pun.getMuteDateList();
+				if(!list.isEmpty()) {
+					for(int i = 0; i < list.size(); i++) {
+						if(i == list.size() - 1) {
+							data += list.get(i);
+						}
+						else {
+							data += list.get(i) + ",";
+						}
+					}
+				}
+				else {
+					data += " ";
+				}
+				data += ",,";
+				list = pun.getMutedByList();
+				if(!list.isEmpty()) {
+					for(int i = 0; i < list.size(); i++) {
+						if(i == list.size() - 1) {
+							data += list.get(i);
+						}
+						else {
+							data += list.get(i) + ",";
+						}
+					}
+				}
+				else {
+					data += " ";
+				}
+				data += ",,";
+				data += pun.getBanPerm() + ",,";
+				data += pun.getBanTime() + ",,";
+				list = pun.getBanReasonsList();
+				if(!list.isEmpty()) {
+					for(int i = 0; i < list.size(); i++) {
+						if(i == list.size() - 1) {
+							data += list.get(i);
+						}
+						else {
+							data += list.get(i) + ",";
+						}
+					}
+				}
+				else {
+					data += " ";
+				}
+				data += ",,";
+				list = pun.getBanDateList();
+				if(!list.isEmpty()) {
+					for(int i = 0; i < list.size(); i++) {
+						if(i == list.size() - 1) {
+							data += list.get(i);
+						}
+						else {
+							data += list.get(i) + ",";
+						}
+					}
+				}
+				else {
+					data += " ";
+				}
+				data += ",,";
+				list = pun.getBannedByList();
+				if(!list.isEmpty()) {
+					for(int i = 0; i < list.size(); i++) {
+						if(i == list.size() - 1) {
+							data += list.get(i);
+						}
+						else {
+							data += list.get(i) + ",";
+						}
+					}
+				}
+				else {
+					data += " ";
+				}
+				HashMap<String, Pair<String, Integer>> serverIps = new HashMap<String, Pair<String, Integer>>(pluginMessenger.getServerIps());
+				String serverName = new File(System.getProperty("user.dir")).getName();
+				if(serverIps.containsKey(serverName)) {
+					serverIps.remove(serverName);
+				}
+				for(Pair<String, Integer> ipport : serverIps.values()) {
+					CustomEnchantments.sendDataToSocket(ipport.getKey(), ipport.getValue() - 24228, data);
+				}
+			}
+		}.runTaskLater(CustomEnchantments.getInstance(), 3L);
 	}
 	
 }
