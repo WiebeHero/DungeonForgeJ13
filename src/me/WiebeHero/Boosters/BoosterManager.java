@@ -194,4 +194,34 @@ public class BoosterManager {
             e.printStackTrace();
         }
 	}
+	public void saveBoostersBackup(String folder) {
+		File f1 = new File("plugins/CustomEnchantments/Data-Backups/" + folder + "/Boosters.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
+		try{
+			yml.load(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		yml.set("Boosters", null);
+		for(Entry<UUID, Booster> entry : this.boosterList.entrySet()) {
+			yml.createSection("Boosters." + entry.getKey());
+			yml.set("Boosters." + entry.getKey(), null);
+			UUID uuid = entry.getKey();
+			Booster booster = entry.getValue();
+			yml.set("Boosters." + uuid + ".Owner", booster.getOwner().toString());
+			yml.set("Boosters." + uuid + ".Multiplier", booster.getMultiplier());
+			yml.set("Boosters." + uuid + ".BoosterType", booster.getType().toString());
+			yml.set("Boosters." + uuid + ".End", booster.getEndTime());
+		}
+		try{
+			yml.save(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
 }

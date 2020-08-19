@@ -25,7 +25,7 @@ public class PunishManager {
         catch(IOException e){
             e.printStackTrace();
         } 
-		catch (InvalidConfigurationException e) {
+		catch(InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
 		if(yml.getConfigurationSection("Mod.Punishments") != null) {
@@ -71,6 +71,51 @@ public class PunishManager {
 	}
 	public void savePunishList() {
 		File f =  new File("plugins/CustomEnchantments/modConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
+		try{
+			yml.load(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		yml.set("Mod.Punishments", null);
+		for(Entry<UUID, Punish> entry : this.punishList.entrySet()) {
+			if(entry != null && entry.getKey() != null && entry.getValue() != null && this.contains(entry.getKey())) {
+				UUID uuid = entry.getKey();
+				Punish pun = this.punishList.get(uuid);
+				for(int i = 0; i < pun.getBanDateList().size(); i++) {
+					String s = pun.getBanDate(i).replace(":", ";");
+					pun.setBanDate(i, s);
+				}
+				for(int i = 0; i < pun.getMuteDateList().size(); i++) {
+					String s = pun.getMuteDate(i).replace(":", ";");
+					pun.setMuteDate(i, s);
+				}
+				yml.createSection("Mod.Punishments." + uuid);
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.Perm", pun.getMutePerm());
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.Temp", pun.getMuteTime());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.Perm", pun.getBanPerm());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.Temp", pun.getBanTime());
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.Reason", pun.getMuteReasonsList());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.Reason", pun.getBanReasonsList());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.When", pun.getBanDateList());
+				yml.set("Mod.Punishments." + uuid + ".Ban Data.By", pun.getBannedByList());
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.By", pun.getMutedByList());
+				yml.set("Mod.Punishments." + uuid + ".Mute Data.When", pun.getMuteDateList());
+			}
+		}
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
+	public void savePunishListBackup(String folder) {
+		File f =  new File("plugins/CustomEnchantments/Data-Backups/" + folder + "/modConfig.yml");
 		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
 		try{
 			yml.load(f);

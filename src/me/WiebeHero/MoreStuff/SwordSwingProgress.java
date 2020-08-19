@@ -172,6 +172,7 @@ public class SwordSwingProgress implements Listener{
 		}
 	}
 	public static float getSwingProgress(Player player) {
+//		EntityPlayer p = ((CraftPlayer)player).getHandle();
 	    return player.getCooledAttackStrength(0.0F);
 	}
 	public float getAttackStrength(Player p) {

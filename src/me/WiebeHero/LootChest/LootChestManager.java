@@ -76,6 +76,24 @@ public class LootChestManager {
             e.printStackTrace();
         }
 	}
+	public void saveLootChestsBackup(String folder) {
+		File f =  new File("plugins/CustomEnchantments/Data-Backups/" + folder + "/lootConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
+		yml.set("Loot.Chests", null);
+		if(!this.getLootList().isEmpty()) {
+			for(LootChest loot : this.getLootList().values()) {
+				yml.set("Loot.Chests." + loot.getUUID() + ".Location", loot.getLocation());
+				yml.set("Loot.Chests." + loot.getUUID() + ".Tier", loot.getTier());
+				yml.set("Loot.Chests." + loot.getUUID() + ".Radius", loot.getRadius());
+			}
+		}
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
 	public void startLootSpawning() {
 		LootChestManager manager = this;
 		new BukkitRunnable() {

@@ -332,4 +332,70 @@ public class DFFactionManager {
             e.printStackTrace();
         }
 	}
+	public void saveFactionsBackup(String folder) {
+		File f1 =  new File("plugins/CustomEnchantments/Data-Backups/" + folder + "/factionsConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
+		try{
+			yml.load(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		yml.set("Factions.List", null);
+		for(DFFaction fac : this.factionList.values()) {
+			yml.createSection("Factions.List." + fac.getFactionId());
+			for(Entry<UUID, DFFactionPlayer> entry : facPlayerManager.getFactionPlayerMap().entrySet()) {
+				if(entry.getValue().isInFaction()) {
+					if(entry.getValue().getFactionId().equals(fac.getFactionId())) {
+						yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Rank", entry.getValue().getRank());
+						yml.set("Factions.List." + fac.getFactionId() + ".Members." + entry.getKey() + ".Name", Bukkit.getOfflinePlayer(entry.getKey()).getName());
+					}
+				}
+			}
+			ArrayList<Long> list = new ArrayList<Long>();
+			if(!fac.getChunkList().isEmpty()) {
+				for(long c : fac.getChunkList()) {
+					list.add(c);
+				}
+			}
+			ArrayList<String> uuids = new ArrayList<String>();
+			if(!fac.getAllyList().isEmpty()) {
+				for(UUID uuid : fac.getAllyList()) {
+					uuids.add(uuid.toString());
+				}
+			}
+			yml.set("Factions.List." + fac.getFactionId() + ".Faction Banner", fac.getBanner());
+			for(Entry<String, Location> entry : fac.getFactionHomes().entrySet()) {
+				yml.set("Factions.List." + fac.getFactionId() + ".Faction Homes." + entry.getKey(), entry.getValue());
+			}
+			for(Entry<FactionGroup, ArrayList<Pair<FactionPermission, Boolean>>> entry : fac.getFactionPermissionsList().entrySet()) {
+				FactionGroup group = entry.getKey();
+				ArrayList<Pair<FactionPermission, Boolean>> perms = entry.getValue();
+				for(Pair<FactionPermission, Boolean> pair : perms) {
+					FactionPermission perm = pair.getKey();
+					boolean state = pair.getValue();
+					yml.set("Factions.List." + fac.getFactionId() + ".Faction Permissions." + group.toString() + "." + perm.toString(), state);
+				}
+			}
+			yml.set("Factions.List." + fac.getFactionId() + ".Faction Name", fac.getName());
+			yml.set("Factions.List." + fac.getFactionId() + ".Chunks List", list);
+			yml.set("Factions.List." + fac.getFactionId() + ".Faction Points", fac.getFactionPoints());
+			yml.set("Factions.List." + fac.getFactionId() + ".Allies", uuids);
+			yml.set("Factions.List." + fac.getFactionId() + ".Energy", fac.getEnergy());
+			yml.set("Factions.List." + fac.getFactionId() + ".Bank", fac.getBank());
+			yml.set("Factions.List." + fac.getFactionId() + ".Level", fac.getLevel());
+			yml.set("Factions.List." + fac.getFactionId() + ".Experience", fac.getExperience());
+			yml.set("Factions.List." + fac.getFactionId() + ".Max Experience", fac.getMaxExperience());
+			yml.set("Factions.List." + fac.getFactionId() + ".Faction Vault", fac.getStackList());
+		}
+		try{
+			yml.save(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
 }

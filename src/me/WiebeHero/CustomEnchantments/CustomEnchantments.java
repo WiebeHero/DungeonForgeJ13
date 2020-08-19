@@ -1,8 +1,15 @@
 package me.WiebeHero.CustomEnchantments;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,6 +17,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -28,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -84,6 +93,8 @@ import me.WiebeHero.DailyRewards.DailyRewardLootTable;
 import me.WiebeHero.DailyRewards.DailyRewardManager;
 import me.WiebeHero.DailyRewards.DailyRewardMenu;
 import me.WiebeHero.DailyRewards.DailyRewardRoll;
+import me.WiebeHero.DataPackage.DataObtainEvent;
+import me.WiebeHero.DataPackage.ProcessData;
 import me.WiebeHero.DungeonInstances.PartyCommand;
 import me.WiebeHero.EnchantmentAPI.CommandFile;
 import me.WiebeHero.EnchantmentAPI.Enchantment;
@@ -158,6 +169,7 @@ import me.WiebeHero.Spawners.DeathOfMob;
 import me.WiebeHero.Trade.TradeCommand;
 import me.WiebeHero.Trade.TradeEvents;
 import me.WiebeHero.Trade.TradeMenu;
+import me.WiebeHero.Waterfall.PluginMessenger;
 import me.WiebeHero.XpTrader.XPAddPlayers;
 import me.WiebeHero.XpTrader.XPTraderMenu;
 import net.luckperms.api.LuckPerms;
@@ -233,6 +245,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	private KitRoll kitRoll = new KitRoll(this.rankedManager, this.builder);
 	private XPTraderMenu xpTraderMenu = new XPTraderMenu();
 	private ShopItemManager shopItemManager = new ShopItemManager();
+	private ProcessData data = new ProcessData(this.punishManager);
 	private ShopMenu shopMenu = new ShopMenu(this.shopItemManager, this.builder);
 	private RankedCommands rankedCommands = new RankedCommands(this.rankedManager, this.wg, this.xpTraderMenu, this.msgManager, this.shopItemManager, this.shopMenu, this.potionM, this.score, this.dfManager, this.cpManager, this.facPlayerManager, this.builder, this.luck);
 	private SignMenuFactory signFactory;
@@ -241,12 +254,34 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	public static boolean shutdown = false;
 	public static boolean maintenance = false;
 	public static boolean load = true;
+	// Server Socket
+	private ServerSocket serverSocket;
 	@Override
 	public void onEnable() {
 		instance = this;
+		PluginMessenger plMessenger = new PluginMessenger();
+		this.getServer().getPluginManager().registerEvents(this.data, this);
 		//Enable Plugin Message
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "\n\nThe plugin CustomEnchantments has been enabled!\n\n");
-		
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", plMessenger);
+		try {
+			ServerSocket socket = new ServerSocket(this.getServer().getPort() - 24228);
+			// ONLINE
+			this.serverSocket = socket;
+		} 
+		catch (UnknownHostException e) {
+			// OFFLINE
+		} 
+		catch (IOException e) {
+			// OFFLINE
+		}
+	    BukkitTask readThread = new BukkitRunnable() {
+	    	public void run() {
+	    		Thread t = new ReadThread();
+				t.start();
+	    	}
+	    }.runTaskTimer(this, 0L, 200L);
 		NovisRewards rewards = new NovisRewards(this.nEnchant);
 		this.signFactory = new SignMenuFactory(this);
 		TradeEvents tradeEvents = new TradeEvents(this.tradeMenu, this.signFactory, this.builder, this.dfManager);
@@ -286,6 +321,12 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		this.dailyTable.constructMonthlyList();
 		new BukkitRunnable() {
 			public void run() {
+				Thread t = new BackupSaveThread();
+				t.start();
+			}
+		}.runTaskTimer(this, 18000L, 18000L);
+		new BukkitRunnable() {
+			public void run() {
 				try {
 					for(OfflinePlayer p : Bukkit.getOfflinePlayers()) {
 						rListener.loadRankedPlayers(p);
@@ -301,7 +342,7 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 			Bukkit.getPluginManager().registerEvents(e, CustomEnchantments.getInstance());
 		}
 		//Config Manager
-		ModerationEvents mod = new ModerationEvents(this.facManager, this.dfManager, this.rankedManager, this.punishManager, this.staffManager, this.spawnerManager, this.lootChestManager, this.gui, this.multi, this.luck, this.method, this.score, this.classMenu, this.msgManager, this.cpManager, this.facPlayerManager, rewards, this.nEnchant, this.builder);
+		ModerationEvents mod = new ModerationEvents(this.facManager, this.dfManager, this.rankedManager, this.punishManager, this.staffManager, this.spawnerManager, this.lootChestManager, this.gui, this.multi, this.luck, this.method, this.score, this.classMenu, this.msgManager, this.cpManager, this.facPlayerManager, rewards, this.nEnchant, this.builder, plMessenger);
 		//Custom Weapons
 		getServer().getPluginManager().registerEvents(en, this);
 		getServer().getPluginManager().registerEvents(new ActivateAbility(this.dfManager, this.facManager), this);
@@ -533,58 +574,52 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 					}
 				}
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 5L);
-		//a
+		}.runTaskLater(this, 5L);
 		new BukkitRunnable() {
-			@Override
 			public void run() {
-				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 hour!"));
-			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 504000L);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 30 minutes!"));
-			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 540000L);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 15 minutes!"));
-			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 558000L);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 10 minutes!"));
-			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 564000L);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 5 minutes!"));
-				shutdown = true;
-				for(Player p : Bukkit.getOnlinePlayers()) {
-					if(p != null) {
-						p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
-					}
+				Calendar calender = Calendar.getInstance();
+				int hour = calender.get(Calendar.HOUR_OF_DAY);
+				int minutes = calender.get(Calendar.MINUTE);
+				switch(hour) {
+					case 23:
+						switch(minutes) {
+							case 0:
+								Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 hour!"));
+								break;
+							case 30:
+								Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 30 minutes!"));
+								break;
+							case 45:
+								Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 15 minutes!"));
+								break;
+							case 50:
+								Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 10 minutes!"));
+								break;
+							case 55:
+								readThread.cancel();
+								shutdown = true;
+								for(Player p : Bukkit.getOnlinePlayers()) {
+									if(p != null) {
+										p.kickPlayer(new CCT().colorize("&2&l[DungeonForge]: &cThe server is going into shutdown, try joining back in 5 minutes."));
+									}
+								}
+								Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 5 minutes!"));
+								break;
+							case 59:
+								Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 minute!"));
+								break;
+						}
+						break;
+					case 0:
+						switch(minutes) {
+							case 0:
+								Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
+								Bukkit.getServer().shutdown();
+								break;
+						}
 				}
 			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 570000L);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cThe server will restart in 1 minute!"));
-			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 574800L);
-		
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Bukkit.broadcastMessage(new CCT().colorize("&2&l[DungeonForge]: &cRestarting!"));
-				Bukkit.getServer().shutdown();
-			}
-		}.runTaskLater(CustomEnchantments.getInstance(), 576000L);
+		}.runTaskTimer(this, 0L, 1200L);
 		new BukkitRunnable() {
 			public void run() {
 				load = false;
@@ -713,12 +748,13 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 		this.cfgm.setUpConfiguration("modConfig.yml", "Mod.Punishments");
 		this.cfgm.setUpConfiguration("dungeonConfig.yml", "Dungeons.Instances");
 		this.cfgm.setUpConfiguration("GeneralConfig.yml", "General.Values");
-		this.cfgm.setUpConfiguration("AuctionConfig.yml", "AuctionHouse.Items");
+		this.cfgm.setUpConfiguration("AuctionHouse.yml", "AuctionHouse.Items");
 		this.cfgm.setUpConfiguration("KitCooldowns.yml", "Kits.Cooldowns");
 		this.cfgm.setUpConfiguration("CapturePoints.yml", "Capture Points");
 		this.cfgm.setUpConfiguration("Boosters.yml", "Boosters");
 		this.cfgm.setUpConfiguration("DailyRewards.yml", "DailyRewards");
 		this.cfgm.setUpConfiguration("FlyTickets.yml", "FlyTickets");
+		this.cfgm.setUpFolder("Data-Backups");
 	}
 	public void loadConfig() {
 		getConfig().options().copyDefaults(true);
@@ -900,7 +936,154 @@ public class CustomEnchantments extends JavaPlugin implements Listener{
 	public static CustomEnchantments getInstance() {
 		return instance;
 	}
+	public PunishManager getPunishManager() {
+		return this.punishManager;
+	}
 	public boolean getShutdownState() {
 		return CustomEnchantments.shutdown;
+	}
+	public ServerSocket getServerSocket() {
+		return this.serverSocket;
+	}
+	
+	public static void sendDataToSocket(String ip, int port, String data){
+		Socket client;
+		try {
+			client = new Socket();
+			client.connect(new InetSocketAddress(ip, port), 60000);
+			DataOutputStream ds = new DataOutputStream(client.getOutputStream());
+			ds.writeUTF(data);
+			ds.close();
+			client.close();
+		} 
+		catch (UnknownHostException e1) {
+			e1.printStackTrace();
+		} 
+		catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	class ReadThread extends Thread{
+		public void run() {
+			while(true) {
+				try {
+					serverSocket.setSoTimeout(10000);
+					Socket client = serverSocket.accept();
+					DataInputStream dis = new DataInputStream(client.getInputStream());
+					String data = dis.readUTF();
+					DataObtainEvent event = new DataObtainEvent(data);
+					Bukkit.getPluginManager().callEvent(event);
+	                dis.close();
+				} 
+				catch (UnknownHostException e) {
+				} 
+				catch(SocketException e) {
+				}
+				catch (IOException e) {
+				}
+			}
+		}
+	}
+	class BackupSaveThread extends Thread {
+		public void run() {
+			getServer().getConsoleSender().sendMessage(new CCT().colorize("&aBackup has been started!"));
+			Calendar calendar = Calendar.getInstance();
+			String date = calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + "-" + calendar.get(Calendar.MINUTE);
+			cfgm.setUpFolder(date, "Data-Backups/");
+			cfgm.setUpConfiguration("playerskillsDF.yml", "Skills.Players", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("spawnerConfig.yml", "Spawners.UUID", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("lootConfig.yml", "Loot.Chests", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("factionsConfig.yml", "Factions.List", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("setHomeConfig.yml", "Homes", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("shopConfig.yml", "Shop", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("modConfig.yml", "Mod.Punishments", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("dungeonConfig.yml", "Dungeons.Instances", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("GeneralConfig.yml", "General.Values", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("AuctionHouse.yml", "AuctionHouse.Items", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("KitCooldowns.yml", "Kits.Cooldowns", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("CapturePoints.yml", "Capture Points", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("Boosters.yml", "Boosters", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("DailyRewards.yml", "DailyRewards", "Data-Backups/" + date);
+			cfgm.setUpConfiguration("FlyTickets.yml", "FlyTickets", "Data-Backups/" + date);
+			try {
+				dfManager.savePlayersBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Skills has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				facManager.saveFactionsBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Factions has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				ahManager.saveAuctionHouseBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Auction House has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				lootChestManager.saveLootChestsBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Loot Chests has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				spawnerManager.saveSpawnersBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Spawners has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				sethome.saveHomesBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Homes has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				punishManager.savePunishListBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Punishments has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				rankedManager.saveKitCooldownsBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Ranked has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				cpManager.saveCapturePointsBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Capture Points has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				boosterManager.saveBoostersBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Boosters has failed!"));
+				ex.printStackTrace();
+			}
+			try {
+				dailyManager.saveDailysBackup(date);
+			}
+			catch(Exception ex) {
+				getServer().getConsoleSender().sendMessage(new CCT().colorize("&cBackup for Daily's has failed!"));
+				ex.printStackTrace();
+			}
+			getServer().getConsoleSender().sendMessage(new CCT().colorize("&aBackup has been finished!"));
+		}
 	}
 }

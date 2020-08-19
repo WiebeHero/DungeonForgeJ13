@@ -116,4 +116,33 @@ public class DailyRewardManager {
             e.printStackTrace();
         }
 	}
+	public void saveDailysBackup(String folder) {
+		File f1 =  new File("plugins/CustomEnchantments/Data-Backups/" + folder + "/DailyRewards.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
+		try{
+			yml.load(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		yml.set("DailyRewards", null);
+		for(Entry<UUID, DailyReward> entry : this.dailyRewardList.entrySet()) {
+			yml.createSection("DailyRewards." + entry.getKey());
+			UUID uuid = entry.getKey();
+			DailyReward daily = entry.getValue();
+			yml.set("DailyRewards." + uuid + ".Last Daily", daily.getLastDaily());
+			yml.set("DailyRewards." + uuid + ".Last Weekly", daily.getLastWeekly());
+			yml.set("DailyRewards." + uuid + ".Last Monthly", daily.getLastMonthly());
+			yml.set("DailyRewards." + uuid + ".Claimed Slots", daily.getClaimedSlots());
+		}
+		try{
+			yml.save(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
 }

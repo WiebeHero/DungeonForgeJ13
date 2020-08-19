@@ -152,6 +152,39 @@ public class CapturePointManager {
         }
 	}
 	
+	public void saveCapturePointsBackup(String folder) {
+		File f1 =  new File("plugins/CustomEnchantments/Data-Backups/" + folder + "/CapturePoints.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
+		try{
+			yml.load(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		yml.set("Capture Points", null);
+		for(CapturePoint cp : this.capturePointList) {
+			if(cp != null) {
+				yml.createSection("Capture Points." + cp.getUniqueId().toString());
+				if(cp.getCapturedId() != null) {
+					yml.set("Capture Points." + cp.getUniqueId().toString() + ".Captured ID", cp.getCapturedId().toString());
+				}
+				yml.set("Capture Points." + cp.getUniqueId().toString() + ".Capture Point Location", cp.getCaptureLocation());
+				yml.set("Capture Points." + cp.getUniqueId().toString() + ".Capture Point Progress", cp.getCaptureProgress());
+				yml.set("Capture Points." + cp.getUniqueId().toString() + ".Capture Point Radius", cp.getCaptureRadius());
+				yml.set("Capture Points." + cp.getUniqueId().toString() + ".Capture Point Multiplier", cp.getXPMultiplier());
+			}
+		}
+		try{
+			yml.save(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
+	
 	public void activateCapturePoints() {
 		new BukkitRunnable() {
 			public void run() {

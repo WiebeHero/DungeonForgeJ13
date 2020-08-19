@@ -86,6 +86,31 @@ public class AHManager {
             e.printStackTrace();
         }
 	}
+	public void saveAuctionHouseBackup(String folder) {
+		File f1 =  new File("plugins/CustomEnchantments/Data-Backups/" + folder + "/AuctionHouse.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f1);
+		try{
+			yml.load(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		yml.set("AuctionHouse.Items", null);
+		for(ItemStack item : this.ahList) {
+			NBTItem i = new NBTItem(item);
+			AHItem ah = i.getObject("AHItem", AHItem.class);
+			yml.set("AuctionHouse.Items." + ah.getUniqueId(), item);
+		}
+		try{
+			yml.save(f1);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
 	public int getItemSizeAh(UUID uuid) {
 		int count = 0;
 		for(ItemStack item : this.ahList) {

@@ -67,7 +67,6 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
 
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
-import de.tr7zw.nbtapi.NBTTileEntity;
 import de.tr7zw.nbtinjector.NBTInjector;
 import javafx.util.Pair;
 import me.WiebeHero.CapturePoints.CapturePoint;
@@ -99,6 +98,7 @@ import me.WiebeHero.Scoreboard.DFScoreboard;
 import me.WiebeHero.Skills.ClassMenu;
 import me.WiebeHero.Spawners.DFSpawner;
 import me.WiebeHero.Spawners.DFSpawnerManager;
+import me.WiebeHero.Waterfall.PluginMessenger;
 import net.luckperms.api.model.user.User;
 
 public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
@@ -122,6 +122,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	private NovisRewards rewards;
 	private ItemStackBuilder builder;
 	private NovisEnchantmentGetting enchant;
+	private PluginMessenger pluginMessenger;
 	private HashMap<UUID, Pair<UUID, String>> target = new HashMap<UUID, Pair<UUID, String>>();
 	private HashMap<UUID, String> reason = new HashMap<UUID, String>();
 	private HashMap<UUID, EntityType> spawnerType = new HashMap<UUID, EntityType>();
@@ -167,7 +168,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 	public String gamemode = "gamemode";
 	public String item = "item";
 	
-	public ModerationEvents(DFFactionManager facManager, DFPlayerManager dfManager, RankedManager rManager, PunishManager pManager, StaffManager sManager, DFSpawnerManager spManager, LootChestManager lcManager, ModerationGUI gui, MethodMulti multi, MethodLuck luck, Methods m, DFScoreboard board, ClassMenu menu, MSGManager msgManager, CapturePointManager cpManager, DFFactionPlayerManager facPlayerManager, NovisRewards rewards, NovisEnchantmentGetting enchant, ItemStackBuilder builder) {
+	public ModerationEvents(DFFactionManager facManager, DFPlayerManager dfManager, RankedManager rManager, PunishManager pManager, StaffManager sManager, DFSpawnerManager spManager, LootChestManager lcManager, ModerationGUI gui, MethodMulti multi, MethodLuck luck, Methods m, DFScoreboard board, ClassMenu menu, MSGManager msgManager, CapturePointManager cpManager, DFFactionPlayerManager facPlayerManager, NovisRewards rewards, NovisEnchantmentGetting enchant, ItemStackBuilder builder, PluginMessenger pluginMessenger) {
 		this.facManager = facManager;
 		this.dfManager = dfManager;
 		this.rManager = rManager;
@@ -187,6 +188,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 		this.rewards = rewards;
 		this.enchant = enchant;
 		this.builder = builder;
+		this.pluginMessenger = pluginMessenger;
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -4033,6 +4035,56 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 									}
 								}
 							}
+							this.pluginMessenger.getServers(player);
+							new BukkitRunnable() {
+								public void run() {
+									String data = "";
+									data += "MODERATION,,";
+									data += p.getUniqueId().toString() + ",,";
+									data += pun.getMutePerm() + ",,";
+									data += pun.getMuteTime() + ",,";
+									ArrayList<String> list = pun.getMuteReasonsList();
+									for(int i = 0; i < list.size(); i++) {
+										data += list.get(i);
+									}
+									data += ",,";
+									list = pun.getMuteDateList();
+									for(int i = 0; i < list.size(); i++) {
+										data += list.get(i);
+									}
+									data += ",,";
+									list = pun.getMutedByList();
+									for(int i = 0; i < list.size(); i++) {
+										data += list.get(i);
+									}
+									data += ",,";
+									data += pun.getBanPerm() + ",,";
+									data += pun.getBanTime() + ",,";
+									list = pun.getBanReasonsList();
+									for(int i = 0; i < list.size(); i++) {
+										data += list.get(i);
+									}
+									data += ",,";
+									list = pun.getBanDateList();
+									for(int i = 0; i < list.size(); i++) {
+										data += list.get(i);
+									}
+									data += ",,";
+									list = pun.getBannedByList();
+									for(int i = 0; i < list.size(); i++) {
+										data += list.get(i);
+									}
+									HashMap<String, Pair<String, Integer>> serverIps = new HashMap<String, Pair<String, Integer>>(pluginMessenger.getServerIps());
+									String serverName = CustomEnchantments.getInstance().getServer().getName();
+									if(serverIps.containsKey(serverName)) {
+										serverIps.remove(serverName);
+									}
+									Bukkit.broadcastMessage(serverIps.keySet().toString());
+									for(Pair<String, Integer> ipport : serverIps.values()) {
+										CustomEnchantments.sendDataToSocket(ipport.getKey(), ipport.getValue() - 24228, data);
+									}
+								}
+							}.runTaskLater(CustomEnchantments.getInstance(), 3L);
 						}
 					}
 				}

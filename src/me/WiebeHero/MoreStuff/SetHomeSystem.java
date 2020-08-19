@@ -259,4 +259,30 @@ public class SetHomeSystem implements Listener,CommandExecutor{
             e.printStackTrace();
         }
 	}
+	public void saveHomesBackup(String folder) {
+		File f =  new File("plugins/CustomEnchantments/Data-Backups/" + folder + "/setHomeConfig.yml");
+		YamlConfiguration yml = YamlConfiguration.loadConfiguration(f);
+		try{
+			yml.load(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        } 
+		catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		for(Entry<UUID, HashMap<String, Location>> entry : outerList.entrySet()) {
+			yml.createSection("Homes." + entry.getKey());
+			HashMap<String, Location> innerList = outerList.get(entry.getKey());
+			for(Entry<String, Location> entry2 : innerList.entrySet()) {
+				yml.set("Homes." + entry.getKey() + "." + entry2.getKey(), entry2.getValue());
+			}
+		}
+		try{
+			yml.save(f);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+	}
 }
