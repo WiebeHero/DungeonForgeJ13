@@ -289,7 +289,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 							}
 							else {
 								player.setAllowFlight(true);
-								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou have enabled fly mode!"));
+								player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have enabled fly mode!"));
 							}
 						}
 						else {
@@ -2095,7 +2095,7 @@ public class ModerationEvents implements CommandExecutor,Listener,TabCompleter{
 													maxxp = maxxp / 100 * 135;
 												}
 												double value1 = baseDamage + incDamage * (itemLevel - 1);
-								            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+								            	double value2 = baseSpeed - incSpeed * (itemLevel - 1);
 												//Config Data
 												//Weapon Data
 								            	item.setInteger("Level", itemLevel);

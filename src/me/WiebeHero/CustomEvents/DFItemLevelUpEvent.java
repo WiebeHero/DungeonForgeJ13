@@ -491,7 +491,7 @@ public class DFItemLevelUpEvent extends Event{
 					}
 				}
 				double value1 = baseDamage + incDamage * (itemLevel - 1);
-            	double value2 = baseSpeed + incSpeed * (itemLevel - 1);
+            	double value2 = baseSpeed - incSpeed * (itemLevel - 1);
 				//Config Data
 				//Weapon Data
             	item.setInteger("Level", itemLevel);

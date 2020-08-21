@@ -295,7 +295,7 @@ public class RankedCommands implements CommandExecutor{
 									}
 								}
 							}
-							if(!player.isEmpty()) {
+							if(!players.isEmpty()) {
 								for(Player p : players) {
 									if(player.getLocation().distance(p.getLocation()) <= 150.0 && count != 5 && p != player) {
 										player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aPlayer: &6" + p.getName() + " &aDistance: &6" + player.getLocation().distance(p.getLocation())));
@@ -771,6 +771,6 @@ public class RankedCommands implements CommandExecutor{
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 }

@@ -934,7 +934,7 @@ public class DFFactions implements Listener,CommandExecutor{
 														}
 														player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &aYou have kicked &6" + p.getName() + " &afrom the faction!"));
 														Player o = Bukkit.getPlayer(p.getUniqueId());
-														if(p != null) {
+														if(o != null) {
 															o.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &6" + player.getName() + " &ckicked you from the faction!"));
 														}
 													}

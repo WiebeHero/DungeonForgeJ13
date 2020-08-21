@@ -684,7 +684,9 @@ public class RankEnum {
 							"&7When you right click this item, you will be",
 							"&7able to fly in your territory for 10 minutes.",
 							"&7This will stack if you already have this effect active."
-						}
+						},
+						new Pair<String, String>("Fly Ticket", ""),
+						new Pair<String, Long>("Duration", 600000L)
 				));
 				items.add(builder.constructItem(
 						Material.FEATHER,
@@ -694,7 +696,9 @@ public class RankEnum {
 							"&7When you right click this item, you will be",
 							"&7able to fly in your territory for 20 minutes.",
 							"&7This will stack if you already have this effect active."
-						}
+						},
+						new Pair<String, String>("Fly Ticket", ""),
+						new Pair<String, Long>("Duration", 1200000L)
 				));
 				for(ItemStack item : items) {
 					if(p.getInventory().firstEmpty() != -1) {

@@ -23,7 +23,6 @@ public class ProcessData implements Listener{
 	@EventHandler
 	public void dataRecieve(DataObtainEvent event) {
 		if(event.getDataType() == DataType.MODERATION) {
-			Bukkit.broadcastMessage(event.getData());
 			String data[] = event.getData().split(",,");
 			UUID uuid = UUID.fromString(data[1]);
 			Punish punish = new Punish(uuid);

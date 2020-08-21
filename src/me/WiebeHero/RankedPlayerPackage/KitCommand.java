@@ -88,9 +88,6 @@ public class KitCommand implements CommandExecutor {
 						player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cInvalid arguments! Usage: /kit (Kit name)"));
 					}
 				}
-				else if(cmd.getName().equalsIgnoreCase(kits)) {
-					
-				}
 			}
 			else {
 				player.sendMessage(new CCT().colorize("&2&l[DungeonForge]: &cYou cannot use this command while in combat!"));
